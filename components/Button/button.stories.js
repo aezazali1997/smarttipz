@@ -11,8 +11,9 @@ export const Primary = Template.bind({})
 //Passing the props to the component
 
 Primary.args = {
-    size: "h-10 w-56",
-    children: "Primary Button"
+    classNames: "w-full bg-indigo-600 text-white p-3 rounded-md",
+    childrens: "Submit",
+    type: "submit"
 }
 
 //these arguments will later be the control on the storybook UI and you can change them in the storybook without coming back to the editor.
