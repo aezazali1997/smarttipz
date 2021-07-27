@@ -1,24 +1,24 @@
 import axios from "axios";
-export const USER_API_BASE_URL = process.env.BASE_URL;
+export const USER_API_BASE_URL = `${process.env.BASE_URL}`;
 
 class AxiosInstance {
-    signup(credentials) {
+    async signup(username, email, password) {
         console.log('In signup API')
-        return axios.post(USER_API_BASE_URL + "/api/user/signup", credentials);
+        return await axios.post(USER_API_BASE_URL + "/api/user/signup", username, email, password);
     }
 
-    login(credentials) {
-        return axios.post(USER_API_BASE_URL + "/api/user/login", credentials);
+    async login(credentials) {
+        return await axios.post(USER_API_BASE_URL + "/api/user/login", credentials);
     }
+
     getUserInfo() {
         return localStorage.getItem("token");
     }
+
     getAuthHeader() {
         return { headers: { Authorization: "Bearer " + this.getUserInfo() } };
     }
 
-
-
 }
 
-export default AxiosInstance;
+export default new AxiosInstance;
