@@ -43,3 +43,18 @@ export const PersonalSignupSchema = Yup.object().shape({
     accountType: Yup.string()
         .required("Select account is a required field"),
 });
+
+export const AuthenticateSchema = Yup.object().shape({
+    tab1: Yup.string()
+        .required(""),
+    tab2: Yup.string()
+        .required(''),
+    tab3: Yup.string()
+        .required(''),
+    tab4: Yup.string()
+        .required(""),
+    tab5: Yup.string()
+        .required(''),
+    tab6: Yup.string()
+        .required(''),
+});
