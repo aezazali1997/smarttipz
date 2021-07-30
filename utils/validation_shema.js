@@ -18,8 +18,7 @@ export const BusinessSignupSchema = Yup.object().shape({
         .required('Email is a required field'),
 
     phone: Yup.string()
-        .min(11, "Minimum 3 characters")
-        .required('Phone number is a required field'),
+        .min(11, "Minimum 3 characters"),
 
     password: Yup.string()
         .min(3, "Minimum 3 characters")

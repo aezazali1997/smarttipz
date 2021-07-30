@@ -19,9 +19,8 @@ const initialValues = {
   website: '',
   accountType: '',
 }
-
-
 const Signup = () => {
+
 
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false);
@@ -29,7 +28,6 @@ const Signup = () => {
   const [showAlert, setShowAlert] = useState(false);
 
 
-  useEffect(() => { console.log('updated') }, [initialValues.accountType])
   const enableLoading = () => {
     setLoading(true);
   };
@@ -50,10 +48,11 @@ const Signup = () => {
     return "";
   };
 
-
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues,
-    validationSchema: PersonalSignupSchema,
+    validationSchema: (initialValues.accountType !== 'Business' ? PersonalSignupSchema : BusinessSignupSchema),
+    validateOnBlur: true,
     onSubmit: (values, { setSubmitting, setStatus }) => {
       setTimeout(() => {
         enableLoading();
@@ -105,7 +104,7 @@ const Signup = () => {
 
         <div className="w-full flex flex-col lg:w-1/2">
           <span className="w-full h-full">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-full w-full object-fill" viewBox="0 0 866.419 850.458">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-full h-52  lg:w-full lg:h-full" viewBox="0 0 866.419 850.458">
               <path id="Path_942" data-name="Path 942" d="M635.383,413.7H303V221.36H635.383Zm-330.355-2.028H633.355V223.388H305.028Z" transform="translate(231.036 158.521)" fill="#e0e0e0" />
               <rect id="Rectangle_262" data-name="Rectangle 262" width="219.297" height="6.429" transform="translate(578.552 482.441)" fill="#f0f0f0" />
               <rect id="Rectangle_263" data-name="Rectangle 263" width="234.406" height="7.017" transform="translate(578.552 506.413)" fill="#f0f0f0" />

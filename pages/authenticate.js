@@ -9,18 +9,20 @@ import { AuthenticateSchema } from '../utils/validation_shema';
 import axiosInstance from '../APIs/axiosInstance';
 import logo from '../public/ST-2.png';
 
+
+const initialValues = {
+    tab1: '',
+    tab2: '',
+    tab3: '',
+    tab4: '',
+    tab5: '',
+    tab6: '',
+}
+
+
 const Authenticate = () => {
 
     const [loading, setLoading] = useState(false);
-    const [initialValues, setInitialValues] = useState({
-        tab1: '',
-        tab2: '',
-        tab3: '',
-        tab4: '',
-        tab5: '',
-        tab6: '',
-    }
-    )
 
     const enableLoading = () => {
         setLoading(true);
@@ -44,6 +46,7 @@ const Authenticate = () => {
 
 
     const formik = useFormik({
+        enableReinitialize: true,
         initialValues: initialValues,
         validationSchema: AuthenticateSchema,
         validateOnBlur: true,
