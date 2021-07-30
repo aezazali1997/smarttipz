@@ -12,8 +12,8 @@ const InoutField = ({ label, inputClass, svg, name, type, value, onChange, onBlu
                 placeholder="name@example.com"
                 autoComplete="off" />
             <label
-                htmlFor="username"
-                className="absolute top-0 left-0 px-3 py-5 h-full pointer-events-none transform origin-left transition-all duration-100 ease-in-out ">
+                htmlFor={name}
+                className="absolute top-0 left-0 px-2 py-3 h-full pointer-events-none transform origin-left transition-all duration-100 ease-in-out ">
                 {label}
             </label>
             <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">

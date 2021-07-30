@@ -76,7 +76,7 @@ const Authenticate = () => {
 
 
     return (
-        <div className="flex flex-col h-screen pt-5 p-5 xs:p-10 pb-2 md:p-16 md:pb-10 space-y-2">
+        <div className="flex flex-col h-screen pt-5 p-5 xs:p-10 pb-2 space-y-2">
             {/*SEO Support*/}
             <Helmet>
                 <title>Authentication | Smart Tipz</title>
@@ -91,7 +91,7 @@ const Authenticate = () => {
 
             <div className="flex flex-col w-full lg:flex-row pt-5 p-5 xs:p-10 pb-2 md:p-16 md:pb-1 md:pt-0">
                 <span className="w-full lg:w-1/2">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-full h-52  lg:w-full lg:h-full" viewBox="0 0 901.955 823">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-full h-52 lg:h-full" viewBox="0 0 901.955 823">
                         <path id="Path_798" data-name="Path 798" d="M461.771,659.283H51.726A12.147,12.147,0,0,1,39.6,647.157V70.75A12.147,12.147,0,0,1,51.726,58.73H461.771a12.126,12.126,0,0,1,12.1,12.126h0v576.3A12.126,12.126,0,0,1,461.771,659.283ZM51.726,59.155A11.616,11.616,0,0,0,40.131,70.75V647.157a11.616,11.616,0,0,0,11.595,11.595H461.771a11.6,11.6,0,0,0,11.574-11.595V70.75a11.6,11.6,0,0,0-11.574-11.595Z" transform="translate(-39.6 -50.894)" fill="#e6e6e6" />
                         <path id="Path_799" data-name="Path 799" d="M678.071,659.283H268a12.126,12.126,0,0,1-12.1-12.126V70.75A12.126,12.126,0,0,1,268,58.73H678.071a12.126,12.126,0,0,1,12.1,12.02V647.157A12.126,12.126,0,0,1,678.071,659.283ZM268,59.155A11.6,11.6,0,0,0,256.431,70.75V647.157A11.6,11.6,0,0,0,268,658.752H678.071a11.637,11.637,0,0,0,11.616-11.595V70.75a11.637,11.637,0,0,0-11.616-11.595Z" transform="translate(203.434 -50.894)" fill="#e6e6e6" />
                         <path id="Path_800" data-name="Path 800" d="M377.593,224.865l-2.909,249.608c-10.278,83.054-157.507,148.992-157.507,148.992S69.926,557.59,59.584,474.472L56.59,224.865,213.949,173.07Z" transform="translate(-20.51 77.578)" fill="#f5f5f5" />
@@ -272,7 +272,7 @@ const Authenticate = () => {
                 </span>
                 <div className="flex flex-col w-full lg:w-1/2 items-center">
                     <div className="flex flex-col w-full lg:max-w-md mt-4 lg:mt-0 space-y-2">
-                        <p className=" font-bold text-3xl text-center lg:text-left lg:text-5xl">Verify Account</p>
+                        <p className=" font-bold text-3xl text-center lg:text-left lg:text-3xl">Verify Account</p>
                         <p className="text-gray-400 text-sm sm:text-md lg:text-lg text-center lg:text-left">Enter six digit code that we sent to your
                             email address to verify your account:</p>
                     </div>
@@ -284,6 +284,7 @@ const Authenticate = () => {
                                     type="text"
                                     maxLength="1"
                                     autoComplete='off'
+                                    tabIndex='1'
                                     className={`${getInputClasses(
                                         "tab1"
                                     )} border bg-gray-100 text-center border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-10 lg:w-16 p-3 h-16`}
@@ -295,6 +296,7 @@ const Authenticate = () => {
                                     type={"text"}
                                     maxLength="1"
                                     autoComplete='off'
+                                    tabIndex='2'
                                     className={`${getInputClasses(
                                         "tab2"
                                     )} border bg-gray-100 text-center border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-10 lg:w-16 p-3 h-16`}
@@ -305,6 +307,7 @@ const Authenticate = () => {
                                     type={"text"}
                                     maxLength="1"
                                     autoComplete='off'
+                                    tabIndex='3'
                                     className={`${getInputClasses(
                                         "tab3"
                                     )} border bg-gray-100 text-center border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-10 lg:w-16 p-3 h-16`}
@@ -315,6 +318,7 @@ const Authenticate = () => {
                                     type={"text"}
                                     maxLength="1"
                                     autoComplete='off'
+                                    tabIndex='4'
                                     className={`${getInputClasses(
                                         "tab4"
                                     )} border bg-gray-100 text-center border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-10 lg:w-16 p-3 h-16`}
@@ -325,6 +329,7 @@ const Authenticate = () => {
                                     type={"text"}
                                     maxLength="1"
                                     autoComplete='off'
+                                    tabIndex='5'
                                     className={`${getInputClasses(
                                         "tab5"
                                     )} border bg-gray-100  text-center border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-10 lg:w-16 p-3 h-16`}
@@ -336,6 +341,7 @@ const Authenticate = () => {
                                     type={"text"}
                                     maxLength="1"
                                     autoComplete='off'
+                                    tabIndex='6'
                                     className={`${getInputClasses(
                                         "tab6"
                                     )} border bg-gray-100 text-center border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-10 lg:w-16 p-3 h-16`}

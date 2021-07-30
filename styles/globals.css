@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @import './signup.css';
+@import './svg.css';
 
 .floating-input > input::placeholder {
   color: transparent;
