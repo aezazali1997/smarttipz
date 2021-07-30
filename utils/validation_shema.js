@@ -50,6 +50,14 @@ export const LoginSchema = Yup.object().shape({
         .required('Password is a required field'),
 });
 
+export const ForgetPasswordSchema = Yup.object().shape({
+    email: Yup.string()
+        .email("Wrong email format")
+        .min(3, "Minimum 3 characters")
+        .max(50, "Maximum 50 characters")
+        .required('Email is a required field'),
+});
+
 export const AuthenticateSchema = Yup.object().shape({
     tab1: Yup.string()
         .required(""),
