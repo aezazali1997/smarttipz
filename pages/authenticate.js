@@ -6,9 +6,10 @@ import { useFormik } from 'formik';
 import Helmet from 'react-helmet';
 import { Button } from '../components';
 import { AuthenticateSchema } from '../utils/validation_shema';
-import axiosInstance from '../APIs/axiosInstance';
+import AxiosInstance from '../APIs/axiosInstance';
 import logo from '../public/ST-2.png';
-
+import swal from 'sweetalert';
+import { useRouter } from 'next/router';
 
 const initialValues = {
     tab1: '',
@@ -21,6 +22,8 @@ const initialValues = {
 
 
 const Authenticate = () => {
+
+    const router = useRouter();
 
     const [loading, setLoading] = useState(false);
 
@@ -50,26 +53,37 @@ const Authenticate = () => {
         initialValues: initialValues,
         validationSchema: AuthenticateSchema,
         validateOnBlur: true,
-        onSubmit: (values, { setSubmitting, setStatus }) => {
+        onSubmit: ({ tab1, tab2, tab3, tab4, tab5, tab6 }, { setSubmitting, setStatus }) => {
             setTimeout(() => {
                 enableLoading();
-                console.log('values', values);
-                // axiosInstance.signup(username, email, password)
-                //   .then((res) => {
-                //     console.log('res >>', res);
-                //     disableLoading();
-                //     // setError(false);
-                //     // setStatus(message);
-                //     // setShowAlert(true);
-                //   })
-                //   .catch((e) => {
-                //     console.log('Error', e)
-                //     // setError(true)
-                //     disableLoading();
-                //     setSubmitting(false);
-                //     // setStatus(e.response.data.message);
-                //     // setShowAlert(true);
-                //   });
+                const data = {
+                    varificationCode: `${tab1}${tab2}${tab3}${tab4}${tab5}${tab6}`,
+                    username: localStorage.getItem('username')
+                }
+                AxiosInstance.authenticate(data)
+                    .then(({ data: { error, data, message } }) => {
+                        disableLoading();
+                        swal({
+                            text: message,
+                            buttons: false,
+                            dangerMode: true,
+                            timer: 3000,
+                            icon: 'success'
+                        })
+                        router.push('/login');
+                    })
+                    .catch((e) => {
+                        console.log('Error', e)
+                        disableLoading();
+                        setSubmitting(false);
+                        swal({
+                            text: message,
+                            buttons: false,
+                            dangerMode: true,
+                            timer: 3000,
+                            icon: 'error'
+                        })
+                    });
             }, 1000);
         },
     });

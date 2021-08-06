@@ -1,18 +1,17 @@
-const { PHASE_DEVELOPMENT_SERVER } = require('next/constants')
-
+const prod = process.env.NODE_ENV === 'production';
 module.exports = {
-  reactStrictMode: true,
   env: {
-    BASE_URL: process.env.BASE_URL,
-    HOST: process.env.HOST,
-    DB_PASSWORD: process.env.DB_PASSWORD,
-    DB_DATABASE: process.env.DB_DATABASE,
-    DB_USERNAME: process.env.DB_USERNAME,
-    DB_PORT: process.env.DB_PORT,
-    PORT: process.env.PORT,
-    EMAIL_SECRET: process.env.EMAIL_SECRET,
-    SECRET_KEY: process.env.SECRET_KEY,
-    TEMP_EMAIL: process.env.TEMP_EMAIL,
-    TEMP_MAILPASS: process.env.TEMP_MAILPASS,
+    BASE_URL: prod ? 'https://smart-tipz.vercel.app/' : 'http://localhost:3000/',
+    HOST: 'localhost',
+    DB_DATABASE: 'smart-tipz',
+    DB_USERNAME: 'postgres',
+    DB_PASSWORD: 'admin',
+    DB_PORT: 5432,
+    PORT: 3000,
+    EMAIL_SECRET: 'atemperaryemailsecretkey',
+    SECRET_KEY: 'atemperarysecretkey',
+    TEMP_EMAIL: 'safaribooks0020@gmail.com',
+    TEMP_MAILPASS: 'safaribooks4854'
+
   }
 }

@@ -28,8 +28,8 @@ export const SignupSchema = Yup.object().shape({
         .max(50, "Maximum 50 characters")
         .required('Email is a required field'),
 
-    phone: Yup.string()
-        .min(11, "Minimum 3 characters"),
+    phone: Yup.string().required()
+        .min(11, "Minimum 11 characters"),
 
     password: Yup.string()
         .min(3, "Minimum 3 characters")
@@ -39,11 +39,9 @@ export const SignupSchema = Yup.object().shape({
 
 export const LoginSchema = Yup.object().shape({
     checked: Yup.boolean(),
-    email: Yup.string()
-        .email("Wrong email format")
-        .min(3, "Minimum 3 characters")
-        .max(50, "Maximum 50 characters")
-        .required('Email is a required field'),
+    username: Yup.string()
+        .min(3, "Please enter at least 3 characters")
+        .required("Username is a required field"),
     password: Yup.string()
         .min(3, "Minimum 3 characters")
         .max(50, "Maximum 50 characters")
