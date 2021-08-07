@@ -1,0 +1,47 @@
+.followingBtn {
+  border: 2px solid #714de1;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  background: #714de1;
+  color: white;
+  padding-right: 4px;
+  padding-left: 4px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  text-align: center;
+  justify-items: center;
+  width: 130px;
+  font-weight: 600;
+  font-size: medium;
+  align-items: center;
+}
+.followingBtn:hover {
+  color: #714de1;
+  background: white;
+}
+.messageBtn {
+  border: 2px solid #714de1;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  padding-right: 4px;
+  padding-left: 4px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  text-align: center;
+  justify-items: center;
+  width: 130px;
+  background: white;
+  color: #714de1;
+  font-weight: 600;
+  font-size: medium;
+}
+.messageBtn:hover {
+  color: white;
+  background: #714de1;
+}

@@ -6,6 +6,7 @@
 @import './signup.css';
 @import './svg.css';
 @import './sidebar.css';
+@import './button.css';
 
 .floating-input > input::placeholder {
   color: transparent;

@@ -1,11 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Sidebar } from '../components'
 
-const CustomLayout = ({ children }) => {
+const CustomLayout = ({ children, authContext }) => {
+
+    const { authorized, _Logout } = authContext;
+
+    useEffect(() => { }, [authorized]);
+
     return (
-        <div className="flex w-full h-full">
-            <Sidebar />
-            {children}
+        <div className={`${authorized ? 'flex flex-row' : ''} w-full h-full`}>
+            {authorized && <Sidebar logout={_Logout} />}
+            <div className={`${authorized ? 'content' : ''}`}>
+                {children}
+            </div>
         </div>
     )
 }

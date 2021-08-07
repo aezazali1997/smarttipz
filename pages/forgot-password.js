@@ -11,6 +11,7 @@ import AxiosInstance from '../APIs/axiosInstance';
 import logo from '../public/ST-2.png';
 import forgetPassword from '../public/forgetPassword.png';
 import swal from 'sweetalert';
+import { useRouter } from 'next/router';
 
 const initialValues = {
     email: '',
@@ -19,6 +20,7 @@ const initialValues = {
 }
 const ForgetPassword = () => {
 
+    const router = useRouter();
 
     const [showPassword, setShowPassword] = useState(false)
     const [loading, setLoading] = useState(false);
@@ -67,6 +69,7 @@ const ForgetPassword = () => {
                         setError(false);
                         setStatus(message);
                         setShowAlert(true);
+                        router.push('/login');
                     })
                     .catch((e) => {
                         console.log('Error', e)

@@ -18,7 +18,7 @@ const initialValues = {
     password: '',
     checked: false
 }
-const Login = () => {
+const Login = ({ _Login }) => {
 
     const router = useRouter();
 
@@ -71,7 +71,7 @@ const Login = () => {
                         setError(false);
                         setStatus(message);
                         setShowAlert(true);
-                        localStorage.setItem('token', token);
+                        _Login(token);
                         localStorage.setItem('username', username);
                         router.push('/profile');
                     })
@@ -123,7 +123,7 @@ const Login = () => {
             <div className="flex flex-col w-full lg:flex-row pt-5 p-5 xs:p-10 pb-2 md:p-16 md:pb-1 md:pt-0">
 
                 <div className="w-full lg:w-1/2">
-                    <Image src={login} alt="banner" className="bannerImg" layout="responsive" />
+                    <Image src={login} alt="banner" />
                 </div>
 
                 <div className="flex flex-col w-full lg:w-1/2 items-center">

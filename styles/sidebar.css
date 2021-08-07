@@ -4,10 +4,16 @@
 
 .sidebar {
   background-color: #714de1;
-  width: 18%;
-  height: 100vh;
-  position: relative;
+  width: 250px;
+  height: 100%;
+  position: fixed;
   z-index: 20px;
+}
+
+.content {
+  margin-left: 250px;
+  height: 100%;
+  width: 100%;
 }
 
 .icons:hover {
