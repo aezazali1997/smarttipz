@@ -70,3 +70,12 @@ export const AuthenticateSchema = Yup.object().shape({
     tab6: Yup.string()
         .required(''),
 });
+
+export const AccountInfoValidationSchema = Yup.object().shape({
+    old: Yup.string()
+        .required(""),
+    new: Yup.string()
+        .required(''),
+    confirm: Yup.string()
+        .required('')
+});

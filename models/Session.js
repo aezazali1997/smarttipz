@@ -1,14 +1,20 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("./db");
-const User = require("./User");
 
 const Session = sequelize.define("Session", {
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  username: {
+    type: DataTypes.STRING,
+  },
+  sessionId: {
+    type: DataTypes.INTEGER,
+  },
   connected: {
     type: DataTypes.BOOLEAN,
   },
 });
-
-Session.hasOne(User);
-User.belongsTo(Session);
 
 module.exports = Session;

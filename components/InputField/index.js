@@ -1,4 +1,4 @@
-const InoutField = ({ label, inputClass, svg, name, type, value, onChange, onBlur, error, placeholder }) => {
+const InoutField = ({ label, inputClass, svg, name, type, value, onChange, onBlur, error, placeholder, disabled }) => {
     return (
         <div className={`floating-input ${error ? "mb-1" : "mb-5"} relative`}>
             <input
@@ -7,6 +7,7 @@ const InoutField = ({ label, inputClass, svg, name, type, value, onChange, onBlu
                 name={name}
                 className={inputClass}
                 value={value}
+                disabled={disabled}
                 onChange={onChange}
                 onBlur={onBlur}
                 placeholder="name@example.com"

@@ -12,6 +12,8 @@ import { LoginSchema } from '../utils/validation_shema';
 import AxiosInstance from '../APIs/axiosInstance';
 import logo from '../public/ST-2.png';
 import login from '../public/login.png';
+import cookie from 'js-cookie';
+
 
 const initialValues = {
     username: '',

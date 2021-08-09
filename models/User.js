@@ -91,11 +91,7 @@ const User = sequelize.define('User', {
   isDeleted: {
     type: DataTypes.BOOLEAN
   }
-  // token: DataTypes.ARRAY(DataTypes.STRING)
 });
-
-User.hasOne(Business);
-Business.belongsTo(User);
 
 User.belongsToMany(User, {
   as: 'Follower',
@@ -107,6 +103,9 @@ User.belongsToMany(User, {
   foreignKey: 'followedId',
   through: 'following'
 });
+
+User.hasOne(Business);
+Business.belongsTo(User);
 
 User.hasMany(Video);
 Video.belongsTo(User);

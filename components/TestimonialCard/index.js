@@ -4,8 +4,8 @@ import React from 'react'
 
 const TestimonialCard = ({ image, name, designation, description }) => {
     return (
-        <div className="max-w-md mx-auto bg-white rounded-xl overflow-hidden md:max-w-2xl">
-            <div className="md:flex items-center space-x-3">
+        <div className="max-w-md mx-auto bg-white rounded-xl overflow-hidden md:max-w-2xl cursor-pointer">
+            <div className="flex items-center space-x-3">
                 <div className="md:flex-shrink-0">
                     <img className="h-20 w-full rounded-full object-cover md:w-20"
                         src={image}

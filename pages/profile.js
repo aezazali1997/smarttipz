@@ -6,10 +6,18 @@ import profile from '../public/profile.jpg';
 import { Card, TestimonialCard } from '../components';
 import videos from '../utils/VdeoSchema.json';
 import testimonialVideo from '../utils/testimonialSchema.json';
+import { useRouter } from 'next/router';
+
 
 const NewsFeed = () => {
+    const router = useRouter();
+
+    const gotoMessaging = () => {
+        router.push('/messages')
+    }
+
     return (
-        <div className="flex flex-col h-full w-full p-5">
+        <div className="flex flex-col h-full w-full p-3 sm:p-5">
             {/*SEO Support*/}
             <Helmet>
                 <title>Profile | Smart Tipz</title>
@@ -17,14 +25,18 @@ const NewsFeed = () => {
             {/*SEO Support End */}
             {/* section starts here*/}
             <div className="flex flex-row w-full h-auto">
-                <div className="flex w-1/6 px-2 py-1">
-                    <Image src={profile} alt="profile" className="rounded-2xl" width={135} height={200} />
+                <div className="flex w-2/6 md:w-1/6  px-2 py-1">
+                    <Image src={profile} alt="profile" className="rounded-2xl "
+                        width={135} height={200}
+
+                    />
                 </div>
-                <div className="flex flex-col w-5/6 ">
+                <div className="flex flex-col w-4/6 md:w-5/6 ">
+                    {/* section starts here */}
                     <div className="flex justify-between px-2 py-2">
                         <div className="flex flex-col w-1/2">
                             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end w-full md:w-2/3">
-                                <h1 className=" text-2xl font-semibold">Luis Hopkins</h1>
+                                <h1 className=" text-md lg:text-2xl font-semibold">Luis Hopkins</h1>
                                 <h2 className="text-sm text-gray-500">+92 3235333140</h2>
                             </div>
                             <h2 className="text-sm text-gray-500">Marketing Specialist</h2>
@@ -41,7 +53,7 @@ const NewsFeed = () => {
                         <div className="flex flex-col w-1/2">
                             <div className="flex justify-end space-x-10">
                                 <div className="flex flex-col">
-                                    <h1 className=" text-3xl font-semibold">1.3K</h1>
+                                    <h1 className="text-md lg:text-3xl font-semibold">1.3K</h1>
                                     <h2 className="text-sm text-black">Followers</h2>
                                 </div>
                                 <div className="flex flex-col ">
@@ -53,6 +65,7 @@ const NewsFeed = () => {
                         <div>
                         </div>
                     </div>
+                    {/* section ends here */}
                     <div className="flex w-full h-10 mt-2 px-2">
                         <p className="text-xs">
                             Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat pidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -62,7 +75,7 @@ const NewsFeed = () => {
                         <button className="followingBtn">
                             Following
                         </button>
-                        <button className="messageBtn">
+                        <button onClick={gotoMessaging} className="messageBtn">
                             Message
                         </button>
                     </div>
@@ -71,9 +84,9 @@ const NewsFeed = () => {
             {/* section ends here */}
             {/* section starts here */}
             <div className="flex flex-col w-full px-2  mt-8">
-                <h1 className="text-md font-medium">Our Videos</h1>
-                <div className="flex w-full mt-6">
-                    <div className="grid grid-cols-4 gap-3">
+                <h1 className="text-md font-medium">My Videos</h1>
+                <div className="flex w-full mt-6 justify-center lg:justify-start" >
+                    <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
                         {
                             videos.map(({ title, image, like, comment, share }) => (
                                 <Card
@@ -92,8 +105,8 @@ const NewsFeed = () => {
             {/* section starts here */}
             <div className="flex flex-col w-full px-2  mt-8">
                 <h1 className="text-md font-medium">Customer Testimonials</h1>
-                <div className="flex w-full mt-6">
-                    <div className="grid grid-cols-2 gap-x-12 gap-y-4">
+                <div className="flex w-full mt-6 justify-center lg:justify-start">
+                    <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
                         {
                             testimonialVideo.map(({ image, description, designation, name }) => (
                                 <TestimonialCard

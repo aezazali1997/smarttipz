@@ -20,3 +20,12 @@
   object-fit: fill !important;
   color: #714de1 !important;
 }
+
+@media (max-width: 1023px) {
+  .sidebar {
+    display: none;
+  }
+  .content {
+    margin-left: 0%;
+  }
+}

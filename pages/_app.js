@@ -8,9 +8,9 @@ const MyApp = ({ Component, pageProps }) => {
   const [authorized, setAuthorized] = useState(null);
 
   useEffect(() => {
-    // if (authorized !== localStorage.getItem('token')) {
-    setAuthorized(localStorage.getItem('token'));
-    // }
+    if (authorized !== localStorage.getItem('token')) {
+      setAuthorized(localStorage.getItem('token'));
+    }
   }, [authorized]);
 
   const _Logout = () => {

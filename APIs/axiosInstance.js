@@ -24,6 +24,10 @@ class AxiosInstance {
         return await axios.post(USER_API_BASE_URL + "api/user/resend", { username });
     }
 
+    async profile() {
+        return await axios.get(USER_API_BASE_URL + "api/profile");
+    }
+
     getUserInfo() {
         return localStorage.getItem("token");
     }

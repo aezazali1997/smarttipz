@@ -2,10 +2,10 @@ const prod = process.env.NODE_ENV === 'production';
 module.exports = {
   env: {
     BASE_URL: prod ? 'https://smart-tipz.vercel.app/' : 'http://localhost:3000/',
-    HOST: 'localhost',
-    DB_DATABASE: 'smart-tipz',
-    DB_USERNAME: 'postgres',
-    DB_PASSWORD: 'admin',
+    HOST: 'chunee.db.elephantsql.com',
+    DB_DATABASE: 'cnjqyhlh',
+    DB_USERNAME: 'cnjqyhlh',
+    DB_PASSWORD: 'UjxgpDUN-LisiJugvQFmDKqzZ7xp3Y3v',
     DB_PORT: 5432,
     PORT: 3000,
     EMAIL_SECRET: 'atemperaryemailsecretkey',

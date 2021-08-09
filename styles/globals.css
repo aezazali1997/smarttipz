@@ -4,7 +4,7 @@
 
 @import 'react-pro-sidebar/dist/css/styles.css';
 @import './signup.css';
-@import './svg.css';
+@import './image.css';
 @import './sidebar.css';
 @import './button.css';
 
@@ -20,4 +20,27 @@
 .floating-input > input:focus ~ label,
 .floating-input > input:not(:placeholder-shown) ~ label {
   @apply opacity-75 scale-75 -translate-y-3 translate-x-1;
+}
+.floating-input > textarea::placeholder {
+  color: transparent;
+}
+
+.floating-input > textarea:focus,
+.floating-input > textarea:not(:placeholder-shown) {
+  @apply pt-8;
+}
+
+.floating-input > textarea:focus ~ label,
+.floating-input > textarea:not(:placeholder-shown) ~ label {
+  @apply opacity-75 scale-75 -translate-y-3 translate-x-1;
+}
+
+.toggle-checkbox:checked {
+  @apply: right-0 border-indigo-600;
+  right: 0;
+  border-color: #714de1;
+}
+.toggle-checkbox:checked + .toggle-label {
+  @apply: bg-indigo-600;
+  background-color: #714de1;
 }

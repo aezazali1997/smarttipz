@@ -5,7 +5,7 @@ import logo from '../../public/logo.png';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faNewspaper, faUserCircle, faCog, faPlayCircle, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
+import { faNewspaper, faUserCircle, faCog, faPlayCircle, faSignOutAlt, faComment } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/router';
 
 const Sidebar = ({ logout }) => {
@@ -25,7 +25,7 @@ const Sidebar = ({ logout }) => {
     return (
         <div className="sidebar">
             <nav
-                className='flex flex-col w-full h-full pt-10 px-5 text-white justify-between relative navbar'
+                className='flex flex-row md:flex-col w-full h-full pt-10 px-5 text-white justify-between relative navbar'
                 role='navigation'
             >
                 <div className="py-5 flex h-20 items-center flex-col ">
@@ -55,9 +55,15 @@ const Sidebar = ({ logout }) => {
                             </div>
                         </Link>
                         <Link href='/videos' className='p-4 font-sans nav-link nav-link-ltr' >
-                            <div className={`flex- flex-row py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
+                            <div className={`py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
                             ${Active("/videos")}`}>
                                 <FontAwesomeIcon icon={faPlayCircle} />&nbsp;Videos
+                            </div>
+                        </Link>
+                        <Link href='/messages' className='p-4 font-sans nav-link nav-link-ltr' >
+                            <div className={`py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
+                            ${Active("/messages")}`}>
+                                <FontAwesomeIcon icon={faComment} />&nbsp;Message
                             </div>
                         </Link>
                     </>
