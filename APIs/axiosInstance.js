@@ -1,10 +1,24 @@
 import axios from "axios";
 export const USER_API_BASE_URL = process.env.BASE_URL;
+import { parseCookies } from 'nookies';
+
+const cookie = parseCookies();
+
+let token = cookie?.token || null;
 
 class AxiosInstance {
+
+    getUserInfo() {
+        console.log('token', token);
+        return token;
+    }
+
+    getAuthHeader() {
+        return { headers: { Authorization: "Bearer " + this.getUserInfo() } };
+    }
+
     async signup(payload) {
         console.log('In signup API')
-        console.log(USER_API_BASE_URL)
         return await axios.post(USER_API_BASE_URL + "api/user/signup", payload);
     }
 
@@ -25,16 +39,14 @@ class AxiosInstance {
     }
 
     async profile() {
-        return await axios.get(USER_API_BASE_URL + "api/profile");
+        return await axios.get(USER_API_BASE_URL + "api/profile", this.getAuthHeader());
     }
 
-    getUserInfo() {
-        return localStorage.getItem("token");
+    async uploadProfilePic(img) {
+        console.log({ img })
+        return await axios.post(USER_API_BASE_URL + "api/profile/uploadpic", img, this.getAuthHeader());
     }
 
-    getAuthHeader() {
-        return { headers: { Authorization: "Bearer " + this.getUserInfo() } };
-    }
 
 }
 

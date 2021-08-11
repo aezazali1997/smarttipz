@@ -1,12 +1,14 @@
+/* eslint-disable @next/next/no-img-element */
 import Image from 'next/image';
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet';
 import { useFormik } from 'formik';
 import { InputField } from '../components';
 import profile from '../public/profile.jpg';
 import { AccountInfoValidationSchema } from '../utils/validation_shema';
-import { initial } from 'lodash';
-
+import { parseCookies } from 'nookies';
+import axios from 'axios';
+import axiosInstance from '../APIs/axiosInstance';
 
 const initialValues = {
     old: '',
@@ -14,11 +16,39 @@ const initialValues = {
     confirm: ''
 }
 
-const Setting = () => {
-    const [personalInfo, setPersonalInfo] = useState({ email: "", aboutme: "", message: true, phone: "", phoneStatus: true, name: "", website: "" });
+const Setting = ({ settings }) => {
+    const [personalInfo, setPersonalInfo] = useState({});
     const [image, setImage] = useState('');
 
-    const { email, aboutme, message, name, website, phone, phoneStatus } = personalInfo;
+
+    useEffect(() => {
+        console.log('settings', settings)
+        setPersonalInfo(settings);
+    }, [image]);
+
+    const { aboutme, accessible, followed, following, rating, username, views, videos, picture, } = personalInfo;
+
+    let upload = useRef();
+
+    let _OnChangeImg = (event) => {
+        const { files } = event.target;
+        const img = URL.createObjectURL(files[0]);
+        const data = { link: img };
+        axiosInstance.uploadProfilePic(data)
+            .then(res => {
+                setImage(img);
+            }).catch(e => {
+                console.log(e.message);
+            })
+    }
+
+    let _BrowseImg = () => {
+        upload.current.click();
+    }
+
+    let _DeleteImg = (index) => {
+        setOrderImages(image => image = '');
+    }
 
     const _OnChange = (e) => {
         const { name, value, checked } = e.target;
@@ -47,7 +77,7 @@ const Setting = () => {
         onSubmit: (values, { setSubmitting, setStatus }) => {
             setTimeout(() => {
                 enableLoading();
-
+                console.log({ values });
             }, 1000);
         },
     });
@@ -66,11 +96,18 @@ const Setting = () => {
                 {/* section starts here*/}
                 <div className="flex w-full px-2 py-1">
                     <div className="relative space-y-2">
-                        <Image src={profile} alt="profile" className="rounded-2xl"
-                            width={135} height={200}
-                        />
+                        <img src={image} alt="profile" className="rounded-2xl profilePic" />
                         <div className="flex w-full space-x-1">
-                            <button type="button"
+                            <input
+                                type="file"
+                                accept='image/*'
+                                ref={upload}
+                                className="hidden"
+                                onChange={_OnChangeImg}
+                            />
+                            <button
+                                onClick={_BrowseImg}
+                                type="button"
                                 className="px-2 py-1 w-1/2 flex justify-center items-center text-white text-sm bg-indigo-600 rounded-md hover:bg-indigo-700">
                                 Edit
                             </button>
@@ -92,7 +129,7 @@ const Setting = () => {
                                 <InputField
                                     name={"name"}
                                     type={"text"}
-                                    value={name}
+                                    value={username}
                                     onChange={_OnChange}
                                     svg={(
                                         <svg className="w-6 h-6 text-gray-500 " fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -106,7 +143,7 @@ const Setting = () => {
                                     disabled={true}
                                     name={"email"}
                                     type={"text"}
-                                    value={email}
+                                    // value={email}
                                     onChange={_OnChange}
                                     svg={(
                                         <svg className="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -115,22 +152,25 @@ const Setting = () => {
                                     inputClass={`border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
                                     label={'Email'}
                                 />
-                                <div className="inline-block w-full items-center mb-5">
-                                    <InputField
-                                        name={"phone"}
-                                        type={"text"}
-                                        value={phone}
-                                        onChange={_OnChange}
-                                        svg={(
-                                            <svg className="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" /></svg>
-                                        )}
-                                        inputClass={`border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3 h-12`}
-                                        label={'Phone no'}
-                                    />
+                                <div className="flex w-full justify-between mb-5">
+                                    <div className="flex w-full">
+                                        <InputField
+                                            name={"phone"}
+                                            type={"text"}
+                                            // value={phone}
+                                            onChange={_OnChange}
+                                            svg={(
+                                                <svg className="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" /></svg>
+                                            )}
+                                            inputClass={`border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3 h-12`}
+                                            label={'Phone no'}
+                                        />
+                                    </div>
+                                    <div className="flex flex-row"></div>
                                     <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
                                         <input
-                                            checked={phoneStatus}
+                                            checked={accessible}
                                             onChange={_OnChange}
                                             type="checkbox"
                                             name="phoneStatus"
@@ -159,7 +199,7 @@ const Setting = () => {
                                 <InputField
                                     name={"website"}
                                     type={"text"}
-                                    value={website}
+                                    // value={website}
                                     onChange={_OnChange}
                                     svg={(
                                         <svg className="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -171,7 +211,7 @@ const Setting = () => {
                                     <p className="text-md font-normal">Message</p>
                                     <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
                                         <input
-                                            checked={message}
+                                            // checked={message}
                                             onChange={_OnChange}
                                             type="checkbox"
                                             name="message"
@@ -259,4 +299,14 @@ const Setting = () => {
     )
 }
 
+export const getServerSideProps = async (context) => {
+    const { token } = parseCookies(context);
+    const res = await axios.get(`${process.env.BASE_URL}api/profile`, { headers: { Authorization: "Bearer " + token } })
+    const { data } = res.data;
+    return {
+        props: {
+            settings: data
+        }
+    }
+}
 export default Setting;

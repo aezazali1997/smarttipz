@@ -73,9 +73,9 @@ export const AuthenticateSchema = Yup.object().shape({
 
 export const AccountInfoValidationSchema = Yup.object().shape({
     old: Yup.string()
-        .required(""),
+        .required("This is a required field "),
     new: Yup.string()
-        .required(''),
+        .required("This is a required field "),
     confirm: Yup.string()
-        .required('')
+        .required("This is a required field "),
 });

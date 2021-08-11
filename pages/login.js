@@ -7,12 +7,12 @@ import { useFormik } from 'formik';
 import Helmet from 'react-helmet';
 import { useRouter } from 'next/router';
 import swal from 'sweetalert';
+import cookie from 'js-cookie';
 import { Button, InputField } from '../components';
 import { LoginSchema } from '../utils/validation_shema';
 import AxiosInstance from '../APIs/axiosInstance';
 import logo from '../public/ST-2.png';
 import login from '../public/login.png';
-import cookie from 'js-cookie';
 
 
 const initialValues = {
@@ -20,7 +20,7 @@ const initialValues = {
     password: '',
     checked: false
 }
-const Login = ({ _Login }) => {
+const Login = () => {
 
     const router = useRouter();
 
@@ -73,8 +73,8 @@ const Login = ({ _Login }) => {
                         setError(false);
                         setStatus(message);
                         setShowAlert(true);
-                        _Login(token);
-                        localStorage.setItem('username', username);
+                        cookie.set('token', token);
+                        cookie.set('username', username);
                         router.push('/profile');
                     })
                     .catch((e) => {

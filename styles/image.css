@@ -1,6 +1,7 @@
 .profilePic {
-  min-width: 100px !important;
-  min-height: 150px !important;
-  max-width: 135px !important;
-  max-height: 200px !important;
+  min-width: 100px;
+  min-height: 150px;
+  max-width: 135px;
+  max-height: 200px;
+  object-fit: cover;
 }

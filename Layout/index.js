@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Sidebar, MobNavbar } from '../components'
+import { parseCookies } from 'nookies';
+import { pascalCase } from 'pascal-case';
+import cookie from 'js-cookie';
+import { useRouter } from 'next/router';
 
-const CustomLayout = ({ children, authContext }) => {
 
-    const { authorized, _Logout } = authContext;
+const CustomLayout = ({ children }) => {
+    const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
-
-    useEffect(() => { }, [authorized]);
 
     useEffect(() => {
 
@@ -29,21 +31,24 @@ const CustomLayout = ({ children, authContext }) => {
         setIsOpen(!isOpen);
     };
 
+    const _Logout = () => {
+        cookie.remove('token');
+        cookie.remove('username');
+        router.push('/login')
+    }
 
     return (
-        <div className={`${authorized ? 'flex flex-col lg:flex-row' : ''} w-full h-full`}>
-            {authorized && (
-                <>
-                    <Sidebar logout={_Logout} />
-                    <MobNavbar toggle={toggle} isOpen={isOpen} />
-                </>
-            )
-            }
-            <div className={`${authorized ? 'content' : ''}`}>
+        <div className={`flex flex-col lg:flex-row w-full h-full`}>
+
+            <Sidebar logout={_Logout} />
+            <MobNavbar toggle={toggle} isOpen={isOpen} />
+
+            <main className={`content`}>
                 {children}
-            </div>
+            </main>
         </div>
     )
 }
+
 
 export default CustomLayout;

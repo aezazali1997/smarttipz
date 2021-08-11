@@ -1,7 +1,7 @@
 import React from 'react'
 import { Helmet } from 'react-helmet';
 
-const Profile = () => {
+const NewsFeed = () => {
     return (
         <div className="flex h-screen w-full justify-center items-center">
             {/*SEO Support*/}
@@ -14,4 +14,4 @@ const Profile = () => {
     )
 }
 
-export default Profile;
+export default NewsFeed;
