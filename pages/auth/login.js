@@ -8,11 +8,11 @@ import Helmet from 'react-helmet';
 import { useRouter } from 'next/router';
 import swal from 'sweetalert';
 import cookie from 'js-cookie';
-import { Button, InputField } from '../components';
-import { LoginSchema } from '../utils/validation_shema';
-import AxiosInstance from '../APIs/axiosInstance';
-import logo from '../public/ST-2.png';
-import login from '../public/login.png';
+import { Button, InputField } from '../../components';
+import { LoginSchema } from '../../utils/validation_shema';
+import AxiosInstance from '../../APIs/axiosInstance';
+import logo from '../../public/ST-2.png';
+import login from '../../public/login.png';
 
 
 const initialValues = {
@@ -75,7 +75,7 @@ const Login = () => {
                         setShowAlert(true);
                         cookie.set('token', token);
                         cookie.set('username', username);
-                        router.push('/profile');
+                        router.push('/dashboard/profile');
                     })
                     .catch((e) => {
                         console.log(e.response.status)
@@ -90,7 +90,7 @@ const Login = () => {
                                         timer: 5000,
                                         icon: 'info'
                                     })
-                                    router.push('/authenticate');
+                                    router.push('/auth/authenticate');
                                 })
                         }
                         else {

@@ -4,12 +4,12 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import { useFormik } from 'formik';
 import Helmet from 'react-helmet';
-import { Button } from '../components';
-import { AuthenticateSchema } from '../utils/validation_shema';
-import AxiosInstance from '../APIs/axiosInstance';
-import logo from '../public/ST-2.png';
 import swal from 'sweetalert';
 import { useRouter } from 'next/router';
+import { Button } from '../../components';
+import { AuthenticateSchema } from '../../utils/validation_shema';
+import AxiosInstance from '../../APIs/axiosInstance';
+import logo from '../../public/ST-2.png';
 
 const initialValues = {
     tab1: '',
@@ -70,7 +70,7 @@ const Authenticate = () => {
                             timer: 3000,
                             icon: 'success'
                         })
-                        router.push('/login');
+                        router.push('/auth/login');
                     })
                     .catch((e) => {
                         console.log('Error', e)

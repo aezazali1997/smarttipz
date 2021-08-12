@@ -3,12 +3,12 @@ import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet';
 import { useFormik } from 'formik';
-import { InputField } from '../components';
-import profile from '../public/profile.jpg';
-import { AccountInfoValidationSchema } from '../utils/validation_shema';
+import { InputField } from '../../components';
+// import profile from '../public/profile.jpg';
+import { AccountInfoValidationSchema } from '../../utils/validation_shema';
 import { parseCookies } from 'nookies';
 import axios from 'axios';
-import axiosInstance from '../APIs/axiosInstance';
+import axiosInstance from '../../APIs/axiosInstance';
 
 const initialValues = {
     old: '',

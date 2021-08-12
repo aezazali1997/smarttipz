@@ -2,11 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-@import 'react-pro-sidebar/dist/css/styles.css';
 @import './signup.css';
 @import './image.css';
 @import './sidebar.css';
 @import './button.css';
+@import './MobileDrawer.css';
+@import './messages.module.css';
 
 .floating-input > input::placeholder {
   color: transparent;

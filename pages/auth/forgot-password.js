@@ -5,13 +5,13 @@ import Link from 'next/link'
 import Image from 'next/image';
 import { useFormik } from 'formik';
 import Helmet from 'react-helmet';
-import { Button, InputField } from '../components';
-import { ForgetPasswordSchema } from '../utils/validation_shema';
-import AxiosInstance from '../APIs/axiosInstance';
-import logo from '../public/ST-2.png';
-import forgetPassword from '../public/forgetPassword.png';
 import swal from 'sweetalert';
 import { useRouter } from 'next/router';
+import { Button, InputField } from '../../components';
+import { ForgetPasswordSchema } from '../../utils/validation_shema';
+import AxiosInstance from '../../APIs/axiosInstance';
+import logo from '../../public/ST-2.png';
+import forgetPassword from '../../public/forgetPassword.png';
 
 const initialValues = {
     email: '',
@@ -69,7 +69,7 @@ const ForgetPassword = () => {
                         setError(false);
                         setStatus(message);
                         setShowAlert(true);
-                        router.push('/login');
+                        router.push('/auth/login');
                     })
                     .catch((e) => {
                         console.log('Error', e)

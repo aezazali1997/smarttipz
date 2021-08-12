@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "NODE_ENV=production next start -p $PORT",
+    "start": "next start",
     "lint": "next lint",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
@@ -41,20 +41,19 @@
     "otp-input-react": "^0.2.4",
     "pg": "^8.6.0",
     "pg-hstore": "^2.3.4",
-    "pg-promise": "^10.10.2",
-    "postcss": "7",
+    "postcss": "^8.0.0",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^6.7.0",
     "prettier": "^2.3.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-helmet": "^6.1.0",
+    "react-input-emoji": "^4.0.8",
     "react-otp-input": "^2.4.0",
-    "react-pro-sidebar": "^0.6.0",
     "react-sidebar": "^3.0.2",
     "sequelize": "^6.6.5",
     "sweetalert": "^2.1.2",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.7",
     "yup": "^0.32.9"
   },
   "devDependencies": {

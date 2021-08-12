@@ -1,8 +1,8 @@
 /* eslint-disable react/jsx-key */
 import React from 'react'
 import { Helmet } from 'react-helmet';
-import videos from '../utils/VdeoSchema.json';
-import { Card } from '../components';
+import videos from '../../utils/VdeoSchema.json';
+import { Card } from '../../components';
 const Videos = () => {
     return (
         <div className="flex h-screen w-full p-5">

@@ -6,3 +6,5 @@ export { default as MobNavbar } from './MobNavbar';
 export { default as Drawer } from './Drawer';
 export { default as Card } from './Card';
 export { default as TestimonialCard } from './TestimonialCard';
+export { default as ChatCard } from './ChatCard';
+export { default as Searchbar } from './Searchbar';

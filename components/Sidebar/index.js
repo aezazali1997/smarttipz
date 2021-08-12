@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/link-passhref */
-import React, { useEffect, useState } from 'react'
-import { ProSidebar, Menu, MenuItem, SubMenu, SidebarHeader, SidebarContent, SidebarFooter } from 'react-pro-sidebar';
+import React from 'react'
 import logo from '../../public/logo.png';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -29,40 +28,40 @@ const Sidebar = ({ logout }) => {
                 role='navigation'
             >
                 <div className="py-5 flex h-20 items-center flex-col ">
-                    <Link href='/login'>
+                    <Link href='/dashboard/news-feed'>
                         <Image src={logo} alt="brand" />
                     </Link>
                 </div>
                 <div className=' lg:flex h-80 flex-col space-y-2 overflow-y-auto'>
                     <>
-                        <Link href='/news-feed' className='p-4  font-sans nav-link nav-link-ltr'>
+                        <Link href='/dashboard/news-feed' className='p-4  font-sans nav-link nav-link-ltr'>
                             <div className={`flex flex-row items-center py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
-                        ${Active('/news-feed')}`}>
+                        ${Active('/dashboard/news-feed')}`}>
 
                                 <FontAwesomeIcon icon={faNewspaper} /> &nbsp;News Feed
                             </div>
                         </Link>
-                        <Link href='/profile' className='p-4 font-sans nav-link nav-link-ltr'>
+                        <Link href='/dashboard/profile' className='p-4 font-sans nav-link nav-link-ltr'>
                             <div className={`py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
-                              ${Active('/profile')}`}>
+                              ${Active('/dashboard/profile')}`}>
                                 <FontAwesomeIcon icon={faUserCircle} />&nbsp;Profile
                             </div>
                         </Link>
-                        <Link href='/setting' className='p-4 font-sans nav-link nav-link-ltr' >
+                        <Link href='/dashboard/setting' className='p-4 font-sans nav-link nav-link-ltr' >
                             <div className={`py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
-                            ${Active("/setting")}`}>
+                            ${Active("/dashboard/setting")}`}>
                                 <FontAwesomeIcon icon={faCog} />&nbsp;Setting
                             </div>
                         </Link>
-                        <Link href='/videos' className='p-4 font-sans nav-link nav-link-ltr' >
+                        <Link href='/dashboard/videos' className='p-4 font-sans nav-link nav-link-ltr' >
                             <div className={`py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
-                            ${Active("/videos")}`}>
+                            ${Active("/dashboard/videos")}`}>
                                 <FontAwesomeIcon icon={faPlayCircle} />&nbsp;Videos
                             </div>
                         </Link>
-                        <Link href='/messages' className='p-4 font-sans nav-link nav-link-ltr' >
+                        <Link href='/dashboard/messages' className='p-4 font-sans nav-link nav-link-ltr' >
                             <div className={`py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
-                            ${Active("/messages")}`}>
+                            ${Active("/dashboard/messages")}`}>
                                 <FontAwesomeIcon icon={faComment} />&nbsp;Message
                             </div>
                         </Link>
@@ -71,7 +70,7 @@ const Sidebar = ({ logout }) => {
                 <div className="flex h-20 items-center">
                     <button onClick={() => logout()}
                         className={`flex flex-row py-2 px-3 rounded-lg w-44 font-medium text-white hover:bg-white hover:text-indigo-600 `} >
-                        <div >
+                        <div>
                             <FontAwesomeIcon icon={faSignOutAlt} /> &nbsp;Logout
                         </div>
                     </button>

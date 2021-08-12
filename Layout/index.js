@@ -39,7 +39,7 @@ const CustomLayout = ({ children }) => {
 
             <Sidebar logout={_Logout} />
             <Drawer toggle={toggle} isOpen={isOpen} />
-            <main className={`content`}>
+            <main className={`Content`}>
                 {children}
             </main>
         </div>
