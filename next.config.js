@@ -1,7 +1,7 @@
 const prod = process.env.NODE_ENV === 'production';
 module.exports = {
   env: {
-    BASE_URL: prod ? 'https://smart-tipz.vercel.app/' : 'http://localhost:3000/',
+    BASE_URL: prod ? 'https://smart-tipz.herokuapp.com/' : 'http://localhost:3000/',
     HOST: 'chunee.db.elephantsql.com',
     DB_DATABASE: 'cnjqyhlh',
     DB_USERNAME: 'cnjqyhlh',
