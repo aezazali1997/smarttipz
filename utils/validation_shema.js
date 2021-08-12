@@ -6,15 +6,15 @@ export const SignupSchema = Yup.object().shape({
         .required("Username is a required field"),
     accountType: Yup.string()
         .required("Select account is a required field"),
-    businessName:
-        Yup.string().when('accountType', {
-            is: 'Business',
-            then: Yup.string()
-                .min(3, "Please enter at least 3 characters")
-                .required("Business name is a required field"),
-            otherwise: Yup.string()
-                .min(3, "Please enter at least 3 characters")
-        }),
+    // businessName:
+    //     Yup.string().when('accountType', {
+    //         is: 'Business',
+    //         then: Yup.string()
+    //             .min(3, "Please enter at least 3 characters")
+    //             .required("Business name is a required field"),
+    //         otherwise: Yup.string()
+    //             .min(3, "Please enter at least 3 characters")
+    //     }),
     website: Yup.string()
         .when('accountType', {
             is: 'Business',
