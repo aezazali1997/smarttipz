@@ -62,7 +62,7 @@ const Login = () => {
         initialValues,
         validationSchema: LoginSchema,
         validateOnBlur: true,
-        onSubmit: ({ username, password }, { setSudbmitting, setStatus }) => {
+        onSubmit: ({ username, password }, { setSubmitting, setStatus }) => {
             setTimeout(() => {
                 enableLoading();
                 const data = { username, password }
@@ -132,7 +132,7 @@ const Login = () => {
                     <div className="flex flex-col w-full lg:max-w-md mt-4 lg:mt-0 space-y-2">
                         <p className=" font-bold text-3xl text-center lg:text-left lg:text-3xl">Login</p>
                         <p className="text-gray-400 text-md text-center lg:text-left">New user? <Link
-                            href="/">
+                            href="/auth/signup">
                             <a className="text-blue-800 text-md font-semibold hover:underline"
                             >Create an account
                             </a>

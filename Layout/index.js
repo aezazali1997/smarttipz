@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Sidebar, Drawer } from '../components'
 import { useRouter } from 'next/router';
+import cookie from 'js-cookie';
 
 
 const CustomLayout = ({ children }) => {
+
     const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
 

@@ -24,7 +24,7 @@ const Sidebar = ({ logout }) => {
     return (
         <div className="sidebar">
             <nav
-                className='flex flex-row md:flex-col w-full h-full pt-10 px-5 text-white justify-between relative navbar'
+                className='flex flex-col w-full h-full pt-10 px-5 text-white justify-between relative navbar'
                 role='navigation'
             >
                 <div className="py-5 flex h-20 items-center flex-col ">

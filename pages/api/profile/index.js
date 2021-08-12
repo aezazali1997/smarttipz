@@ -1,7 +1,5 @@
 const User = require('../../../models/User');
 const Video = require('../../../models/Video');
-const Testimonial = require('../../../models/Testimonial');
-const BusinessCard = require('../../../models/BusinessCard');
 const jwt = require('jsonwebtoken');
 
 const handler = async (req, res) => {
@@ -18,8 +16,6 @@ const handler = async (req, res) => {
         throw new Error('Please Login');
       }
 
-      // if (!user.token) throw new Error('Please Login');
-
       let following = await user.getFollower();
       let followed = await user.getFollowed();
       const vids = await Video.findAll({ where: { UserId: user.id } });
@@ -33,10 +29,12 @@ const handler = async (req, res) => {
         about: user.about,
         picture: user.picture,
         accessible: user.accessible,
-        videos: vids.map((vid) => vid.name)
+        videos: vids.map((vid) => vid.name),
+        phone: user.phoneNumber,
+        showPhone: user.showPhone,
+        showMessages: user.accessible,
+        accountType: user.accountType
       };
-
-      if (user.showPhone) response.phone = user.phone;
 
       if (user.accountType === 'Business') {
         const business = await user.getBusiness();
@@ -52,7 +50,6 @@ const handler = async (req, res) => {
             website: findBusinessCard.website
           };
 
-          if (showPhone) response.BusinessCard.phone = phone;
           response.businessCard = businessCard;
         }
       }

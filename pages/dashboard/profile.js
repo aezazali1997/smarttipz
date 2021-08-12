@@ -26,7 +26,7 @@ const Profile = ({ profile }) => {
         setPersonalInfo(personalInfo => personalInfo = profile);
     }, []);
 
-    const { aboutme, accessible, followed, following, rating, username, views, picture } = personalInfo;
+    const { aboutme, accessible, followed, following, rating, username, views, picture, phone, showMessages, accountType } = personalInfo;
 
 
     return (
@@ -42,7 +42,6 @@ const Profile = ({ profile }) => {
                 <div className="flex w-2/6 md:w-1/6  px-2 py-1">
                     <Image src={logo} alt="profile" className="rounded-2xl "
                         width={135} height={200}
-
                     />
                 </div>
                 <div className="flex flex-col w-4/6 md:w-5/6 ">
@@ -52,7 +51,7 @@ const Profile = ({ profile }) => {
                             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end w-full md:w-2/3">
                                 <h1 className=" text-md lg:text-2xl font-semibold">{username}</h1>
                             </div>
-                            <h2 className="text-sm text-gray-500">{accessible ? '+92 3235333140' : ''}</h2>
+                            <h2 className="text-sm text-gray-500">{accessible ? phone : ''}</h2>
                             {/* <h2 className="text-sm text-gray-500">Marketing Specialist</h2> */}
                             <div className="flex justify-between w-full md:w-1/2 mt-1">
                                 <span className="flex items-center">
@@ -68,11 +67,11 @@ const Profile = ({ profile }) => {
                         <div className="flex flex-col w-1/2">
                             <div className="flex justify-end space-x-10">
                                 <div className="flex flex-col">
-                                    <h1 className="text-md lg:text-3xl font-semibold text-center">{followed?.length || '1.3K'}</h1>
+                                    <h1 className="text-md lg:text-3xl font-semibold text-center">{followed?.length}</h1>
                                     <h2 className="text-sm text-black">Followers</h2>
                                 </div>
                                 <div className="flex flex-col ">
-                                    <h1 className=" text-3xl font-semibold text-center">{following?.length || '1.8K'}</h1>
+                                    <h1 className=" text-3xl font-semibold text-center">{following?.length}</h1>
                                     <h2 className="text-sm  text-black">Following</h2>
                                 </div>
                             </div>
@@ -83,16 +82,18 @@ const Profile = ({ profile }) => {
                     {/* section ends here */}
                     <div className="flex w-full h-10 mt-2 px-2">
                         <p className="text-xs">
-                            {aboutme}
+                            {aboutme || 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat pidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'}
                         </p>
                     </div>
                     <div className="flex w-full mt-3 items-center px-2 space-x-6">
                         <button className="followingBtn">
                             Following
                         </button>
-                        <button onClick={gotoMessaging} className="messageBtn">
+
+                        {showMessages ? <button onClick={gotoMessaging} className="messageBtn">
                             Message
-                        </button>
+                        </button> : ''
+                        }
                     </div>
                 </div>
             </div>
@@ -118,24 +119,28 @@ const Profile = ({ profile }) => {
             </div>
             {/* section ends here */}
             {/* section starts here */}
-            <div className="flex flex-col w-full px-2  mt-8">
-                <h1 className="text-md font-medium">Customer Testimonials</h1>
-                <div className="flex w-full mt-6 justify-center lg:justify-start">
-                    <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
-                        {
-                            testimonialVideo.map(({ image, description, designation, name }) => (
-                                <TestimonialCard
-                                    image={image}
-                                    name={name}
-                                    designation={designation}
-                                    description={description}
-                                />
-                            ))
-                        }
+            {accountType === 'Business' ?
+                <div className="flex flex-col w-full px-2  mt-8">
+                    <h1 className="text-md font-medium">Customer Testimonials</h1>
+                    <div className="flex w-full mt-6 justify-center lg:justify-start">
+                        <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
+                            {
+                                testimonialVideo.map(({ image, description, designation, name }) => (
+                                    <TestimonialCard
+                                        image={image}
+                                        name={name}
+                                        designation={designation}
+                                        description={description}
+                                    />
+                                ))
+                            }
+                        </div>
                     </div>
+
                 </div>
-                {/* section ends here */}
-            </div>
+                : ""
+            }
+            {/* section ends here */}
         </div>
     )
 }

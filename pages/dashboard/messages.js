@@ -23,51 +23,30 @@ const Messages = () => {
             <div className="hidden lg:flex w-full justify-between items-center h-16 px-5 shadow-md z-10">
                 <p className="text-xl font-semibold ">Messages</p>
             </div>
-            <div className="flex flex-col lg:flex-row w-full">
-                <div className="flex flex-col relative w-full lg:max-w-sm overflow-y-auto screen bg-gray-100 p-5 space-y-3">
+            <div className="flex flex-col lg:flex-row w-full screen" >
+                <div className="flex flex-col relative w-full lg:max-w-sm bg-gray-100 p-5 px-3 space-y-3">
                     <Searchbar />
-                    {
-                        !isEmpty(testimonialVideo) ?
-                            testimonialVideo.map(({ image, description, name }) => (
-                                <>
+                    <div className="flex flex-col w-full space-y-3 h-full overflow-y-auto">
+                        {
+                            !isEmpty(testimonialVideo) ?
+                                testimonialVideo.map(({ image, description, name }) => (
                                     <ChatCard
                                         image={image}
                                         name={name}
                                         message={description}
-                                        containerStyle={`w-full mx-auto rounded-lg overflow-hidden  cursor-pointer`}
+                                        containerStyle={`w-full mx-auto rounded-lg cursor-pointer`}
                                         cardStyle={`flex items-center space-x-1 bg-white rounded-lg px-3 `}
                                         imgStyle={`h-12 w-12 rounded-full object-cover md:w-12`}
                                         contentStyle={`py-2 px-3 w-full`}
                                         headerStyle={`flex justify-between items-center`}
                                         messageStyle={`text-sm text-black w-60 overflow-ellipsis whitespace-nowrap overflow-hidden`}
                                     />
-                                    <ChatCard
-                                        image={image}
-                                        name={name}
-                                        message={description}
-                                        containerStyle={`w-full mx-auto rounded-lg overflow-hidden  cursor-pointer`}
-                                        cardStyle={`flex items-center space-x-1 bg-white rounded-lg px-3 `}
-                                        imgStyle={`h-12 w-12 rounded-full object-cover md:w-12`}
-                                        contentStyle={`py-2 px-3 w-full`}
-                                        headerStyle={`flex justify-between items-center`}
-                                        messageStyle={`text-sm text-black w-60 overflow-ellipsis whitespace-nowrap overflow-hidden`}
-                                    />
-                                    <ChatCard
-                                        image={image}
-                                        name={name}
-                                        message={description}
-                                        containerStyle={`w-full mx-auto rounded-lg overflow-hidden  cursor-pointer`}
-                                        cardStyle={`flex items-center space-x-1 bg-white rounded-lg px-3 `}
-                                        imgStyle={`h-12 w-12 rounded-full object-cover md:w-12`}
-                                        contentStyle={`py-2 px-3 w-full`}
-                                        headerStyle={`flex justify-between items-center`}
-                                        messageStyle={`text-sm text-black w-60 overflow-ellipsis whitespace-nowrap overflow-hidden`}
-                                    />
-                                </>
-                            ))
-                            :
-                            <p className="text-center text-gray-500 h-full justify-center items-center w-full flex">No chats</p>
-                    }
+
+                                ))
+                                :
+                                <p className="text-center text-gray-500 h-full justify-center items-center w-full flex">No chats</p>
+                        }
+                    </div>
                 </div>
                 {
                     !isEmpty(testimonialVideo) && (
@@ -81,7 +60,7 @@ const Messages = () => {
                                 </div>
                             </div>
                             <hr />
-                            <div className="flex flex-col screen overflow-y-auto items-start justify-end space-y-3 mt-6">
+                            <div className="flex flex-col items-start overflow-y-auto h-full w-full space-y-3 mt-6">
                                 {
                                     testimonialVideo.map(({ image, description, name }) => (
                                         <>
@@ -89,7 +68,7 @@ const Messages = () => {
                                                 image={image}
                                                 name={name}
                                                 message={description}
-                                                containerStyle={`max-w-sm overflow-hidden`}
+                                                containerStyle={`max-w-sm relative`}
                                                 cardStyle={`flex items-center space-x-3`}
                                                 imgStyle={`h-10 w-16 rounded-full object-cover md:w-10`}
                                                 contentStyle={`py-2 px-4 rounded-3xl bg-gray-100`}
@@ -100,7 +79,7 @@ const Messages = () => {
                                                 image={image}
                                                 name={name}
                                                 message={description}
-                                                containerStyle={`max-w-sm ml-50 lg:ml-72 overflow-hidden`}
+                                                containerStyle={`max-w-sm ml-50  sm:ml-96 lg:ml-72`}
                                                 cardStyle={` flex items-center space-x-3`}
                                                 imgStyle={` hidden h-10 w-16 rounded-full object-cover md:w-10`}
                                                 contentStyle={`py-2 px-4 rounded-3xl bg-gray-100`}

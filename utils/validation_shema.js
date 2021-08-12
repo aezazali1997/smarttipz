@@ -77,5 +77,6 @@ export const AccountInfoValidationSchema = Yup.object().shape({
     new: Yup.string()
         .required("This is a required field "),
     confirm: Yup.string()
-        .required("This is a required field "),
+        .oneOf([Yup.ref("new")], "Confirm password must match with new password")
+        .required("This is a required field"),
 });

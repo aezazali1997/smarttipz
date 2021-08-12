@@ -43,9 +43,7 @@ const handler = async (req, res) => {
         // throw new Error('User failed to login.');
       }
 
-      const token = jwt.sign({ username }, process.env.SECRET_KEY, {
-        expiresIn: '1h'
-      });
+      const token = jwt.sign({ username }, process.env.SECRET_KEY);
 
       await Session.create({
         userId: user.id,
