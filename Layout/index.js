@@ -31,7 +31,7 @@ const CustomLayout = ({ children }) => {
     const _Logout = () => {
         cookie.remove('token');
         cookie.remove('username');
-        router.push('/login')
+        router.push('/auth/login')
     }
 
     return (
