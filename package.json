@@ -17,7 +17,6 @@
     "@fortawesome/react-fontawesome": "^0.1.15",
     "@tailwindcss/postcss7-compat": "^2.2.4",
     "@zeit/next-css": "^1.0.1",
-    "autoprefixer": "9",
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
@@ -41,7 +40,6 @@
     "otp-input-react": "^0.2.4",
     "pg": "^8.6.0",
     "pg-hstore": "^2.3.4",
-    "postcss": "^8.0.0",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^6.7.0",
     "prettier": "^2.3.2",
@@ -53,7 +51,6 @@
     "react-sidebar": "^3.0.2",
     "sequelize": "^6.6.5",
     "sweetalert": "^2.1.2",
-    "tailwindcss": "^2.2.7",
     "yup": "^0.32.9"
   },
   "devDependencies": {
@@ -62,8 +59,11 @@
     "@storybook/addon-essentials": "^6.3.2",
     "@storybook/addon-links": "^6.3.2",
     "@storybook/react": "^6.3.2",
+    "autoprefixer": "^10.3.1",
     "babel-loader": "^8.2.2",
     "eslint": "7.29.0",
-    "eslint-config-next": "11.0.1"
+    "eslint-config-next": "11.0.1",
+    "postcss": "^8.3.6",
+    "tailwindcss": "^2.2.7"
   }
 }
