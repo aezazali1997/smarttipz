@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import '../styles/globals.css'
+import 'tailwindcss/tailwind.css'
 import { useRouter } from 'next/router';
 import CustomLayout from '../Layout';
 import { parseCookies } from 'nookies';
