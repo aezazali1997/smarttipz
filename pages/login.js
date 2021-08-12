@@ -62,7 +62,7 @@ const Login = () => {
         initialValues,
         validationSchema: LoginSchema,
         validateOnBlur: true,
-        onSubmit: ({ username, password }, { setSubmitting, setStatus }) => {
+        onSubmit: ({ username, password }, { setSudbmitting, setStatus }) => {
             setTimeout(() => {
                 enableLoading();
                 const data = { username, password }

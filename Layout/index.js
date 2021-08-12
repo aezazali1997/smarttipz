@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Sidebar, MobNavbar } from '../components'
-import { parseCookies } from 'nookies';
-import { pascalCase } from 'pascal-case';
-import cookie from 'js-cookie';
+import { Sidebar, Drawer } from '../components'
 import { useRouter } from 'next/router';
 
 
@@ -41,8 +38,7 @@ const CustomLayout = ({ children }) => {
         <div className={`flex flex-col lg:flex-row w-full h-full`}>
 
             <Sidebar logout={_Logout} />
-            <MobNavbar toggle={toggle} isOpen={isOpen} />
-
+            <Drawer toggle={toggle} isOpen={isOpen} />
             <main className={`content`}>
                 {children}
             </main>
