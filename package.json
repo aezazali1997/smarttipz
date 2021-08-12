@@ -53,7 +53,7 @@
     "react-sidebar": "^3.0.2",
     "sequelize": "^6.6.5",
     "sweetalert": "^2.1.2",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.7",
+    "tailwindcss": "^2.2.7",
     "yup": "^0.32.9"
   },
   "devDependencies": {
