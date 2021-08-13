@@ -8,7 +8,6 @@ import logo from '../../public/profile.jpg';
 import { Card, TestimonialCard } from '../../components';
 import videos from '../../utils/VdeoSchema.json';
 import testimonialVideo from '../../utils/testimonialSchema.json';
-import axiosInstance from '../../APIs/axiosInstance';
 import { parseCookies } from 'nookies';
 import axios from 'axios';
 
