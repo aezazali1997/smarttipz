@@ -6,7 +6,7 @@ import { ChatCard, Searchbar } from '../../components';
 import testimonialVideo from '../../utils/testimonialSchema.json';
 import InputEmoji from 'react-input-emoji'
 import { isEmpty } from 'lodash';
-import socket from '../../utils/socket';
+// import socket from '../../utils/socket';
 import { parseCookies } from 'nookies';
 
 
@@ -22,17 +22,17 @@ const Messages = () => {
     const [message, setMessage] = useState('')
 
 
-    useEffect(() => {
-        socket.auth = { username: username };
-        socket.connect();
-        console.log(socket.userID)
-    }, []);
+    // useEffect(() => {
+    //     socket.auth = { username: username };
+    //     socket.connect();
+    //     console.log(socket.userID)
+    // }, []);
 
-    socket.on("connect_error", (err) => {
-        if (err.message === "invalid username") {
-            this.usernameAlreadySelected = false;
-        }
-    });
+    // socket.on("connect_error", (err) => {
+    //     if (err.message === "invalid username") {
+    //         this.usernameAlreadySelected = false;
+    //     }
+    // });
 
 
     function handleOnEnter(text) {

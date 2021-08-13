@@ -1,6 +1,6 @@
-import { io } from "socket.io-client";
+// import { io } from "socket.io-client";
 
 const URL = "https://smart-tipz-chat.herokuapp.com";
-const socket = io(URL, { autoConnect: false });
+// const socket = io(URL, { autoConnect: false });
 
-export default socket;
+export default {};

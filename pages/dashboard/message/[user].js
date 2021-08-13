@@ -7,7 +7,7 @@ import { ChatCard, Searchbar } from '../../../components';
 import testimonialVideo from '../../../utils/testimonialSchema.json';
 import InputEmoji from 'react-input-emoji'
 import { isEmpty } from 'lodash';
-import socket from '../../../utils/socket';
+// import socket from '../../../utils/socket';
 import { parseCookies } from 'nookies';
 import { useRouter } from 'next/router';
 
@@ -26,17 +26,17 @@ const UserMessage = () => {
     const [message, setMessage] = useState('')
 
 
-    useEffect(() => {
-        console.log('user', user);
-        socket.auth = { username: username };
-        socket.connect();
-        // console.log(socket.userID)
-    }, []);
+    // useEffect(() => {
+    //     console.log('user', user);
+    //     socket.auth = { username: username };
+    //     socket.connect();
+    //     // console.log(socket.userID)
+    // }, []);
 
-    function handleOnEnter(text) {
-        console.log('enter', text)
-        socket.emit("private message", { content: text, to: '1' });
-    }
+    // function handleOnEnter(text) {
+    //     console.log('enter', text)
+    //     socket.emit("private message", { content: text, to: '1' });
+    // }
 
     return (
         <div className="min-h-screen flex flex-col bg-white">
