@@ -63,12 +63,12 @@ const Login = () => {
         validationSchema: LoginSchema,
         validateOnBlur: true,
         onSubmit: ({ username, password }, { setSubmitting, setStatus }) => {
+            enableLoading();
             setTimeout(() => {
-                enableLoading();
                 const data = { username, password }
                 localStorage.setItem('username', username);
                 AxiosInstance.login(data)
-                    .then(({ data: { data: { username, token }, message, error }, status }) => {
+                    .then(({ data: { data: { username, token }, message }, status }) => {
                         disableLoading();
                         setError(false);
                         setStatus(message);
@@ -90,19 +90,22 @@ const Login = () => {
                                         timer: 5000,
                                         icon: 'info'
                                     })
+                                    disableLoading();
                                     router.push('/auth/authenticate');
                                 })
                         }
                         else {
                             setError(true)
-                            disableLoading();
-                            setSubmitting(false);
+                            // setSubmitting(false);
                             setStatus(e.response.data.message);
                             setShowAlert(true);
+                            disableLoading();
                         }
                     });
             }, 1000);
+
         },
+
     });
 
 
@@ -208,7 +211,7 @@ const Login = () => {
                                 <div className="text-red-700 text-sm mb-4" >{formik.errors.password}</div>
                             ) : null}
 
-                            <label className="flex items-center">
+                            {/* <label className="flex items-center">
                                 <input type="checkbox"
                                     className={`${getInputClasses(
                                         "checked"
@@ -223,14 +226,15 @@ const Login = () => {
                                         <text id="Keep_me_checked_in" data-name="Keep me checked in" transform="translate(0 15)" fill="#6d6d6d" fontSize="14" fontFamily="SegoeUI, Segoe UI"><tspan x="0" y="0">Keep me checked in</tspan></text>
                                     </svg>
                                 </span>
-                            </label>
+                            </label> */}
 
                             <Button
                                 type={"submit"}
-                                classNames={"flex w-full mt-10 justify-center bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-md"}
+                                classNames={"flex w-full mt-10 justify-center btn text-white p-3 rounded-md"}
                                 childrens={'Login'}
                                 loading={loading}
                             />
+
                             <div className="flex mt-3 w-full ">
                                 <p className="text-sm w-full text-gray-500 text-center ">
                                     <Link

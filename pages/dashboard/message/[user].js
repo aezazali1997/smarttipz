@@ -1,42 +1,41 @@
+
 /* eslint-disable react/jsx-key */
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet';
-import { ChatCard, Searchbar } from '../../components';
-import testimonialVideo from '../../utils/testimonialSchema.json';
+import { ChatCard, Searchbar } from '../../../components';
+import testimonialVideo from '../../../utils/testimonialSchema.json';
 import InputEmoji from 'react-input-emoji'
 import { isEmpty } from 'lodash';
-import socket from '../../utils/socket';
+import socket from '../../../utils/socket';
 import { parseCookies } from 'nookies';
-
+import { useRouter } from 'next/router';
 
 
 // socket.on('users', users => {
 //     console.log(users);
 // })
 
-const Messages = () => {
+const UserMessage = () => {
 
+    const router = useRouter()
+    const { user } = router.query;
+    console.log('user', user);
     const { username } = parseCookies();
 
     const [message, setMessage] = useState('')
 
 
     useEffect(() => {
+        console.log('user', user);
         socket.auth = { username: username };
         socket.connect();
-        console.log(socket.userID)
+        // console.log(socket.userID)
     }, []);
-
-    socket.on("connect_error", (err) => {
-        if (err.message === "invalid username") {
-            this.usernameAlreadySelected = false;
-        }
-    });
-
 
     function handleOnEnter(text) {
         console.log('enter', text)
+        socket.emit("private message", { content: text, to: '1' });
     }
 
     return (
@@ -48,30 +47,6 @@ const Messages = () => {
                 <p className="text-xl font-semibold ">Messages</p>
             </div>
             <div className="flex flex-col lg:flex-row w-full screen" >
-                <div className="flex flex-col relative w-full lg:max-w-sm bg-gray-100 p-5 px-3 space-y-3">
-                    <Searchbar />
-                    <div className="flex flex-col w-full space-y-3 h-full overflow-y-auto px-3">
-                        {
-                            !isEmpty(testimonialVideo) ?
-                                testimonialVideo.map(({ image, description, name }) => (
-                                    <ChatCard
-                                        image={image}
-                                        name={name}
-                                        message={description}
-                                        containerStyle={`w-full mx-auto rounded-lg cursor-pointer`}
-                                        cardStyle={`flex items-center space-x-1 bg-white rounded-lg px-3 `}
-                                        imgStyle={`h-12 w-12 rounded-full object-cover md:w-12`}
-                                        contentStyle={`py-2 px-3 w-full`}
-                                        headerStyle={`flex justify-between items-center`}
-                                        messageStyle={`text-sm text-black w-60 overflow-ellipsis whitespace-nowrap overflow-hidden`}
-                                    />
-
-                                ))
-                                :
-                                <p className="text-center text-gray-500 h-full justify-center items-center w-full flex">No chats</p>
-                        }
-                    </div>
-                </div>
                 {
                     !isEmpty(testimonialVideo) && (
                         <div className="flex flex-col w-full p-5 border">
@@ -137,4 +112,6 @@ const Messages = () => {
     )
 }
 
-export default Messages;
+
+
+export default UserMessage;

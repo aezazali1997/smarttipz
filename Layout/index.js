@@ -40,7 +40,7 @@ const CustomLayout = ({ children }) => {
         <div className={`flex flex-col lg:flex-row w-full h-full`}>
 
             <Sidebar logout={_Logout} />
-            <Drawer toggle={toggle} isOpen={isOpen} />
+            <Drawer logout={_Logout} toggle={toggle} isOpen={isOpen} />
             <main className={`Content`}>
                 {children}
             </main>

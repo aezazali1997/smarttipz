@@ -1,5 +1,5 @@
 .loader {
-  border-top-color: #714de1;
-  -webkit-animation: spinner 0.5s linear infinite;
-  animation: spinner 0.5s linear infinite;
+  border-top-color: #714de1 !important;
+  -webkit-animation: spin 0.5s linear infinite !important;
+  animation: spin 0.5s linear infinite !important;
 }

@@ -45,3 +45,10 @@
   color: white;
   background: #714de1;
 }
+
+.btn {
+  background: #714de1;
+}
+.btn:hover {
+  background: #6740df;
+}

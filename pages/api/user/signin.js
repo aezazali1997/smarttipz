@@ -29,7 +29,8 @@ const handler = async (req, res) => {
         // throw new Error('User deos not exist.');
       }
 
-      if (!user.emailConfirmed) {
+      // console.log(user.emailConfirmed)
+      if (user.emailConfirmed === false) {
         return res
           .status(405)
           .json({ error: true, message: 'Confirmation code sent to email address', data: [] });
@@ -39,7 +40,7 @@ const handler = async (req, res) => {
       const match = await bcrypt.compare(password, user.password);
 
       if (!match) {
-        return res.status(405).json({ error: true, message: 'Validation failed', data: [] });
+        return res.status(403).json({ error: true, message: 'Validation failed', data: [] });
         // throw new Error('User failed to login.');
       }
 

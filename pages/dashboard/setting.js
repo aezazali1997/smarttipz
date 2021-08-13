@@ -3,12 +3,13 @@ import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet';
 import { useFormik } from 'formik';
-import { InputField } from '../../components';
+import { Button, InputField } from '../../components';
 // import profile from '../public/profile.jpg';
 import { AccountInfoValidationSchema } from '../../utils/validation_shema';
 import { parseCookies } from 'nookies';
 import axios from 'axios';
 import axiosInstance from '../../APIs/axiosInstance';
+import swal from 'sweetalert';
 
 const initialValues = {
     old: '',
@@ -17,16 +18,38 @@ const initialValues = {
 }
 
 const Setting = ({ settings }) => {
+    const [personalLoading, setPersonalLoading] = useState(false);
+    const [accountLoading, setAccountLoading] = useState(false);
     const [personalInfo, setPersonalInfo] = useState({});
     const [image, setImage] = useState('');
+    const [updated, setUpdated] = useState(true);
 
 
     useEffect(() => {
         console.log('settings', settings)
         setPersonalInfo(settings);
-    }, [image]);
+    }, [image, updated]);
 
-    const { aboutme, accessible, followed, following, rating, username, views, videos, picture, accountType, phone, showMessages } = personalInfo;
+
+    const { name, email, about, accessible, picture, accountType, phone, showMessages, website } = personalInfo;
+
+
+    const enablePersonalLoading = () => {
+        setPersonalLoading(true);
+    };
+
+    const disablePersonalLoading = () => {
+        setPersonalLoading(false);
+    };
+
+    const enableAccountLoading = () => {
+        setAccountLoading(true);
+    };
+
+    const disableAccountLoading = () => {
+        setAccountLoading(false);
+    };
+
 
     let upload = useRef();
 
@@ -53,11 +76,10 @@ const Setting = ({ settings }) => {
     const _OnChange = (e) => {
         const { name, value, checked } = e.target;
         let copyOriginal = { ...personalInfo };
-        let newObject = (name === 'message' || name === 'phoneStatus' ?
+        let newObject = (name === 'accessible' || name === 'showMessages' ?
             { ...copyOriginal, [name]: checked } : { ...copyOriginal, [name]: value });
         setPersonalInfo(newObject);
     }
-
 
     const getInputClasses = (fieldname) => {
         if (formik.touched[fieldname] && formik.errors[fieldname]) {
@@ -71,13 +93,75 @@ const Setting = ({ settings }) => {
         return "";
     };
 
+    let _Update = () => {
+        enablePersonalLoading();
+        let payload = {
+            data: personalInfo,
+            accountType: accountType,
+        };
+        if (accountType === "Business") {
+            payload.businessCard = {
+                website
+            }
+        }
+        console.log('payload', payload);
+        axiosInstance.updateProfile(payload)
+            .then(({ data: { message } }) => {
+                console.log(message);
+                swal({
+                    text: message,
+                    timer: 3000,
+                    icon: 'success',
+                    dangerMode: true,
+                    buttons: false
+                })
+                setUpdated(!updated);
+                disablePersonalLoading();
+            })
+            .catch(e => {
+                swal({
+                    text: e.response.data.message,
+                    timer: 3000,
+                    icon: 'error',
+                    dangerMode: true,
+                    buttons: false
+                })
+                console.log("error in api: ", e.response.data.message);
+                disablePersonalLoading();
+            })
+    }
+
+
     const formik = useFormik({
         initialValues: initialValues,
         validationSchema: AccountInfoValidationSchema,
         onSubmit: (values, { setSubmitting, setStatus }) => {
+            enableAccountLoading();
             setTimeout(() => {
-                enableLoading();
-                console.log({ values });
+
+                axiosInstance.updateProfile({ data: { password: values.new } })
+                    .then(({ data: { message } }) => {
+                        swal({
+                            text: message,
+                            timer: 3000,
+                            icon: 'success',
+                            dangerMode: true,
+                            buttons: false
+                        })
+                        setUpdated(!updated);
+                        disableAccountLoading();
+                    })
+                    .catch(e => {
+                        console.log("error in api: ", e.response.data.message);
+                        swal({
+                            text: e.response.data.message,
+                            timer: 3000,
+                            icon: 'error',
+                            dangerMode: true,
+                            buttons: false
+                        })
+                        disableAccountLoading();
+                    })
             }, 1000);
         },
     });
@@ -109,7 +193,7 @@ const Setting = ({ settings }) => {
                                 onClick={_BrowseImg}
                                 type="button"
                                 className="px-2 py-1 w-1/2 flex justify-center items-center text-white text-sm bg-indigo-600 rounded-md hover:bg-indigo-700">
-                                Edit
+                                Upload
                             </button>
                             <button
                                 type="button"
@@ -129,7 +213,7 @@ const Setting = ({ settings }) => {
                                 <InputField
                                     name={"name"}
                                     type={"text"}
-                                    value={username}
+                                    value={name}
                                     onChange={_OnChange}
                                     svg={(
                                         <svg className="w-6 h-6 text-gray-500 " fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -143,13 +227,13 @@ const Setting = ({ settings }) => {
                                     disabled={true}
                                     name={"email"}
                                     type={"text"}
-                                    // value={email || }
+                                    value={email}
                                     onChange={_OnChange}
                                     svg={(
                                         <svg className="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" /><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" /></svg>
                                     )}
-                                    inputClass={`border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
+                                    inputClass={`border text-gray-400 bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12 `}
                                     label={'Email'}
                                 />
                                 <div className="flex w-full justify-between mb-5">
@@ -167,31 +251,30 @@ const Setting = ({ settings }) => {
                                             label={'Phone no'}
                                         />
                                     </div>
-                                    <div className="flex flex-row"></div>
-                                    <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                                    <div className="relative inline-block w-10 mr-2 self-center select-none transition duration-200 ease-in">
                                         <input
                                             checked={accessible}
                                             onChange={_OnChange}
                                             type="checkbox"
-                                            name="phoneStatus"
-                                            id="phoneStatus"
+                                            name="accessible"
+                                            id="accessible"
                                             className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" />
-                                        <label htmlFor="phoneStatus" className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                                        <label htmlFor="accessible" className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
                                     </div>
                                 </div>
                                 <div className='floating-input mb-5 relative'>
                                     <textarea
                                         type="text"
-                                        id="aboutme"
+                                        id="about"
                                         rows={5}
-                                        name="aboutme"
+                                        name="about"
                                         className={`border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3`}
-                                        value={aboutme}
+                                        value={about}
                                         onChange={_OnChange}
                                         placeholder="name@example.com"
                                         autoComplete="off" />
                                     <label
-                                        htmlFor="aboutme"
+                                        htmlFor="about"
                                         className="absolute top-0 left-0 px-2 py-3 h-full pointer-events-none transform origin-left transition-all duration-100 ease-in-out ">
                                         About me
                                     </label>
@@ -201,7 +284,7 @@ const Setting = ({ settings }) => {
                                         <InputField
                                             name={"website"}
                                             type={"text"}
-                                            // value={website}
+                                            value={website || ''}
                                             onChange={_OnChange}
                                             svg={(
                                                 <svg className="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -220,18 +303,22 @@ const Setting = ({ settings }) => {
                                             checked={showMessages}
                                             onChange={_OnChange}
                                             type="checkbox"
-                                            name="message"
-                                            id="message"
+                                            name="showMessages"
+                                            id="showMessages"
                                             className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" />
-                                        <label htmlFor="message" className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                                        <label htmlFor="showMessages" className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
 
                                     </div>
                                 </div>
                             </div>
                             <div className="flex w-full items-center justify-end">
-                                <button type="button" className="px-3 py-2 flex justify-center items-center text-white text-sm bg-indigo-600 rounded-md hover:bg-indigo-700">
-                                    Update
-                                </button>
+                                <Button
+                                    onSubmit={_Update}
+                                    type="button"
+                                    loading={personalLoading}
+                                    childrens={'Update'}
+                                    classNames={"px-3 py-2 flex justify-center items-center text-white text-sm btn rounded-md "} />
+
                             </div>
                         </div>
                         <div className="flex flex-col w-full lg:w-1/2 space-y-2 mt-10 sm:mt-0 px-3">
@@ -239,13 +326,12 @@ const Setting = ({ settings }) => {
                             <div className="flex flex-col w-full">
                                 <InputField
                                     name={"old"}
-                                    type={"text"}
+                                    type={"password"}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     error={formik.touched.old && formik.errors.old}
                                     svg={(
                                         <svg className="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z" clipRule="evenodd" /></svg>
-
                                     )}
                                     inputClass={`${getInputClasses(
                                         "old"
@@ -258,7 +344,7 @@ const Setting = ({ settings }) => {
 
                                 <InputField
                                     name={"new"}
-                                    type={"text"}
+                                    type={"password"}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     error={formik.touched.new && formik.errors.new}
@@ -276,7 +362,7 @@ const Setting = ({ settings }) => {
                                 ) : null}
                                 <InputField
                                     name={"confirm"}
-                                    type={"text"}
+                                    type={"password"}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     error={formik.touched.confirm && formik.errors.confirm}
@@ -293,9 +379,12 @@ const Setting = ({ settings }) => {
                                 ) : null}
                             </div>
                             <div className="flex w-full items-center justify-end mt-10">
-                                <button type="submit" className="px-3 py-2 flex justify-center items-center text-white text-sm bg-indigo-600 rounded-md hover:bg-indigo-700">
-                                    Update
-                                </button>
+                                <Button
+                                    type="submit"
+                                    loading={accountLoading}
+                                    childrens={'Update'}
+                                    classNames={"px-3 py-2 flex justify-center items-center text-white text-sm btn rounded-md "} />
+
                             </div>
                         </div>
                     </div>

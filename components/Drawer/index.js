@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faNewspaper, faUserCircle, faCog, faPlayCircle, faSignOutAlt, faComment } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/router';
 
-const Drawer = ({ isOpen, toggle }) => {
+const Drawer = ({ isOpen, toggle, logout }) => {
 
     const router = useRouter();
     const { asPath } = router;

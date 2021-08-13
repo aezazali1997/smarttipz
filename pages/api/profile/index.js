@@ -21,6 +21,8 @@ const handler = async (req, res) => {
       const vids = await Video.findAll({ where: { UserId: user.id } });
 
       let response = {
+        name: user.name,
+        email: user.email,
         username,
         rating: user.avgRating,
         views: user.totalViews,
@@ -34,10 +36,12 @@ const handler = async (req, res) => {
         showPhone: user.showPhone,
         showMessages: user.accessible,
         accountType: user.accountType
+
       };
 
       if (user.accountType === 'Business') {
         const business = await user.getBusiness();
+        response.website = business.link
         let testimonials = await business.getTestimonials();
         response.testimonials = testimonials;
 

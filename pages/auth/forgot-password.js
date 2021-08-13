@@ -152,7 +152,7 @@ const ForgetPassword = () => {
                                 childrens={'Next'}
                                 loading={loading}
                             />
-                            <div className="flex mt-3 w-full ">
+                            {/* <div className="flex mt-3 w-full ">
                                 <p className="text-sm w-full text-gray-500 text-center ">
                                     <Link
                                         href="/forgot-password">
@@ -161,7 +161,7 @@ const ForgetPassword = () => {
                                         </a>
                                     </Link>
                                 </p>
-                            </div>
+                            </div> */}
                         </form>
                     </div>
                 </div>

@@ -48,6 +48,7 @@
     "react-helmet": "^6.1.0",
     "react-input-emoji": "^4.0.8",
     "react-otp-input": "^2.4.0",
+    "react-rating-stars-component": "^2.2.0",
     "react-sidebar": "^3.0.2",
     "sequelize": "^6.6.5",
     "sweetalert": "^2.1.2",

@@ -14,6 +14,7 @@ import swal from 'sweetalert';
 import { useRouter } from 'next/router'
 
 const initialValues = {
+    name: '',
     username: '',
     phone: '',
     email: '',
@@ -53,11 +54,12 @@ const Signup = () => {
         initialValues,
         validationSchema: SignupSchema,
         validateOnBlur: true,
-        onSubmit: ({ email, phone, password, username, accountType, website },
+        onSubmit: ({ name, email, phone, password, username, accountType, website },
             { setSubmitting, setStatus }) => {
             setTimeout(() => {
                 enableLoading();
                 const data = {
+                    name,
                     username,
                     email,
                     phone,
@@ -133,6 +135,24 @@ const Signup = () => {
                     </div>
                     <div className="flex w-full lg:max-w-md justify-evenly flex-col mt-6">
                         <form className="w-full" onSubmit={formik.handleSubmit}>
+                            <InputField
+                                name={"name"}
+                                type={"text"}
+                                svg={(
+                                    <svg className="w-6 h-6 text-gray-500 " fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" /></svg>
+                                )}
+                                value={formik.values.name}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                error={formik.touched.name && formik.errors.name}
+                                inputClass={`${getInputClasses(
+                                    "name"
+                                )} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
+                                label={'Name'}
+                            />
+                            {formik.touched.name && formik.errors.name ? (
+                                <div className="text-red-700 text-sm mb-4" >{formik.errors.name}</div>
+                            ) : null}
                             <InputField
                                 name={"username"}
                                 type={"text"}
@@ -248,8 +268,10 @@ const Signup = () => {
                                     <option value="Personal">Personal</option>
                                 </select>
                                 <div className="absolute inset-y-0 right-0 flex items-center px-2 cursor-pointer ">
-                                    <svg className="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clipRule="evenodd" /></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="text-gray-500 pointer-events-none" width="19.524" height="19.524" viewBox="0 0 19.524 19.524">
+                                        <path id="Icon_ionic-ios-arrow-dropdown-circle" data-name="Icon ionic-ios-arrow-dropdown-circle" d="M3.375,13.137a9.762,9.762,0,0,0,19.524,0c0-3.656-5.248-8.658-5.248-8.658a16.252,16.252,0,0,0-4.514-1.1A9.76,9.76,0,0,0,3.375,13.137ZM16.943,11.1s.929-.352,1.281,0a.9.9,0,0,1,.263.638.91.91,0,0,1-.268.643l-4.426,4.412a.9.9,0,0,1-1.248-.028L8.054,12.287a.906.906,0,0,1,1.281-1.281l3.806,3.844Z" transform="translate(-3.375 -3.375)" fill="#6d6d6d" />
+                                    </svg>
+
                                 </div>
                             </div>
                             {formik.touched.accountType && formik.errors.accountType ? (
@@ -311,7 +333,7 @@ const Signup = () => {
 
                             <Button
                                 type={"submit"}
-                                classNames={"flex w-full justify-center bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-md"}
+                                classNames={"flex w-full justify-center btn text-white p-3 rounded-md"}
                                 childrens={'Sign Up'}
                                 loading={loading}
                             />

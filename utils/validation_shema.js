@@ -1,6 +1,9 @@
 import * as Yup from "yup";
 
 export const SignupSchema = Yup.object().shape({
+    name: Yup.string()
+        .min(3, "Please enter at least 3 characters")
+        .required("Name is a required field"),
     username: Yup.string()
         .min(3, "Please enter at least 3 characters")
         .required("Username is a required field"),

@@ -35,6 +35,13 @@ const Authenticate = () => {
         setLoading(false);
     };
 
+    function movetoNext(e, nextFieldId) {
+        const { value, maxLength } = e.target;
+        if (value.length >= maxLength) {
+            document.getElementById(nextFieldId).focus();
+        }
+    }
+
     const getInputClasses = (fieldname) => {
         if (formik.touched[fieldname] && formik.errors[fieldname]) {
             return "border-red-500";
@@ -294,11 +301,13 @@ const Authenticate = () => {
                         <form className="w-full flex flex-col space-y-8" onSubmit={formik.handleSubmit}>
                             <div className="flex flex-row w-full space-x-2 justify-center lg:justify-start">
                                 <input
+                                    id="tab1"
                                     name="tab1"
                                     type="text"
                                     maxLength="1"
                                     autoComplete='off'
                                     tabIndex='1'
+                                    onKeyUp={(e) => movetoNext(e, 'tab2')}
                                     className={`${getInputClasses(
                                         "tab1"
                                     )} border bg-gray-100 text-center border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-10 lg:w-16 p-3 h-16`}
@@ -306,21 +315,25 @@ const Authenticate = () => {
                                 />
 
                                 <input
+                                    id="tab2"
                                     name={"tab2"}
                                     type={"text"}
                                     maxLength="1"
                                     autoComplete='off'
                                     tabIndex='2'
+                                    onKeyUp={(e) => movetoNext(e, 'tab3')}
                                     className={`${getInputClasses(
                                         "tab2"
                                     )} border bg-gray-100 text-center border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-10 lg:w-16 p-3 h-16`}
                                     {...formik.getFieldProps('tab2')}
                                 />
                                 <input
+                                    id="tab3"
                                     name={"tab3"}
                                     type={"text"}
                                     maxLength="1"
                                     autoComplete='off'
+                                    onKeyUp={(e) => movetoNext(e, 'tab4')}
                                     tabIndex='3'
                                     className={`${getInputClasses(
                                         "tab3"
@@ -328,22 +341,26 @@ const Authenticate = () => {
                                     {...formik.getFieldProps('tab3')}
                                 />
                                 <input
+                                    id="tab4"
                                     name={"tab4"}
                                     type={"text"}
                                     maxLength="1"
                                     autoComplete='off'
                                     tabIndex='4'
+                                    onKeyUp={(e) => movetoNext(e, 'tab5')}
                                     className={`${getInputClasses(
                                         "tab4"
                                     )} border bg-gray-100 text-center border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-10 lg:w-16 p-3 h-16`}
                                     {...formik.getFieldProps('tab4')}
                                 />
                                 <input
+                                    id="tab5"
                                     name={"tab5"}
                                     type={"text"}
                                     maxLength="1"
                                     autoComplete='off'
                                     tabIndex='5'
+                                    onKeyUp={(e) => movetoNext(e, 'tab6')}
                                     className={`${getInputClasses(
                                         "tab5"
                                     )} border bg-gray-100  text-center border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-10 lg:w-16 p-3 h-16`}
@@ -351,11 +368,13 @@ const Authenticate = () => {
 
                                 />
                                 <input
+                                    id="tab6"
                                     name={"tab6"}
                                     type={"text"}
                                     maxLength="1"
                                     autoComplete='off'
                                     tabIndex='6'
+                                    onKeyUp={(e) => movetoNext(e, 'authenticate')}
                                     className={`${getInputClasses(
                                         "tab6"
                                     )} border bg-gray-100 text-center border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-10 lg:w-16 p-3 h-16`}
@@ -363,8 +382,9 @@ const Authenticate = () => {
                                 />
                             </div>
                             <Button
+                                id={"authenticate"}
                                 type={"submit"}
-                                classNames={"flex w-full justify-center bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-md"}
+                                classNames={"flex w-full justify-center btn text-white p-3 rounded-md"}
                                 childrens={'Verify & Continue'}
                                 loading={loading}
                             />

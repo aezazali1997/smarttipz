@@ -42,6 +42,10 @@ class AxiosInstance {
         return await axios.get(USER_API_BASE_URL + "api/profile", this.getAuthHeader());
     }
 
+    async updateProfile(payload) {
+        return await axios.post(USER_API_BASE_URL + "api/profile/update", payload, this.getAuthHeader());
+    }
+
     async uploadProfilePic(img) {
         console.log({ img })
         return await axios.post(USER_API_BASE_URL + "api/profile/uploadpic", img, this.getAuthHeader());

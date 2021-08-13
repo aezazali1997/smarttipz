@@ -2,3 +2,10 @@
   min-height: 89.7vh;
   max-height: 89.7vh;
 }
+
+.senderChat {
+  right: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
