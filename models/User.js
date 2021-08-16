@@ -38,7 +38,7 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING
   },
   showPhone: {
-    type: DataTypes.STRING,
+    type: DataTypes.BOOLEAN,
     defaultValue: true
   },
   picture: {

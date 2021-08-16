@@ -9,6 +9,7 @@
 @import './loader.css';
 @import './MobileDrawer.css';
 @import './messages.module.css';
+@import './businessCard.css';
 
 .floating-input > input::placeholder {
   color: transparent;

@@ -3,13 +3,14 @@ import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet';
 import { useFormik } from 'formik';
-import { Button, InputField } from '../../components';
-// import profile from '../public/profile.jpg';
-import { AccountInfoValidationSchema } from '../../utils/validation_shema';
 import { parseCookies } from 'nookies';
 import axios from 'axios';
-import axiosInstance from '../../APIs/axiosInstance';
 import swal from 'sweetalert';
+import { Button, InputField } from '../../components';
+import profile from '../../public/profile.jpg';
+import { AccountInfoValidationSchema } from '../../utils/validation_shema';
+import axiosInstance from '../../APIs/axiosInstance';
+import ReactTooltip from 'react-tooltip';
 
 const initialValues = {
     old: '',
@@ -17,21 +18,24 @@ const initialValues = {
     confirm: ''
 }
 
-const Setting = ({ settings }) => {
+const Setting = () => {
     const [personalLoading, setPersonalLoading] = useState(false);
     const [accountLoading, setAccountLoading] = useState(false);
-    const [personalInfo, setPersonalInfo] = useState({});
+    const [personalInfo, setPersonalInfo] = useState({
+        phone: '', accessible: '', name: '', email: '', showPhone: '', about: '', website: ''
+    });
     const [image, setImage] = useState('');
     const [updated, setUpdated] = useState(true);
 
-
     useEffect(() => {
-        console.log('settings', settings)
-        setPersonalInfo(settings);
+        axiosInstance.profile().then(({ data: { data } }) => {
+            console.log('settingsFetched', data);
+            setPersonalInfo(data);
+        })
     }, [image, updated]);
 
 
-    const { name, email, about, accessible, picture, accountType, phone, showMessages, website } = personalInfo;
+    const { name, email, about, accessible, showPhone, picture, accountType, phone, website } = personalInfo;
 
 
     const enablePersonalLoading = () => {
@@ -76,7 +80,7 @@ const Setting = ({ settings }) => {
     const _OnChange = (e) => {
         const { name, value, checked } = e.target;
         let copyOriginal = { ...personalInfo };
-        let newObject = (name === 'accessible' || name === 'showMessages' ?
+        let newObject = (name === 'accessible' || name === 'showPhone' ?
             { ...copyOriginal, [name]: checked } : { ...copyOriginal, [name]: value });
         setPersonalInfo(newObject);
     }
@@ -104,7 +108,6 @@ const Setting = ({ settings }) => {
                 website
             }
         }
-        console.log('payload', payload);
         axiosInstance.updateProfile(payload)
             .then(({ data: { message } }) => {
                 console.log(message);
@@ -180,7 +183,9 @@ const Setting = ({ settings }) => {
                 {/* section starts here*/}
                 <div className="flex w-full px-2 py-1">
                     <div className="relative space-y-2">
-                        <img src={image} alt="profile" className="rounded-2xl profilePic" />
+                        <div className="rounded-2xl profilePic relative">
+                            <Image src={image || profile} alt="profile" className="rounded-2xl" layout="fill" />
+                        </div>
                         <div className="flex w-full space-x-1">
                             <input
                                 type="file"
@@ -196,6 +201,7 @@ const Setting = ({ settings }) => {
                                 Upload
                             </button>
                             <button
+                                onClick={_DeleteImg}
                                 type="button"
                                 className="px-2 py-1 w-1/2 flex items-center justify-center text-white text-sm bg-red-600 rounded-md hover:bg-red-700">
                                 Delete
@@ -251,15 +257,25 @@ const Setting = ({ settings }) => {
                                             label={'Phone no'}
                                         />
                                     </div>
-                                    <div className="relative inline-block w-10 mr-2 self-center select-none transition duration-200 ease-in">
-                                        <input
-                                            checked={accessible}
-                                            onChange={_OnChange}
-                                            type="checkbox"
-                                            name="accessible"
-                                            id="accessible"
-                                            className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" />
-                                        <label htmlFor="accessible" className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                                    <div className="flex items-center space-x-1">
+                                        <span>
+                                            <svg data-tip data-for="showPhone" className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <ReactTooltip id="showPhone" place="top" effect="solid" border={false} borderColor="white" clickable={false}>
+                                                {showPhone ? 'Click to hide number' : 'Click to show number'}
+                                            </ReactTooltip>
+                                        </span>
+                                        <div className="relative inline-block w-10 mr-2 self-center select-none transition duration-200 ease-in">
+                                            <input
+                                                checked={showPhone}
+                                                onChange={_OnChange}
+                                                type="checkbox"
+                                                name="showPhone"
+                                                id="showPhone"
+                                                className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" />
+                                            <label htmlFor="showPhone" className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className='floating-input mb-5 relative'>
@@ -296,18 +312,25 @@ const Setting = ({ settings }) => {
                                 }
                                 <div className="flex w-full justify-between mb-5">
                                     <p className="text-md font-normal">Message</p>
-
-                                    <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-
-                                        <input
-                                            checked={showMessages}
-                                            onChange={_OnChange}
-                                            type="checkbox"
-                                            name="showMessages"
-                                            id="showMessages"
-                                            className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" />
-                                        <label htmlFor="showMessages" className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-
+                                    <div className="flex items-center space-x-1">
+                                        <span>
+                                            <svg data-tip data-for="accessible" className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <ReactTooltip id="accessible" place="top" effect="solid" border={false} borderColor="white" clickable={false}>
+                                                {accessible ? 'Click to hide messages' : 'Click to show messages'}
+                                            </ReactTooltip>
+                                        </span>
+                                        <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                                            <input
+                                                checked={accessible}
+                                                onChange={_OnChange}
+                                                type="checkbox"
+                                                name="accessible"
+                                                id="accessible"
+                                                className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" />
+                                            <label htmlFor="accessible" className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -395,14 +418,14 @@ const Setting = ({ settings }) => {
     )
 }
 
-export const getServerSideProps = async (context) => {
-    const { token } = parseCookies(context);
-    const res = await axios.get(`${process.env.BASE_URL}api/profile`, { headers: { Authorization: "Bearer " + token } })
-    const { data } = res.data;
-    return {
-        props: {
-            settings: data
-        }
-    }
-}
+// export const getServerSideProps = async (context) => {
+//     const { token } = parseCookies(context);
+//     const res = await axios.get(`${process.env.BASE_URL}api/profile`, { headers: { Authorization: "Bearer " + token } })
+//     const { data } = res.data;
+//     return {
+//         props: {
+//             settings: data
+//         }
+//     }
+// }
 export default Setting;

@@ -49,12 +49,6 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                                     <FontAwesomeIcon icon={faUserCircle} />&nbsp;Profile
                                 </div>
                             </Link>
-                            <Link href='/dashboard/setting' className='p-4 font-sans nav-link nav-link-ltr' >
-                                <div className={`py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
-                            ${Active("/dashboard/setting")}`}>
-                                    <FontAwesomeIcon icon={faCog} />&nbsp;Setting
-                                </div>
-                            </Link>
                             <Link href='/dashboard/videos' className='p-4 font-sans nav-link nav-link-ltr' >
                                 <div className={`py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
                             ${Active("/dashboard/videos")}`}>
@@ -64,7 +58,13 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                             <Link href='/dashboard/messages' className='p-4 font-sans nav-link nav-link-ltr' >
                                 <div className={`py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
                             ${Active("/dashboard/messages")}`}>
-                                    <FontAwesomeIcon icon={faComment} />&nbsp;Message
+                                    <FontAwesomeIcon icon={faComment} />&nbsp;Messages
+                                </div>
+                            </Link>
+                            <Link href='/dashboard/setting' className='p-4 font-sans nav-link nav-link-ltr' >
+                                <div className={`py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
+                            ${Active("/dashboard/setting")}`}>
+                                    <FontAwesomeIcon icon={faCog} />&nbsp;Settings
                                 </div>
                             </Link>
                         </>
@@ -85,6 +85,7 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                 sidebar: { background: "#714de1" },
                 root: {
                     position: "unset",
+                    zIndex: 40,
                     top: 0,
                     left: 0,
                     right: 0,

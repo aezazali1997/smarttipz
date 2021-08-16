@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react'
-import Image from 'next/image';
+// import Image from 'next/image';
 
 const Card = ({ image, like, comment, share, title }) => {
     return (

@@ -9,7 +9,7 @@ let token = cookie?.token || null;
 class AxiosInstance {
 
     getUserInfo() {
-        console.log('token', token);
+        // console.log('token', token);
         return token;
     }
 

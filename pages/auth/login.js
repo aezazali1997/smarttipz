@@ -118,20 +118,19 @@ const Login = () => {
             {/*SEO Support End */}
 
 
-            <div className="flex flex-col w-full lg:w-1/2">
-                <span className="hidden lg:flex">
+            <div className="hidden lg:flex flex-col w-full">
+                <span className="flex">
                     <Image src={logo} alt="brand logo" />
                 </span>
             </div>
 
-
             <div className="flex flex-col w-full lg:flex-row pt-5 p-5 xs:p-10 pb-2 md:p-16 md:pb-1 md:pt-0">
 
-                <div className="w-full lg:w-1/2">
-                    <Image src={login} alt="banner" />
+                <div className="flex w-full justify-center items-center text-center overflow-hidden">
+                    <Image src={login} alt="banner" objectFit="contain" />
                 </div>
 
-                <div className="flex flex-col w-full lg:w-1/2 items-center">
+                <div className="flex flex-col w-full items-center">
                     <div className="flex flex-col w-full lg:max-w-md mt-4 lg:mt-0 space-y-2">
                         <p className=" font-bold text-3xl text-center lg:text-left lg:text-3xl">Login</p>
                         <p className="text-gray-400 text-md text-center lg:text-left">New user? <Link

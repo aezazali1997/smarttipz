@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
-import '../styles/globals.css'
-import 'tailwindcss/tailwind.css'
-import CustomLayout from '../Layout';
+import '../styles/globals.css';
+import 'tailwindcss/tailwind.css';
 import { parseCookies } from 'nookies';
+import CustomLayout from '../Layout';
+import { AppWrapper } from '../contexts';
+
 
 const MyApp = ({ Component, pageProps }) => {
   const [authorized, setAuthorized] = useState(null)
@@ -15,13 +17,18 @@ const MyApp = ({ Component, pageProps }) => {
 
   if (authorized) {
     return (
-      <CustomLayout>
-        <Component {...pageProps} />
-      </CustomLayout>
+      <AppWrapper>
+        <CustomLayout>
+          <Component {...pageProps} />
+        </CustomLayout>
+      </AppWrapper>
     )
   }
   return (
-    <Component {...pageProps} />)
+    <AppWrapper>
+      <Component {...pageProps} />
+    </AppWrapper>
+  )
 }
 
 export default MyApp;

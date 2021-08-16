@@ -1,23 +1,16 @@
 /* eslint-disable react/jsx-key */
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 import { Helmet } from 'react-helmet';
-import ReactStars from "react-rating-stars-component";
 import logo from '../../public/profile.jpg';
-import { Card, TestimonialCard } from '../../components';
+import { Card, ProfileCard, Rating, TestimonialCard } from '../../components';
 import videos from '../../utils/VdeoSchema.json';
 import testimonialVideo from '../../utils/testimonialSchema.json';
 import { parseCookies } from 'nookies';
 import axios from 'axios';
-
+import router from 'next/router';
 
 const Profile = ({ profile }) => {
-    const router = useRouter();
-
-    const gotoMessaging = () => {
-        router.push('/messages')
-    }
 
     const [personalInfo, setPersonalInfo] = useState({});
 
@@ -28,7 +21,6 @@ const Profile = ({ profile }) => {
 
     const { name, about, accessible, followed, following, rating, username, views, picture, phone, showMessages, accountType } = personalInfo;
 
-
     return (
 
         <div className="flex flex-col h-full w-full p-3 sm:p-5">
@@ -38,20 +30,26 @@ const Profile = ({ profile }) => {
             </Helmet>
             {/*SEO Support End */}
             {/* section starts here*/}
-            <div className="flex flex-row w-full h-auto">
-                <div className="flex w-2/6  md:w-1/6  px-2 py-1">
-                    <Image src={logo} alt="profile" className="rounded-2xl "
-                        width={135} height={200}
-                    />
+            <div className="md:hidden flex flex-col w-full">
+                <ProfileCard
+                    logo={logo}
+                    data={personalInfo}
+                />
+            </div>
+            <div className="hidden md:flex flex-row w-full h-auto">
+                <div className="flex w-1/6 px-2 py-1">
+                    <div className="rounded-2xl w-28 h-36 relative px-2 py-1">
+                        <Image src={logo} alt="profile" className="rounded-2xl " layout="fill" />
+                    </div>
                 </div>
                 <div className="flex flex-col w-4/6 md:w-5/6 ">
                     {/* section starts here */}
-                    <div className="flex  flex-col lg:flex-row lg:justify-between px-2 py-2">
+                    <div className="flex flex-row lg:justify-between px-2 ">
                         <div className="flex flex-col w-full lg:w-1/2">
                             <div className="flex justify-between items-start lg:items-end w-full md:w-2/3">
                                 <h1 className=" text-md lg:text-2xl font-semibold">{name}</h1>
                             </div>
-                            <h2 className="text-sm text-gray-500">{accessible ? phone : ''}</h2>
+                            <h2 className="text-sm text-gray-500">{phone}</h2>
                             {/* <h2 className="text-sm text-gray-500">Marketing Specialist</h2> */}
                             <div className="flex lg:flex-row lg:justify-between w-full md:max-w-xs mt-1">
                                 <span className="flex w-full items-center">
@@ -59,17 +57,10 @@ const Profile = ({ profile }) => {
                                         <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" /></svg>
                                     &nbsp;<p className="text-xs">{views} Views</p></span>
                                 <span className="flex w-full items-center">
-                                    <ReactStars
-                                        count={5}
+                                    <Rating
                                         value={rating}
-                                        size={16}
-                                        edit={false}
-                                        isHalf={true}
-                                        emptyIcon={<i className="far fa-star"></i>}
-                                        halfIcon={<i className="fa fa-star-half-alt"></i>}
-                                        fullIcon={<i className="fa fa-star"></i>}
-                                        activeColor="#714de1"
-                                    />&nbsp; <p className="hidden md:text-xs" > Rating</p></span>
+                                    />
+                                    &nbsp; <p className="hidden md:text-xs"> Rating</p></span>
                             </div>
                         </div>
                         {
@@ -96,7 +87,7 @@ const Profile = ({ profile }) => {
                             {about || 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat pidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'}
                         </p>
                     </div>
-                    <div className="flex w-full mt-3 items-center px-2 space-x-6">
+                    {/* <div className="flex w-full mt-3 items-center px-2 space-x-6">
                         <button className="followingBtn">
                             Following
                         </button>
@@ -105,7 +96,7 @@ const Profile = ({ profile }) => {
                             Message
                         </button> : ''
                         }
-                    </div>
+                    </div> */}
                 </div>
             </div>
             {/* section ends here */}
@@ -130,7 +121,7 @@ const Profile = ({ profile }) => {
             </div>
             {/* section ends here */}
             {/* section starts here */}
-            {accountType === 'Business' ?
+            {accountType === 'Business' && (
                 <div className="flex flex-col w-full px-2  mt-8">
                     <h1 className="text-md font-medium">Customer Testimonials</h1>
                     <div className="flex w-full mt-6 justify-center lg:justify-start">
@@ -149,8 +140,7 @@ const Profile = ({ profile }) => {
                     </div>
 
                 </div>
-                : ""
-            }
+            )}
             {/* section ends here */}
         </div>
     )

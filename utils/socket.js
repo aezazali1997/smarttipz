@@ -1,6 +1,12 @@
-// import { io } from "socket.io-client";
+import { io } from "socket.io-client";
 
-const URL = "https://smart-tipz-chat.herokuapp.com";
-// const socket = io(URL, { autoConnect: false });
+const URL =
+    'https://f9bf133df392.ngrok.io';
+// "https://smart-tipz-chat.herokuapp.com";
+const socket = io(URL, { autoConnect: false });
 
-export default {};
+socket.onAny((event, ...args) => {
+    console.log('args', args);
+})
+
+export default socket;

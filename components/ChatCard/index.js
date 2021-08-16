@@ -8,7 +8,7 @@ const ChatCard = ({ image, name, message, containerStyle, cardStyle, imgStyle, h
                 <div className="md:flex-shrink-0">
                     <img className={imgStyle}
                         src={image}
-                        alt="testimonial"
+                        alt="pic"
                     />
                 </div>
                 <div className={contentStyle}>

@@ -1,11 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
 import React, { useEffect, useState } from 'react'
-import Link from 'next/link'
+// import Link from 'next/link'
 import Image from 'next/image';
 import { useFormik } from 'formik';
 import Helmet from 'react-helmet';
-import swal from 'sweetalert';
 import { useRouter } from 'next/router';
 import { Button, InputField } from '../../components';
 import { ForgetPasswordSchema } from '../../utils/validation_shema';

@@ -3,6 +3,11 @@
   max-height: 89.7vh;
 }
 
+.chat {
+  min-height: 60vh;
+  max-height: 60vh;
+}
+
 .senderChat {
   right: 10px;
   width: 100%;
