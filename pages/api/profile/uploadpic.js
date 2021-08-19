@@ -30,7 +30,7 @@ const handler = async (req, res) => {
       }
 
       await user.update({ picture: req.body.link });
-      res.status(201).json({ error: false, message: 'success', data: [] });
+      res.status(201).json({ error: false, message: 'success', data: { img: req.body.link } });
     } catch (err) {
       res.status(401).json({ error: true, message: err.message, data: [] });
     }

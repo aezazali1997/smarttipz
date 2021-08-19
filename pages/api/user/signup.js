@@ -12,6 +12,7 @@ const handler = async (req, res) => {
   if (req.method === 'POST') {
     const validateSignup = (data) => {
       const schema = Joi.object({
+        name: Joi.string().required(),
         username: Joi.string().required(),
         email: Joi.string().required().email(),
         phone: Joi.string().required(),
@@ -30,7 +31,7 @@ const handler = async (req, res) => {
 
     if (error) return res.status(400).json({ error: error.details[0].message });
 
-    const { username, email, phone, password, accountType, website } = req.body;
+    const { username, email, phone, password, accountType, website, name } = req.body;
 
     let user = null;
 
@@ -50,6 +51,7 @@ const handler = async (req, res) => {
       while (varificationCode.length < 6) varificationCode += '0';
 
       const newUser = await User.create({
+        name,
         username,
         email,
         phoneNumber: phone,

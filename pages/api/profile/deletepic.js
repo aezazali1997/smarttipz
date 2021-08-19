@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../../../models/User');
 
 const handler = async (req, res) => {
-  if (req.method === 'POST') {
+  if (req.method === 'DELETE') {
     try {
       if (!req.headers.authorization) {
         throw new Error('Please login');

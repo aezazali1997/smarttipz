@@ -11,7 +11,17 @@ module.exports = {
     EMAIL_SECRET: 'atemperaryemailsecretkey',
     SECRET_KEY: 'atemperarysecretkey',
     TEMP_EMAIL: 'safaribooks0020@gmail.com',
-    TEMP_MAILPASS: 'safaribooks4854'
-
+    TEMP_MAILPASS: 'safaribooks4854',
+    S3_UPLOAD_KEY: "AKIARG4Q332L5DQGZTV4",
+    S3_UPLOAD_SECRET: "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",
+    S3_UPLOAD_BUCKET: "smart-tipz-data-bucket",
+    S3_UPLOAD_REGION: "Asia Pacific (Singapore) ap-southeast-1",
+  },
+  images: {
+    domains: [
+      `${process.env.S3_UPLOAD_BUCKET}.amazonaws.com`,
+      'smart-tipz-data-bucket.s3.ap-southeast-1.amazonaws.com',
+      'thumbs.dreamstime.com'
+    ],
   }
 }

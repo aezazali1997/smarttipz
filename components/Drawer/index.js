@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/link-passhref */
 import React from 'react'
 import Sidebar from 'react-sidebar';
 import Hamburger from 'hamburger-react';
@@ -39,7 +40,6 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                             <Link href='/dashboard/news-feed' className='p-4 font-sans nav-link nav-link-ltr'>
                                 <div className={`flex flex-row items-center py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
                         ${Active('/dashboard/news-feed')}`}>
-
                                     <FontAwesomeIcon icon={faNewspaper} /> &nbsp;News Feed
                                 </div>
                             </Link>
@@ -82,10 +82,15 @@ const Drawer = ({ isOpen, toggle, logout }) => {
             open={isOpen}
             onSetOpen={toggle}
             styles={{
-                sidebar: { background: "#714de1" },
+                sidebar: {
+                    background: "#714de1",
+                    height: "100vh",
+                    position: "fixed",
+                    zIndex: 35,
+                    overflow: "hidden",
+                },
                 root: {
                     position: "unset",
-                    zIndex: 40,
                     top: 0,
                     left: 0,
                     right: 0,
@@ -111,7 +116,14 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                 <div className='px-3'>
                     <Hamburger toggled={isOpen} onToggle={toggle} color='#714de1' direction="right" duration={0.5} size={28} />
                 </div>
-                <h1 className="text-2xl font-bold font-sans">Profile</h1>
+                <h1 className="text-2xl font-bold font-sans">
+                    {asPath === '/dashboard/setting' ? 'Settings' :
+                        asPath === '/dashboard/profile' ? 'Profile' :
+                            asPath === '/dashboard/videos' ? 'Videos' :
+                                asPath === '/dashboard/messages' ? 'Messages' :
+                                    'News Feed'
+                    }
+                </h1>
                 <span className="relative px-6 inline-block cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" width="19.99" height="23.625" viewBox="0 0 19.99 23.625">
                         <path id="Icon_ionic-md-notifications" data-name="Icon ionic-md-notifications" d="M15.62,27a2.364,2.364,0,0,0,2.352-2.362h-4.7A2.364,2.364,0,0,0,15.62,27Zm7.643-7.087v-6.5a7.656,7.656,0,0,0-5.88-7.442V5.147a1.764,1.764,0,1,0-3.528,0v.827a7.656,7.656,0,0,0-5.88,7.442v6.5L5.625,22.275v1.181h19.99V22.275Z" transform="translate(-5.625 -3.375)" />

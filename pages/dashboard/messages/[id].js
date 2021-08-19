@@ -4,7 +4,6 @@
 import React, { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet';
 import { ChatCard, EmojiInput } from '../../../components';
-// import testimonialVideo from '../../../utils/testimonialSchema.json';
 import socket from '../../../utils/socket';
 import { parseCookies } from 'nookies';
 import { useRouter } from 'next/router';
@@ -21,23 +20,29 @@ const UserMessage = () => {
     const [messageList, setMessageList] = useState([]);
     const [message, setMessage] = useState('');
 
+    const ID = parseInt(id);
 
     useEffect(() => {
         if (id) {
             isLoading(true);
-            // socket.auth = { username };
-            // socket.connect();
+            socket.auth = { username };
+            socket.connect();
             console.log('user', id);
-
             // socket.on('private message', ({ messages, users }, error) => {
             //     console.log(messages, users, error)
             //     data = messages;
             // })
+            socket.emit('get messages', { id: ID });
+            socket.on('get messages', (res) => {
+                console.log('returnedRes', res);
+                data = res;
+            })
+
             setTimeout(function () {
                 console.log("data", data);
                 setMessageList(messageList => messageList = data);
                 isLoading(false);
-            }, 3000);
+            }, 4000);
         }
     }, [id]);
 
@@ -45,11 +50,11 @@ const UserMessage = () => {
 
     function handleOnEnter(text) {
         console.log('enter', text)
-        // socket.emit("private message", { content: text, to: id });
-        // socket.on('private message', (res) => {
-        //     console.log('res', res);
-        //     setMessageList([...messageList, res])
-        // })
+        socket.emit("private message", { message: text, to: ID });
+        socket.on('private message', (res) => {
+            console.log('res', res);
+            setMessageList([...messageList, res])
+        })
     }
 
 
@@ -68,12 +73,12 @@ const UserMessage = () => {
                             <path fillRule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414zm-6 0a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
                         </svg>
                     </span>
-                    <div className="flex items-center w-full space-x-3 ">
+                    <div className="flex items-center w-full space-x-3 mb-2">
                         <img className="inline object-cover w-12 h-10 rounded-full" src="https://images.pexels.com/photos/2589653/pexels-photo-2589653.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" alt="Profile image" />
-                        <div className="flex flex-col w-full mb-2">
+                        <div className="flex flex-col w-full ">
                             <h1 className="text-md md:text-lg lg:text-xl text-bold font-sans">Reena Thomas</h1>
                             {/* <h1 className="text-sm text-gray-600 font-sans"><span className="inline-block w-2 h-2 mr-2 bg-green-600 rounded-full"></span>Active Now</h1> */}
-                            <h1 className="text-sm text-gray-600 font-sans">Just now</h1>
+                            {/* <h1 className="text-sm text-gray-600 font-sans">Just Now</h1> */}
                         </div>
                     </div>
                 </div>
@@ -87,35 +92,36 @@ const UserMessage = () => {
                             <p className="text-sm text-center text-gray-400">Loading Messages</p>
                         </div>
                         :
-                        messageList && messageList.map(({ to, from, content }, index) => (
-                            to !== parseInt(id) ?
-                                (
+                        messageList && messageList.map(({ to, message, time }, index) => (
+                            to !== ID ?
+                                <div key={index}>
                                     <ChatCard
                                         image={profile}
                                         name={'Naveed Ahsan'}
-                                        message={content}
+                                        message={message}
+                                        time={time}
                                         containerStyle={`max-w-lg`}
                                         cardStyle={`flex items-center space-x-3`}
                                         imgStyle={`h-10 w-16 rounded-full object-cover md:w-10`}
                                         contentStyle={`py-2 px-4 rounded-3xl bg-gray-100`}
-                                        headerStyle={`hidden`}
-                                        messageStyle={`text-sm text-black`}
-                                    />)
-                                :
-                                (<div key={index} className="senderChat">
-                                    <ChatCard
-                                        image={''}
-                                        name={'Muhammad Suleman'}
-                                        message={content}
-                                        containerStyle={`max-w-lg`}
-                                        cardStyle={`flex items-center space-x-3`}
-                                        imgStyle={` hidden h-10 w-16 rounded-full object-cover md:w-10`}
-                                        contentStyle={`py-2 px-4 rounded-3xl bg-gray-100`}
-                                        headerStyle={`hidden`}
+                                        headerStyle={`flex items-center justify-between space-x-3`}
                                         messageStyle={`text-sm text-black`}
                                     />
                                 </div>
-                                )
+                                :
+                                <div key={index} className={'senderChat'}>
+                                    <ChatCard
+                                        name={username}
+                                        message={message}
+                                        time={time}
+                                        containerStyle={`max-w-lg`}
+                                        cardStyle={`flex items-center space-x-3`}
+                                        imgStyle={`h-10 w-16 rounded-full object-cover md:w-10`}
+                                        contentStyle={`py-2 px-4 rounded-3xl bg-gray-100`}
+                                        headerStyle={`flex items-center justify-between space-x-3`}
+                                        messageStyle={`text-sm text-black`}
+                                    />
+                                </div>
                         ))
                 }
             </main>

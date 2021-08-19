@@ -1,25 +1,31 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/jsx-key */
 import React, { useEffect, useState } from 'react'
-import Image from 'next/image';
+// import Image from 'next/image';
 import { Helmet } from 'react-helmet';
-import logo from '../../public/profile.jpg';
-import { Card, ProfileCard, Rating, TestimonialCard } from '../../components';
+import { Card, PopupBusinessCard, ProfileCard, Rating, TestimonialCard } from '../../components';
 import videos from '../../utils/VdeoSchema.json';
 import testimonialVideo from '../../utils/testimonialSchema.json';
 import { parseCookies } from 'nookies';
 import axios from 'axios';
-import router from 'next/router';
 
 const Profile = ({ profile }) => {
 
     const [personalInfo, setPersonalInfo] = useState({});
+    const [showBusinessCard, setShowBusinessCard] = useState(false);
 
     useEffect(() => {
         console.log('profile', profile);
         setPersonalInfo(personalInfo => personalInfo = profile);
     }, []);
 
-    const { name, about, accessible, followed, following, rating, username, views, picture, phone, showMessages, accountType } = personalInfo;
+
+    let handleShowBusinessCard = () => {
+        console.log('clicked');
+        setShowBusinessCard(showBusinessCard => !showBusinessCard)
+    }
+
+    const { name, about, followed, following, rating, views, picture, phone, email, accountType, website } = personalInfo;
 
     return (
 
@@ -32,14 +38,23 @@ const Profile = ({ profile }) => {
             {/* section starts here*/}
             <div className="md:hidden flex flex-col w-full">
                 <ProfileCard
-                    logo={logo}
                     data={personalInfo}
+                    handleShowBusinessCard={handleShowBusinessCard}
+                    showBusinessCard={showBusinessCard}
+
                 />
             </div>
             <div className="hidden md:flex flex-row w-full h-auto">
                 <div className="flex w-1/6 px-2 py-1">
                     <div className="rounded-2xl w-28 h-36 relative px-2 py-1">
-                        <Image src={logo} alt="profile" className="rounded-2xl " layout="fill" />
+                        {picture ?
+                            <img src={picture} alt="profile" className="rounded-2xl " layout="fill" />
+                            :
+                            <img
+                                src="https://thumbs.dreamstime.com/b/solid-purple-gradient-user-icon-web-mobile-design-interface-ui-ux-developer-app-137467998.jpg" alt=""
+                                className="rounded-full"
+                            />
+                        }
                     </div>
                 </div>
                 <div className="flex flex-col w-4/6 md:w-5/6 ">
@@ -60,7 +75,7 @@ const Profile = ({ profile }) => {
                                     <Rating
                                         value={rating}
                                     />
-                                    &nbsp; <p className="hidden md:text-xs"> Rating</p></span>
+                                    &nbsp; <p className="text-xs"> Rating</p></span>
                             </div>
                         </div>
                         {
@@ -82,11 +97,18 @@ const Profile = ({ profile }) => {
                         </div>
                     </div>
                     {/* section ends here */}
-                    <div className="flex w-full h-10 mt-2 px-2">
+                    <div className="flex w-full mt-2 px-2">
                         <p className="text-xs">
                             {about || 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat pidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'}
                         </p>
                     </div>
+                    {accountType === "Business" && (
+                        <div className="flex w-full mt-2 px-2 " onClick={handleShowBusinessCard}>
+                            <p className="text-xs no-underline hover:underline text-indigo-600 cursor-pointer">
+                                Click See Virtual Business Card
+                            </p>
+                        </div>
+                    )}
                     {/* <div className="flex w-full mt-3 items-center px-2 space-x-6">
                         <button className="followingBtn">
                             Following
@@ -141,6 +163,18 @@ const Profile = ({ profile }) => {
 
                 </div>
             )}
+            {
+                showBusinessCard && (
+                    <PopupBusinessCard
+                        _ShowCard={handleShowBusinessCard}
+                        name={name}
+                        image={picture}
+                        website={website}
+                        email={email}
+                        phone={phone}
+
+                    />
+                )}
             {/* section ends here */}
         </div>
     )

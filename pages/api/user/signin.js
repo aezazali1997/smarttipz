@@ -55,7 +55,7 @@ const handler = async (req, res) => {
 
       res
         .status(200)
-        .json({ error: false, message: 'Login successful', data: { username, token } });
+        .json({ error: false, message: 'Login successful', data: { username, token, image: user.picture } });
     } catch (err) {
       res.status(500).json({ error: true, message: err.message, data: [] });
     }

@@ -3,21 +3,35 @@
 import React from 'react'
 import Rating from '../RatingStar';
 import Image from 'next/image';
+import PopupBusinessCard from '../PopupBusinessCard';
 
-const ProfileCard = ({ data, otherUser, logo }) => {
+const ProfileCard = ({ data, otherUser, handleShowBusinessCard, showBusinessCard }) => {
 
-    const { name, about, accessible, followed, following, rating, username, views, picture, phone, showMessages, accountType } = data;
+    const { name, about, accessible, followed, following, rating, website, email, views, picture, phone, showMessages, accountType } = data;
 
     return (
         <div className="flex flex-col w-full relative items-center space-y-3">
-            <div class="inline-block h-28 w-28 ring-2 ring-white relative">
-                <Image className="rounded-full" src={logo} alt="" layout="fill" />
-            </div>
+            {picture ?
+                <div class="inline-block h-28 w-28 ring-2 ring-white relative">
+                    <img src={picture} className="rounded-full" alt="" layout="fill" />
+                </div>
+                :
+                <div class="inline-block h-28 w-28 ring-2 ring-white relative">
+                    <img className="rounded-full" src="https://thumbs.dreamstime.com/b/solid-purple-gradient-user-icon-web-mobile-design-interface-ui-ux-developer-app-137467998.jpg" alt="" />
+                </div>
+            }
             <div className="flex flex-col w-full jusify-center items-center">
                 <h1 className="text-black text-lg font-sans font-semibold">{name}</h1>
                 <h1 className=" text-sm font-sans text-gray-400">{phone}</h1>
             </div>
             <p className="text-xs text-black text-center">{about || 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat pidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'}</p>
+            {accountType === "Business" && (
+                <div className="flex w-full mt-2 px-2 justify-center " onClick={handleShowBusinessCard}>
+                    <p className="text-xs no-underline hover:underline text-indigo-600 cursor-pointer">
+                        Click to See Virtual Business Card
+                    </p>
+                </div>
+            )}
             <div className="flex w-full justify-between items-center">
                 <div className="flex justify-between w-full">
                     <span className="flex w-full justify-center items-center">
@@ -52,6 +66,18 @@ const ProfileCard = ({ data, otherUser, logo }) => {
                             Message
                         </button>
                     </div>
+                )}
+            {
+                showBusinessCard && (
+                    <PopupBusinessCard
+                        _ShowCard={handleShowBusinessCard}
+                        name={name}
+                        image={picture}
+                        website={website}
+                        email={email}
+                        phone={phone}
+
+                    />
                 )}
         </div>
     )

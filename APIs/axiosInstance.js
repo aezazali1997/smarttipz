@@ -9,7 +9,7 @@ let token = cookie?.token || null;
 class AxiosInstance {
 
     getUserInfo() {
-        // console.log('token', token);
+        console.log('token', token);
         return token;
     }
 
@@ -46,9 +46,14 @@ class AxiosInstance {
         return await axios.post(USER_API_BASE_URL + "api/profile/update", payload, this.getAuthHeader());
     }
 
-    async uploadProfilePic(img) {
-        console.log({ img })
-        return await axios.post(USER_API_BASE_URL + "api/profile/uploadpic", img, this.getAuthHeader());
+    async uploadProfilePic(url) {
+        console.log({ url })
+        return await axios.post(USER_API_BASE_URL + "api/profile/uploadpic", { link: url }, this.getAuthHeader());
+    }
+
+    async removeProfilePic() {
+        console.log('In delete ProfilePic Api')
+        return await axios.delete(USER_API_BASE_URL + "api/profile/deletepic", this.getAuthHeader());
     }
 
 

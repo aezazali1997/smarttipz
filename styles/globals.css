@@ -1,40 +1,40 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 @import './signup.css';
 @import './image.css';
 @import './sidebar.css';
 @import './button.css';
 @import './loader.css';
-@import './MobileDrawer.css';
 @import './messages.module.css';
-@import './businessCard.css';
 
-.floating-input > input::placeholder {
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.floating-input>input::placeholder {
   color: transparent;
 }
 
-.floating-input > input:focus,
-.floating-input > input:not(:placeholder-shown) {
+.floating-input>input:focus,
+.floating-input>input:not(:placeholder-shown) {
   @apply pt-8;
 }
 
-.floating-input > input:focus ~ label,
-.floating-input > input:not(:placeholder-shown) ~ label {
+.floating-input>input:focus~label,
+.floating-input>input:not(:placeholder-shown)~label {
   @apply opacity-75 scale-75 -translate-y-3 translate-x-1;
 }
-.floating-input > textarea::placeholder {
+
+.floating-input>textarea::placeholder {
   color: transparent;
 }
 
-.floating-input > textarea:focus,
-.floating-input > textarea:not(:placeholder-shown) {
+.floating-input>textarea:focus,
+.floating-input>textarea:not(:placeholder-shown) {
   @apply pt-8;
 }
 
-.floating-input > textarea:focus ~ label,
-.floating-input > textarea:not(:placeholder-shown) ~ label {
+.floating-input>textarea:focus~label,
+.floating-input>textarea:not(:placeholder-shown)~label {
   @apply opacity-75 scale-75 -translate-y-3 translate-x-1;
 }
 
@@ -43,7 +43,8 @@
   right: 0;
   border-color: #714de1;
 }
-.toggle-checkbox:checked + .toggle-label {
+
+.toggle-checkbox:checked+.toggle-label {
   @apply: bg-indigo-600;
   background-color: #714de1;
 }

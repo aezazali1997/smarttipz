@@ -13,6 +13,7 @@ import { LoginSchema } from '../../utils/validation_shema';
 import AxiosInstance from '../../APIs/axiosInstance';
 import logo from '../../public/ST-2.png';
 import login from '../../public/login.png';
+import socket from '../../utils/socket';
 
 
 const initialValues = {
@@ -30,7 +31,6 @@ const Login = () => {
     const [showAlert, setShowAlert] = useState(false);
 
     useEffect(() => {
-
     }, [showAlert])
 
     const toggleAlert = () => {
@@ -68,13 +68,16 @@ const Login = () => {
                 const data = { username, password }
                 localStorage.setItem('username', username);
                 AxiosInstance.login(data)
-                    .then(({ data: { data: { username, token }, message }, status }) => {
+                    .then(({ data: { data: { username, token, image }, message }, status }) => {
                         disableLoading();
                         setError(false);
                         setStatus(message);
                         setShowAlert(true);
                         cookie.set('token', token);
                         cookie.set('username', username);
+                        localStorage.setItem('image', image);
+                        // socket.auth = { username };
+                        // socket.connect();
                         router.push('/dashboard/profile');
                     })
                     .catch((e) => {

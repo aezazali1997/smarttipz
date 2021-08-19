@@ -11,3 +11,8 @@ export { default as Rating } from './RatingStar';
 export { default as ChatList } from './ChatList';
 export { default as MessageWindow } from './MessageWindow';
 export { default as EmojiInput } from './EmojiInput';
+export { default as BusinessCard } from './BusinessCard';
+export { default as AccountSetting } from './AccountSetting';
+export { default as MobileInbox } from './MobileInbox';
+export { default as WebInbox } from './WebInbox';
+export { default as PopupBusinessCard } from './PopupBusinessCard';

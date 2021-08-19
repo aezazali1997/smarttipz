@@ -8,10 +8,10 @@ const Videos = () => {
         <div className="flex h-screen w-full p-5">
             {/*SEO Support*/}
             <Helmet>
-                <title>Login | Smart Tipz</title>
+                <title>Videos | Smart Tipz</title>
             </Helmet>
             {/*SEO Support End */}
-            <div className="grid grid-cols-4 gap-3">
+            <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
                 {
                     videos.map(({ title, image, like, comment, share }) => (
                         <Card

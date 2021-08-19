@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import '../styles/globals.css';
 import 'tailwindcss/tailwind.css';
+
 import { parseCookies } from 'nookies';
 import CustomLayout from '../Layout';
 import { AppWrapper } from '../contexts';
