@@ -5,6 +5,7 @@
 @import './button.css';
 @import './loader.css';
 @import './messages.module.css';
+@import './businessCard.css';
 
 @tailwind base;
 @tailwind components;

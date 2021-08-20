@@ -36,7 +36,7 @@ const Setting = ({ settings }) => {
     if (update !== updated) {
       axiosInstance.profile()
         .then(({ data: { data } }) => {
-          setImageUrl(data.picture);
+          setImageUrl(data?.picture);
           setPersonalInfo(data);
         })
     }

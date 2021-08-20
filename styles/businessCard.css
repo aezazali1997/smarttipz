@@ -1,0 +1,22 @@
+#pointer {
+    width: 200px;
+    min-height: 40px;
+    position: relative;
+    background: #714de1;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+}
+
+#pointer1 {
+    content: "";
+    position: relative;
+    width: 0;
+    height: auto;
+    border-left: 20px solid #714de1;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+}
+
+.BCard {
+    /* min-width: 400px; */
+}
