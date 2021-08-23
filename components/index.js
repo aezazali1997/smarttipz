@@ -1,4 +1,5 @@
 export { default as Button } from './Button';
+export { default as Badge } from './Badge';
 export { default as InputField } from './InputField';
 export { default as Sidebar } from './Sidebar';
 export { default as Drawer } from './Drawer';

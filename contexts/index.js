@@ -1,14 +1,15 @@
-import { useRouter } from "next/router";
 import { createContext, useContext, useState } from 'react';
 
 const SocketContext = createContext();
 
+
 export function AppWrapper({ children }) {
-    const router = useRouter();
+
+    const [socket, setSocket] = useState(null);
 
     const data = {
-        name: "Muhammad Suleman",
-        Designation: 'Software Developer'
+        socket,
+        setSocket
     }
 
     return (

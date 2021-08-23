@@ -9,8 +9,8 @@ const Session = sequelize.define("Session", {
   username: {
     type: DataTypes.STRING,
   },
-  sessionId: {
-    type: DataTypes.INTEGER,
+  sessions: {
+    type: DataTypes.ARRAY(DataTypes.STRING),
   },
   connected: {
     type: DataTypes.BOOLEAN,

@@ -1,116 +1,18 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
-import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image';
-import { useFormik } from 'formik';
 import Helmet from 'react-helmet';
-import { useRouter } from 'next/router';
-import swal from 'sweetalert';
-import cookie from 'js-cookie';
-import { Button, InputField } from '../../components';
-import { LoginSchema } from '../../utils/validation_shema';
-import AxiosInstance from '../../APIs/axiosInstance';
 import logo from '../../public/ST-2.png';
 import login from '../../public/login.png';
-import socket from '../../utils/socket';
+import { getInputClasses } from 'helpers';
+import { Button, InputField } from 'components';
+import { UseFetchLogin } from 'hooks';
 
 
-const initialValues = {
-    username: '',
-    password: '',
-    checked: false
-}
 const Login = () => {
 
-    const router = useRouter();
-
-    const [showPassword, setShowPassword] = useState(false)
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
-    const [showAlert, setShowAlert] = useState(false);
-
-    useEffect(() => {
-    }, [showAlert])
-
-    const toggleAlert = () => {
-        setShowAlert(false);
-    }
-
-    const enableLoading = () => {
-        setLoading(true);
-    };
-
-    const disableLoading = () => {
-        setLoading(false);
-    };
-
-    const getInputClasses = (fieldname) => {
-        if (formik.touched[fieldname] && formik.errors[fieldname]) {
-            return "border-red-500";
-        }
-
-        if (formik.touched[fieldname] && !formik.errors[fieldname]) {
-            return "border-blue-500";
-        }
-
-        return "";
-    };
-
-    const formik = useFormik({
-        enableReinitialize: true,
-        initialValues,
-        validationSchema: LoginSchema,
-        validateOnBlur: true,
-        onSubmit: ({ username, password }, { setSubmitting, setStatus }) => {
-            enableLoading();
-            setTimeout(() => {
-                const data = { username, password }
-                localStorage.setItem('username', username);
-                AxiosInstance.login(data)
-                    .then(({ data: { data: { username, token, image }, message }, status }) => {
-                        disableLoading();
-                        setError(false);
-                        setStatus(message);
-                        setShowAlert(true);
-                        cookie.set('token', token);
-                        cookie.set('username', username);
-                        localStorage.setItem('image', image);
-                        // socket.auth = { username };
-                        // socket.connect();
-                        router.push('/dashboard/profile');
-                    })
-                    .catch((e) => {
-                        console.log(e.response.status)
-                        if (e.response.status === 405) {
-                            AxiosInstance.resendOTP(username)
-                                .then(({ data: { data, message, error }, status }) => {
-                                    swal({
-                                        title: "Email Not Verified",
-                                        text: 'Confirmation code sent to email address',
-                                        buttons: false,
-                                        dangerMode: true,
-                                        timer: 5000,
-                                        icon: 'info'
-                                    })
-                                    disableLoading();
-                                    router.push('/auth/authenticate');
-                                })
-                        }
-                        else {
-                            setError(true)
-                            // setSubmitting(false);
-                            setStatus(e.response.data.message);
-                            setShowAlert(true);
-                            disableLoading();
-                        }
-                    });
-            }, 1000);
-
-        },
-
-    });
-
+    const { toggleAlert, showPassword, setShowPassword, showAlert, formik, loading, error } = UseFetchLogin();
 
     return (
         <div className="flex flex-col h-screen pt-5 p-5 xs:p-10 pb-2 space-y-5">
@@ -151,7 +53,11 @@ const Login = () => {
                                     <div className={`${error ? 'bg-red-100 border border-red-400 text-red-700' : 'bg-green-100 border border-green-400 text-green-700'} px-4 py-3 flex flex-row w-full justify-between items-center mb-10 rounded" role="alert`}>
                                         <span className="block sm:inline">{formik.status}</span>
                                         <span className="relative px-4 py-3">
-                                            <svg onClick={() => toggleAlert()} className="fill-current h-6 w-6 text-black" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" /></svg>
+                                            <svg
+                                                onClick={() => toggleAlert()}
+                                                className="fill-current h-6 w-6 text-black" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title>
+                                                <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+                                            </svg>
                                         </span>
                                     </div>
                                 ) : ('')
@@ -168,7 +74,7 @@ const Login = () => {
                                     <svg className="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" /><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" /></svg>
                                 )}
                                 inputClass={`${getInputClasses(
-                                    "username"
+                                    formik, "username"
                                 )} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
                                 label={'Username'}
                             />
@@ -183,7 +89,7 @@ const Login = () => {
                                     id={'password'}
                                     name={'password'}
                                     className={`${getInputClasses(
-                                        "password"
+                                        formik, "password"
                                     )}   border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
 
                                     value={formik.values.password}
@@ -240,7 +146,7 @@ const Login = () => {
                             <div className="flex mt-3 w-full ">
                                 <p className="text-sm w-full text-gray-500 text-center ">
                                     <Link
-                                        href="/forgot-password">
+                                        href="/auth/forgot-password">
                                         <a className="text-blue-800 text-sm font-semibold hover:underline"
                                         >Forgot Password?
                                         </a>

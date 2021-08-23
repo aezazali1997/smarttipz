@@ -1,104 +1,19 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image';
-import { useFormik } from 'formik';
 import Helmet from 'react-helmet';
-import { Button, InputField } from '../../components';
-import { SignupSchema } from '../../utils/validation_shema';
-import AxiosInstance from '../../APIs/axiosInstance';
-import logo from '../../public/ST-2.png';
 import reg from '../../public/reg.png';
-import swal from 'sweetalert';
-import { useRouter } from 'next/router'
+import logo from '../../public/ST-2.png';
+import { getInputClasses } from 'helpers';
+import { Button, InputField } from 'components';
+import { UseFetchSignup } from 'hooks';
 
-const initialValues = {
-    name: '',
-    username: '',
-    phone: '',
-    email: '',
-    password: '',
-    // businessName: '',
-    website: '',
-    accountType: '',
-}
+
 const Signup = () => {
-    const router = useRouter()
 
-    const [showPassword, setShowPassword] = useState(false)
-    const [loading, setLoading] = useState(false);
-
-    const enableLoading = () => {
-        setLoading(true);
-    };
-
-    const disableLoading = () => {
-        setLoading(false);
-    };
-
-    const getInputClasses = (fieldname) => {
-        if (formik.touched[fieldname] && formik.errors[fieldname]) {
-            return "border-red-500";
-        }
-
-        if (formik.touched[fieldname] && !formik.errors[fieldname]) {
-            return "border-blue-500";
-        }
-
-        return "";
-    };
-
-    const formik = useFormik({
-        enableReinitialize: true,
-        initialValues,
-        validationSchema: SignupSchema,
-        validateOnBlur: true,
-        onSubmit: ({ name, email, phone, password, username, accountType, website },
-            { setSubmitting, setStatus }) => {
-            setTimeout(() => {
-                enableLoading();
-                const data = {
-                    name,
-                    username,
-                    email,
-                    phone,
-                    password,
-                    accountType,
-                    // businessName,
-                    website
-                }
-                AxiosInstance.signup(data)
-                    .then(({ data: { data, error, message } }) => {
-                        console.log('res >>', data);
-                        disableLoading();
-                        swal({
-                            title: "User created successfully",
-                            text: message,
-                            buttons: false,
-                            dangerMode: true,
-                            timer: 5000,
-                            icon: 'success'
-                        })
-                        localStorage.setItem('username', username);
-                        router.push('/auth/authenticate')
-                    })
-                    .catch((e) => {
-                        console.log('Error', e.response.data.message)
-                        disableLoading();
-                        setSubmitting(false);
-                        swal({
-                            text: e.response.data.message,
-                            buttons: false,
-                            dangerMode: true,
-                            timer: 3000,
-                            icon: 'error'
-                        })
-                    });
-            }, 1000);
-        },
-    });
-
+    const { loading, showPassword, setShowPassword, formik } = UseFetchSignup();
 
     return (
         <>
@@ -146,7 +61,7 @@ const Signup = () => {
                                 onBlur={formik.handleBlur}
                                 error={formik.touched.name && formik.errors.name}
                                 inputClass={`${getInputClasses(
-                                    "name"
+                                    formik, "name"
                                 )} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
                                 label={'Name'}
                             />
@@ -164,7 +79,7 @@ const Signup = () => {
                                 onBlur={formik.handleBlur}
                                 error={formik.touched.username && formik.errors.username}
                                 inputClass={`${getInputClasses(
-                                    "username"
+                                    formik, "username"
                                 )} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
                                 label={'Username'}
                             />
@@ -183,7 +98,7 @@ const Signup = () => {
                                     <svg className="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" /><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" /></svg>
                                 )}
                                 inputClass={`${getInputClasses(
-                                    "email"
+                                    formik, "email"
                                 )} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
                                 label={'Email'}
                             />
@@ -204,7 +119,7 @@ const Signup = () => {
                                 onBlur={formik.handleBlur}
                                 error={formik.touched.phone && formik.errors.phone}
                                 inputClass={`${getInputClasses(
-                                    "phone"
+                                    formik, "phone"
                                 )} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
                                 label={'Phone number'}
                             />
@@ -218,7 +133,7 @@ const Signup = () => {
                                     id={'password'}
                                     name={'password'}
                                     className={`${getInputClasses(
-                                        "password"
+                                        formik, "password"
                                     )}  border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
 
                                     value={formik.values.password}
@@ -256,7 +171,7 @@ const Signup = () => {
                                     name={'accountType'}
 
                                     className={`${getInputClasses(
-                                        "accountType"
+                                        formik, "accountType"
                                     )}  border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
                                     value={formik.values.accountType}
                                     onChange={formik.handleChange}
@@ -319,7 +234,7 @@ const Signup = () => {
                                             onBlur={formik.handleBlur}
                                             error={formik.touched.websiteName && formik.errors.website}
                                             inputClass={`${getInputClasses(
-                                                "website"
+                                                formik, "website"
                                             )} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
                                             label={'Website address'}
                                         />
@@ -340,14 +255,14 @@ const Signup = () => {
                             <div className="flex mt-8 w-full">
                                 <p className="text-sm text-gray-500 text-center">By creating an account you agree to the{' '}
                                     <Link
-                                        href="/termsAndConditions">
+                                        href="/auth/termsAndConditions">
                                         <a className="text-blue-800 text-sm font-semibold hover:underline"
                                         >Terms & Conditions
                                         </a>
                                     </Link> and{' '}
                                     <Link
 
-                                        href="/privacyPolicy">
+                                        href="/auth/privacyPolicy">
                                         <a
                                             className="text-blue-800 text-sm font-semibold hover:underline"
                                         >Privacy Policy

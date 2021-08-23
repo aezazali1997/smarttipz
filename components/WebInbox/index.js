@@ -3,7 +3,7 @@ import React from 'react'
 import ChatList from '../ChatList'
 import MessageWindow from '../MessageWindow'
 
-const WebInbox = ({ loading, userList, _OnSelect, selected, goBackToUserList, message, setMessage, handleOnEnter }) => {
+const WebInbox = ({ loading, userList, _OnSelect, selected, goBackToUserList, message, setMessage }) => {
     return (
         <>{
             loading ?
@@ -25,7 +25,6 @@ const WebInbox = ({ loading, userList, _OnSelect, selected, goBackToUserList, me
                                 goBackToUserList={goBackToUserList}
                                 message={message}
                                 setMessage={setMessage}
-                                handleOnEnter={handleOnEnter}
                             />)
                     }
                 </>

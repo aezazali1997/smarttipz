@@ -1,11 +1,10 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable @next/next/no-img-element */
-import React, { useState } from 'react'
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet';
-import { MobileInbox, WebInbox } from '../../components';
-import socket from '../../utils/socket';
 import { parseCookies } from 'nookies';
+import socket from 'utils/socket';
+import { MobileInbox, WebInbox } from 'components';
 
 
 let data = [];
@@ -26,8 +25,6 @@ const Messages = () => {
         isLoading(false);
     }
 
-
-
     useEffect(() => {
         _EnableLoading();
         socket.auth = { username };
@@ -43,15 +40,6 @@ const Messages = () => {
     }, []);
 
     useEffect(() => { }, [userList]);
-
-    function handleOnEnter(text) {
-        console.log('enter', text)
-        socket.emit("private message", { message: text, to: selected?.id });
-        socket.on('private message', (res) => {
-            console.log('res', res);
-            setMessageList([...userList, res])
-        })
-    }
 
     let _OnSelect = (id, name, picture) => {
         if (selected?.id !== id) {
@@ -84,9 +72,7 @@ const Messages = () => {
                     goBackToUserList={goBackToUserList}
                     message={message}
                     setMessage={setMessage}
-                    handleOnEnter={handleOnEnter}
                 />
-
             </main>
             <main className="lg:hidden flex flex-col lg:flex-row w-full h-screen overflow-y-auto">
                 <MobileInbox
@@ -96,7 +82,6 @@ const Messages = () => {
                     goBackToUserList={goBackToUserList}
                     message={message}
                     setMessage={setMessage}
-                    handleOnEnter={handleOnEnter}
                 />
 
             </main>

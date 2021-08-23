@@ -6,7 +6,7 @@ import socket from '../../utils/socket';
 import ChatCard from '../ChatCard';
 import EmojiInput from '../EmojiInput';
 
-const MessageWindow = ({ message, setMessage, handleOnEnter, selected, goBackToUserList }) => {
+const MessageWindow = ({ message, setMessage, selected, goBackToUserList }) => {
     const { username } = parseCookies();
     const [userMessages, setMessages] = useState([]);
 
@@ -20,6 +20,17 @@ const MessageWindow = ({ message, setMessage, handleOnEnter, selected, goBackToU
             })
         }
     }, [selected])
+
+    useEffect(() => { }, [userMessages]);
+
+    let handleOnEnter = (text) => {
+        console.log('enter', text)
+        socket.emit("private message", { message: text, to: selected?.id });
+        socket.on('private message', (res) => {
+            console.log('res', res);
+            setMessages([...userMessages, res])
+        })
+    }
 
     return (
         <>

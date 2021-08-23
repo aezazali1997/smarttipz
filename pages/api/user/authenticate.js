@@ -18,22 +18,22 @@ const handler = async (req, res) => {
 
     const { username, varificationCode } = req.body;
 
+    console.log(req.body);
+
     try {
       const user = await User.findOne({ where: { username } });
       if (!user) {
         return res.status(400).json({ error: true, message: 'Validation failed', data: [] });
-        // throw new Error('Validation failed');
       }
+
 
       const time = Math.floor((Date.now() - user.updatedAt.getTime()) / (1000 * 60));
       if (time >= 60) {
-        return res.status(403).json({ error: true, message: 'Validation code expired', data: [] });
-        // throw new Error('Validation code expired');
+        return res.status(403).json({ error: true, data: [], message: 'Validation code expired' });
       }
 
       if (!(user.varificationCode === varificationCode.toString())) {
         return res.status(400).json({ error: true, message: 'Validation failed', data: [] });
-        // throw new Error('Validation failed');
       }
 
       await user.update({ emailConfirmed: true });

@@ -1,100 +1,17 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState } from 'react'
+import React from 'react'
 import Image from 'next/image';
-import { useFormik } from 'formik';
 import Helmet from 'react-helmet';
-import swal from 'sweetalert';
-import { useRouter } from 'next/router';
 import { Button } from '../../components';
-import { AuthenticateSchema } from '../../utils/validation_shema';
-import AxiosInstance from '../../APIs/axiosInstance';
 import logo from '../../public/ST-2.png';
-
-const initialValues = {
-    tab1: '',
-    tab2: '',
-    tab3: '',
-    tab4: '',
-    tab5: '',
-    tab6: '',
-}
-
+import { getInputClasses } from '../../helpers';
+import { UseFetchAuthenticate } from '../../hooks';
+import { movetoNext } from '../../helpers';
 
 const Authenticate = () => {
 
-    const router = useRouter();
-
-    const [loading, setLoading] = useState(false);
-
-    const enableLoading = () => {
-        setLoading(true);
-    };
-
-    const disableLoading = () => {
-        setLoading(false);
-    };
-
-    function movetoNext(e, nextFieldId) {
-        const { value, maxLength } = e.target;
-        if (value.length >= maxLength) {
-            document.getElementById(nextFieldId).focus();
-        }
-    }
-
-    const getInputClasses = (fieldname) => {
-        if (formik.touched[fieldname] && formik.errors[fieldname]) {
-            return "border-red-500";
-        }
-
-        if (formik.touched[fieldname] && !formik.errors[fieldname]) {
-            return "border-blue-500";
-        }
-
-        return "";
-    };
-
-
-    const formik = useFormik({
-        enableReinitialize: true,
-        initialValues: initialValues,
-        validationSchema: AuthenticateSchema,
-        validateOnBlur: true,
-        onSubmit: ({ tab1, tab2, tab3, tab4, tab5, tab6 }, { setSubmitting, setStatus }) => {
-            setTimeout(() => {
-                enableLoading();
-                const data = {
-                    varificationCode: `${tab1}${tab2}${tab3}${tab4}${tab5}${tab6}`,
-                    username: localStorage.getItem('username')
-                }
-                AxiosInstance.authenticate(data)
-                    .then(({ data: { error, data, message } }) => {
-                        disableLoading();
-                        swal({
-                            text: message,
-                            buttons: false,
-                            dangerMode: true,
-                            timer: 3000,
-                            icon: 'success'
-                        })
-                        router.push('/auth/login');
-                    })
-                    .catch((e) => {
-                        console.log('Error', e)
-                        disableLoading();
-                        setSubmitting(false);
-                        swal({
-                            text: message,
-                            buttons: false,
-                            dangerMode: true,
-                            timer: 3000,
-                            icon: 'error'
-                        })
-                    });
-            }, 1000);
-        },
-    });
-
+    const { loading, formik } = UseFetchAuthenticate();
 
     return (
         <div className="flex flex-col h-screen pt-5 p-5 xs:p-10 pb-2 space-y-2">
@@ -309,7 +226,7 @@ const Authenticate = () => {
                                     tabIndex='1'
                                     onKeyUp={(e) => movetoNext(e, 'tab2')}
                                     className={`${getInputClasses(
-                                        "tab1"
+                                        formik, "tab1"
                                     )} border bg-gray-100 text-center border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-10 lg:w-16 p-3 h-16`}
                                     {...formik.getFieldProps('tab1')}
                                 />
@@ -323,7 +240,7 @@ const Authenticate = () => {
                                     tabIndex='2'
                                     onKeyUp={(e) => movetoNext(e, 'tab3')}
                                     className={`${getInputClasses(
-                                        "tab2"
+                                        formik, "tab2"
                                     )} border bg-gray-100 text-center border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-10 lg:w-16 p-3 h-16`}
                                     {...formik.getFieldProps('tab2')}
                                 />
@@ -336,7 +253,7 @@ const Authenticate = () => {
                                     onKeyUp={(e) => movetoNext(e, 'tab4')}
                                     tabIndex='3'
                                     className={`${getInputClasses(
-                                        "tab3"
+                                        formik, "tab3"
                                     )} border bg-gray-100 text-center border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-10 lg:w-16 p-3 h-16`}
                                     {...formik.getFieldProps('tab3')}
                                 />
@@ -349,7 +266,7 @@ const Authenticate = () => {
                                     tabIndex='4'
                                     onKeyUp={(e) => movetoNext(e, 'tab5')}
                                     className={`${getInputClasses(
-                                        "tab4"
+                                        formik, "tab4"
                                     )} border bg-gray-100 text-center border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-10 lg:w-16 p-3 h-16`}
                                     {...formik.getFieldProps('tab4')}
                                 />
@@ -362,7 +279,7 @@ const Authenticate = () => {
                                     tabIndex='5'
                                     onKeyUp={(e) => movetoNext(e, 'tab6')}
                                     className={`${getInputClasses(
-                                        "tab5"
+                                        formik, "tab5"
                                     )} border bg-gray-100  text-center border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-10 lg:w-16 p-3 h-16`}
                                     {...formik.getFieldProps('tab5')}
 
@@ -376,7 +293,7 @@ const Authenticate = () => {
                                     tabIndex='6'
                                     onKeyUp={(e) => movetoNext(e, 'authenticate')}
                                     className={`${getInputClasses(
-                                        "tab6"
+                                        formik, "tab6"
                                     )} border bg-gray-100 text-center border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-10 lg:w-16 p-3 h-16`}
                                     {...formik.getFieldProps('tab6')}
                                 />

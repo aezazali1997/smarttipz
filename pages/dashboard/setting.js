@@ -1,226 +1,22 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Helmet } from 'react-helmet';
-import { useFormik } from 'formik';
 import { parseCookies } from 'nookies';
 import axios from 'axios';
-import swal from 'sweetalert';
-import { AccountSetting, BusinessCard, Button, InputField } from '../../components';
-// import profile from '../../public/profile.jpg';
-import { AccountInfoValidationSchema } from '../../utils/validation_shema';
-import axiosInstance from '../../APIs/axiosInstance';
 import ReactTooltip from 'react-tooltip';
-import { useS3Upload } from 'next-s3-upload';
+// import profile from '../../public/profile.jpg';
+import { getInputClasses } from 'helpers';
+import { UseFetchSetting } from 'hooks';
+import { AccountSetting, BusinessCard, Button, InputField } from 'components';
 
-const initialValues = {
-  old: '',
-  new: '',
-  confirm: ''
-}
-
-let update = false;
 
 const Setting = ({ settings }) => {
-  const [personalLoading, setPersonalLoading] = useState(false);
-  const [accountLoading, setAccountLoading] = useState(false);
-  const [uploadLoading, setUploadLoading] = useState(false);
-  const [deleteLoading, setDeleteLoading] = useState(false);
-  const [personalInfo, setPersonalInfo] = useState({
-    phone: '', accessible: '', name: '', email: '', showPhone: '', about: '', website: '', name: ''
-  });
-  const [updated, setUpdated] = useState(false);
-  const [imageUrl, setImageUrl] = useState('');
-  let { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
 
-  useEffect(() => {
-    if (update !== updated) {
-      axiosInstance.profile()
-        .then(({ data: { data } }) => {
-          setImageUrl(data?.picture);
-          setPersonalInfo(data);
-        })
-    }
-    else {
-      setImageUrl(settings.picture);
-      setPersonalInfo(settings);
-    }
-  }, [updated]);
-
-  useEffect(() => {
-  }, [imageUrl])
-
+  const { accountLoading, formik, personalInfo, personalLoading, imageUrl, _Update, _OnChange,
+    _DeleteImg, handleFileChange, FileInput, openFileDialog } = UseFetchSetting(settings);
 
   const { name, email, about, accessible, showPhone, accountType, phone, website } = personalInfo;
 
-
-  const enablePersonalLoading = () => {
-    setPersonalLoading(true);
-  };
-
-  const disablePersonalLoading = () => {
-    setPersonalLoading(false);
-  };
-
-  const enableAccountLoading = () => {
-    setAccountLoading(true);
-  };
-
-  const disableAccountLoading = () => {
-    setAccountLoading(false);
-  };
-
-  const enableUploadLoading = () => {
-    setUploadLoading(true);
-  };
-
-  const disableUploadLoading = () => {
-    setUploadLoading(false);
-  };
-
-  const enableDeleteLoading = () => {
-    setDeleteLoading(true);
-  };
-
-  const disableDeleteLoading = () => {
-    setDeleteLoading(false);
-  };
-
-
-  // let upload = useRef();
-
-  // let _OnChangeImg = async (event) => {
-  //     const { files } = event.target;
-  //     const img = URL.createObjectURL(files[0]);
-  //     const data = { link: img };
-  //     axiosInstance.uploadProfilePic(data)
-  //         .then(res => {
-  //             setImage(img);
-  //         }).catch(e => {
-  //             console.log(e.message);
-  //         })
-  // }
-
-  // let _BrowseImg = () => {
-  //     upload.current.click();
-  // }
-
-
-  let handleFileChange = async file => {
-    console.log(file);
-    enableUploadLoading();
-    let { url } = await uploadToS3(file);
-    axiosInstance.uploadProfilePic(url)
-      .then(({ data: { data: { img } } }) => {
-        setImageUrl(img);
-        disableUploadLoading();
-      }).catch(e => {
-        disableUploadLoading();
-        console.log(e.message);
-      })
-  };
-
-  let _DeleteImg = () => {
-    enableDeleteLoading();
-    axiosInstance.removeProfilePic()
-      .then(res => {
-        disableDeleteLoading();
-        setUpdated(true);
-      }).catch(error => {
-        disableDeleteLoading();
-        console.log("API error: ", error)
-      })
-  }
-
-
-  const _OnChange = (e) => {
-    const { name, value, checked } = e.target;
-    let copyOriginal = { ...personalInfo };
-    let newObject = (name === 'accessible' || name === 'showPhone' ?
-      { ...copyOriginal, [name]: checked } : { ...copyOriginal, [name]: value });
-    setPersonalInfo(newObject);
-  }
-
-  const getInputClasses = (fieldname) => {
-    if (formik.touched[fieldname] && formik.errors[fieldname]) {
-      return "border-red-500";
-    }
-
-    if (formik.touched[fieldname] && !formik.errors[fieldname]) {
-      return "border-blue-500";
-    }
-
-    return "";
-  };
-
-  let _Update = () => {
-    enablePersonalLoading();
-    let payload = {
-      data: personalInfo,
-      accountType: accountType,
-    };
-    if (accountType === "Business") {
-      payload.businessCard = {
-        website
-      }
-    }
-    axiosInstance.updateProfile(payload)
-      .then(({ data: { message } }) => {
-        swal({
-          text: message,
-          timer: 3000,
-          icon: 'success',
-          dangerMode: true,
-          buttons: false
-        })
-        setUpdated(true);
-        disablePersonalLoading();
-      })
-      .catch(e => {
-        swal({
-          text: e.response.data.message,
-          timer: 3000,
-          icon: 'error',
-          dangerMode: true,
-          buttons: false
-        })
-        console.log("error in api: ", e.response.data.message);
-        disablePersonalLoading();
-      })
-  }
-
-
-  const formik = useFormik({
-    initialValues: initialValues,
-    validationSchema: AccountInfoValidationSchema,
-    onSubmit: (values, { setSubmitting, setStatus }) => {
-      enableAccountLoading();
-      setTimeout(() => {
-        axiosInstance.updateProfile({ data: { password: values.new } })
-          .then(({ data: { message } }) => {
-            swal({
-              text: message,
-              timer: 3000,
-              icon: 'success',
-              dangerMode: true,
-              buttons: false
-            })
-            disableAccountLoading();
-            setUpdated(true);
-          })
-          .catch(e => {
-            console.log("error in api: ", e.response.data.message);
-            swal({
-              text: e.response.data.message,
-              timer: 3000,
-              icon: 'error',
-              dangerMode: true,
-              buttons: false
-            })
-            disableAccountLoading();
-          })
-      }, 1000);
-    },
-  });
 
   return (
 
@@ -426,7 +222,7 @@ const Setting = ({ settings }) => {
                 />
               </div>
               <div className={accountType === 'Business' ? "flex flex-col space-y-2" : "hidden"}>
-                <h1 className="text-lg font-semibold">Business Card</h1>
+                <h1 className="text-lg font-semibold">Virtual Business Card</h1>
                 <BusinessCard
                   image={imageUrl}
                   phone={phone}

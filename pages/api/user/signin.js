@@ -3,7 +3,6 @@ const Joi = require('joi');
 const bcrypt = require('bcryptjs');
 
 const User = require('../../../models/User');
-const Session = require('../../../models/Session');
 
 const handler = async (req, res) => {
   if (req.method === 'POST') {
@@ -14,7 +13,7 @@ const handler = async (req, res) => {
       });
       return schema.validate(data);
     };
-
+    console.log(req.body)
     const { error } = validateSignin(req.body);
 
     if (error)
@@ -26,32 +25,21 @@ const handler = async (req, res) => {
       const user = await User.findOne({ where: { username } });
       if (!user) {
         return res.status(403).json({ error: true, message: 'Validation failed', data: [] });
-        // throw new Error('User deos not exist.');
       }
 
-      // console.log(user.emailConfirmed)
       if (user.emailConfirmed === false) {
         return res
           .status(405)
           .json({ error: true, message: 'Confirmation code sent to email address', data: [] });
-        // throw new Error('Please confirm email.');
       }
 
       const match = await bcrypt.compare(password, user.password);
 
       if (!match) {
         return res.status(403).json({ error: true, message: 'Validation failed', data: [] });
-        // throw new Error('User failed to login.');
       }
 
       const token = jwt.sign({ username }, process.env.SECRET_KEY);
-
-      await Session.create({
-        userId: user.id,
-        username: user.username,
-        sessionId: user.varificationCode,
-        connected: false
-      });
 
       res
         .status(200)
@@ -60,7 +48,7 @@ const handler = async (req, res) => {
       res.status(500).json({ error: true, message: err.message, data: [] });
     }
   } else {
-    res.status(404).end('Page Not Found');
+    res.status(404).end('API Not Found');
   }
 };
 

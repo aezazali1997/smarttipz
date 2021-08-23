@@ -7,7 +7,6 @@ import { ChatCard, EmojiInput } from '../../../components';
 import socket from '../../../utils/socket';
 import { parseCookies } from 'nookies';
 import { useRouter } from 'next/router';
-import profile from '../../../public/profile.jpg';
 
 var data = [];
 
@@ -22,38 +21,46 @@ const UserMessage = () => {
 
     const ID = parseInt(id);
 
+
     useEffect(() => {
         if (id) {
-            isLoading(true);
             socket.auth = { username };
             socket.connect();
-            console.log('user', id);
-            // socket.on('private message', ({ messages, users }, error) => {
-            //     console.log(messages, users, error)
-            //     data = messages;
-            // })
+            console.log('user', ID);
             socket.emit('get messages', { id: ID });
-            socket.on('get messages', (res) => {
-                console.log('returnedRes', res);
-                data = res;
-            })
-
-            setTimeout(function () {
-                console.log("data", data);
-                setMessageList(messageList => messageList = data);
-                isLoading(false);
-            }, 4000);
         }
-    }, [id]);
+    }, [id])
 
-    useEffect(() => { }, [messageList]);
 
-    function handleOnEnter(text) {
+    useEffect(() => {
+        // if (ID) {
+        isLoading(true);
+        console.log('here');
+        socket.on('get messages', (res) => {
+            console.log('returnedRes', res);
+            data = res;
+        })
+        setTimeout(() => {
+            console.log("data", data);
+            setMessageList(messageList => messageList = data);
+            isLoading(false);
+        }, 5000);
+
+    }, [socket]);
+
+    useEffect(() => { console.log('updated') }, [messageList]);
+
+    let handleOnEnter = (text) => {
         console.log('enter', text)
         socket.emit("private message", { message: text, to: ID });
         socket.on('private message', (res) => {
             console.log('res', res);
-            setMessageList([...messageList, res])
+            let copyArray = [...messageList];
+            console.log({ copyArray });
+            let updatedArray = [...copyArray, res]
+            console.log({ updatedArray });
+            setMessageList(updatedArray);
+            console.log()
         })
     }
 
@@ -96,7 +103,6 @@ const UserMessage = () => {
                             to !== ID ?
                                 <div key={index}>
                                     <ChatCard
-                                        image={profile}
                                         name={'Naveed Ahsan'}
                                         message={message}
                                         time={time}

@@ -3,8 +3,8 @@ import '../styles/globals.css';
 import 'tailwindcss/tailwind.css';
 
 import { parseCookies } from 'nookies';
-import CustomLayout from '../Layout';
-import { AppWrapper } from '../contexts';
+import CustomLayout from 'Layout';
+import { AppWrapper } from 'contexts';
 
 
 const MyApp = ({ Component, pageProps }) => {

@@ -1,87 +1,18 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 // import Link from 'next/link'
 import Image from 'next/image';
-import { useFormik } from 'formik';
 import Helmet from 'react-helmet';
-import { useRouter } from 'next/router';
 import { Button, InputField } from '../../components';
-import { ForgetPasswordSchema } from '../../utils/validation_shema';
-import AxiosInstance from '../../APIs/axiosInstance';
 import logo from '../../public/ST-2.png';
 import forgetPassword from '../../public/forgetPassword.png';
+import { getInputClasses } from '../../helpers';
+import { UseForgotPassword } from '../../hooks';
 
-const initialValues = {
-    email: '',
-    password: '',
-    checked: false
-}
 const ForgetPassword = () => {
 
-    const router = useRouter();
-
-    const [showPassword, setShowPassword] = useState(false)
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
-    const [showAlert, setShowAlert] = useState(false);
-
-    useEffect(() => {
-
-    }, [showAlert])
-
-    const toggleAlert = () => {
-        setShowAlert(false);
-    }
-
-    const enableLoading = () => {
-        setLoading(true);
-    };
-
-    const disableLoading = () => {
-        setLoading(false);
-    };
-
-    const getInputClasses = (fieldname) => {
-        if (formik.touched[fieldname] && formik.errors[fieldname]) {
-            return "border-red-500";
-        }
-
-        if (formik.touched[fieldname] && !formik.errors[fieldname]) {
-            return "border-blue-500";
-        }
-
-        return "";
-    };
-
-    const formik = useFormik({
-        enableReinitialize: true,
-        initialValues,
-        validationSchema: ForgetPasswordSchema,
-        validateOnBlur: true,
-        onSubmit: ({ email }, { setSubmitting, setStatus }) => {
-            setTimeout(() => {
-                enableLoading();
-                AxiosInstance.forgetPassword(email)
-                    .then(({ data: { data, message, error } }) => {
-                        disableLoading();
-                        setError(false);
-                        setStatus(message);
-                        setShowAlert(true);
-                        router.push('/auth/login');
-                    })
-                    .catch((e) => {
-                        console.log('Error', e)
-                        setError(true)
-                        disableLoading();
-                        setSubmitting(false);
-                        setStatus(e.response.data.message);
-                        setShowAlert(true);
-                    });
-            }, 1000);
-        },
-    });
-
+    const { loading, toggleAlert, showAlert, error, formik } = UseForgotPassword();
 
     return (
         <div className="flex flex-col h-screen pt-5 p-5 xs:p-10 pb-2 space-y-5">
@@ -135,7 +66,7 @@ const ForgetPassword = () => {
                                     <svg className="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" /><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" /></svg>
                                 )}
                                 inputClass={`${getInputClasses(
-                                    "email"
+                                    formik, "email"
                                 )} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
                                 label={'Email'}
                             />

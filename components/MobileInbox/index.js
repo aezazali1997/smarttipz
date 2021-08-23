@@ -3,7 +3,7 @@ import React from 'react'
 import ChatList from '../ChatList';
 import MessageWindow from '../MessageWindow';
 
-const MobileInbox = ({ userList, goBackToUserList, message, setMessage, _OnSelect, handleOnEnter, selected }) => {
+const MobileInbox = ({ userList, goBackToUserList, message, setMessage, _OnSelect, selected }) => {
     return (
         <>
             {
@@ -20,7 +20,6 @@ const MobileInbox = ({ userList, goBackToUserList, message, setMessage, _OnSelec
                         goBackToUserList={goBackToUserList}
                         message={message}
                         setMessage={setMessage}
-                        handleOnEnter={handleOnEnter}
                     />)
 
             }

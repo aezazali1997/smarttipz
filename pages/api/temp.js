@@ -10,17 +10,18 @@ const Session = require('../../models/Session');
 
 const sequelize = require('../../models/db');
 
-const handler = async (req, res) => {
+const handler = (req, res) => {
   try {
     // await sequelize.close();
     // await sequelize.authenticate();
 
-    // await Business.sync({ force: true });
-    // await User.sync({ force: true });
-    // await BusinessCard.sync({ force: true });
-    // await Testimonial.sync({ force: true });
-    // await VideoCategory.sync({ force: true });
-    // await Video.sync({ force: true });
+    Business.sync({ force: true });
+    User.sync({ force: true });
+    BusinessCard.sync({ force: true });
+    Testimonial.sync({ force: true });
+    VideoCategory.sync({ force: true });
+    Video.sync({ force: true });
+    Session.sync({ force: true });
     // await sequelize.sync({ force: true });
     // await User.destroy({ where: {}, truncate: true });
     // await Businsess.destroy({ where: {}, truncate: true });
@@ -29,7 +30,7 @@ const handler = async (req, res) => {
     // await Video.destroy({ where: {}, truncate: true });
     // await VideoCategory.destroy({ where: {}, truncate: true });
 
-    await sequelize.sync({ force: true });
+    // sequelize.sync({ force: true });
 
     console.log('Connection has been established successfully.');
   } catch (error) {

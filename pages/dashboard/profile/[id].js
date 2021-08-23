@@ -93,9 +93,9 @@ const UserProfile = () => {
                             {'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. '}
                         </p>
                     </div>
-                    <div className="flex w-full items-center mt-1 px-2 space-x-6">
+                    <div className="flex w-full items-center mt-2 px-2 space-x-6">
                         <button className="followingBtn">
-                            Following
+                            Follow
                         </button>
 
                         <button onClick={gotoMessaging} className="messageBtn">

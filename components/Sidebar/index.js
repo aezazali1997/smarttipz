@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faNewspaper, faUserCircle, faCog, faPlayCircle, faSignOutAlt, faComment } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/router';
+import Badge from 'components/Badge';
 
 const Sidebar = ({ logout }) => {
 
@@ -54,9 +55,12 @@ const Sidebar = ({ logout }) => {
                             </div>
                         </Link>
                         <Link href='/dashboard/messages' className='p-4 font-sans nav-link nav-link-ltr' >
-                            <div className={`py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
+                            <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
                             ${Active("/dashboard/messages")}`}>
-                                <FontAwesomeIcon icon={faComment} />&nbsp;Messages
+                                <div>
+                                    <FontAwesomeIcon icon={faComment} />&nbsp;Messages
+                                </div>
+                                <Badge />
                             </div>
                         </Link>
                         <Link href='/dashboard/setting' className='p-4 font-sans nav-link nav-link-ltr' >

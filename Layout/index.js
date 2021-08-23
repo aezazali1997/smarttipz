@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { Sidebar, Drawer } from '../components'
 import { useRouter } from 'next/router';
 import cookie from 'js-cookie';
+import { Sidebar, Drawer } from 'components'
 
 
 const CustomLayout = ({ children }) => {

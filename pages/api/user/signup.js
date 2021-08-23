@@ -1,7 +1,6 @@
-import { when } from 'joi';
-
+import Session from '../../../models/Session';
 const bcrypt = require('bcryptjs');
-
+const randomString = require('randomstring');
 const User = require('../../../models/User');
 const Business = require('../../../models/Business');
 const sendEmail = require('../../../utils/sendMail');
@@ -32,6 +31,7 @@ const handler = async (req, res) => {
     if (error) return res.status(400).json({ error: error.details[0].message });
 
     const { username, email, phone, password, accountType, website, name } = req.body;
+    console.log('Signup:', req.body);
 
     let user = null;
 
@@ -47,8 +47,12 @@ const handler = async (req, res) => {
       }
 
       const encPassword = await bcrypt.hash(password, 12);
-      let varificationCode = Math.round(Math.random() * 1000000).toString();
-      while (varificationCode.length < 6) varificationCode += '0';
+      let varificationCode = randomString.generate({
+        length: 6,
+        charset: 'numeric'
+      });
+
+      console.log('varifyCode:', varificationCode);
 
       const newUser = await User.create({
         name,
@@ -67,7 +71,14 @@ const handler = async (req, res) => {
         await newUser.setBusiness(newBusiness);
       }
 
-      sendEmail(
+
+      await Session.create({
+        userId: newUser.id,
+        username: newUser.username,
+        connected: false
+      });
+
+      await sendEmail(
         email,
         'Account Varification',
         `<p>Your account validation code is: ${varificationCode}</p>`

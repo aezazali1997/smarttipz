@@ -31,7 +31,7 @@ const handler = async (req, res) => {
       const encNewPassword = await bcrypt.hash(newPassword, 12);
 
       await user.update({ password: encNewPassword });
-
+      console.log(newPassword);
       await sendEmail(email, 'New Password', `<p>Your new password is: ${newPassword}</p>`);
 
       res.status(201).json({ error: false, message: 'New password sent', data: [] });

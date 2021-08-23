@@ -1,34 +1,20 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/jsx-key */
-import React, { useEffect, useState } from 'react'
-// import Image from 'next/image';
-import { Helmet } from 'react-helmet';
-import { Card, PopupBusinessCard, ProfileCard, Rating, TestimonialCard } from '../../components';
-import videos from '../../utils/VdeoSchema.json';
-import testimonialVideo from '../../utils/testimonialSchema.json';
-import { parseCookies } from 'nookies';
+import React from 'react'
 import axios from 'axios';
+import { Helmet } from 'react-helmet';
+import { parseCookies } from 'nookies';
+import { UseFetchProfile } from 'hooks';
+import videos from 'utils/VdeoSchema.json';
+import testimonialVideo from 'utils/testimonialSchema.json';
+import { Card, PopupBusinessCard, ProfileCard, Rating, TestimonialCard } from 'components';
 
 const Profile = ({ profile }) => {
 
-    const [personalInfo, setPersonalInfo] = useState({});
-    const [showBusinessCard, setShowBusinessCard] = useState(false);
-
-    useEffect(() => {
-        console.log('profile', profile);
-        setPersonalInfo(personalInfo => personalInfo = profile);
-    }, []);
-
-
-    let handleShowBusinessCard = () => {
-        console.log('clicked');
-        setShowBusinessCard(showBusinessCard => !showBusinessCard)
-    }
-
+    const { personalInfo, handleShowBusinessCard, showBusinessCard } = UseFetchProfile(profile);
     const { name, about, followed, following, rating, views, picture, phone, email, accountType, website } = personalInfo;
 
     return (
-
         <div className="flex flex-col h-full w-full p-3 sm:p-5">
             {/*SEO Support*/}
             <Helmet>
@@ -41,7 +27,6 @@ const Profile = ({ profile }) => {
                     data={personalInfo}
                     handleShowBusinessCard={handleShowBusinessCard}
                     showBusinessCard={showBusinessCard}
-
                 />
             </div>
             <div className="hidden md:flex flex-row w-full h-auto">
@@ -105,7 +90,7 @@ const Profile = ({ profile }) => {
                     {accountType === "Business" && (
                         <div className="flex w-full mt-2 px-2 " onClick={handleShowBusinessCard}>
                             <p className="text-xs no-underline hover:underline text-indigo-600 cursor-pointer">
-                                Click See Virtual Business Card
+                                Virtual Business Card
                             </p>
                         </div>
                     )}
