@@ -7,6 +7,8 @@ import { ChatCard, EmojiInput } from '../../../components';
 import socket from '../../../utils/socket';
 import { parseCookies } from 'nookies';
 import { useRouter } from 'next/router';
+import axiosInstance from 'APIs/axiosInstance';
+import { Socket } from 'socket.io-client';
 
 var data = [];
 
@@ -21,39 +23,27 @@ const UserMessage = () => {
 
     const ID = parseInt(id);
 
-
     useEffect(() => {
         if (id) {
+            isLoading(true);
             socket.auth = { username };
             socket.connect();
-            console.log('user', ID);
-            socket.emit('get messages', { id: ID });
+            socket.on('connected', (res) => {
+                console.log(res);
+            })
+            const data = { id: ID }
+            axiosInstance.privateChat(data).then(({ data: { error, data, message } }) => {
+                setMessageList(data);
+                isLoading(false);
+            }).catch(e => {
+                console.log(e.response.data.message);
+            })
         }
-    }, [id])
-
+    }, [id]);
 
     useEffect(() => {
-        // if (ID) {
-        isLoading(true);
-        console.log('here');
-        socket.on('get messages', (res) => {
-            console.log('returnedRes', res);
-            data = res;
-        })
-        setTimeout(() => {
-            console.log("data", data);
-            setMessageList(messageList => messageList = data);
-            isLoading(false);
-        }, 5000);
-
-    }, [socket]);
-
-    useEffect(() => { console.log('updated') }, [messageList]);
-
-    let handleOnEnter = (text) => {
-        console.log('enter', text)
-        socket.emit("private message", { message: text, to: ID });
-        socket.on('private message', (res) => {
+        console.log('updated');
+        socket.on('recieveMessage', (res) => {
             console.log('res', res);
             let copyArray = [...messageList];
             console.log({ copyArray });
@@ -62,6 +52,11 @@ const UserMessage = () => {
             setMessageList(updatedArray);
             console.log()
         })
+    }, [messageList]);
+
+    let handleOnEnter = (text) => {
+        console.log('enter', text)
+        socket.emit("sendMessage", { message: text, to: ID });
     }
 
 

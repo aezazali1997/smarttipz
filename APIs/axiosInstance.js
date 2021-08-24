@@ -42,6 +42,14 @@ class AxiosInstance {
         return await axios.get(USER_API_BASE_URL + "api/profile", this.getAuthHeader());
     }
 
+    async privateChat(data) {
+        return await axios.post(USER_API_BASE_URL + "api/chat/private", data, this.getAuthHeader());
+    }
+
+    async threads() {
+        return await axios.get(USER_API_BASE_URL + "api/chat/threads", this.getAuthHeader());
+    }
+
     async updateProfile(payload) {
         return await axios.post(USER_API_BASE_URL + "api/profile/update", payload, this.getAuthHeader());
     }

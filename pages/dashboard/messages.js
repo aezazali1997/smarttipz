@@ -5,9 +5,8 @@ import { Helmet } from 'react-helmet';
 import { parseCookies } from 'nookies';
 import socket from 'utils/socket';
 import { MobileInbox, WebInbox } from 'components';
+import axiosInstance from 'APIs/axiosInstance';
 
-
-let data = [];
 
 const Messages = () => {
 
@@ -29,17 +28,30 @@ const Messages = () => {
         _EnableLoading();
         socket.auth = { username };
         socket.connect();
-        socket.on('users', ({ users }) => {
-            data = users;
+        socket.on('connected', (res) => {
+            console.log(res);
         })
-        setTimeout(function () {
+        axiosInstance.threads().then(({ data: { error, data, message } }) => {
             console.log("data", data);
             setUserList(userList => userList = data);
             _DisableLoading(false);
-        }, 4000);
+        }).catch(e => {
+            console.log(e.response.data.message);
+        })
     }, []);
 
-    useEffect(() => { }, [userList]);
+    useEffect(() => {
+
+        socket.on('newUser', (res) => {
+            console.log('res', res);
+            let copyArray = [...userList];
+            console.log({ copyArray });
+            let updatedArray = [...copyArray, res]
+            console.log({ updatedArray });
+            setUserList(updatedArray);
+        })
+
+    }, [userList]);
 
     let _OnSelect = (id, name, picture) => {
         if (selected?.id !== id) {
@@ -77,6 +89,7 @@ const Messages = () => {
             <main className="lg:hidden flex flex-col lg:flex-row w-full h-screen overflow-y-auto">
                 <MobileInbox
                     userList={userList}
+                    loading={loading}
                     _OnSelect={_OnSelect}
                     selected={selected}
                     goBackToUserList={goBackToUserList}

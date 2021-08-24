@@ -5,12 +5,11 @@ import { useRouter } from 'next/router';
 import swal from 'sweetalert';
 import axiosInstance from '../APIs/axiosInstance';
 import { LoginSchema } from 'utils/validation_shema';
-import { useAppContext } from 'contexts';
+
+
 
 const UseFetchLogin = () => {
     const router = useRouter();
-    const { socket } = useAppContext();
-
     const [showPassword, setShowPassword] = useState(false)
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
@@ -56,7 +55,6 @@ const UseFetchLogin = () => {
                         cookie.set('token', token);
                         cookie.set('username', username);
                         localStorage.setItem('image', image);
-
                         router.push('/dashboard/profile');
                     })
                     .catch((e) => {

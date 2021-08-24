@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import axiosInstance from 'APIs/axiosInstance';
 import { isEmpty } from 'lodash';
 import { parseCookies } from 'nookies';
 import React, { useEffect, useState } from 'react'
@@ -9,27 +10,37 @@ import EmojiInput from '../EmojiInput';
 const MessageWindow = ({ message, setMessage, selected, goBackToUserList }) => {
     const { username } = parseCookies();
     const [userMessages, setMessages] = useState([]);
+    const [loading, isLoading] = useState(true);
 
     useEffect(() => {
         if (selected) {
-            console.log(selected);
-            socket.emit('get messages', { id: selected?.id });
-            socket.on('get messages', (res) => {
-                console.log('returnedRes', res);
-                setMessages(res);
+            isLoading(true);
+            const data = {
+                id: selected?.id
+            }
+            axiosInstance.privateChat(data).then(({ data: { error, data, message } }) => {
+                setMessages(data);
+                isLoading(false);
+            }).catch(e => {
+                console.log(e.response.data.message);
             })
         }
     }, [selected])
 
-    useEffect(() => { }, [userMessages]);
+    useEffect(() => {
+        console.log('updated');
+        socket.on('recieveMessage', (res) => {
+            console.log('res', res);
+            let copyArray = [...userMessages];
+            console.log({ copyArray });
+            let updatedArray = [...copyArray, res]
+            console.log({ updatedArray });
+            setMessages(updatedArray);
+        })
+    }, [userMessages]);
 
     let handleOnEnter = (text) => {
-        console.log('enter', text)
-        socket.emit("private message", { message: text, to: selected?.id });
-        socket.on('private message', (res) => {
-            console.log('res', res);
-            setMessages([...userMessages, res])
-        })
+        socket.emit("sendMessage", { message: text, to: selected?.id });
     }
 
     return (
@@ -64,37 +75,45 @@ const MessageWindow = ({ message, setMessage, selected, goBackToUserList }) => {
                 <hr />
                 <div className="flex h-screen lg:h-auto lg:flex-1 flex-col items-start  overflow-y-auto w-full space-y-3 mt-6 px-3 border-b">
                     {
-                        !isEmpty(userMessages) &&
-                        userMessages.map(({ to, message, time }, index) => (
-                            to !== selected?.id ?
-                                <div key={index}>
-                                    <ChatCard
-                                        image={selected?.picture}
-                                        name={selected?.name}
-                                        message={message}
-                                        time={time}
-                                        containerStyle={`max-w-sm`}
-                                        cardStyle={`flex items-center space-x-3`}
-                                        imgStyle={`h-10 w-16 rounded-full object-cover md:w-10`}
-                                        contentStyle={`py-2 px-4 rounded-3xl bg-gray-100`}
-                                        headerStyle={`flex items-center justify-between space-x-3`}
-                                        messageStyle={`text-sm text-black`}
-                                    />
-                                </div> :
-                                <div key={index} className="senderChat">
-                                    <ChatCard
-                                        name={username}
-                                        message={message}
-                                        time={time}
-                                        containerStyle={`max-w-sm`}
-                                        cardStyle={` flex items-center space-x-3`}
-                                        imgStyle={` hidden h-10 w-16 rounded-full object-cover md:w-10`}
-                                        contentStyle={`py-2 px-4 rounded-3xl bg-gray-100`}
-                                        headerStyle={`flex items-center justify-between space-x-3`}
-                                        messageStyle={`text-sm text-black`}
-                                    />
+
+                        !isEmpty(userMessages) && (
+                            loading ?
+                                <div className="flex flex-col w-full items-center justify-center">
+                                    <div className="self-center ml-3 loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-6 w-6 "></div>
+                                    <p className="text-sm text-center text-gray-400">Loading Messages</p>
                                 </div>
-                        ))
+                                :
+                                userMessages.map(({ to, message, time }, index) => (
+                                    to !== selected?.id ?
+                                        <div key={index}>
+                                            <ChatCard
+                                                image={selected?.picture}
+                                                name={selected?.name}
+                                                message={message}
+                                                time={time}
+                                                containerStyle={`max-w-sm`}
+                                                cardStyle={`flex items-center space-x-3`}
+                                                imgStyle={`h-10 w-16 rounded-full object-cover md:w-10`}
+                                                contentStyle={`py-2 px-4 rounded-3xl bg-gray-100`}
+                                                headerStyle={`flex items-center justify-between space-x-3`}
+                                                messageStyle={`text-sm text-black`}
+                                            />
+                                        </div> :
+                                        <div key={index} className="senderChat">
+                                            <ChatCard
+                                                name={username}
+                                                message={message}
+                                                time={time}
+                                                containerStyle={`max-w-sm`}
+                                                cardStyle={` flex items-center space-x-3`}
+                                                imgStyle={` hidden h-10 w-16 rounded-full object-cover md:w-10`}
+                                                contentStyle={`py-2 px-4 rounded-3xl bg-gray-100`}
+                                                headerStyle={`flex items-center justify-between space-x-3`}
+                                                messageStyle={`text-sm text-black`}
+                                            />
+                                        </div>
+                                ))
+                        )
 
                     }
 

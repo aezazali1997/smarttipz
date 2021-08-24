@@ -24,7 +24,7 @@ const ChatCard = ({ image, name, message, time, containerStyle, cardStyle, imgSt
 
                 <div className={contentStyle}>
                     <div className={headerStyle}>
-                        <div className="tracking-wide text-md text-black font-semibold">{name}</div>
+                        <div className="tracking-wide text-xs md:text-sm lg:text-md text-black font-semibold">{name}</div>
                         {
                             time && (
                                 <div className="tracking-wide text-xs text-indigo-600 font-semibold">{moment(time).format('h:mm a')}</div>

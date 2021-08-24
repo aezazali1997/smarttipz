@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useMemo, useState } from 'react';
 
 const SocketContext = createContext();
 
@@ -7,10 +7,7 @@ export function AppWrapper({ children }) {
 
     const [socket, setSocket] = useState(null);
 
-    const data = {
-        socket,
-        setSocket
-    }
+    const data = useMemo(() => ({ socket, setSocket }), [socket, setSocket]);
 
     return (
         <SocketContext.Provider value={data}>
