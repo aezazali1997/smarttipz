@@ -6,6 +6,11 @@ const User = require('../../../models/User');
 
 const handler = async (req, res) => {
   if (req.method === 'POST') {
+
+    const {
+      body
+    } = req;
+
     const validateSignin = (data) => {
       const schema = Joi.object({
         username: Joi.string().required(),
@@ -13,13 +18,13 @@ const handler = async (req, res) => {
       });
       return schema.validate(data);
     };
-    console.log(req.body)
-    const { error } = validateSignin(req.body);
+    console.log(body)
+    const { error } = validateSignin(body);
 
     if (error)
       return res.status(400).json({ error: true, message: error.details[0].message, data: [] });
 
-    const { username, password } = req.body;
+    const { username, password } = body;
 
     try {
       const user = await User.findOne({ where: { username } });
@@ -27,7 +32,9 @@ const handler = async (req, res) => {
         return res.status(403).json({ error: true, message: 'Validation failed', data: [] });
       }
 
-      if (user.emailConfirmed === false) {
+      const { emailConfirmed, id, picture } = user;
+
+      if (emailConfirmed === false) {
         return res
           .status(405)
           .json({ error: true, message: 'Confirmation code sent to email address', data: [] });
@@ -43,7 +50,7 @@ const handler = async (req, res) => {
 
       res
         .status(200)
-        .json({ error: false, message: 'Login successful', data: { username, token, image: user.picture } });
+        .json({ error: false, message: 'Login successful', data: { id: id, username, image: picture, token } });
     } catch (err) {
       res.status(500).json({ error: true, message: err.message, data: [] });
     }

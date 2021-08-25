@@ -60,7 +60,7 @@ const UseFetchLogin = () => {
                     .catch((e) => {
                         console.log(e.response.status);
                         if (e.response.status === 405) {
-                            AxiosInstance.resendOTP(username)
+                            axiosInstance.resendOTP(username)
                                 .then(({ data: { data, message, error }, status }) => {
                                     swal({
                                         title: "Email Not Verified",

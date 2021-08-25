@@ -21,14 +21,17 @@ const UseFetchSetting = (settings) => {
     const [uploadLoading, setUploadLoading] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
     const [personalInfo, setPersonalInfo] = useState({
-        phone: '', accessible: '', name: '', email: '', showPhone: '', about: '', website: '', name: '',
+        phone: '', accessible: '', name: '', email: '', showPhone: '', about: '', username: '',
         accountType: ''
     });
     const [updated, setUpdated] = useState(false);
     const [imageUrl, setImageUrl] = useState('');
+    const [businessCard, setBusinessCard] = useState('');
+
     let { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
 
     useEffect(() => {
+        const { accountType } = settings;
         if (update !== updated) {
             axiosInstance.profile()
                 .then(({ data: { data } }) => {
@@ -39,6 +42,13 @@ const UseFetchSetting = (settings) => {
         else {
             setImageUrl(settings?.picture);
             setPersonalInfo(settings);
+        }
+        if (accountType === 'Business') {
+            axiosInstance.getBusinessCard().then(({ data: { error, data, message } }) => {
+                setBusinessCard(data);
+            }).catch(e => {
+                console.log('Error in Api BusinessCard: ', e.response.data.message);
+            })
         }
     }, [updated]);
 
@@ -205,7 +215,7 @@ const UseFetchSetting = (settings) => {
     });
 
     return {
-        uploadLoading, accountLoading, formik, uploadLoading, personalInfo, personalLoading,
+        uploadLoading, accountLoading, formik, uploadLoading, personalInfo, personalLoading, businessCard,
         deleteLoading, imageUrl, _Update, _OnChange, _DeleteImg, handleFileChange, FileInput, openFileDialog
     }
 }

@@ -16,7 +16,6 @@ const WebInbox = ({ loading, userList, _OnSelect, selected, goBackToUserList, me
                     <ChatList
                         users={userList}
                         _OnSelect={_OnSelect}
-
                     />
                     {
                         !isEmpty(selected) && (

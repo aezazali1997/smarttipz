@@ -42,6 +42,20 @@ class AxiosInstance {
         return await axios.get(USER_API_BASE_URL + "api/profile", this.getAuthHeader());
     }
 
+    async getFollow() {
+        return await axios.get(USER_API_BASE_URL + "api/profile/follow", this.getAuthHeader());
+    }
+    async followUser(id) {
+        return await axios.post(USER_API_BASE_URL + "api/profile/follow", id, this.getAuthHeader());
+    }
+
+    async getVideos() {
+        return await axios.get(USER_API_BASE_URL + "api/profile/videos", this.getAuthHeader());
+    }
+    async getBusinessCard() {
+        return await axios.get(USER_API_BASE_URL + "api/profile/businesscard", this.getAuthHeader());
+    }
+
     async privateChat(data) {
         return await axios.post(USER_API_BASE_URL + "api/chat/private", data, this.getAuthHeader());
     }

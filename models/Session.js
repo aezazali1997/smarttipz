@@ -11,6 +11,7 @@ const Session = sequelize.define("Session", {
   },
   sessions: {
     type: DataTypes.ARRAY(DataTypes.STRING),
+    defaultValue: []
   },
   connected: {
     type: DataTypes.BOOLEAN,

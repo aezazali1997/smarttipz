@@ -9,12 +9,12 @@ const Business = require('../../models/Business');
 const nodemailer = require("nodemailer");
 
 const handler = async (req, res) => {
-    User.sync({ force: true });
-    Business.sync({ force: true });
-    BusinessCard.sync({ force: true });
-    Session.sync({ force: true });
-    Video.sync({ force: true });
-    Testimonial.sync({ force: true });
+    // User.sync({ force: true });
+    // Business.sync({ force: true });
+    // BusinessCard.sync({ force: true });
+    Session.sync({ alter: true });
+    // Video.sync({ force: true });
+    // Testimonial.sync({ force: true });
     // Chat.sync({ force: true });
     res.status(200).send({ message: "Tables created Successfully" });
 }

@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import swal from 'sweetalert';
 import axiosInstance from '../APIs/axiosInstance';
 import { AuthenticateSchema } from '../utils/validation_shema';
+import cookie from 'js-cookie';
 
 const UseFetchAuthenticate = () => {
 
@@ -27,6 +28,20 @@ const UseFetchAuthenticate = () => {
         tab5: '',
         tab6: '',
     }
+
+    const resendOTP = () => {
+        axiosInstance.resendOTP(localStorage.getItem('username'))
+            .then(({ data: { data, message, error }, status }) => {
+                swal({
+                    text: 'Confirmation code sent to email address',
+                    buttons: false,
+                    dangerMode: true,
+                    timer: 5000,
+                    icon: 'info'
+                })
+            })
+    }
+
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: initialValues,
@@ -42,7 +57,7 @@ const UseFetchAuthenticate = () => {
                     }
                     console.log(data);
                     axiosInstance.authenticate(data)
-                        .then(({ data: { error, data, message } }) => {
+                        .then(({ data: { error, data: { token, username, image }, message } }) => {
                             disableLoading();
                             console.log(message, error, data);
                             swal({
@@ -52,12 +67,14 @@ const UseFetchAuthenticate = () => {
                                 timer: 3000,
                                 icon: 'success'
                             })
-                            router.push('/auth/login');
+                            cookie.set('token', token);
+                            cookie.set('username', username);
+                            localStorage.setItem('image', image);
+                            router.push('/dashboard/profile');
                         })
                         .catch((e) => {
                             console.log('Error', e)
                             disableLoading();
-                            setSubmitting(false);
                             swal({
                                 text: e.response.data.message,
                                 buttons: false,
@@ -71,7 +88,7 @@ const UseFetchAuthenticate = () => {
         },
     });
 
-    return { loading, formik }
+    return { loading, formik, resendOTP };
 
 }
 

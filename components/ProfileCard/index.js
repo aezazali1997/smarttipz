@@ -5,9 +5,10 @@ import Rating from '../RatingStar';
 import Image from 'next/image';
 import PopupBusinessCard from '../PopupBusinessCard';
 
-const ProfileCard = ({ data, otherUser, handleShowBusinessCard, showBusinessCard }) => {
+const ProfileCard = ({ data, otherUser, handleShowBusinessCard, showBusinessCard, followed, followers, website }) => {
 
-    const { name, about, accessible, followed, following, rating, website, email, views, picture, phone, showPhone, accountType } = data;
+
+    const { name, about, rating, email, views, picture, phone, accountType } = data;
 
     return (
         <div className="flex flex-col w-full relative items-center space-y-3">
@@ -51,11 +52,11 @@ const ProfileCard = ({ data, otherUser, handleShowBusinessCard, showBusinessCard
                     <>
                         <div className="flex w-full justify-between">
                             <div className="flex flex-col justify-center w-full">
-                                <h1 className="text-md lg:text-3xl font-semibold text-center">{followed?.length || '1.3K'}</h1>
+                                <h1 className="text-md lg:text-3xl font-semibold text-center">{followers?.length}</h1>
                                 <h2 className="text-sm text-center text-black">Followers</h2>
                             </div>
                             <div className="flex flex-col w-full">
-                                <h1 className=" text-md lg:text-3xl font-semibold text-center">{following?.length || '1.8K'}</h1>
+                                <h1 className=" text-md lg:text-3xl font-semibold text-center">{followed?.length}</h1>
                                 <h2 className="text-sm text-center text-black">Following</h2>
                             </div>
                         </div>
@@ -72,11 +73,11 @@ const ProfileCard = ({ data, otherUser, handleShowBusinessCard, showBusinessCard
                     :
                     <div className="flex w-full bg-gray-200 border">
                         <div className="flex flex-col justify-center border-r border-gray-500 w-full">
-                            <h1 className="text-md lg:text-3xl font-semibold text-center">{followed?.length || '1.3K'}</h1>
+                            <h1 className="text-md lg:text-3xl font-semibold text-center">{followers?.length}</h1>
                             <h2 className="text-sm text-center text-black">Followers</h2>
                         </div>
                         <div className="flex flex-col w-full">
-                            <h1 className=" text-md lg:text-3xl font-semibold text-center">{following?.length || '1.8K'}</h1>
+                            <h1 className=" text-md lg:text-3xl font-semibold text-center">{followed?.length}</h1>
                             <h2 className="text-sm text-center text-black">Following</h2>
                         </div>
                     </div>

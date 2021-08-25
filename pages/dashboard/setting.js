@@ -12,12 +12,12 @@ import { AccountSetting, BusinessCard, Button, InputField } from 'components';
 
 const Setting = ({ settings }) => {
 
-  const { accountLoading, formik, personalInfo, personalLoading, imageUrl, _Update, _OnChange,
-    _DeleteImg, handleFileChange, FileInput, openFileDialog } = UseFetchSetting(settings);
+  const { accountLoading, formik, personalInfo, personalLoading, imageUrl, businessCard,
+    _Update, _OnChange, _DeleteImg, handleFileChange, FileInput, openFileDialog } = UseFetchSetting(settings);
 
-  const { name, email, about, accessible, showPhone, accountType, phone, website } = personalInfo;
-
-
+  const { name, email, about, accessible, showPhone, accountType, phone, username } = personalInfo;
+  const { website } = businessCard;
+  console.log(personalInfo)
   return (
 
     <div className="flex flex-col h-full w-full p-3 sm:p-5 ">
@@ -26,7 +26,6 @@ const Setting = ({ settings }) => {
         <title>Setting | Smart Tipz</title>
       </Helmet>
       {/*SEO Support End */}
-
 
       <div className="flex flex-col w-full">
         {/* section starts here*/}
@@ -90,6 +89,19 @@ const Setting = ({ settings }) => {
                   )}
                   inputClass={`border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
                   label={'Name'}
+                />
+                <InputField
+                  disabled={true}
+                  name={"username"}
+                  type={"text"}
+                  value={username}
+                  onChange={_OnChange}
+                  svg={(
+                    <svg className="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" /><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" /></svg>
+                  )}
+                  inputClass={`border text-gray-400 bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12 `}
+                  label={'Username'}
                 />
                 <InputField
                   disabled={true}
@@ -226,7 +238,7 @@ const Setting = ({ settings }) => {
                 <BusinessCard
                   image={imageUrl}
                   phone={phone}
-                  website={website}
+                  website={website || ''}
                   name={name}
                   email={email}
                 />
@@ -242,11 +254,21 @@ const Setting = ({ settings }) => {
 
 export const getServerSideProps = async (context) => {
   const { token } = parseCookies(context);
-  const res = await axios.get(`${process.env.BASE_URL}api/profile`, { headers: { Authorization: "Bearer " + token } })
-  const { data } = res.data;
-  return {
-    props: {
-      settings: data
+  if (!token)
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/auth/login",
+      },
+      props: {},
+    };
+  else {
+    const res = await axios.get(`${process.env.BASE_URL}api/profile`, { headers: { Authorization: "Bearer " + token } })
+    const { data } = res.data;
+    return {
+      props: {
+        settings: data
+      }
     }
   }
 }

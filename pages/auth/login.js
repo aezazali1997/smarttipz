@@ -38,12 +38,13 @@ const Login = () => {
                 <div className="flex flex-col w-full items-center">
                     <div className="flex flex-col w-full lg:max-w-md mt-4 lg:mt-0 space-y-2">
                         <p className=" font-bold text-3xl text-center lg:text-left lg:text-3xl">Login</p>
-                        <p className="text-gray-400 text-md text-center lg:text-left">New user? <Link
-                            href="/auth/signup">
-                            <a className="text-blue-800 text-md font-semibold hover:underline"
-                            >Create an account
-                            </a>
-                        </Link></p>
+                        <p className="text-gray-400 text-md text-center lg:text-left">New user?&nbsp;
+                            <Link
+                                href="/auth/signup">
+                                <a className="text-blue-800 text-md font-semibold hover:underline"
+                                >Create an account
+                                </a>
+                            </Link></p>
                     </div>
                     <div className="flex w-full lg:max-w-md justify-evenly flex-col mt-6">
                         <form className="w-full" onSubmit={formik.handleSubmit}>

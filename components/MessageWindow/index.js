@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import axiosInstance from 'APIs/axiosInstance';
+import { scrollToBottom } from 'helpers';
 import { isEmpty } from 'lodash';
 import { parseCookies } from 'nookies';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import socket from '../../utils/socket';
 import ChatCard from '../ChatCard';
 import EmojiInput from '../EmojiInput';
@@ -11,6 +12,8 @@ const MessageWindow = ({ message, setMessage, selected, goBackToUserList }) => {
     const { username } = parseCookies();
     const [userMessages, setMessages] = useState([]);
     const [loading, isLoading] = useState(true);
+
+    const messagesEndRef = useRef(null);
 
     useEffect(() => {
         if (selected) {
@@ -21,6 +24,7 @@ const MessageWindow = ({ message, setMessage, selected, goBackToUserList }) => {
             axiosInstance.privateChat(data).then(({ data: { error, data, message } }) => {
                 setMessages(data);
                 isLoading(false);
+                scrollToBottom(messagesEndRef);
             }).catch(e => {
                 console.log(e.response.data.message);
             })
@@ -36,10 +40,12 @@ const MessageWindow = ({ message, setMessage, selected, goBackToUserList }) => {
             let updatedArray = [...copyArray, res]
             console.log({ updatedArray });
             setMessages(updatedArray);
+            scrollToBottom(messagesEndRef);
         })
     }, [userMessages]);
 
     let handleOnEnter = (text) => {
+        console.log('sentText', text);
         socket.emit("sendMessage", { message: text, to: selected?.id });
     }
 
@@ -83,38 +89,43 @@ const MessageWindow = ({ message, setMessage, selected, goBackToUserList }) => {
                                     <p className="text-sm text-center text-gray-400">Loading Messages</p>
                                 </div>
                                 :
-                                userMessages.map(({ to, message, time }, index) => (
-                                    to !== selected?.id ?
-                                        <div key={index}>
-                                            <ChatCard
-                                                image={selected?.picture}
-                                                name={selected?.name}
-                                                message={message}
-                                                time={time}
-                                                containerStyle={`max-w-sm`}
-                                                cardStyle={`flex items-center space-x-3`}
-                                                imgStyle={`h-10 w-16 rounded-full object-cover md:w-10`}
-                                                contentStyle={`py-2 px-4 rounded-3xl bg-gray-100`}
-                                                headerStyle={`flex items-center justify-between space-x-3`}
-                                                messageStyle={`text-sm text-black`}
-                                            />
-                                        </div> :
-                                        <div key={index} className="senderChat">
-                                            <ChatCard
-                                                name={username}
-                                                message={message}
-                                                time={time}
-                                                containerStyle={`max-w-sm`}
-                                                cardStyle={` flex items-center space-x-3`}
-                                                imgStyle={` hidden h-10 w-16 rounded-full object-cover md:w-10`}
-                                                contentStyle={`py-2 px-4 rounded-3xl bg-gray-100`}
-                                                headerStyle={`flex items-center justify-between space-x-3`}
-                                                messageStyle={`text-sm text-black`}
-                                            />
-                                        </div>
-                                ))
-                        )
+                                <>
+                                    {
+                                        userMessages.map(({ to, message, time }, index) => (
+                                            to !== selected?.id ?
+                                                <div key={index}>
+                                                    <ChatCard
+                                                        image={selected?.picture}
+                                                        name={selected?.name}
+                                                        message={message}
+                                                        time={time}
+                                                        containerStyle={`max-w-sm`}
+                                                        cardStyle={`flex items-center space-x-3`}
+                                                        imgStyle={`h-10 w-16 rounded-full object-cover md:w-10`}
+                                                        contentStyle={`py-2 px-4 rounded-3xl bg-gray-100`}
+                                                        headerStyle={`flex items-center justify-between space-x-3`}
+                                                        messageStyle={`text-sm text-black`}
+                                                    />
+                                                </div> :
+                                                <div key={index} className="senderChat">
+                                                    <ChatCard
+                                                        name={username}
+                                                        message={message}
+                                                        time={time}
+                                                        containerStyle={`max-w-sm`}
+                                                        cardStyle={` flex items-center space-x-3`}
+                                                        imgStyle={` hidden h-10 w-16 rounded-full object-cover md:w-10`}
+                                                        contentStyle={`py-2 px-4 rounded-3xl bg-gray-100`}
+                                                        headerStyle={`flex items-center justify-between space-x-3`}
+                                                        messageStyle={`text-sm text-black`}
+                                                    />
+                                                </div>
 
+                                        ))
+                                    }
+                                    <div ref={messagesEndRef} />
+                                </>
+                        )
                     }
 
                 </div>

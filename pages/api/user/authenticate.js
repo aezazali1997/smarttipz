@@ -1,5 +1,5 @@
 const Joi = require('joi');
-
+const jwt = require('jsonwebtoken');
 const User = require('../../../models/User');
 
 const handler = async (req, res) => {
@@ -12,13 +12,15 @@ const handler = async (req, res) => {
       return schema.validate(data);
     };
 
-    const { error } = validateAuthenticate(req.body);
+    const { body } = req;
 
-    if (error) return res.status(400).json({ error: error.details[0].message });
+    const { error } = validateAuthenticate(body);
 
-    const { username, varificationCode } = req.body;
+    if (error) return res.status(400).send({ error: true, data: [], message: error.details[0].message });
 
-    console.log(req.body);
+    const { username, varificationCode } = body;
+
+    console.log(body);
 
     try {
       const user = await User.findOne({ where: { username } });
@@ -26,6 +28,7 @@ const handler = async (req, res) => {
         return res.status(400).json({ error: true, message: 'Validation failed', data: [] });
       }
 
+      const token = jwt.sign({ username }, process.env.SECRET_KEY);
 
       const time = Math.floor((Date.now() - user.updatedAt.getTime()) / (1000 * 60));
       if (time >= 60) {
@@ -37,9 +40,17 @@ const handler = async (req, res) => {
       }
 
       await user.update({ emailConfirmed: true });
-      res.status(200).json({ error: false, message: 'User varified', data: [] });
+
+      const { id, picture } = user;
+
+      res
+        .status(200)
+        .json({ error: false, data: { id, username, image: picture, token }, message: 'User varified' });
+
     } catch (err) {
-      res.status(500).json({ error: false, message: err.message, data: [] });
+      res
+        .status(500)
+        .send({ error: false, data: [], message: 'API Failed' });
     }
   } else {
     res.status(404).end('Page Not Found');

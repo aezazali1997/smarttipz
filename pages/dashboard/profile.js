@@ -8,11 +8,13 @@ import { UseFetchProfile } from 'hooks';
 import videos from 'utils/VdeoSchema.json';
 import testimonialVideo from 'utils/testimonialSchema.json';
 import { Card, PopupBusinessCard, ProfileCard, Rating, TestimonialCard } from 'components';
+import axiosInstance from 'APIs/axiosInstance';
 
 const Profile = ({ profile }) => {
 
-    const { personalInfo, handleShowBusinessCard, showBusinessCard } = UseFetchProfile(profile);
-    const { name, about, followed, following, rating, views, picture, phone, email, accountType, website } = personalInfo;
+    const { handleShowBusinessCard, showBusinessCard, followed, followers, businessCard } = UseFetchProfile(profile);
+    const { name, about, rating, views, picture, phone, email, accountType } = profile;
+    const { website } = businessCard;
 
     return (
         <div className="flex flex-col h-full w-full p-3 sm:p-5">
@@ -24,7 +26,10 @@ const Profile = ({ profile }) => {
             {/* section starts here*/}
             <div className="md:hidden flex flex-col w-full">
                 <ProfileCard
-                    data={personalInfo}
+                    data={profile}
+                    followed={followed}
+                    followers={followers}
+                    website={website || ''}
                     handleShowBusinessCard={handleShowBusinessCard}
                     showBusinessCard={showBusinessCard}
                 />
@@ -69,11 +74,11 @@ const Profile = ({ profile }) => {
                         <div className="flex flex-col  lg:w-1/2">
                             <div className="flex lg:justify-end space-x-10">
                                 <div className="flex flex-col">
-                                    <h1 className="text-md lg:text-3xl font-semibold text-center">{followed?.length}</h1>
+                                    <h1 className="text-md lg:text-3xl font-semibold text-center">{followers?.length}</h1>
                                     <h2 className="text-sm text-black">Followers</h2>
                                 </div>
                                 <div className="flex flex-col ">
-                                    <h1 className=" text-md lg:text-3xl font-semibold text-center">{following?.length}</h1>
+                                    <h1 className=" text-md lg:text-3xl font-semibold text-center">{followed?.length}</h1>
                                     <h2 className="text-sm  text-black">Following</h2>
                                 </div>
                             </div>
@@ -154,7 +159,7 @@ const Profile = ({ profile }) => {
                         _ShowCard={handleShowBusinessCard}
                         name={name}
                         image={picture}
-                        website={website}
+                        website={website || ''}
                         email={email}
                         phone={phone}
 
@@ -167,11 +172,21 @@ const Profile = ({ profile }) => {
 
 export const getServerSideProps = async (context) => {
     const { token } = parseCookies(context);
-    const res = await axios.get(`${process.env.BASE_URL}api/profile`, { headers: { Authorization: "Bearer " + token } })
-    const { data } = res.data;
-    return {
-        props: {
-            profile: data
+    if (!token)
+        return {
+            redirect: {
+                permanent: false,
+                destination: "/auth/login",
+            },
+            props: {},
+        };
+    else {
+        const res = await axios.get(`${process.env.BASE_URL}api/profile`, { headers: { Authorization: "Bearer " + token } })
+        const { data } = res.data;
+        return {
+            props: {
+                profile: data
+            }
         }
     }
 }

@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-key */
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Helmet } from 'react-helmet';
@@ -7,15 +7,31 @@ import logo from '../../../public/profile.jpg';
 import { Card, ProfileCard, Rating, TestimonialCard } from '../../../components';
 import videos from '../../../utils/VdeoSchema.json';
 import testimonialVideo from '../../../utils/testimonialSchema.json';
+import axiosInstance from 'APIs/axiosInstance';
 
 
 const UserProfile = () => {
     let router = useRouter();
     const { id } = router.query;
+    // const [followed, setFollow] = useState(true);
+    // const [followers, setFollower] = useState(true);
+    const [canMessage, setCanMessage] = useState(false);
 
     const gotoMessaging = () => {
         router.push(`/dashboard/messages/${id}`)
     }
+    useEffect(() => {
+        if (id) {
+            axiosInstance.getFollow().then(({ data: { error, data: { followers, followed }, message } }) => {
+                console.log(followers, followed);
+                if (followers.includes(id) || followed.includes(id)) {
+                    setCanMessage(true);
+                }
+            }).catch(e => {
+                console.log(e.response.data.message);
+            })
+        }
+    }, [id])
 
     // const [personalInfo, setPersonalInfo] = useState({});
 
@@ -25,6 +41,19 @@ const UserProfile = () => {
     // }, []);
 
     // const { name, about, accessible, followed, following, rating, username, views, picture, phone, showMessages, accountType } = personalInfo;
+
+
+
+
+    const _Follow = () => {
+        axiosInstance.followUser({ id }).then(({ data: { error, data, message } }) => {
+            setFollowed(true);
+        })
+            .catch(err => {
+                console.log('FollowUser API Failed: ', err.reponse.data.message);
+            })
+
+    }
 
 
     return (
@@ -94,13 +123,15 @@ const UserProfile = () => {
                         </p>
                     </div>
                     <div className="flex w-full items-center mt-2 px-2 space-x-6">
-                        <button className="followingBtn">
-                            Follow
+                        <button onClick={_Follow} className="followingBtn">
+                            {canMessage ? 'Following' : 'Follow'}
                         </button>
+                        {
+                            canMessage && (<button onClick={gotoMessaging} className="messageBtn">
+                                Message
+                            </button>)
 
-                        <button onClick={gotoMessaging} className="messageBtn">
-                            Message
-                        </button>
+                        }
 
                     </div>
                 </div>

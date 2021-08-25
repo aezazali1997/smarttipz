@@ -7,11 +7,11 @@ import { Button } from '../../components';
 import logo from '../../public/ST-2.png';
 import { getInputClasses } from '../../helpers';
 import { UseFetchAuthenticate } from '../../hooks';
-import { movetoNext } from '../../helpers';
+import { movetoNext, movetoPrevious } from '../../helpers';
 
 const Authenticate = () => {
 
-    const { loading, formik } = UseFetchAuthenticate();
+    const { loading, formik, resendOTP } = UseFetchAuthenticate();
 
     return (
         <div className="flex flex-col h-screen pt-5 p-5 xs:p-10 pb-2 space-y-2">
@@ -211,8 +211,11 @@ const Authenticate = () => {
                 <div className="flex flex-col w-full lg:w-1/2 items-center">
                     <div className="flex flex-col w-full lg:max-w-md mt-4 lg:mt-0 space-y-2">
                         <p className=" font-bold text-3xl text-center lg:text-left lg:text-3xl">Verify Account</p>
+
                         <p className="text-gray-400 text-sm sm:text-md lg:text-lg text-center lg:text-left">Enter six digit code that we sent to your
-                            email address to verify your account:</p>
+                            email address to verify your account: <span onClick={resendOTP}
+                                className="cursor-pointer text-sm font-semibold text-indigo-600 no-underline hover:underline hover:text-indigo-700" >Resend OTP</span>
+                        </p>
                     </div>
                     <div className="flex  w-full lg:max-w-md flex-col mt-6">
                         <form className="w-full flex flex-col space-y-8" onSubmit={formik.handleSubmit}>
@@ -223,8 +226,7 @@ const Authenticate = () => {
                                     type="text"
                                     maxLength="1"
                                     autoComplete='off'
-                                    tabIndex='1'
-                                    onKeyUp={(e) => movetoNext(e, 'tab2')}
+                                    onKeyUp={(e) => movetoNext(e, 'tab2', null)}
                                     className={`${getInputClasses(
                                         formik, "tab1"
                                     )} border bg-gray-100 text-center border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-10 lg:w-16 p-3 h-16`}
@@ -237,8 +239,8 @@ const Authenticate = () => {
                                     type={"text"}
                                     maxLength="1"
                                     autoComplete='off'
-                                    tabIndex='2'
-                                    onKeyUp={(e) => movetoNext(e, 'tab3')}
+                                    // onKeyDown={(e) => movetoPrevious(e, 'tab1')}
+                                    onKeyUp={(e) => movetoNext(e, 'tab3', 'tab1')}
                                     className={`${getInputClasses(
                                         formik, "tab2"
                                     )} border bg-gray-100 text-center border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-10 lg:w-16 p-3 h-16`}
@@ -248,9 +250,9 @@ const Authenticate = () => {
                                     id="tab3"
                                     name={"tab3"}
                                     type={"text"}
-                                    maxLength="1"
                                     autoComplete='off'
-                                    onKeyUp={(e) => movetoNext(e, 'tab4')}
+                                    // onKeyDown={(e) => movetoPrevious(e, 'tab2')}
+                                    onKeyUp={(e) => movetoNext(e, 'tab4', 'tab2')}
                                     tabIndex='3'
                                     className={`${getInputClasses(
                                         formik, "tab3"
@@ -263,8 +265,8 @@ const Authenticate = () => {
                                     type={"text"}
                                     maxLength="1"
                                     autoComplete='off'
-                                    tabIndex='4'
-                                    onKeyUp={(e) => movetoNext(e, 'tab5')}
+                                    // onKeyDown={(e) => movetoPrevious(e, 'tab3')}
+                                    onKeyUp={(e) => movetoNext(e, 'tab5', 'tab3')}
                                     className={`${getInputClasses(
                                         formik, "tab4"
                                     )} border bg-gray-100 text-center border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-10 lg:w-16 p-3 h-16`}
@@ -276,8 +278,8 @@ const Authenticate = () => {
                                     type={"text"}
                                     maxLength="1"
                                     autoComplete='off'
-                                    tabIndex='5'
-                                    onKeyUp={(e) => movetoNext(e, 'tab6')}
+                                    // onKeyDown={(e) => movetoPrevious(e, 'tab4')}
+                                    onKeyUp={(e) => movetoNext(e, 'tab6', 'tab4')}
                                     className={`${getInputClasses(
                                         formik, "tab5"
                                     )} border bg-gray-100  text-center border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-10 lg:w-16 p-3 h-16`}
@@ -290,8 +292,8 @@ const Authenticate = () => {
                                     type={"text"}
                                     maxLength="1"
                                     autoComplete='off'
-                                    tabIndex='6'
-                                    onKeyUp={(e) => movetoNext(e, 'authenticate')}
+                                    // onKeyDown={(e) => movetoPrevious(e, 'tab5')}
+                                    onKeyUp={(e) => movetoNext(e, 'authenticate', 'tab5')}
                                     className={`${getInputClasses(
                                         formik, "tab6"
                                     )} border bg-gray-100 text-center border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-10 lg:w-16 p-3 h-16`}
