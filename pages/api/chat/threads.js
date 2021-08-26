@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-import { forEach, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import User from 'models/User';
 const Chat = require('models/Chat');
 const Sequelize = require("sequelize");
@@ -10,10 +10,8 @@ const handler = async (req, res) => {
 
         const {
             body,
-            body: { id: userId },
             headers
         } = req;
-
 
         try {
             let users = [];
@@ -39,39 +37,45 @@ const handler = async (req, res) => {
                 }
             });
 
-            allMessages.forEach((msg) => {
-                userSet.add(msg.to);
-                userSet.add(msg.from);
-            })
+            if (!isEmpty(allMessages)) {
 
-            for (let value of userSet) {
-                console.log('beforeIF: ', value);
-                if (value !== id) {
-                    console.log('afterIF: ', value);
-                    const res = await Chat.findAll({
-                        limit: 1,
-                        where: {
-                            [Sequelize.Op.or]: [{ to: id, from: value }, { from: id, to: value }]
-                        },
-                        order: [["createdAt", "DESC"]],
-                    });
-                    console.log('chats: ', res);
-                    let { name, picture } = await User.findOne({ where: { id: value } });
-                    users.push({
-                        id: value,
-                        name: name,
-                        picture: picture,
-                        lastMessage: res[0].content,
-                        lastMessageTime: res[0].createdAt,
-                    });
+                allMessages.forEach((msg) => {
+                    userSet.add(msg.to);
+                    userSet.add(msg.from);
+                })
+
+                for (let value of userSet) {
+                    if (value !== id) {
+                        const res = await Chat.findAll({
+                            limit: 1,
+                            where: {
+                                [Sequelize.Op.or]: [{ to: id, from: value }, { from: id, to: value }]
+                            },
+                            order: [["createdAt", "DESC"]],
+                        });
+                        console.log('chats: ', res);
+                        let { name, picture } = await User.findOne({ where: { id: value } });
+                        users.push({
+                            id: value,
+                            name: name,
+                            picture: picture,
+                            lastMessage: res[0].content,
+                            lastMessageTime: res[0].createdAt,
+                        });
+                    }
                 }
+                users.sort((a, b) => {
+                    return (
+                        b.lastMessageTime - a.lastMessageTime
+                    )
+                })
             }
 
-            return res.status(200).send({ error: false, data: users, message: 'Users fetched successfully' });
+            res.status(200).send({ error: false, data: users, message: 'Users fetched successfully' });
         }
 
         catch (err) {
-            return res.status(500).send({ error: true, data: [], message: err.message });
+            res.status(500).send({ error: true, data: [], message: err.message });
         }
     }
     else {

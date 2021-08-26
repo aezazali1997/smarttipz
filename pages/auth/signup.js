@@ -33,6 +33,11 @@ const Signup = () => {
                     <div className="flex flex-col w-full lg:max-w-lg mt-4 lg:mt-0 space-y-1">
                         <p className=" font-bold text-3xl text-center lg:text-left lg:text-3xl">Sign Up</p>
                         <p className="text-gray-400 text-md text-center lg:text-left">Let's create your account</p>
+                        <p className="text-gray-400 text-sm lg:text-left">Already have an account? <Link href='/auth/login'>
+                            <a className="cursor-pointer font-semibold text-indigo-600 no-underline hover:underline hover:text-indigo-700">
+                                Login</a>
+                        </Link>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -255,14 +260,14 @@ const Signup = () => {
                             <div className="flex mt-8 w-full">
                                 <p className="text-sm text-gray-500 text-center">By creating an account you agree to the{' '}
                                     <Link
-                                        href="/auth/termsAndConditions">
+                                        href="/auth/terms-and-conditions">
                                         <a className="text-blue-800 text-sm font-semibold hover:underline"
-                                        >Terms & Conditions
+                                        >terms & conditions
                                         </a>
                                     </Link> and{' '}
                                     <Link
 
-                                        href="/auth/privacyPolicy">
+                                        href="/auth/privacy-policy">
                                         <a
                                             className="text-blue-800 text-sm font-semibold hover:underline"
                                         >Privacy Policy

@@ -18,8 +18,6 @@ const UseFetchSetting = (settings) => {
 
     const [personalLoading, setPersonalLoading] = useState(false);
     const [accountLoading, setAccountLoading] = useState(false);
-    const [uploadLoading, setUploadLoading] = useState(false);
-    const [deleteLoading, setDeleteLoading] = useState(false);
     const [personalInfo, setPersonalInfo] = useState({
         phone: '', accessible: '', name: '', email: '', showPhone: '', about: '', username: '',
         accountType: ''
@@ -34,9 +32,11 @@ const UseFetchSetting = (settings) => {
         const { accountType } = settings;
         if (update !== updated) {
             axiosInstance.profile()
-                .then(({ data: { data } }) => {
+                .then(({ data: { data, message } }) => {
                     setImageUrl(data?.picture);
                     setPersonalInfo(data);
+                }).catch(e => {
+                    console.log('Profile Fetch Failed: ', e.response.data.message)
                 })
         }
         else {
@@ -71,23 +71,6 @@ const UseFetchSetting = (settings) => {
         setAccountLoading(false);
     };
 
-    const enableUploadLoading = () => {
-        setUploadLoading(true);
-    };
-
-    const disableUploadLoading = () => {
-        setUploadLoading(false);
-    };
-
-    const enableDeleteLoading = () => {
-        setDeleteLoading(true);
-    };
-
-    const disableDeleteLoading = () => {
-        setDeleteLoading(false);
-    };
-
-
     // let upload = useRef();
 
     // let _OnChangeImg = async (event) => {
@@ -109,26 +92,20 @@ const UseFetchSetting = (settings) => {
 
     let handleFileChange = async file => {
         console.log(file);
-        enableUploadLoading();
         let { url } = await uploadToS3(file);
         axiosInstance.uploadProfilePic(url)
             .then(({ data: { data: { img } } }) => {
                 setImageUrl(img);
-                disableUploadLoading();
             }).catch(e => {
-                disableUploadLoading();
                 console.log(e.message);
             })
     };
 
     let _DeleteImg = () => {
-        enableDeleteLoading();
         axiosInstance.removeProfilePic()
             .then(res => {
-                disableDeleteLoading();
                 setUpdated(true);
             }).catch(error => {
-                disableDeleteLoading();
                 console.log("API error: ", error)
             })
     }
@@ -149,6 +126,7 @@ const UseFetchSetting = (settings) => {
             accountType: personalInfo.accountType,
         };
         if (personalInfo.accountType === "Business") {
+            const website = businessCard?.website;
             payload.businessCard = {
                 website
             }
@@ -215,8 +193,8 @@ const UseFetchSetting = (settings) => {
     });
 
     return {
-        uploadLoading, accountLoading, formik, uploadLoading, personalInfo, personalLoading, businessCard,
-        deleteLoading, imageUrl, _Update, _OnChange, _DeleteImg, handleFileChange, FileInput, openFileDialog
+        accountLoading, formik, personalInfo, personalLoading, businessCard,
+        imageUrl, _Update, _OnChange, _DeleteImg, handleFileChange, FileInput, openFileDialog
     }
 }
 

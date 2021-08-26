@@ -46,12 +46,14 @@ const MessageWindow = ({ message, setMessage, selected, goBackToUserList }) => {
 
     let handleOnEnter = (text) => {
         console.log('sentText', text);
-        socket.emit("sendMessage", { message: text, to: selected?.id });
+        if (text !== '') {
+            socket.emit("sendMessage", { message: text, to: selected?.id });
+        }
     }
 
     return (
         <>
-            <div className="flex flex-col w-full p-5 pb-2">
+            <header className="flex flex-col w-full p-5 pb-2">
                 <div onClick={goBackToUserList} className='lg:hidden flex sticky top-0 lg:relative bg-white items-center w-full space-x-5 mb-2'>
                     <span className="flex border rounded-full hover:shadow-md p-1 cursor-pointer">
                         <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -79,7 +81,7 @@ const MessageWindow = ({ message, setMessage, selected, goBackToUserList }) => {
                     </div>
                 </div>
                 <hr />
-                <div className="flex h-screen lg:h-auto lg:flex-1 flex-col items-start  overflow-y-auto w-full space-y-3 mt-6 px-3 border-b">
+                <div className="flex h-screen lg:h-auto lg:flex-1 flex-col overflow-y-auto w-full space-y-3 mt-6 px-3 border-b">
                     {
 
                         !isEmpty(userMessages) && (
@@ -93,7 +95,7 @@ const MessageWindow = ({ message, setMessage, selected, goBackToUserList }) => {
                                     {
                                         userMessages.map(({ to, message, time }, index) => (
                                             to !== selected?.id ?
-                                                <div key={index}>
+                                                <div key={index} className="mt-auto">
                                                     <ChatCard
                                                         image={selected?.picture}
                                                         name={selected?.name}
@@ -107,7 +109,7 @@ const MessageWindow = ({ message, setMessage, selected, goBackToUserList }) => {
                                                         messageStyle={`text-sm text-black`}
                                                     />
                                                 </div> :
-                                                <div key={index} className="senderChat">
+                                                <div key={index} className="senderChat mt-auto">
                                                     <ChatCard
                                                         name={username}
                                                         message={message}
@@ -136,7 +138,7 @@ const MessageWindow = ({ message, setMessage, selected, goBackToUserList }) => {
                         handleOnEnter={handleOnEnter}
                     />
                 </div>
-            </div>
+            </header>
         </>
     )
 }

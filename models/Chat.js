@@ -3,10 +3,10 @@ const sequelize = require("./db");
 
 const Chat = sequelize.define("Chat", {
   to: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
   },
   from: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
   },
   content: {
     type: DataTypes.STRING,

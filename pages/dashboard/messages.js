@@ -26,7 +26,7 @@ const Messages = () => {
 
     useEffect(() => {
         _EnableLoading();
-        socket.auth = { username };
+        socket.auth = { username, otherUserID: null };
         socket.connect();
         socket.on('connected', (res) => {
             console.log(res);

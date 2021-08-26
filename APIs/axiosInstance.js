@@ -2,13 +2,12 @@ import axios from "axios";
 export const USER_API_BASE_URL = process.env.BASE_URL;
 import { parseCookies } from 'nookies';
 
-const cookie = parseCookies();
-
-let token = cookie?.token || null;
-
 class AxiosInstance {
 
     getUserInfo() {
+        const cookie = parseCookies();
+
+        let token = cookie?.token || null;
         console.log('token', token);
         return token;
     }

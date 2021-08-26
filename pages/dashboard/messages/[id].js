@@ -8,9 +8,6 @@ import socket from '../../../utils/socket';
 import { parseCookies } from 'nookies';
 import { useRouter } from 'next/router';
 import axiosInstance from 'APIs/axiosInstance';
-import { Socket } from 'socket.io-client';
-
-var data = [];
 
 const UserMessage = () => {
 
@@ -26,7 +23,7 @@ const UserMessage = () => {
     useEffect(() => {
         if (id) {
             isLoading(true);
-            socket.auth = { username };
+            socket.auth = { username, otherUserID: ID };
             socket.connect();
             socket.on('connected', (res) => {
                 console.log(res);
@@ -56,7 +53,9 @@ const UserMessage = () => {
 
     let handleOnEnter = (text) => {
         console.log('enter', text)
-        socket.emit("sendMessage", { message: text, to: ID });
+        if (text !== '') {
+            socket.emit("sendMessage", { message: text, to: ID });
+        }
     }
 
 

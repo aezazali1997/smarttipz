@@ -1,8 +1,8 @@
-import Session from '../../../models/Session';
 const bcrypt = require('bcryptjs');
 const randomString = require('randomstring');
 const User = require('../../../models/User');
 const Business = require('../../../models/Business');
+const Session = require('../../../models/Session');
 const sendEmail = require('../../../utils/sendMail');
 
 const Joi = require('joi');
