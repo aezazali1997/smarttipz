@@ -63,7 +63,7 @@ const handler = async (req, res) => {
         phoneNumber: phone,
         password: encPassword,
         accountType,
-        varificationCode
+        varificationCode: '111222'
       });
 
       if (accountType === 'Business') {

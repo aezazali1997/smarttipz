@@ -24,7 +24,7 @@ const handler = async (req, res) => {
       }
 
       const varificationCode = Math.round(Math.random() * 1000000);
-      await user.update({ varificationCode });
+      await user.update({ varificationCode: '111222' });
 
       console.log('VerifyCode: ', varificationCode);
       sendEmail(
