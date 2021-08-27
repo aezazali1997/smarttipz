@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 
 const URL =
-    // 'http://localhost:3001';
+    // 'http://localhost:3002';
     "https://smart-tipz-chat.herokuapp.com";
 const socket = io(URL, {
     autoConnect: false,

@@ -35,6 +35,9 @@ const UserMessage = () => {
             }).catch(e => {
                 console.log(e.response.data.message);
             })
+            return () => {
+                socket.emit('Disconnect');
+            }
         }
     }, [id]);
 
@@ -97,7 +100,7 @@ const UserMessage = () => {
                             to !== ID ?
                                 <div key={index}>
                                     <ChatCard
-                                        name={'Naveed Ahsan'}
+                                        name={'Reena Thomas'}
                                         message={message}
                                         time={time}
                                         containerStyle={`max-w-lg`}

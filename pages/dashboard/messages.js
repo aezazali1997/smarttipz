@@ -38,10 +38,14 @@ const Messages = () => {
         }).catch(e => {
             console.log(e.response.data.message);
         })
+        return () => {
+            socket.emit('Disconnect', (res) => {
+                console.log(res);
+            });
+        }
     }, []);
 
     useEffect(() => {
-
         socket.on('newUser', (res) => {
             console.log('res', res);
             let copyArray = [...userList];
@@ -50,10 +54,17 @@ const Messages = () => {
             console.log({ updatedArray });
             setUserList(updatedArray);
         })
-
     }, [userList]);
 
     let _OnSelect = (id, name, picture) => {
+        // socket.emit('Disconnect', (res) => {
+        //     console.log(res);
+        // });
+        // socket.auth = { username, otherUserID: id };
+        // socket.connect();
+        // socket.on('connected', (res) => {
+        //     console.log(res);
+        // })
         if (selected?.id !== id) {
             const data = {
                 id,
@@ -63,7 +74,8 @@ const Messages = () => {
             setSelected(data);
         }
     }
-    let goBackToUserList = () => {
+    let goBackToUserList = (id) => {
+        socket.emit('leaveRoom', ({ id }));
         setSelected({});
     }
 
