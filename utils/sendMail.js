@@ -21,19 +21,11 @@ const sendEmail = async (to, subject, body) => {
     html: body,
   };
 
-  await transporter.sendMail(mailOptions, (error) => {
-    if (error) {
-      console.log('error', error.message);
-      return res
-        .status(400)
-        .send({ error: true, message: 'Email Not sent, try again' });
-    } else
-      return res.send({
-        error: false,
-        data: [],
-        message: 'Email Send Successfully',
-      });
-  });
+  const response = await transporter.sendMail(mailOptions);
+  console.log('response', response);
+  return response;
+
+
 };
 
 module.exports = sendEmail;
