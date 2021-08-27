@@ -1,5 +1,3 @@
-import { isEmpty } from 'lodash';
-
 const bcrypt = require('bcryptjs');
 const randomString = require('randomstring');
 const User = require('../../../models/User');
@@ -80,20 +78,15 @@ const handler = async (req, res) => {
         connected: false
       });
 
-      const mail = await sendEmail(
-        email,
-        'Account Varification',
-        `<p>Your account validation code is: ${varificationCode}</p>`
-      );
+      // const mail = await sendEmail(
+      //   email,
+      //   'Account Varification',
+      //   `<p>Your account validation code is: ${varificationCode}</p>`
+      // );
 
-      console.log('mail', mail);
-      if (!isEmpty(mail?.accepted)) {
-        res.status(201).json({ error: false, data: [], message: 'User Created, Email Sent' });
-      }
-      else {
-        res.status(201).json({ error: false, data: [], message: 'Email Not sent' });
-      }
+      //   console.log('here: ',re)
 
+      res.status(201).json({ error: false, data: [], message: 'User successfuly created.' });
     } catch (err) {
       res.status(422).json({ error: true, message: err.message, data: [] });
     }
