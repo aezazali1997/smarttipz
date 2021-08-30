@@ -31,7 +31,7 @@ const Messages = () => {
         socket.on('connected', (res) => {
             console.log(res);
         })
-        axiosInstance.threads().then(({ data: { error, data, message } }) => {
+        axiosInstance.threads().then(({ data: { data } }) => {
             console.log("data", data);
             setUserList(userList => userList = data);
             _DisableLoading(false);
@@ -42,30 +42,30 @@ const Messages = () => {
             socket.emit('Disconnect', (res) => {
                 console.log(res);
             });
+
         }
     }, []);
 
     useEffect(() => {
+        console.log("In Listener effect")
         socket.on('newUser', (res) => {
             console.log('res', res);
             let copyArray = [...userList];
+            copyArray = copyArray.filter(user => user.id !== res.id);
             console.log({ copyArray });
-            let updatedArray = [...copyArray, res]
+            let updatedArray = [res, ...copyArray]
             console.log({ updatedArray });
             setUserList(updatedArray);
         })
     }, [userList]);
 
     let _OnSelect = (id, name, picture) => {
-        // socket.emit('Disconnect', (res) => {
-        //     console.log(res);
-        // });
-        // socket.auth = { username, otherUserID: id };
-        // socket.connect();
-        // socket.on('connected', (res) => {
-        //     console.log(res);
-        // })
         if (selected?.id !== id) {
+            axiosInstance.msgRead({ recieverID: id })
+                .then(res => { })
+                .catch(e => {
+                    console.log(e.response.data.message);
+                })
             const data = {
                 id,
                 name,
@@ -74,6 +74,7 @@ const Messages = () => {
             setSelected(data);
         }
     }
+
     let goBackToUserList = (id) => {
         socket.emit('leaveRoom', ({ id }));
         setSelected({});
@@ -108,10 +109,25 @@ const Messages = () => {
                     message={message}
                     setMessage={setMessage}
                 />
-
             </main>
         </div>
     )
+}
+
+
+export const getServerSideProps = async (context) => {
+    const { token } = parseCookies(context);
+    if (!token)
+        return {
+            redirect: {
+                permanent: false,
+                destination: "/auth/login",
+            },
+            props: {},
+        };
+    else {
+        return { props: {} }
+    }
 }
 
 export default Messages;

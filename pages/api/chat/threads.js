@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 import { isEmpty } from 'lodash';
+import Session from 'models/Session';
 import User from 'models/User';
 const Chat = require('models/Chat');
 const Sequelize = require("sequelize");
@@ -54,11 +55,13 @@ const handler = async (req, res) => {
                             order: [["createdAt", "DESC"]],
                         });
                         console.log('chats: ', res);
-                        let { name, picture } = await User.findOne({ where: { id: value } });
+                        const { name, picture } = await User.findOne({ where: { id: value } });
+                        const { isRead } = await Session.findOne({ where: { userId: value } });
                         users.push({
                             id: value,
                             name: name,
                             picture: picture,
+                            isRead: isRead,
                             lastMessage: res[0].content,
                             lastMessageTime: res[0].createdAt,
                         });

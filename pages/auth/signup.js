@@ -30,7 +30,7 @@ const Signup = () => {
                     </span>
                 </div>
                 <div className="hidden lg:flex flex-col w-full lg:w-1/2 items-center">
-                    <div className="flex flex-col w-full lg:max-w-lg mt-4 lg:mt-0 space-y-1">
+                    <div className="flex flex-col w-full lg:max-w-lg mt-4 lg:mt-0 space-y-1 px-2">
                         <p className=" font-bold text-3xl text-center lg:text-left lg:text-3xl">Sign Up</p>
                         <p className="text-gray-400 text-md text-center lg:text-left">Let's create your account</p>
                         <p className="text-gray-400 text-sm lg:text-left">Already have an account? <Link href='/auth/login'>

@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/jsx-key */
-import React from 'react'
+import React, { useEffect } from 'react'
 import axios from 'axios';
 import { Helmet } from 'react-helmet';
 import { parseCookies } from 'nookies';
@@ -9,12 +9,17 @@ import videos from 'utils/VdeoSchema.json';
 import testimonialVideo from 'utils/testimonialSchema.json';
 import { Card, PopupBusinessCard, ProfileCard, Rating, TestimonialCard } from 'components';
 import axiosInstance from 'APIs/axiosInstance';
+import cookie from 'js-cookie';
 
 const Profile = ({ profile }) => {
 
     const { handleShowBusinessCard, showBusinessCard, followed, followers, businessCard } = UseFetchProfile(profile);
     const { name, about, rating, views, picture, phone, email, accountType } = profile;
     const { website } = businessCard;
+
+    useEffect(() => {
+        cookie.set('name', name);
+    }, [])
 
     return (
         <div className="flex flex-col h-full w-full p-3 sm:p-5">

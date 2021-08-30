@@ -16,6 +16,10 @@ const Session = sequelize.define("Session", {
   connected: {
     type: DataTypes.BOOLEAN,
   },
+  isRead: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  }
 });
 
 module.exports = Session;

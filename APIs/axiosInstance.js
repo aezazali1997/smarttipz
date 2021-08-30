@@ -63,6 +63,10 @@ class AxiosInstance {
         return await axios.get(USER_API_BASE_URL + "api/chat/threads", this.getAuthHeader());
     }
 
+    async msgRead(id) {
+        return await axios.post(USER_API_BASE_URL + "api/chat/read", id, this.getAuthHeader());
+    }
+
     async updateProfile(payload) {
         return await axios.post(USER_API_BASE_URL + "api/profile/update", payload, this.getAuthHeader());
     }

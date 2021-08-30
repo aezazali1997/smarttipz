@@ -9,7 +9,7 @@ import ChatCard from '../ChatCard';
 import EmojiInput from '../EmojiInput';
 
 const MessageWindow = ({ message, setMessage, selected, goBackToUserList }) => {
-    const { username } = parseCookies();
+    const { username, name } = parseCookies();
     const [userMessages, setMessages] = useState([]);
     const [loading, isLoading] = useState(true);
 
@@ -83,14 +83,13 @@ const MessageWindow = ({ message, setMessage, selected, goBackToUserList }) => {
                 <hr />
                 <div className="flex h-screen lg:h-auto lg:flex-1 flex-col overflow-y-auto w-full space-y-3 mt-6 px-3 border-b">
                     {
-
-                        !isEmpty(userMessages) && (
-                            loading ?
-                                <div className="flex flex-col w-full items-center justify-center">
-                                    <div className="self-center ml-3 loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-6 w-6 "></div>
-                                    <p className="text-sm text-center text-gray-400">Loading Messages</p>
-                                </div>
-                                :
+                        loading ?
+                            <div className="flex flex-col w-full items-center justify-center">
+                                <div className="self-center ml-3 loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-6 w-6 "></div>
+                                <p className="text-sm text-center text-gray-400">Loading Messages</p>
+                            </div>
+                            :
+                            !isEmpty(userMessages) && (
                                 <>
                                     {
                                         userMessages.map(({ to, message, time }, index) => (
@@ -111,7 +110,7 @@ const MessageWindow = ({ message, setMessage, selected, goBackToUserList }) => {
                                                 </div> :
                                                 <div key={index} className="senderChat mt-auto">
                                                     <ChatCard
-                                                        name={username}
+                                                        name={name}
                                                         message={message}
                                                         time={time}
                                                         containerStyle={`max-w-sm`}
@@ -127,7 +126,7 @@ const MessageWindow = ({ message, setMessage, selected, goBackToUserList }) => {
                                     }
                                     <div ref={messagesEndRef} />
                                 </>
-                        )
+                            )
                     }
 
                 </div>
