@@ -39,26 +39,26 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                     <div className=' lg:flex h-80 flex-col space-y-2 overflow-y-auto'>
                         <>
                             <Link href='/dashboard/news-feed' className='p-4 font-sans nav-link nav-link-ltr'>
-                                <div className={`flex flex-row items-center py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
-                        ${Active('/dashboard/news-feed')}`}>
+                                <div onClick={toggle} className={`flex flex-row items-center py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
+                                    ${Active('/dashboard/news-feed')}`}>
                                     <FontAwesomeIcon icon={faNewspaper} /> &nbsp;News Feed
                                 </div>
                             </Link>
                             <Link href='/dashboard/profile' className='p-4 font-sans nav-link nav-link-ltr'>
-                                <div className={`py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
-                              ${Active('/dashboard/profile')}`}>
+                                <div onClick={toggle} className={`py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
+                                    ${Active('/dashboard/profile')}`}>
                                     <FontAwesomeIcon icon={faUserCircle} />&nbsp;Profile
                                 </div>
                             </Link>
                             <Link href='/dashboard/videos' className='p-4 font-sans nav-link nav-link-ltr' >
-                                <div className={`py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
-                            ${Active("/dashboard/videos")}`}>
+                                <div onClick={toggle} className={`py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
+                                    ${Active("/dashboard/videos")}`}>
                                     <FontAwesomeIcon icon={faPlayCircle} />&nbsp;Videos
                                 </div>
                             </Link>
                             <Link href='/dashboard/messages' className='p-4 font-sans nav-link nav-link-ltr' >
-                                <div className={`flex justify-between items-center py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
-                            ${Active("/dashboard/messages")}`}>
+                                <div onClick={toggle} className={`flex justify-between items-center py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
+                                    ${Active("/dashboard/messages")}`}>
                                     <div>
                                         <FontAwesomeIcon icon={faComment} />&nbsp;Messages
                                     </div>
@@ -66,8 +66,8 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                                 </div>
                             </Link>
                             <Link href='/dashboard/setting' className='p-4 font-sans nav-link nav-link-ltr' >
-                                <div className={`py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
-                            ${Active("/dashboard/setting")}`}>
+                                <div onClick={toggle} className={`py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
+                                ${Active("/dashboard/setting")}`}>
                                     <FontAwesomeIcon icon={faCog} />&nbsp;Settings
                                 </div>
                             </Link>

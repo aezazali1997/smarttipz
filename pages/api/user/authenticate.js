@@ -45,7 +45,7 @@ const handler = async (req, res) => {
 
       res
         .status(200)
-        .json({ error: false, data: { id, username, image: picture, token }, message: 'User varified' });
+        .json({ error: false, data: { id, username, image: picture, token }, message: 'User verified' });
 
     } catch (err) {
       res

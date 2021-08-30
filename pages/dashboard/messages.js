@@ -28,9 +28,6 @@ const Messages = () => {
         _EnableLoading();
         socket.auth = { username, otherUserID: null };
         socket.connect();
-        socket.on('connected', (res) => {
-            console.log(res);
-        })
         axiosInstance.threads().then(({ data: { data } }) => {
             console.log("data", data);
             setUserList(userList => userList = data);
@@ -39,15 +36,36 @@ const Messages = () => {
             console.log(e.response.data.message);
         })
         return () => {
-            socket.emit('Disconnect', (res) => {
-                console.log(res);
-            });
-
+            socket.emit('Disconnect');
         }
     }, []);
 
     useEffect(() => {
         console.log("In Listener effect")
+        socket.on('connected', ({ data: { id }, message }) => {
+            let copyArray = [...userList];
+            copyArray = copyArray.map((item, i) => {
+                if (item.id !== id) return item;
+                item.connected = true;
+                return item;
+            })
+            setUserList(copyArray);
+            console.log({ copyArray })
+            console.log("message: ", message);
+        });
+
+        socket.on('user disconnected', (userID) => {
+            let copyArray = [...userList];
+            copyArray = copyArray.map((item, i) => {
+                if (item.id !== userID) return item;
+                item.connected = false;
+                return item;
+            })
+            setUserList(copyArray);
+            console.log({ copyArray })
+            console.log('user Disconnected')
+        });
+
         socket.on('newUser', (res) => {
             console.log('res', res);
             let copyArray = [...userList];

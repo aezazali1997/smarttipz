@@ -56,12 +56,13 @@ const handler = async (req, res) => {
                         });
                         console.log('chats: ', res);
                         const { name, picture } = await User.findOne({ where: { id: value } });
-                        const { isRead } = await Session.findOne({ where: { userId: value } });
+                        const { isRead, connected } = await Session.findOne({ where: { userId: value } });
                         users.push({
                             id: value,
                             name: name,
                             picture: picture,
                             isRead: isRead,
+                            connected,
                             lastMessage: res[0].content,
                             lastMessageTime: res[0].createdAt,
                         });

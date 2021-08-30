@@ -8,6 +8,7 @@ import socket from '../../../utils/socket';
 import { parseCookies } from 'nookies';
 import { useRouter } from 'next/router';
 import axiosInstance from 'APIs/axiosInstance';
+import { scrollToBottom } from 'helpers';
 
 const UserMessage = () => {
 
@@ -19,6 +20,7 @@ const UserMessage = () => {
     const [message, setMessage] = useState('');
 
     const ID = parseInt(id);
+    const messagesEndRef = useRef(null);
 
     useEffect(() => {
         if (id) {
@@ -32,6 +34,7 @@ const UserMessage = () => {
             axiosInstance.privateChat(data).then(({ data: { error, data, message } }) => {
                 setMessageList(data);
                 isLoading(false);
+                scrollToBottom(messagesEndRef);
             }).catch(e => {
                 console.log(e.response.data.message);
             })
@@ -50,7 +53,7 @@ const UserMessage = () => {
             let updatedArray = [...copyArray, res]
             console.log({ updatedArray });
             setMessageList(updatedArray);
-            console.log()
+            scrollToBottom(messagesEndRef);
         })
     }, [messageList]);
 
@@ -96,36 +99,44 @@ const UserMessage = () => {
                             <p className="text-sm text-center text-gray-400">Loading Messages</p>
                         </div>
                         :
-                        messageList && messageList.map(({ to, message, time }, index) => (
-                            to !== ID ?
-                                <div key={index}>
-                                    <ChatCard
-                                        name={'Reena Thomas'}
-                                        message={message}
-                                        time={time}
-                                        containerStyle={`max-w-lg`}
-                                        cardStyle={`flex items-center space-x-3`}
-                                        imgStyle={`h-10 w-16 rounded-full object-cover md:w-10`}
-                                        contentStyle={`py-2 px-4 rounded-3xl bg-gray-100`}
-                                        headerStyle={`flex items-center justify-between space-x-3`}
-                                        messageStyle={`text-sm text-black`}
-                                    />
-                                </div>
-                                :
-                                <div key={index} className={'senderChat'}>
-                                    <ChatCard
-                                        name={username}
-                                        message={message}
-                                        time={time}
-                                        containerStyle={`max-w-lg`}
-                                        cardStyle={`flex items-center space-x-3`}
-                                        imgStyle={`h-10 w-16 rounded-full object-cover md:w-10`}
-                                        contentStyle={`py-2 px-4 rounded-3xl bg-gray-100`}
-                                        headerStyle={`flex items-center justify-between space-x-3`}
-                                        messageStyle={`text-sm text-black`}
-                                    />
-                                </div>
-                        ))
+
+                        !isEmpty(messageList) && (
+                            <>
+                                {
+                                    messageList.map(({ to, message, time }, index) => (
+                                        to !== ID ?
+                                            <div key={index} className="mt-auto">
+                                                <ChatCard
+                                                    name={'Reena Thomas'}
+                                                    message={message}
+                                                    time={time}
+                                                    containerStyle={`max-w-lg`}
+                                                    cardStyle={`flex items-center space-x-3`}
+                                                    imgStyle={`h-10 w-16 rounded-full object-cover md:w-10`}
+                                                    contentStyle={`py-2 px-4 rounded-3xl bg-gray-100`}
+                                                    headerStyle={`flex items-center justify-between space-x-3`}
+                                                    messageStyle={`text-sm text-black`}
+                                                />
+                                            </div>
+                                            :
+                                            <div key={index} className='senderChat mt-auto'>
+                                                <ChatCard
+                                                    name={username}
+                                                    message={message}
+                                                    time={time}
+                                                    containerStyle={`max-w-lg`}
+                                                    cardStyle={`flex items-center space-x-3`}
+                                                    imgStyle={`h-10 w-16 rounded-full object-cover md:w-10`}
+                                                    contentStyle={`py-2 px-4 rounded-3xl bg-gray-100`}
+                                                    headerStyle={`flex items-center justify-between space-x-3`}
+                                                    messageStyle={`text-sm text-black`}
+                                                />
+                                            </div>
+                                    ))
+                                }
+                                <div ref={messagesEndRef} />
+                            </>
+                        )
                 }
             </main>
             <footer>
