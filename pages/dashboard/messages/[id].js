@@ -1,7 +1,7 @@
 
 /* eslint-disable react/jsx-key */
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet';
 import { ChatCard, EmojiInput } from '../../../components';
 import socket from '../../../utils/socket';
