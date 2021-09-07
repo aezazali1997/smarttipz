@@ -4,3 +4,20 @@ select {
   text-indent: 1px;
   text-overflow: '';
 }
+
+.react-tel-input .form-control {
+  position: relative;
+  font-size: 14px;
+  letter-spacing: .01rem;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-left: 48px;
+  margin-left: 0;
+  background: #F9FAFB !important;
+  border: 1px solid #e7e6e6;
+  border-radius: 5px;
+  line-height: 25px;
+  height: 3rem !important;
+  width: 100% !important;
+  outline: none;
+}

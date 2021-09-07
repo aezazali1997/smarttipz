@@ -68,22 +68,22 @@ const Login = () => {
                             }
 
                             <InputField
-                                name={"username"}
+                                name={"email"}
                                 type={"text"}
-                                value={formik.values.username}
+                                value={formik.values.email}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                error={formik.touched.username && formik.errors.username}
+                                error={formik.touched.email && formik.errors.email}
                                 svg={(
                                     <svg className="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" /><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" /></svg>
                                 )}
                                 inputClass={`${getInputClasses(
-                                    formik, "username"
+                                    formik, "email"
                                 )} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
-                                label={'Username'}
+                                label={'Email'}
                             />
-                            {formik.touched.username && formik.errors.username ? (
-                                <div className="text-red-700 text-sm mb-4" >{formik.errors.username}</div>
+                            {formik.touched.email && formik.errors.email ? (
+                                <div className="text-red-700 text-sm mb-4" >{formik.errors.email}</div>
                             ) : null}
 
 

@@ -41,16 +41,16 @@ const Profile = ({ profile }) => {
             </div>
             <div className="hidden md:flex flex-row w-full h-auto">
                 <div className="flex w-1/6 px-2 py-1">
-                    <div className="rounded-2xl w-28 h-36 relative px-2 py-1">
-                        {picture ?
-                            <img src={picture} alt="profile" className="rounded-2xl " layout="fill" />
-                            :
-                            <img
-                                src="https://thumbs.dreamstime.com/b/solid-purple-gradient-user-icon-web-mobile-design-interface-ui-ux-developer-app-137467998.jpg" alt=""
-                                className="rounded-full"
-                            />
-                        }
-                    </div>
+                    {/* <div className="rounded-2xl w-28 h-36 relative px-2 py-1"> */}
+                    {picture ?
+                        <img src={picture} alt="profile" className="rounded-2xl w-30 h-40" layout="fill" />
+                        :
+                        <img
+                            src="https://thumbs.dreamstime.com/b/solid-purple-gradient-user-icon-web-mobile-design-interface-ui-ux-developer-app-137467998.jpg" alt=""
+                            className="rounded-full"
+                        />
+                    }
+                    {/* </div> */}
                 </div>
                 <div className="flex flex-col w-4/6 md:w-5/6 ">
                     {/* section starts here */}
@@ -93,7 +93,7 @@ const Profile = ({ profile }) => {
                     </div>
                     {/* section ends here */}
                     <div className="flex w-full mt-2 px-2">
-                        <p className="text-xs">
+                        <p className="text-sm">
                             {about || 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat pidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'}
                         </p>
                     </div>
@@ -116,6 +116,28 @@ const Profile = ({ profile }) => {
                     </div> */}
                 </div>
             </div>
+            {/* section ends here */}
+            {/* section starts here */}{
+                accountType === 'Business' && (
+                    <div className="flex flex-col w-full px-2  mt-8">
+                        <h1 className="text-md font-medium">My Catalogue</h1>
+                        <div className="flex w-full mt-6 justify-center lg:justify-start" >
+                            <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
+                                {
+                                    videos && videos.map(({ title, image, like, comment, share }) => (
+                                        <Card
+                                            image={image}
+                                            title={title}
+                                            comment={comment}
+                                            like={like}
+                                            share={share}
+                                        />
+                                    ))
+                                }
+                            </div>
+                        </div>
+                    </div>
+                )}
             {/* section ends here */}
             {/* section starts here */}
             <div className="flex flex-col w-full px-2  mt-8">

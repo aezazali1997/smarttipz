@@ -11,6 +11,8 @@ const UseFetchSignup = () => {
 
     const [showPassword, setShowPassword] = useState(false)
     const [loading, setLoading] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [agree, setAgree] = useState(false);
 
     const enableLoading = () => {
         setLoading(true);
@@ -18,6 +20,9 @@ const UseFetchSignup = () => {
 
     const disableLoading = () => {
         setLoading(false);
+    };
+    const toggleModal = () => {
+        setShowModal(!showModal);
     };
 
     const initialValues = {
@@ -54,14 +59,13 @@ const UseFetchSignup = () => {
                         console.log('res >>', data);
                         disableLoading();
                         swal({
-                            title: "User created successfully",
                             text: message,
                             buttons: false,
                             dangerMode: true,
                             timer: 5000,
                             icon: 'success'
                         })
-                        localStorage.setItem('username', username);
+                        localStorage.setItem('email', email);
                         router.push('/auth/authenticate')
                     })
                     .catch((e) => {
@@ -80,8 +84,18 @@ const UseFetchSignup = () => {
         },
     });
 
+    const _Confirm = () => {
+        setAgree(true);
+        toggleModal();
+    }
 
-    return { showPassword, setShowPassword, loading, formik };
+    const _Cancel = () => {
+        setAgree(false);
+        toggleModal();
+    }
+
+
+    return { showPassword, loading, formik, showModal, agree, setShowPassword, toggleModal, _Confirm, _Cancel };
 }
 
 export default UseFetchSignup;

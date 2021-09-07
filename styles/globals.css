@@ -1,4 +1,3 @@
-
 @import './signup.css';
 @import './image.css';
 @import './sidebar.css';
@@ -6,6 +5,7 @@
 @import './loader.css';
 @import './messages.module.css';
 @import './businessCard.css';
+@import 'react-phone-input-2/lib/style.css';
 
 @tailwind base;
 @tailwind components;

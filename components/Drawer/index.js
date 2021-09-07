@@ -62,7 +62,7 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                                     <div>
                                         <FontAwesomeIcon icon={faComment} />&nbsp;Messages
                                     </div>
-                                    <Badge />
+                                    {/* <Badge /> */}
                                 </div>
                             </Link>
                             <Link href='/dashboard/setting' className='p-4 font-sans nav-link nav-link-ltr' >

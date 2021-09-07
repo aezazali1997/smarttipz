@@ -13,9 +13,9 @@ const ProfileCard = ({ data, otherUser, handleShowBusinessCard, showBusinessCard
     return (
         <div className="flex flex-col w-full relative items-center space-y-3">
             {picture ?
-                <div class="inline-block h-28 w-28 ring-2 ring-white relative">
-                    <img src={picture} className="rounded-full" alt="" layout="fill" />
-                </div>
+                /* <div class="inline-block h-32 w-28 ring-2 ring-white relative"> */
+                <img src={picture} className="rounded-full w-28 h-28 object-cover" alt="" />
+                /* </div> */
                 :
                 <div class="inline-block h-28 w-28 ring-2 ring-white relative">
                     <img className="rounded-full" src="https://thumbs.dreamstime.com/b/solid-purple-gradient-user-icon-web-mobile-design-interface-ui-ux-developer-app-137467998.jpg" alt="" />
@@ -25,7 +25,7 @@ const ProfileCard = ({ data, otherUser, handleShowBusinessCard, showBusinessCard
                 <h1 className="text-black text-lg font-sans font-semibold">{name}</h1>
                 <h1 className=" text-sm font-sans text-gray-400">{phone}</h1>
             </div>
-            <p className="text-xs text-black text-center">{about || 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat pidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'}</p>
+            <p className="text-sm text-black text-center">{about || 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat pidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'}</p>
             {accountType === "Business" && (
                 <div className="flex w-full mt-2 px-2 justify-center " onClick={handleShowBusinessCard}>
                     <p className="text-xs no-underline hover:underline text-indigo-600 cursor-pointer">

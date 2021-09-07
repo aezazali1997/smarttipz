@@ -31,7 +31,7 @@ const UseFetchLogin = () => {
     };
 
     const initialValues = {
-        username: '',
+        email: '',
         password: '',
         checked: false
     }
@@ -41,11 +41,11 @@ const UseFetchLogin = () => {
         initialValues,
         validationSchema: LoginSchema,
         validateOnBlur: true,
-        onSubmit: ({ username, password }, { setSubmitting, setStatus }) => {
+        onSubmit: ({ email, password }, { setSubmitting, setStatus }) => {
             enableLoading();
             setTimeout(() => {
-                const data = { username, password }
-                localStorage.setItem('username', username);
+                const data = { email, password }
+                localStorage.setItem('email', email);
                 axiosInstance.login(data)
                     .then(({ data: { data: { username, token, image }, message } }) => {
                         disableLoading();

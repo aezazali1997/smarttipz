@@ -25,6 +25,7 @@ const UseFetchSetting = (settings) => {
     const [updated, setUpdated] = useState(false);
     const [imageUrl, setImageUrl] = useState('');
     const [businessCard, setBusinessCard] = useState('');
+    const [countryCode, setCountryCode] = useState('')
 
     let { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
 
@@ -32,15 +33,17 @@ const UseFetchSetting = (settings) => {
         const { accountType } = settings;
         if (update !== updated) {
             axiosInstance.profile()
-                .then(({ data: { data, message } }) => {
+                .then(({ data: { data } }) => {
                     setImageUrl(data?.picture);
                     setPersonalInfo(data);
+                    setCountryCode(data?.phone);
                 }).catch(e => {
                     console.log('Profile Fetch Failed: ', e.response.data.message)
                 })
         }
         else {
             setImageUrl(settings?.picture);
+            setCountryCode(settings?.phone);
             setPersonalInfo(settings);
         }
         if (accountType === 'Business') {
@@ -119,8 +122,15 @@ const UseFetchSetting = (settings) => {
         setPersonalInfo(newObject);
     }
 
+    const _ChangeCountryCode = value => {
+        console.log('value: ', value);
+        setCountryCode(value)
+    }
+
     let _Update = () => {
         enablePersonalLoading();
+        personalInfo.phone = countryCode;
+        console.log('personal: ', personalInfo);
         let payload = {
             data: personalInfo,
             accountType: personalInfo.accountType,
@@ -193,8 +203,8 @@ const UseFetchSetting = (settings) => {
     });
 
     return {
-        accountLoading, formik, personalInfo, personalLoading, businessCard,
-        imageUrl, _Update, _OnChange, _DeleteImg, handleFileChange, FileInput, openFileDialog
+        accountLoading, formik, personalInfo, personalLoading, businessCard, countryCode,
+        imageUrl, _Update, _OnChange, _DeleteImg, handleFileChange, FileInput, openFileDialog, _ChangeCountryCode
     }
 }
 

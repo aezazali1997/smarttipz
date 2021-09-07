@@ -6,7 +6,7 @@ const handler = async (req, res) => {
   if (req.method === 'POST') {
     const validateAuthenticate = (data) => {
       const schema = Joi.object({
-        username: Joi.string().required(),
+        email: Joi.string().email().required(),
         varificationCode: Joi.string().required().length(6)
       });
       return schema.validate(data);
@@ -18,17 +18,17 @@ const handler = async (req, res) => {
 
     if (error) return res.status(400).send({ error: true, data: [], message: error.details[0].message });
 
-    const { username, varificationCode } = body;
+    const { email, varificationCode } = body;
 
     console.log(body);
 
     try {
-      const user = await User.findOne({ where: { username } });
+      const user = await User.findOne({ where: { email } });
       if (!user) {
         return res.status(400).json({ error: true, message: 'Validation failed', data: [] });
       }
 
-      const token = jwt.sign({ username }, process.env.SECRET_KEY);
+      const token = jwt.sign({ username: user.username }, process.env.SECRET_KEY);
 
       const time = Math.floor((Date.now() - user.updatedAt.getTime()) / (1000 * 60));
       if (time >= 60) {
@@ -45,7 +45,7 @@ const handler = async (req, res) => {
 
       res
         .status(200)
-        .json({ error: false, data: { id, username, image: picture, token }, message: 'User verified' });
+        .json({ error: false, data: { id, username: user.username, image: picture, token }, message: 'User verified' });
 
     } catch (err) {
       res

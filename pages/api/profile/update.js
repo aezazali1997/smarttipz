@@ -4,40 +4,72 @@ const bcrypt = require('bcryptjs');
 
 const handler = async (req, res) => {
 
-  const { body, headers } = req;
+  const {
+    body: { data, businessCard },
+    headers
+  } = req;
+
   try {
     if (!headers.authorization) {
-      throw new Error('Please Login');
+      return res.status(401).send({ error: true, data: [], message: 'Please Login' })
     }
+
     const { username } = jwt.verify(
       headers.authorization.split(' ')[1],
       process.env.SECRET_KEY
     );
+
+    const { about, name, email, accessible, accountType, phone, picture, views, rating, showPhone } = data
+
     const user = await User.findOne({ where: { username } });
     if (!user) {
       throw new Error('Please Login');
     }
-    if (body.accountType !== 'Business') {
-      let updateobj = body.data;
-      if (body.data.password) {
-        const encpass = await bcrypt.hash(body.data.password, 12);
-        updateobj.password = encpass;
+    if (accountType !== 'Business') {
+      if (data.password) {
+        const encpass = await bcrypt.hash(data.password, 12);
+        data.password = encpass;
       }
-      await user.update(updateobj);
+      await user.update({
+        name,
+        username,
+        email,
+        avgRating: rating,
+        totalViews: views,
+        about,
+        picture,
+        phoneNumber: phone,
+        showPhone,
+        accessible,
+        accountType
+      });
     }
     else {
-      await user.update(req.body.data);
+      console.log("data: ", data);
+      await user.update({
+        name,
+        username,
+        email,
+        avgRating: rating,
+        totalViews: views,
+        about,
+        picture,
+        phoneNumber: phone,
+        showPhone,
+        accessible,
+        accountType
+      });
       const business = await user.getBusiness();
-      if (body.businessCard.website) {
-        business.link = body.businessCard.website;
+      if (businessCard.website) {
+        business.link = businessCard.website;
         business.save();
       }
-      const businessCard = await business.getBusinessCard();
-      if (businessCard) await businessCard.update(body.businessCard);
+      const card = await business.getBusinessCard();
+      if (card) await card.update(businessCard);
     }
     res.status(200).json({ message: 'Updated successfully' });
   } catch (err) {
-    res.status(422).json({ error: true, message: err.message });
+    res.status(500).json({ error: true, message: err.message });
   }
 };
 

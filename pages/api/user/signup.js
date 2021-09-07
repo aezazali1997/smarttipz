@@ -86,7 +86,7 @@ const handler = async (req, res) => {
 
       //   console.log('here: ',re)
 
-      res.status(201).json({ error: false, data: [], message: 'User successfuly created.' });
+      res.status(201).json({ error: false, data: [], message: 'User successfuly signed up.' });
     } catch (err) {
       res.status(422).json({ error: true, message: err.message, data: [] });
     }

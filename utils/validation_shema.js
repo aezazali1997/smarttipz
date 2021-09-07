@@ -42,9 +42,8 @@ export const SignupSchema = Yup.object().shape({
 
 export const LoginSchema = Yup.object().shape({
     checked: Yup.boolean(),
-    username: Yup.string()
-        .min(3, "Please enter at least 3 characters")
-        .required("Username is a required field"),
+    email: Yup.string().email()
+        .required("Email is a required field"),
     password: Yup.string()
         .min(3, "Minimum 3 characters")
         .max(50, "Maximum 50 characters")

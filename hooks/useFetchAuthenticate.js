@@ -30,16 +30,18 @@ const UseFetchAuthenticate = () => {
     }
 
     const resendOTP = () => {
-        axiosInstance.resendOTP(localStorage.getItem('username'))
-            .then(({ data: { data, message, error }, status }) => {
-                swal({
-                    text: 'Confirmation code sent to email address',
-                    buttons: false,
-                    dangerMode: true,
-                    timer: 5000,
-                    icon: 'info'
+        if (localStorage.getItem('email')) {
+            axiosInstance.resendOTP(localStorage.getItem('email'))
+                .then(({ data: { data, message, error }, status }) => {
+                    swal({
+                        text: 'Confirmation code sent to email address',
+                        buttons: false,
+                        dangerMode: true,
+                        timer: 5000,
+                        icon: 'info'
+                    })
                 })
-            })
+        }
     }
 
     const formik = useFormik({
@@ -49,11 +51,11 @@ const UseFetchAuthenticate = () => {
         validateOnBlur: true,
         onSubmit: ({ tab1, tab2, tab3, tab4, tab5, tab6 }, { setSubmitting, setStatus }) => {
             setTimeout(() => {
-                if (localStorage.getItem('username')) {
+                if (localStorage.getItem('email')) {
                     enableLoading();
                     const data = {
                         varificationCode: `${tab1}${tab2}${tab3}${tab4}${tab5}${tab6}`,
-                        username: localStorage.getItem('username')
+                        email: localStorage.getItem('email')
                     }
                     console.log(data);
                     axiosInstance.authenticate(data)

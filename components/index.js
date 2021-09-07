@@ -1,6 +1,10 @@
 export { default as Button } from './Button';
 export { default as Badge } from './Badge';
+export { default as Select } from './Select';
+export { default as Spinner } from './Spinner';
+export { default as Modal } from './Modal';
 export { default as InputField } from './InputField';
+export { default as PhoneInput } from './CodePhone';
 export { default as Sidebar } from './Sidebar';
 export { default as Drawer } from './Drawer';
 export { default as Card } from './Card';

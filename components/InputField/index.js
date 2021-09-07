@@ -1,6 +1,6 @@
 const InoutField = ({ label, inputClass, svg, name, type, value, onChange, onBlur, error, placeholder, disabled }) => {
     return (
-        <div className={`floating-input ${error ? "mb-1" : "mb-5"} relative`}>
+        <div className={`floating-input w-full ${error ? "mb-1" : "mb-5"} relative`}>
             <input
                 type={type}
                 id={name}

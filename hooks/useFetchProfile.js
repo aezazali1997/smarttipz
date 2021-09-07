@@ -10,9 +10,8 @@ const UseFetchProfile = (profile) => {
     const [businessCard, setBusinessCard] = useState('');
 
     useEffect(() => {
-        const { accountType } = profile;
-        console.log('profile', profile);
-        // setPersonalInfo(personalInfo => personalInfo = profile);
+        const { accountType, username } = profile;
+        localStorage.setItem('username', username);
         axiosInstance.getFollow().then(({ data: { error, data: { followers, followed }, message } }) => {
             console.log(followers, followed);
             setFollowed(followed);
@@ -26,7 +25,6 @@ const UseFetchProfile = (profile) => {
             }).catch(e => {
                 console.log('Error in Api BusinessCard: ', e.response.data.message);
             })
-
         }
     }, []);
 

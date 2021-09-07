@@ -12,7 +12,6 @@ const handler = async (req, res) => {
         process.env.SECRET_KEY
       );
 
-      console.log(req.headers.authorization)
 
       const user = await User.findOne({
         attributes: [

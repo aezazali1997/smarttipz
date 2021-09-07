@@ -13,7 +13,7 @@ const handler = async (req, res) => {
 
     const validateSignin = (data) => {
       const schema = Joi.object({
-        username: Joi.string().required(),
+        email: Joi.string().email().required(),
         password: Joi.string().required()
       });
       return schema.validate(data);
@@ -24,10 +24,10 @@ const handler = async (req, res) => {
     if (error)
       return res.status(400).json({ error: true, message: error.details[0].message, data: [] });
 
-    const { username, password } = body;
+    const { email, password } = body;
 
     try {
-      const user = await User.findOne({ where: { username } });
+      const user = await User.findOne({ where: { email } });
       if (!user) {
         return res.status(403).json({ error: true, message: 'Validation failed', data: [] });
       }
@@ -46,11 +46,11 @@ const handler = async (req, res) => {
         return res.status(403).json({ error: true, message: 'Validation failed', data: [] });
       }
 
-      const token = jwt.sign({ username }, process.env.SECRET_KEY);
+      const token = jwt.sign({ username: user.username }, process.env.SECRET_KEY);
 
       res
         .status(200)
-        .json({ error: false, message: 'Login successful', data: { id: id, username, image: picture, token } });
+        .json({ error: false, message: 'Login successful', data: { id: id, username: user.username, image: picture, token } });
     } catch (err) {
       res.status(500).json({ error: true, message: err.message, data: [] });
     }
