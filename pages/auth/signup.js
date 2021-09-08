@@ -7,14 +7,14 @@ import Helmet from 'react-helmet';
 import reg from '../../public/reg.png';
 import logo from '../../public/ST-2.png';
 import { getInputClasses } from 'helpers';
-import { Button, InputField, Modal } from 'components';
+import { Button, InputField, Modal, Footer, PhoneInput } from 'components';
 import { UseFetchSignup } from 'hooks';
-import PhoneInput from 'react-phone-input-2';
 
 
 const Signup = () => {
 
-	const { loading, showPassword, formik, agree, showModal, setShowPassword, toggleModal, _Confirm, _Cancel } = UseFetchSignup();
+	const { loading, showPassword, formik, agree, showModal, accountType, phone, _HandlePhone,
+		ActiveTab, setShowPassword, toggleModal, _Confirm, _Cancel, _SelectAccount } = UseFetchSignup();
 
 	return (
 		<>
@@ -45,8 +45,8 @@ const Signup = () => {
 
 			<div className="flex flex-col w-full lg:flex-row pt-5 p-5 xs:p-10 pb-2 md:p-16 md:pb-1 md:pt-0">
 
-				<div className="w-full h-full flex flex-col lg:w-1/2">
-					<Image src={reg} alt="brand logo" layout="responsive" width={500} height={430} />
+				<div className="flex w-full lg:w-1/2 relative h-52 sm:h-64 lg:h-screen">
+					<Image src={reg} alt="brand logo" layout="fill" objectFit="contain" />
 				</div>
 
 				<div className="flex flex-col w-full lg:w-1/2 items-center">
@@ -61,6 +61,22 @@ const Signup = () => {
 					</div>
 					<div className="flex w-full lg:max-w-md justify-evenly flex-col mt-6">
 						<form className="w-full" onSubmit={formik.handleSubmit}>
+							<div className="flex w-full mb-5 space-x-1">
+								<Button
+									onSubmit={() => _SelectAccount('Personal')}
+									type={"button"}
+									classNames={`flex w-full ${ActiveTab('Personal')} justify-center  hover:text-white hover:bg-purple-600 p-3 
+									rounded-md`}
+									childrens={'Personal Account'}
+								/>
+								<Button
+									onSubmit={() => _SelectAccount('Business')}
+									type={"button"}
+									classNames={`flex w-full ${ActiveTab('Business')} justify-center hover:text-white hover:bg-purple-600
+									p-3 rounded-md`}
+									childrens={'Business Account'}
+								/>
+							</div>
 							<InputField
 								name={"name"}
 								type={"text"}
@@ -74,7 +90,7 @@ const Signup = () => {
 								inputClass={`${getInputClasses(
 									formik, "name"
 								)} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
-								label={'Name'}
+								label={accountType === 'Personal' ? 'Name' : 'Business Name'}
 							/>
 							{formik.touched.name && formik.errors.name ? (
 								<div className="text-red-700 text-sm mb-4" >{formik.errors.name}</div>
@@ -92,7 +108,7 @@ const Signup = () => {
 								inputClass={`${getInputClasses(
 									formik, "username"
 								)} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
-								label={'Username'}
+								label={accountType === 'Personal' ? 'Username' : 'Business Username'}
 							/>
 							{formik.touched.username && formik.errors.username ? (
 								<div className="text-red-700 text-sm mb-4" >{formik.errors.username}</div>
@@ -111,13 +127,13 @@ const Signup = () => {
 								inputClass={`${getInputClasses(
 									formik, "email"
 								)} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
-								label={'Email'}
+								label={accountType === 'Personal' ? 'Email' : 'Business Email'}
 							/>
 							{formik.touched.email && formik.errors.email ? (
 								<div className="text-red-700 text-sm mb-4" >{formik.errors.email}</div>
 							) : null}
 
-							<InputField
+							{/* <InputField
 								name={"phone"}
 								type={"text"}
 								svg={(
@@ -132,18 +148,16 @@ const Signup = () => {
 								inputClass={`${getInputClasses(
 									formik, "phone"
 								)} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
-								label={'Phone number'}
+								label={accountType === 'Personal' ? 'Phone number' : 'Business Phone number'}
 							/>
-							{/* <div className={`relative ${formik.touched.phone && formik.errors.phone ? "mb-1" : "mb-5"} w-full`}>
+							{formik.touched.phone && formik.errors.phone ? (
+								<div className="text-red-700 text-sm mb-4" >{formik.errors.phone}</div>
+							) : null} */}
+
+							<div className={`relative ${formik.touched.phone && formik.errors.phone ? "mb-1" : "mb-5"} w-full`}>
 								<PhoneInput
-									country={'us'}
-									placeholder="Enter phone number"
-									name="phone"
-									value={formik.values.phone}
-									containerClass={`${getInputClasses(
-										formik, "phone"
-									)}`}
-									onChange={formik.handleChange}
+									value={phone}
+									onChange={_HandlePhone}
 								/>
 								<svg className="absolute right-2 top-3 w-6 h-6 pointer-events-none text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
 									<path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
@@ -151,7 +165,7 @@ const Signup = () => {
 								{formik.touched.phone && formik.errors.phone ? (
 									<div className="text-red-700 text-sm mb-4" >{formik.errors.phone}</div>
 								) : null}
-							</div> */}
+							</div>
 
 							<div className={`floating-input ${formik.touched.password && formik.errors.password ? "mb-1" : "mb-5"} relative`}>
 								<input
@@ -190,7 +204,7 @@ const Signup = () => {
 							) : null}
 
 
-							<div className={`floating-input ${formik.touched.accountType && formik.errors.accountType ? "mb-1" : "mb-5"} relative`}>
+							{/* <div className={`floating-input ${formik.touched.accountType && formik.errors.accountType ? "mb-1" : "mb-5"} relative`}>
 								<select
 									type={'select'}
 									id={'accountType'}
@@ -217,10 +231,10 @@ const Signup = () => {
 							</div>
 							{formik.touched.accountType && formik.errors.accountType ? (
 								<div className="text-red-700 text-sm mb-4" >{formik.errors.accountType}</div>
-							) : null}
+							) : null} */}
 
 							{
-								formik.values.accountType === 'Business' && (
+								accountType === 'Business' && (
 									<>
 										{/* <InputField
                       name={"businessName"}
@@ -262,7 +276,7 @@ const Signup = () => {
 											inputClass={`${getInputClasses(
 												formik, "website"
 											)} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
-											label={'Website address'}
+											label={'Business Website address'}
 										/>
 										{formik.touched.website && formik.errors.website ? (
 											<div className="text-red-700 text-sm mb-4" >{formik.errors.website}</div>
@@ -305,13 +319,12 @@ const Signup = () => {
 							</div> */}
 						</form>
 					</div>
-
 				</div>
-				<span className="flex w-full justify-center lg:hidden pt-2">
+				{/* <span className="flex w-full justify-center lg:hidden pt-2">
 					<svg xmlns="http://www.w3.org/2000/svg" width="185" height="6" viewBox="0 0 185 6">
 						<rect id="_-" data-name="-" width="185" height="6" rx="3" fill="#714de1" />
 					</svg>
-				</span>
+				</span> */}
 			</div>
 			{
 				showModal && (
@@ -342,6 +355,7 @@ const Signup = () => {
 					/>
 				)
 			}
+			<Footer logo={logo} />
 		</ >
 	)
 }

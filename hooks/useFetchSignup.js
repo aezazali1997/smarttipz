@@ -1,9 +1,9 @@
 import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import swal from 'sweetalert';
 import axiosInstance from '../APIs/axiosInstance';
-import { SignupSchema } from '../utils/validation_shema';
+import { SignupSchema, PersonalSignupSchema } from '../utils/validation_shema';
 
 const UseFetchSignup = () => {
 
@@ -13,6 +13,11 @@ const UseFetchSignup = () => {
     const [loading, setLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [agree, setAgree] = useState(false);
+    const [accountType, setAccountType] = useState('Personal');
+    const [phone, setPhone] = useState('');
+
+
+    useEffect(() => { }, [accountType])
 
     const enableLoading = () => {
         setLoading(true);
@@ -23,6 +28,9 @@ const UseFetchSignup = () => {
     };
     const toggleModal = () => {
         setShowModal(!showModal);
+    };
+    const _HandlePhone = (value) => {
+        setPhone(value);
     };
 
     const initialValues = {
@@ -38,9 +46,9 @@ const UseFetchSignup = () => {
     const formik = useFormik({
         enableReinitialize: true,
         initialValues,
-        validationSchema: SignupSchema,
+        validationSchema: (accountType === 'Business' ? SignupSchema : PersonalSignupSchema),
         validateOnBlur: true,
-        onSubmit: ({ name, email, phone, password, username, accountType, website },
+        onSubmit: ({ name, email, password, username, website },
             { setSubmitting, setStatus }) => {
             setTimeout(() => {
                 enableLoading();
@@ -48,12 +56,13 @@ const UseFetchSignup = () => {
                     name,
                     username,
                     email,
-                    phone,
+                    phone: phone,
                     password,
-                    accountType,
+                    accountType: accountType,
                     // businessName,
-                    website
+                    website: website || ''
                 }
+                console.log(data);
                 axiosInstance.signup(data)
                     .then(({ data: { data, error, message } }) => {
                         console.log('res >>', data);
@@ -94,8 +103,21 @@ const UseFetchSignup = () => {
         toggleModal();
     }
 
+    const _SelectAccount = (type) => {
+        console.log('type: ', type);
+        setAccountType(type);
+    }
 
-    return { showPassword, loading, formik, showModal, agree, setShowPassword, toggleModal, _Confirm, _Cancel };
+    const ActiveTab = (account) => {
+        if (account === accountType) {
+            return 'bg-purple-600 text-white'
+        }
+        else {
+            return 'text-purple-600 bg-white'
+        }
+    }
+
+    return { showPassword, loading, formik, showModal, agree, accountType, phone, _HandlePhone, ActiveTab, _SelectAccount, setShowPassword, toggleModal, _Confirm, _Cancel };
 }
 
 export default UseFetchSignup;

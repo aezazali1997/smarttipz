@@ -14,7 +14,7 @@ const handler = async (req, res) => {
         name: Joi.string().required(),
         username: Joi.string().required(),
         email: Joi.string().required().email(),
-        phone: Joi.string().required(),
+        phone: Joi.string().allow(null).allow('').optional(),
         password: Joi.string().required(),
         accountType: Joi.string().required(),
         website: Joi.any().when('accountType', {

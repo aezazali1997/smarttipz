@@ -15,7 +15,7 @@ const Setting = ({ settings }) => {
     _Update, _OnChange, _DeleteImg, handleFileChange, FileInput, openFileDialog, _ChangeCountryCode
   } = UseFetchSetting(settings);
 
-  const { name, email, about, accessible, showPhone, accountType, phone, username } = personalInfo;
+  const { name, email, about, accessible, showPhone, accountType, phone, username, showName, showUsername } = personalInfo;
   const { website } = businessCard;
   return (
 
@@ -63,72 +63,80 @@ const Setting = ({ settings }) => {
             <div className="flex flex-col w-full lg:w-1/2 space-y-2 sm:px-3">
               <h1 className="text-lg font-semibold">{accountType === 'Business' ? 'Business' : 'Personal'} Information</h1>
               <div className="flex flex-col w-full">
-                <InputField
-                  name={"name"}
-                  type={"text"}
-                  value={name}
-                  onChange={_OnChange}
-                  svg={(
-                    <svg className="w-6 h-6 text-gray-500 " fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" /></svg>
+                <div className="flex w-full justify-between space-x-3">
+                  <InputField
+                    name={"name"}
+                    type={"text"}
+                    value={name}
+                    onChange={_OnChange}
+                    svg={(
+                      <svg className="w-6 h-6 text-gray-500 " fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" /></svg>
 
-                  )}
-                  inputClass={`border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
-                  label={accountType === 'Business' ? 'Business Name' : 'Name'}
-                />
-                {/* <div className="flex items-center space-x-1">
-                  <span>
-                    <svg data-tip data-for="showName" className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <ReactTooltip id="showName" place="top" effect="solid" border={false} borderColor="white" clickable={false}>
-                      {showPhone ? 'Click to hide number' : 'Click to show number'}
-                    </ReactTooltip>
-                  </span>
-                  <div className="relative inline-block w-10 mr-2 self-center select-none transition duration-200 ease-in">
-                    <input
-                      checked={showPhone}
-                      onChange={_OnChange}
-                      type="checkbox"
-                      name="showPhone"
-                      id="showPhone"
-                      className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" />
-                    <label htmlFor="showPhone" className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                  </div>
-                </div> */}
-                <InputField
-                  disabled={true}
-                  name={"username"}
-                  type={"text"}
-                  value={username}
-                  onChange={_OnChange}
-                  svg={(
-                    <svg className="w-6 h-6 text-gray-500 " fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" /></svg>
-                  )}
-                  inputClass={`border text-gray-400 bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12 `}
-                  label={accountType === 'Business' ? 'Business Username' : 'Username'}
-                />
-                {/* <div className="flex items-center space-x-1">
-                  <span>
-                    <svg data-tip data-for="showUsername" className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <ReactTooltip id="showUsername" place="top" effect="solid" border={false} borderColor="white" clickable={false}>
-                      {showPhone ? 'Click to hide number' : 'Click to show number'}
-                    </ReactTooltip>
-                  </span>
-                  <div className="relative inline-block w-10 mr-2 self-center select-none transition duration-200 ease-in">
-                    <input
-                      checked={showPhone}
-                      onChange={_OnChange}
-                      type="checkbox"
-                      name="showPhone"
-                      id="showPhone"
-                      className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" />
-                    <label htmlFor="showPhone" className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                  </div>
-                </div> */}
+                    )}
+                    inputClass={`border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
+                    label={accountType === 'Business' ? 'Business Name' : 'Name'}
+                  />
+                  {
+                    accountType === 'Personal' && (
+                      <div className="flex items-center space-x-1">
+                        <span>
+                          <svg data-tip data-for="showName" className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <ReactTooltip id="showName" place="top" effect="solid" border={false} borderColor="white" clickable={false}>
+                            {showName ? 'Click to hide name' : 'Click to show name'}
+                          </ReactTooltip>
+                        </span>
+                        <div className="relative inline-block w-10 mr-2 self-center select-none transition duration-200 ease-in">
+                          <input
+                            checked={showName}
+                            onChange={_OnChange}
+                            type="checkbox"
+                            name="showName"
+                            id="showName"
+                            className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" />
+                          <label htmlFor="showName" className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                        </div>
+                      </div>)}
+                </div>
+                <div className="flex w-full justify-between space-x-3">
+                  <InputField
+                    disabled={true}
+                    name={"username"}
+                    type={"text"}
+                    value={username}
+                    onChange={_OnChange}
+                    svg={(
+                      <svg className="w-6 h-6 text-gray-500 " fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" /></svg>
+                    )}
+                    inputClass={`border text-gray-400 bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12 `}
+                    label={accountType === 'Business' ? 'Business Username' : 'Username'}
+                  />
+                  {
+                    accountType === 'Personal' && (
+                      <div className="flex items-center space-x-1">
+                        <span>
+                          <svg data-tip data-for="showUsername" className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <ReactTooltip id="showUsername" place="top" effect="solid" border={false} borderColor="white" clickable={false}>
+                            {showUsername ? 'Click to hide username' : 'Click to show username'}
+                          </ReactTooltip>
+                        </span>
+                        <div className="relative inline-block w-10 mr-2 self-center select-none transition duration-200 ease-in">
+                          <input
+                            checked={showUsername}
+                            onChange={_OnChange}
+                            type="checkbox"
+                            name="showUsername"
+                            id="showUsername"
+                            className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" />
+                          <label htmlFor="showUsername" className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                        </div>
+                      </div>)}
+                </div>
                 <InputField
                   disabled={true}
                   name={"email"}

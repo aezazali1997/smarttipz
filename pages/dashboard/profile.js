@@ -14,7 +14,7 @@ import cookie from 'js-cookie';
 const Profile = ({ profile }) => {
 
     const { handleShowBusinessCard, showBusinessCard, followed, followers, businessCard } = UseFetchProfile(profile);
-    const { name, about, rating, views, picture, phone, email, accountType } = profile;
+    const { name, about, rating, views, picture, phone, email, accountType, username, showUsername, showName } = profile;
     const { website } = businessCard;
 
     useEffect(() => {
@@ -57,7 +57,7 @@ const Profile = ({ profile }) => {
                     <div className="flex flex-row lg:justify-between px-2 ">
                         <div className="flex flex-col w-full lg:w-1/2">
                             <div className="flex justify-between items-start lg:items-end w-full md:w-2/3">
-                                <h1 className=" text-md lg:text-2xl font-semibold">{name}</h1>
+                                <h1 className=" text-md lg:text-2xl font-semibold">{accountType === 'Personal' ? showName ? name : showUsername ? username : '' : username}</h1>
                             </div>
                             <h2 className="text-sm text-gray-500">{phone}</h2>
                             {/* <h2 className="text-sm text-gray-500">Marketing Specialist</h2> */}

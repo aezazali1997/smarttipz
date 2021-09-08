@@ -20,7 +20,7 @@ const UseFetchSetting = (settings) => {
     const [accountLoading, setAccountLoading] = useState(false);
     const [personalInfo, setPersonalInfo] = useState({
         phone: '', accessible: '', name: '', email: '', showPhone: '', about: '', username: '',
-        accountType: ''
+        accountType: '', showName: '', showUsername: ''
     });
     const [updated, setUpdated] = useState(false);
     const [imageUrl, setImageUrl] = useState('');
@@ -74,25 +74,6 @@ const UseFetchSetting = (settings) => {
         setAccountLoading(false);
     };
 
-    // let upload = useRef();
-
-    // let _OnChangeImg = async (event) => {
-    //     const { files } = event.target;
-    //     const img = URL.createObjectURL(files[0]);
-    //     const data = { link: img };
-    //     axiosInstance.uploadProfilePic(data)
-    //         .then(res => {
-    //             setImage(img);
-    //         }).catch(e => {
-    //             console.log(e.message);
-    //         })
-    // }
-
-    // let _BrowseImg = () => {
-    //     upload.current.click();
-    // }
-
-
     let handleFileChange = async file => {
         console.log(file);
         let { url } = await uploadToS3(file);
@@ -117,8 +98,22 @@ const UseFetchSetting = (settings) => {
     const _OnChange = (e) => {
         const { name, value, checked } = e.target;
         let copyOriginal = { ...personalInfo };
-        let newObject = (name === 'accessible' || name === 'showPhone' ?
-            { ...copyOriginal, [name]: checked } : { ...copyOriginal, [name]: value });
+        let newObject = (name === 'accessible' || name === 'showPhone' || name === 'showName' ||
+            name === 'showUsername' ?
+            name === 'showUsername' && checked === true ?
+                { ...copyOriginal, showUsername: true, showName: false }
+                :
+                name === 'showUsername' && checked === false ?
+                    { ...copyOriginal, showUsername: false, showName: true } :
+                    name === 'showName' && checked === true ?
+                        { ...copyOriginal, showUsername: false, showName: true }
+                        :
+                        name === 'showName' && checked === false ?
+                            { ...copyOriginal, showUsername: true, showName: false }
+                            :
+                            { ...copyOriginal, [name]: checked }
+            : { ...copyOriginal, [name]: value });
+        console.log(newObject)
         setPersonalInfo(newObject);
     }
 

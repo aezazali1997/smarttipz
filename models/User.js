@@ -41,6 +41,14 @@ const User = sequelize.define('User', {
     type: DataTypes.BOOLEAN,
     defaultValue: true
   },
+  showName: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
+  },
+  showUsername: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
   picture: {
     type: DataTypes.STRING,
     defaultValue: 'https://thumbs.dreamstime.com/b/solid-purple-gradient-user-icon-web-mobile-design-interface-ui-ux-developer-app-137467998.jpg'

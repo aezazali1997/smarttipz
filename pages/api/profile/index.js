@@ -22,6 +22,8 @@ const handler = async (req, res) => {
           'about',
           'picture',
           'phoneNumber',
+          'showName',
+          'showUsername',
           'showPhone',
           'accessible',
           'accountType'
@@ -33,7 +35,7 @@ const handler = async (req, res) => {
       }
 
       const { name, email, avgRating, totalViews, about, picture, phoneNumber, showPhone, accessible,
-        accountType } = user;
+        accountType, showUsername, showName } = user;
 
       res.status(200).json({
         error: false,
@@ -50,6 +52,8 @@ const handler = async (req, res) => {
           showPhone: showPhone,
           accessible: accessible,
           showPhone: showPhone,
+          showName: showName,
+          showUsername: showUsername,
           accountType: accountType
         }
       });

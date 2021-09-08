@@ -19,7 +19,7 @@ const handler = async (req, res) => {
       process.env.SECRET_KEY
     );
 
-    const { about, name, email, accessible, accountType, phone, picture, views, rating, showPhone } = data
+    const { about, name, email, accessible, accountType, phone, picture, views, rating, showPhone, showUsername, showName } = data
 
     const user = await User.findOne({ where: { username } });
     if (!user) {
@@ -39,6 +39,8 @@ const handler = async (req, res) => {
         about,
         picture,
         phoneNumber: phone,
+        showUsername,
+        showName,
         showPhone,
         accessible,
         accountType
@@ -56,6 +58,8 @@ const handler = async (req, res) => {
         picture,
         phoneNumber: phone,
         showPhone,
+        showUsername,
+        showName,
         accessible,
         accountType
       });

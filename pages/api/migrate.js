@@ -8,10 +8,10 @@ const User = require('../../models/User');
 const Business = require('../../models/Business');
 
 const handler = async (req, res) => {
-    // User.sync({ force: true });
+    User.sync({ alter: true });
     // Business.sync({ force: true });
     // BusinessCard.sync({ force: true });
-    Session.sync({ alter: true });
+    // Session.sync({ alter: true });
     // Video.sync({ force: true });
     // Testimonial.sync({ force: true });
     // Chat.sync({ force: true });

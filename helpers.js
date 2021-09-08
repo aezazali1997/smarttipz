@@ -30,5 +30,5 @@ export const movetoNext = (e, nextFieldId, prevFieldId) => {
 }
 
 export const scrollToBottom = (messagesEndRef) => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    messagesEndRef.current?.scrollIntoView()
 }
