@@ -4,6 +4,7 @@
 @import './button.css';
 @import './tabs.css';
 @import './loader.css';
+@import './footer.css';
 @import './messages.module.css';
 @import './businessCard.css';
 @import 'react-phone-input-2/lib/style.css';

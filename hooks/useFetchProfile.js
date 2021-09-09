@@ -1,4 +1,5 @@
 import axiosInstance from 'APIs/axiosInstance';
+import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react'
 
 const UseFetchProfile = (profile) => {
@@ -8,6 +9,11 @@ const UseFetchProfile = (profile) => {
     const [followers, setFollowers] = useState(0);
     const [followed, setFollowed] = useState(0);
     const [businessCard, setBusinessCard] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const initialValues = {
+        name: '', designation: '', description: ''
+    }
 
     useEffect(() => {
         const { accountType, username } = profile;
@@ -33,7 +39,31 @@ const UseFetchProfile = (profile) => {
         setShowBusinessCard(showBusinessCard => !showBusinessCard)
     };
 
-    return { followed, followers, businessCard, showBusinessCard, handleShowBusinessCard };
+    const enableLoading = () => {
+        setLoading(true);
+    };
+
+    const disableLoading = () => {
+        setLoading(false);
+    };
+
+    const formik = useFormik({
+        enableReinitialize: true,
+        initialValues,
+        validateOnBlur: true,
+        onSubmit: ({ name, designation, description }, { setSubmitting, setStatus }) => {
+            // enableLoading();
+            setTimeout(() => {
+                const data = { name, designation, description };
+                console.log(data);
+            }, 1000);
+
+        },
+
+    });
+
+
+    return { followed, followers, businessCard, showBusinessCard, formik, handleShowBusinessCard };
 }
 
 export default UseFetchProfile;

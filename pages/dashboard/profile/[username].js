@@ -3,75 +3,67 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
 import { Helmet } from 'react-helmet';
-import { Card, PopupBusinessCard, ProfileCard, Rating, Spinner, TestimonialCard } from '../../../components';
+import { Card, PopupBusinessCard, ProfileCard, Rating, TestimonialCard } from '../../../components';
 import videos from '../../../utils/VdeoSchema.json';
 import testimonialVideo from '../../../utils/testimonialSchema.json';
 import axiosInstance from 'APIs/axiosInstance';
+import { parseCookies } from 'nookies';
+import axios from 'axios';
 
 
-const UserProfile = () => {
+const UserProfile = ({ profile }) => {
+    console.log('userprofile: ', profile);
     let router = useRouter();
-    const { username } = router.query;
     const [followed, setFollowed] = useState([]);
     const [followers, setFollowers] = useState([]);
     const [personalInfo, setPersonalInfo] = useState({});
+    const [isFollowing, setIsFollowing] = useState(false);
     const [canMessage, setCanMessage] = useState(false);
-    const [loading, setLoading] = useState(true);
     const [showBusinessCard, setShowBusinessCard] = useState(false);
     const [businessCard, setBusinessCard] = useState('');
 
     const gotoMessaging = () => {
-        router.push(`/dashboard/messages/${username}`)
+        router.push(`/dashboard/messages/${profile?.username}`)
     }
 
-    const { name, about, rating, views, picture, phone, showPhone, email, accountType } = personalInfo;
-    const { website } = businessCard;
-
     useEffect(() => {
-        if (username) {
-            let accountType = '';
-            axiosInstance.getSpecificprofile(username).then(({ data: { data } }) => {
-                console.log("user's data: ", data);
-                setPersonalInfo(data);
-                accountType = data.accountType;
-                setLoading(false);
+        const { accountType, username } = profile;
+        setPersonalInfo(profile);
+        axiosInstance.getSpecificFollow(username).then(({ data: { data: { followers, followed } } }) => {
+            console.log(followers, followed);
+            setFollowed(followed);
+            setFollowers(followers);
+        }).catch(e => {
+            console.log(e);
+        })
+        if (accountType === 'Business') {
+            console.log('business');
+            axiosInstance.getSpecificBusinessCard(username).then(({ data: { data } }) => {
+                console.log('data', data)
+                setBusinessCard(data);
             }).catch(e => {
-                console.log(e);
+                console.log('Error in Api BusinessCard: ', e);
             })
-
-            axiosInstance.getSpecificFollow(username).then(({ data: { data: { followers, followed } } }) => {
-                console.log(followers, followed);
-                setFollowed(followed);
-                setFollowers(followers);
-            }).catch(e => {
-                console.log(e);
-            })
-            if (accountType === 'Business') {
-                axiosInstance.getSpecificBusinessCard().then(({ data: { data } }) => {
-                    setBusinessCard(data);
-                }).catch(e => {
-                    console.log('Error in Api BusinessCard: ', e.response.data.message);
-                })
-            }
         }
-    }, [username])
-
-
-
+    }, [])
 
     const _Follow = () => {
-        // axiosInstance.followUser({ username }).then(({ data: { error, data, message } }) => {
-        //     setFollowed(true);
-        // })
-        //     .catch(err => {
-        //         console.log('FollowUser API Failed: ', err.reponse.data.message);
-        //     })
+        axiosInstance.followUser({ username: profile?.username }).then(({ data: { data } }) => {
+            setIsFollowing(data);
+            setCanMessage(canMessage => !canMessage);
+        })
+            .catch(err => {
+                console.log('FollowUser API Failed: ', err);
+            })
 
     }
     let handleShowBusinessCard = () => {
         console.log('clicked');
         setShowBusinessCard(showBusinessCard => !showBusinessCard)
     };
+
+    const { name, about, rating, views, picture, phone, showPhone, email, accountType, username, showName, showUsername } = personalInfo;
+    const { website } = businessCard;
 
     return (
 
@@ -159,8 +151,8 @@ const UserProfile = () => {
                         </div>
                     )}
                     <div className="flex w-full mt-3 items-center px-2 space-x-6">
-                        <button className="followingBtn">
-                            Following
+                        <button onClick={_Follow} className="followingBtn">
+                            {isFollowing ? 'Following' : 'Follow'}
                         </button>
 
                         {canMessage ? <button onClick={gotoMessaging} className="messageBtn">
@@ -248,7 +240,31 @@ const UserProfile = () => {
                 )}
             {/* section ends here */}
         </div>
+
+
     )
+}
+
+export const getServerSideProps = async (context) => {
+    const { query: { username } } = context;
+    const { token } = parseCookies(context);
+    if (!token)
+        return {
+            redirect: {
+                permanent: false,
+                destination: "/auth/login",
+            },
+            props: {},
+        };
+    else {
+        const res = await axios.get(`${process.env.BASE_URL}api/profile/${username}`, { headers: { Authorization: "Bearer " + token } })
+        const { data } = res.data;
+        return {
+            props: {
+                profile: data
+            }
+        }
+    }
 }
 
 export default UserProfile;

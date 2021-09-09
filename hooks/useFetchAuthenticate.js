@@ -9,7 +9,6 @@ import cookie from 'js-cookie';
 const UseFetchAuthenticate = () => {
 
     const router = useRouter();
-
     const [loading, setLoading] = useState(false);
 
     const enableLoading = () => {
@@ -32,7 +31,7 @@ const UseFetchAuthenticate = () => {
     const resendOTP = () => {
         if (localStorage.getItem('email')) {
             axiosInstance.resendOTP(localStorage.getItem('email'))
-                .then(({ data: { data, message, error }, status }) => {
+                .then(() => {
                     swal({
                         text: 'Confirmation code sent to email address',
                         buttons: false,

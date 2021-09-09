@@ -1,12 +1,12 @@
 /* eslint-disable @next/next/link-passhref */
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Sidebar from 'react-sidebar';
 import Hamburger from 'hamburger-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import logo from '../../public/logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faNewspaper, faUserCircle, faCog, faPlayCircle, faSignOutAlt, faComment } from '@fortawesome/free-solid-svg-icons'
+import { faNewspaper, faUserCircle, faCog, faPlayCircle, faSignOutAlt, faComment, faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/router';
 import Badge from 'components/Badge';
 
@@ -14,15 +14,26 @@ const Drawer = ({ isOpen, toggle, logout }) => {
 
     const router = useRouter();
     const { asPath } = router;
+    const [dropdown, setShowDropdown] = useState(false);
+
+    useEffect(() => {
+        asPath === '/privacy-policy' || asPath === '/terms-and-conditions'
+            ? setShowDropdown(true) : setShowDropdown(false);
+    }, [])
 
     let Active = (path) => {
-        if (asPath === path) {
-            return 'bg-white text-indigo-600'
-        }
-        else {
-            return 'text-white'
-        }
+        return asPath === path ?
+            'bg-white text-indigo-600' : 'text-white'
     }
+
+    const toggleDropdown = () => {
+        setShowDropdown(!dropdown);
+    }
+
+    let ActiveDropdown = (path) => {
+        return asPath === path ? 'text-white bg-indigo-600' : 'text-indigo-600';
+    }
+
 
     return (
         <Sidebar
@@ -39,25 +50,25 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                     <div className=' lg:flex h-80 flex-col space-y-2 overflow-y-auto'>
                         <>
                             <Link href='/dashboard/news-feed' className='p-4 font-sans nav-link nav-link-ltr'>
-                                <div onClick={toggle} className={`flex flex-row items-center py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
+                                <div onClick={toggle} className={`flex flex-row items-center py-2 px-3 rounded-lg w-52 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
                                     ${Active('/dashboard/news-feed')}`}>
                                     <FontAwesomeIcon icon={faNewspaper} /> &nbsp;News Feed
                                 </div>
                             </Link>
                             <Link href='/dashboard/profile' className='p-4 font-sans nav-link nav-link-ltr'>
-                                <div onClick={toggle} className={`py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
+                                <div onClick={toggle} className={`py-2 px-3 rounded-lg w-52 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
                                     ${Active('/dashboard/profile')}`}>
                                     <FontAwesomeIcon icon={faUserCircle} />&nbsp;Profile
                                 </div>
                             </Link>
                             <Link href='/dashboard/videos' className='p-4 font-sans nav-link nav-link-ltr' >
-                                <div onClick={toggle} className={`py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
+                                <div onClick={toggle} className={`py-2 px-3 rounded-lg w-52 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
                                     ${Active("/dashboard/videos")}`}>
                                     <FontAwesomeIcon icon={faPlayCircle} />&nbsp;Videos
                                 </div>
                             </Link>
                             <Link href='/dashboard/messages' className='p-4 font-sans nav-link nav-link-ltr' >
-                                <div onClick={toggle} className={`flex justify-between items-center py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
+                                <div onClick={toggle} className={`flex justify-between items-center py-2 px-3 rounded-lg w-52 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
                                     ${Active("/dashboard/messages")}`}>
                                     <div>
                                         <FontAwesomeIcon icon={faComment} />&nbsp;Messages
@@ -65,8 +76,61 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                                     {/* <Badge /> */}
                                 </div>
                             </Link>
+                            <button onClick={toggleDropdown} className={`flex items-center justify-between py-2 px-3 rounded-lg w-52 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
+                           ${dropdown ? 'bg-white text-indigo-600' : 'text-white'}`}>
+                                <div>
+                                    <FontAwesomeIcon icon={faClipboardList} />&nbsp;Policies
+                                </div>
+                                {
+                                    dropdown ?
+                                        <svg className="w-6 h-6 pointer-events-none" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                                        </svg>
+                                        :
+                                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
+                                        </svg>
+                                }
+                            </button>
+                            {
+                                dropdown ? (
+                                    <div className="flex flex-col space-y-2 bg-white p-2 w-52 rounded-lg">
+                                        <Link href='/privacy-policy' className='p-4 font-sans nav-link nav-link-ltr' >
+                                            <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium hover:text-white hover:bg-indigo-600 cursor-pointer
+                            ${ActiveDropdown("/privacy-policy")}`}>
+                                                <div>
+                                                    Privacy Policy
+                                                </div>
+                                            </div>
+                                        </Link>
+                                        <Link href='/terms-and-conditions' className='p-4 font-sans nav-link nav-link-ltr' >
+                                            <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium hover:text-white hover:bg-indigo-600 cursor-pointer
+                            ${ActiveDropdown("/terms-and-conditions")}`}>
+                                                <div>
+                                                    Terms & Conditions
+                                                </div>
+                                            </div>
+                                        </Link>
+                                        <Link href='/terms-and-conditions' className='p-4 font-sans nav-link nav-link-ltr' >
+                                            <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium hover:text-white hover:bg-indigo-600 cursor-pointer
+                            ${ActiveDropdown("/copyrights")}`}>
+                                                <div>
+                                                    Copyrights Reserved
+                                                </div>
+                                            </div>
+                                        </Link>
+                                        <Link href='/terms-and-conditions' className='p-4 font-sans nav-link nav-link-ltr' >
+                                            <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium hover:text-white hover:bg-indigo-600 cursor-pointer
+                            ${ActiveDropdown("/trademark-license")}`}>
+                                                <div>
+                                                    Trademark License
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    </div>
+                                ) : ('')}
                             <Link href='/dashboard/setting' className='p-4 font-sans nav-link nav-link-ltr' >
-                                <div onClick={toggle} className={`py-2 px-3 rounded-lg w-44 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
+                                <div onClick={toggle} className={`py-2 px-3 rounded-lg w-52 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
                                 ${Active("/dashboard/setting")}`}>
                                     <FontAwesomeIcon icon={faCog} />&nbsp;Settings
                                 </div>
@@ -75,7 +139,7 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                     </div>
                     <div className="flex h-20 items-center">
                         <button onClick={() => logout()}
-                            className={`flex flex-row py-2 px-3 rounded-lg w-44 font-medium text-white hover:bg-white hover:text-indigo-600 `} >
+                            className={`flex flex-row py-2 px-3 rounded-lg w-52 font-medium text-white hover:bg-white hover:text-indigo-600 `} >
                             <div >
                                 <FontAwesomeIcon icon={faSignOutAlt} /> &nbsp;Logout
                             </div>

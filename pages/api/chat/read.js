@@ -39,17 +39,29 @@ const handler = async (req, res) => {
                 },
                 order: [["createdAt", "DESC"]],
             });
+
             console.log('chats: ', chats);
+
             const { name, picture } = await User.findOne({ where: { id: recieverID } });
-            const { isRead } = await Session.update({ isRead: true }, {
+            const { isRead, connected } = await Session.update({ isRead: true }, {
                 where: { userId: recieverID },
                 returning: true, // needed for affectedRows to be populated
                 plain: true
             });
 
             console.log('isRead: ', isRead);
+            const response = {
+                id: recieverID,
+                name: name,
+                picture: picture,
+                isRead: true,
+                connected,
+                lastMessage: chats[0].content,
+                lastMessageTime: chats[0].createdAt,
 
-            return res.status(200).send({ error: false, data: [], message: 'API successful' });
+            }
+
+            return res.status(200).send({ error: false, data: response, message: 'API successful' });
         }
 
         catch (err) {

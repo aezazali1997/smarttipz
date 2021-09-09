@@ -8,7 +8,7 @@ import PopupBusinessCard from '../PopupBusinessCard';
 const ProfileCard = ({ data, otherUser, handleShowBusinessCard, showBusinessCard, followed, followers, website }) => {
 
 
-    const { name, about, rating, email, views, picture, phone, accountType } = data;
+    const { name, about, rating, email, views, picture, phone, accountType, username, showPhone, showName, showUsername } = data;
 
     return (
         <div className="flex flex-col w-full relative items-center space-y-3">
@@ -22,8 +22,8 @@ const ProfileCard = ({ data, otherUser, handleShowBusinessCard, showBusinessCard
                 </div>
             }
             <div className="flex flex-col w-full jusify-center items-center">
-                <h1 className="text-black text-lg font-sans font-semibold">{name}</h1>
-                <h1 className=" text-sm font-sans text-gray-400">{phone}</h1>
+                <h1 className="text-black text-lg font-sans font-semibold">{accountType === 'Personal' ? showName ? name : showUsername ? username : '' : name}</h1>
+                <h1 className=" text-sm font-sans text-gray-400">{otherUser ? showPhone ? phone : '' : phone}</h1>
             </div>
             <p className="text-sm text-black text-center">{about || 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat pidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'}</p>
             {accountType === "Business" && (

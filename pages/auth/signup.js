@@ -14,23 +14,23 @@ import { UseFetchSignup } from 'hooks';
 const Signup = () => {
 
 	const { loading, showPassword, formik, agree, showModal, accountType, phone, _HandlePhone,
-		ActiveTab, setShowPassword, toggleModal, _Confirm, _Cancel, _SelectAccount } = UseFetchSignup();
+		setShowPassword, toggleModal, _Confirm, _Cancel, _SelectAccount } = UseFetchSignup();
 
 	return (
-		<>
+		<div className="flex flex-col w-full h-full lg:h-screen">
 			{/*SEO Support*/}
 			<Helmet>
 				<title>SignUp | Smart Tipz</title>
 			</Helmet>
 			{/*SEO Support End */}
 
-			<div className="flex flex-col w-full lg:flex-row pt-5 p-5 xs:p-10 pb-0">
+			<div className="hidden lg:flex flex-col w-full lg:flex-row pt-5 p-5 xs:p-10 pb-0">
 				<div className="flex flex-col w-full lg:w-1/2 justify-start">
-					<span className="hidden lg:flex">
-						<Image src={logo} alt="brand logo" />
+					<span className="flex">
+						<Image src={logo} alt="brand logo" priority={true} />
 					</span>
 				</div>
-				<div className="hidden lg:flex flex-col w-full lg:w-1/2 items-center">
+				<div className="flex flex-col w-full lg:w-1/2 items-center">
 					<div className="flex flex-col w-full lg:max-w-lg mt-4 lg:mt-0 space-y-1 px-2">
 						<p className=" font-bold text-3xl text-center lg:text-left lg:text-3xl">Sign Up</p>
 						<p className="text-gray-400 text-md text-center lg:text-left">Let's create your account</p>
@@ -43,13 +43,13 @@ const Signup = () => {
 				</div>
 			</div>
 
-			<div className="flex flex-col w-full lg:flex-row pt-5 p-5 xs:p-10 pb-2 md:p-16 md:pb-1 md:pt-0">
+			<div className="flex flex-col h-full w-full lg:flex-row pt-5 p-5 xs:p-10 pb-2 md:p-16 md:pb-1 md:pt-0">
 
-				<div className="flex w-full lg:w-1/2 relative h-52 sm:h-64 lg:h-screen">
-					<Image src={reg} alt="brand logo" layout="fill" objectFit="contain" />
+				<div className="flex w-full relative h-52 sm:h-64 lg:h-full">
+					<Image src={reg} alt="brand logo" layout="fill" objectFit="contain" priority={true} />
 				</div>
 
-				<div className="flex flex-col w-full lg:w-1/2 items-center">
+				<div className="flex flex-col w-full items-center">
 					<div className="flex flex-col w-full lg:hidden mt-4 lg:mt-0 space-y-2">
 						<p className=" font-bold text-3xl text-center lg:text-left lg:text-5xl">Sign Up</p>
 						<p className="text-gray-400 text-lg text-center lg:text-left">Let's create your account</p>
@@ -65,14 +65,15 @@ const Signup = () => {
 								<Button
 									onSubmit={() => _SelectAccount('Personal')}
 									type={"button"}
-									classNames={`flex w-full ${ActiveTab('Personal')} justify-center  hover:text-white hover:bg-purple-600 p-3 
+									classNames={`flex w-full ${accountType === 'Personal' ? 'bg-purple-600 text-white' : 'text-indigo-600 bg-white'}
+									 justify-center  hover:text-white hover:bg-purple-600 p-3
 									rounded-md`}
 									childrens={'Personal Account'}
 								/>
 								<Button
 									onSubmit={() => _SelectAccount('Business')}
 									type={"button"}
-									classNames={`flex w-full ${ActiveTab('Business')} justify-center hover:text-white hover:bg-purple-600
+									classNames={`flex w-full ${accountType === 'Business' ? 'bg-purple-600 text-white' : 'text-indigo-600 bg-white'} justify-center hover:text-white hover:bg-purple-600
 									p-3 rounded-md`}
 									childrens={'Business Account'}
 								/>
@@ -288,7 +289,7 @@ const Signup = () => {
 								<label
 									className="flex items-center text-sm cursor-pointer text-indigo-700  font-semibold">
 									<input onChange={toggleModal} type="checkbox" color={'#714de1'} checked={agree} className="form-checkbox" />
-									<span className="ml-2">I agree to the <span className="underline">terms and conditions</span></span>
+									<span className="ml-2">I agree to the <span>terms and conditions</span></span>
 								</label>
 							</div>
 
@@ -356,7 +357,7 @@ const Signup = () => {
 				)
 			}
 			<Footer logo={logo} />
-		</ >
+		</div>
 	)
 }
 

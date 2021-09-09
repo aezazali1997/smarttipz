@@ -49,7 +49,7 @@ const UseFetchSignup = () => {
         validationSchema: (accountType === 'Business' ? SignupSchema : PersonalSignupSchema),
         validateOnBlur: true,
         onSubmit: ({ name, email, password, username, website },
-            { setSubmitting, setStatus }) => {
+            { setSubmitting }) => {
             setTimeout(() => {
                 enableLoading();
                 const data = {
@@ -75,7 +75,7 @@ const UseFetchSignup = () => {
                             icon: 'success'
                         })
                         localStorage.setItem('email', email);
-                        router.push('/auth/authenticate')
+                        router.push({ pathname: '/auth/authenticate', state: { email } })
                     })
                     .catch((e) => {
                         console.log('Error', e.response.data.message)
@@ -108,16 +108,16 @@ const UseFetchSignup = () => {
         setAccountType(type);
     }
 
-    const ActiveTab = (account) => {
-        if (account === accountType) {
-            return 'bg-purple-600 text-white'
-        }
-        else {
-            return 'text-purple-600 bg-white'
-        }
-    }
+    // const ActiveTab = (account) => {
+    //     if (account === accountType) {
+    //         return 'bg-purple-600 text-white'
+    //     }
+    //     else {
+    //         return 'text-purple-600 bg-white'
+    //     }
+    // }
 
-    return { showPassword, loading, formik, showModal, agree, accountType, phone, _HandlePhone, ActiveTab, _SelectAccount, setShowPassword, toggleModal, _Confirm, _Cancel };
+    return { showPassword, loading, formik, showModal, agree, accountType, phone, _HandlePhone, _SelectAccount, setShowPassword, toggleModal, _Confirm, _Cancel };
 }
 
 export default UseFetchSignup;

@@ -6,7 +6,7 @@ const handler = async (req, res) => {
         const {
             headers,
             body,
-            body: { followID }
+            body: { username: otheruser }
         } = req;
 
         try {
@@ -26,14 +26,14 @@ const handler = async (req, res) => {
                 return res.status(404).send({ error: true, data: [], message: 'User Not Found' })
             }
 
-            const otherUser = await User.findOne({ where: { id: followID } });
+            const otherUser = await User.findOne({ where: { username: otheruser } });
             if (!otherUser) {
                 return res.status(404).json({ error: true, message: 'User Not Found', data: [] });
             }
 
             const alreadyFollowed = await user.getFollower();
             if (!alreadyFollowed) {
-                await user.setFollowed(otherUser);
+                await user.setFollowed(otheruser);
                 await otherUser.setFollower(user);
             }
 

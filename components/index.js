@@ -23,3 +23,4 @@ export { default as AccountSetting } from './AccountSetting';
 export { default as MobileInbox } from './MobileInbox';
 export { default as WebInbox } from './WebInbox';
 export { default as PopupBusinessCard } from './PopupBusinessCard';
+export { default as TestimonialForm } from './TestimonialForm';

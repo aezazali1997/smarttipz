@@ -80,9 +80,16 @@ const Messages = () => {
     let _OnSelect = (id, name, picture) => {
         if (selected?.id !== id) {
             axiosInstance.msgRead({ recieverID: id })
-                .then(res => { })
+                .then(({ data: { data } }) => {
+                    let copyArray = [...userList];
+                    copyArray = copyArray.filter(user => user.id !== data.id);
+                    console.log({ copyArray });
+                    let updatedArray = [data, ...copyArray]
+                    console.log({ updatedArray });
+                    setUserList(updatedArray);
+                })
                 .catch(e => {
-                    console.log(e.response.data.message);
+                    console.log(e);
                 })
             const data = {
                 id,

@@ -15,8 +15,8 @@ const Login = () => {
     const { toggleAlert, showPassword, setShowPassword, showAlert, formik, loading, error } = UseFetchLogin();
 
     return (
-        <>
-            <div className="flex flex-col h-screen pt-5 p-5 xs:p-10 pb-2 space-y-5">
+        <div className="flex flex-col h-screen w-full">
+            <div className="flex flex-col h-full pt-5 p-5 xs:p-10 pb-2 space-y-5">
                 {/*SEO Support*/}
                 <Helmet>
                     <title>Login | Smart Tipz</title>
@@ -32,9 +32,6 @@ const Login = () => {
 
                 <div className="flex flex-col w-full h-full lg:flex-row pt-5 p-5 xs:p-10 pb-2 md:p-16 md:pb-1 md:pt-0">
 
-                    {/* <div className="flex w-full justify-center items-center text-center overflow-hidden">
-                    <Image src={login} alt="banner" objectFit="contain" />
-                </div> */}
                     <div className="flex w-full relative h-52 sm:h-64 lg:h-full">
                         <Image src={login} alt="banner" layout="fill" objectFit="contain" />
                     </div>
@@ -168,8 +165,10 @@ const Login = () => {
                 </span> */}
                 </div>
             </div>
+            {/* <div className="fixed bottom-0 w-full"> */}
             <Footer />
-        </>
+            {/* </div> */}
+        </div>
     )
 }
 

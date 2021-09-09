@@ -4,16 +4,15 @@ import React from 'react'
 
 const Index = () => {
     return (
-        <div className="flex flex-col md:flex-row items-center md:justify-evenly w-full py-4 px-3 bg-purple-500 text-white">
-            <Link href="/auth/privacy-policy"><a className="hover:underline">Privacy Policy</a></Link>
-            <Link href="/auth/terms-and-conditions"><a className="hover:underline">Terms and Conditions</a></Link>
+        <div className="flex flex-col md:flex-row items-center md:justify-evenly w-full py-4 px-3 footer text-white">
+            <Link href="/privacy-policy"><a className="hover:underline">Privacy Policy</a></Link>
+            <Link href="/terms-and-conditions"><a className="hover:underline">Terms and Conditions</a></Link>
             <div>
-                <p>© 2021 CopyRights Reserved.</p>
+                <Link href="/copyrights" ><a className="hover:underline">© 2021 CopyRights Reserved.</a></Link>
             </div>
-            <div>
-                <p className="text-center">™ Trademark license agreement - Intellectual property</p>
+            <div className="text-center">
+                <Link href="/trademark-license"><a className="hover:underline">™ Trademark license agreement - Intellectual property</a></Link>
             </div>
-
 
             {/* <div className="xl:px-40 pb-12 lg:px-20 md:px-10 sm:px-5 px-10">
                 <div className="w-full pt-12 flex flex-col sm:flex-row space-y-2  justify-start">

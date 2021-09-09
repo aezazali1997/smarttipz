@@ -5,7 +5,7 @@ const handler = async (req, res) => {
     if (req.method === 'GET') {
 
         const {
-            body,
+
             headers,
             query: { username }
         } = req;
@@ -15,6 +15,12 @@ const handler = async (req, res) => {
             if (!headers.authorization) {
                 return res.status(401).send({ error: true, data: [], message: 'Please Login' })
             };
+
+            const result = jwt.verify(
+                req.headers.authorization.split(' ')[1],
+                process.env.SECRET_KEY
+            );
+
             console.log('params: ', username);
             const user = await User.findOne({
                 attributes: [
@@ -27,16 +33,19 @@ const handler = async (req, res) => {
                     'phoneNumber',
                     'showPhone',
                     'accessible',
-                    'accountType'
+                    'accountType',
+                    'showName',
+                    'showUsername'
                 ],
                 where: { username }
             });
+            console.log('user: ', user);
             if (!user) {
                 return res.status(404).send({ error: true, data: [], message: 'User Not Found' })
             }
 
-            const { name, email, avgRating, totalViews, about, picture, phoneNumber, showPhone, accessible,
-                accountType } = user;
+            const { name, email, avgRating, totalViews, about, picture, phoneNumber, showPhone, accessible, showName,
+                showUsername, accountType } = user;
 
             res.status(200).json({
                 error: false,
@@ -51,8 +60,9 @@ const handler = async (req, res) => {
                     picture: picture,
                     phone: phoneNumber,
                     showPhone: showPhone,
+                    showName,
+                    showUsername,
                     accessible: accessible,
-                    showPhone: showPhone,
                     accountType: accountType
                 }
             });
