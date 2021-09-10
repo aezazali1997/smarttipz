@@ -73,6 +73,10 @@ class AxiosInstance {
         return await axios.post(USER_API_BASE_URL + "api/profile/testimonial", data, this.getAuthHeader());
     }
 
+    async updateTestimonial(data) {
+        return await axios.put(USER_API_BASE_URL + "api/profile/testimonial", data, this.getAuthHeader());
+    }
+
     async getSpecificBusinessCard(username) {
         return await axios.get(USER_API_BASE_URL + `api/profile/businesscard/${username}`, this.getAuthHeader());
     }

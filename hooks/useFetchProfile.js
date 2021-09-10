@@ -4,9 +4,10 @@ import { useS3Upload } from 'next-s3-upload';
 import React, { useEffect, useState } from 'react'
 import { TestimonialFormSchema } from 'utils/validation_shema';
 
+
 const initialValues = {
     name: '', designation: '', description: ''
-}
+};
 
 const UseFetchProfile = (profile) => {
 
@@ -17,13 +18,16 @@ const UseFetchProfile = (profile) => {
     const [loading, setLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState('');
     const [testimonial, setTestimonial] = useState([]);
-    let { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
 
+
+    let { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
 
     useEffect(() => {
         console.log('profile: ', profile);
-        const { accountType, username } = profile;
+        const { accountType, username, isApproved } = profile;
+        localStorage.setItem('isApproved', isApproved);
         localStorage.setItem('username', username);
+        localStorage.setItem('accountType', accountType);
         axiosInstance.getFollow().then(({ data: { data: { followers, followed } } }) => {
             console.log(followers, followed);
             setFollowed(followed);
@@ -41,7 +45,7 @@ const UseFetchProfile = (profile) => {
                 console.log("Testimonials: ", data);
                 setTestimonial(data);
             }).catch(e => {
-                console.log('Error in Api BusinessCard: ', e.message);
+                console.log('Error in Api Testimonials: ', e.message);
             })
 
         }
@@ -65,6 +69,10 @@ const UseFetchProfile = (profile) => {
 
     }
 
+    const handleEditTestimonial = (data) => {
+        console.log('clicked:', data);
+    }
+
     const enableLoading = () => {
         setLoading(true);
     };
@@ -78,7 +86,7 @@ const UseFetchProfile = (profile) => {
         initialValues,
         validationSchema: TestimonialFormSchema,
         validateOnBlur: true,
-        onSubmit: ({ name, designation, description }, { setSubmitting, setStatus }) => {
+        onSubmit: ({ name, designation, description }, { setSubmitting, setStatus, resetForm }) => {
             enableLoading();
             setTimeout(() => {
                 const data = { name, designation, description, image: imageUrl };
@@ -89,19 +97,19 @@ const UseFetchProfile = (profile) => {
                     let newArray = [...copyTestimonial, { ownerName: name, designation, description, picture: imageUrl }];
                     setTestimonial(newArray);
                     disableLoading();
+                    resetForm({ name: '', designation: '', description: '' })
                 }).catch(e => {
                     console.log('Error in Api BusinessCard: ', e.message);
                     disableLoading();
                 })
             }, 1000);
         },
-
     });
 
 
     return {
         followed, followers, businessCard, showBusinessCard, formik, imageUrl, loading, testimonial,
-        handleShowBusinessCard, _DeleteImg, handleFileChange, FileInput, openFileDialog
+        handleShowBusinessCard, _DeleteImg, handleFileChange, FileInput, openFileDialog, handleEditTestimonial
     }
 }
 

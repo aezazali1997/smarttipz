@@ -65,13 +65,14 @@ const Index = ({ formik, getInputClasses, loading }) => {
             {formik.touched.description && formik.errors.description ? (
                 <div className="text-red-700 text-sm mb-4" >{formik.errors.description}</div>
             ) : null}
-
-            <Button
-                type={"submit"}
-                classNames={"flex w-28 justify-center btn text-white p-3 rounded-md"}
-                childrens={'Submit'}
-                loading={loading}
-            />
+            <div>
+                <Button
+                    type={"submit"}
+                    classNames={"flex  justify-center btn text-white p-3 rounded-md"}
+                    childrens={'Add Testimonial'}
+                    loading={loading}
+                />
+            </div>
         </div>
     )
 }

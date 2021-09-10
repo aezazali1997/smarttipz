@@ -111,7 +111,7 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                                                 </div>
                                             </div>
                                         </Link>
-                                        <Link href='/terms-and-conditions' className='p-4 font-sans nav-link nav-link-ltr' >
+                                        <Link href='/copyrights' className='p-4 font-sans nav-link nav-link-ltr' >
                                             <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium hover:text-white hover:bg-indigo-600 cursor-pointer
                             ${ActiveDropdown("/copyrights")}`}>
                                                 <div>
@@ -119,7 +119,7 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                                                 </div>
                                             </div>
                                         </Link>
-                                        <Link href='/terms-and-conditions' className='p-4 font-sans nav-link nav-link-ltr' >
+                                        <Link href='/trademark-license' className='p-4 font-sans nav-link nav-link-ltr' >
                                             <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium hover:text-white hover:bg-indigo-600 cursor-pointer
                             ${ActiveDropdown("/trademark-license")}`}>
                                                 <div>

@@ -20,10 +20,6 @@ const handler = async (req, res) => {
         return res.status(404).json({ error: true, data: [], message: 'No user found' });
       }
 
-      // if (user.accountType !== 'Business') {
-      //   return res.status(400).send({ error: true, data: [], message: 'Only business have testimonials' });
-      // }
-
       const business = await user.getBusiness();
 
       const testimonials = await business.getTestimonials();
@@ -69,11 +65,9 @@ const handler = async (req, res) => {
 
       const { name, description, designation, image } = req.body;
 
-      const testimonial = await Testimonial.create({ username, ownerName: name, description, designation, picture: image });
-
       const business = await user.getBusiness();
 
-      await business.setTestimonials(testimonial);
+      await Testimonial.create({ username, ownerName: name, description, designation, picture: image, BusinessId: business.id });
 
       res.status(201).json({ error: false, message: 'Testimonial Added Successfully', data: [] });
 

@@ -14,7 +14,7 @@ import { getInputClasses } from 'helpers';
 const Profile = ({ profile }) => {
 
     const { handleShowBusinessCard, showBusinessCard, followed, followers, businessCard, formik, imageUrl, loading,
-        testimonial, FileInput, handleFileChange, _DeleteImg, openFileDialog } = UseFetchProfile(profile);
+        testimonial, handleEditTestimonial, FileInput, handleFileChange, _DeleteImg, openFileDialog } = UseFetchProfile(profile);
     const { name, about, rating, views, picture, phone, email, accountType, username, showUsername, showName } = profile;
     const { website } = businessCard;
 
@@ -220,13 +220,15 @@ const Profile = ({ profile }) => {
                     <div className="flex w-full mt-6 justify-center lg:justify-start">
                         <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
                             {
-                                testimonial.map(({ picture, description, designation, ownerName, id }, index) => (
+                                testimonial.map((res, index) => (
                                     <div key={index}>
                                         <TestimonialCard
-                                            image={picture}
-                                            name={ownerName}
-                                            designation={designation}
-                                            description={description}
+                                            _Edit={handleEditTestimonial}
+                                            image={res.picture}
+                                            name={res.ownerName}
+                                            designation={res.designation}
+                                            description={res.description}
+                                            data={res}
                                         />
                                     </div>
                                 ))
