@@ -26,14 +26,14 @@ const Login = () => {
 
                 <div className="hidden lg:flex flex-col w-full">
                     <span className="flex">
-                        <Image src={logo} alt="brand logo" />
+                        <Image src={logo} alt="brand logo" priority={true} />
                     </span>
                 </div>
 
                 <div className="flex flex-col w-full h-full lg:flex-row pt-5 p-5 xs:p-10 pb-2 md:p-16 md:pb-1 md:pt-0">
 
                     <div className="flex w-full relative h-52 sm:h-64 lg:h-full">
-                        <Image src={login} alt="banner" layout="fill" objectFit="contain" />
+                        <Image src={login} alt="banner" layout="fill" objectFit="contain" priority={true} />
                     </div>
 
                     <div className="flex flex-col w-full items-center">

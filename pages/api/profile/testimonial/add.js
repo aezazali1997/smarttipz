@@ -8,8 +8,10 @@ const handler = async (req, res) => {
   if (req.method === 'POST') {
     const validateAddTestimonial = (data) => {
       const schema = Joi.object({
-        username: Joi.string().required(),
-        message: Joi.string().required()
+        name: Joi.string().required(),
+        designation: Joi.string().required(),
+        description: Joi.string().required(),
+        image: Joi.string().optional().allow(''),
       });
       return schema.validate(data);
     };
@@ -21,7 +23,7 @@ const handler = async (req, res) => {
 
     try {
       if (!req.headers.authorization) {
-        throw new Error('Please Login');
+        return res.status(401).json({ error: true, data: [], message: 'Please Login' });
       }
       const { username } = jwt.verify(
         req.headers.authorization.split(' ')[1],
@@ -30,27 +32,30 @@ const handler = async (req, res) => {
 
       const user = await User.findOne({ where: { username } });
       if (!user) {
-        throw new Error('Please Login');
+        return res.status(404).json({ error: true, data: [], message: 'No user found' });
       }
 
-      const { username: busername, message } = req.body;
+      const { name, description, designation, image } = req.body;
 
-      const businessUser = await User.findOne({ where: { username: busername } });
+      const businessUser = await User.findOne({ where: { username: name } });
 
-      if (!businessUser) throw new Error('User name of business does not exist');
+      if (!businessUser) {
+        return res.status(404).send({ error: true, data: [], message: 'User name of business does not exist' })
+      }
 
       if (!businessUser.accountType === 'Business')
-        throw new Error('Only business have testimonials');
+        return res.status(400).send({ error: true, data: [], message: 'Only business have testimonials' });
 
-      const testimonial = await Testimonial.create({ username, testimonial: message });
+      const testimonial = await Testimonial.create({ username, ownerName: name, description, designation, picture: image });
 
       const business = await businessUser.getBusiness();
 
       await business.setTestimonials(testimonial);
 
-      res.status(201).json({ error: false, message: 'success', data: [] });
+      res.status(201).json({ error: false, message: 'Testimonial Added Successfully', data: [] });
+
     } catch (err) {
-      res.status(422).json({ error: true, message: err.message, data: [] });
+      res.status(500).json({ error: true, message: err.message, data: [] });
     }
   } else {
     res.status(404).end('Page Not Found');

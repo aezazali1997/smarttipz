@@ -7,7 +7,7 @@ import ReactTooltip from 'react-tooltip';
 // import profile from '../../public/profile.jpg';
 import { getInputClasses } from 'helpers';
 import { UseFetchSetting } from 'hooks';
-import { AccountSetting, BusinessCard, Button, PhoneInput, InputField, Select } from 'components';
+import { AccountSetting, BusinessCard, Button, PhoneInput, InputField } from 'components';
 
 const Setting = ({ settings }) => {
 

@@ -13,7 +13,7 @@ const handler = async (req, res) => {
     // BusinessCard.sync({ force: true });
     // Session.sync({ alter: true });
     // Video.sync({ force: true });
-    // Testimonial.sync({ force: true });
+    // Testimonial.sync({ alter: true });
     // Chat.sync({ force: true });
     res.status(200).send({ message: "Tables created Successfully" });
 }

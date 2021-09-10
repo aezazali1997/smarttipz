@@ -26,7 +26,8 @@ const handler = async (req, res) => {
           'showUsername',
           'showPhone',
           'accessible',
-          'accountType'
+          'accountType',
+          'isApproved'
         ],
         where: { username }
       });
@@ -35,7 +36,7 @@ const handler = async (req, res) => {
       }
 
       const { name, email, avgRating, totalViews, about, picture, phoneNumber, showPhone, accessible,
-        accountType, showUsername, showName } = user;
+        accountType, showUsername, showName, isApproved } = user;
 
       res.status(200).json({
         error: false,
@@ -54,7 +55,8 @@ const handler = async (req, res) => {
           showPhone: showPhone,
           showName: showName,
           showUsername: showUsername,
-          accountType: accountType
+          accountType: accountType,
+          isApproved
         }
       });
     } catch (err) {

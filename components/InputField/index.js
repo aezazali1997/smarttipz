@@ -11,7 +11,7 @@ const InoutField = ({ label, inputClass, svg, name, type, value, onChange, onBlu
                 onChange={onChange}
                 onBlur={onBlur}
                 placeholder="name@example.com"
-                autoComplete="off" />
+                autoComplete="on" />
             <label
                 htmlFor={name}
                 className="absolute top-0 left-0 px-2 py-3 h-full pointer-events-none transform origin-left transition-all duration-100 ease-in-out ">

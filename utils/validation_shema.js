@@ -90,6 +90,14 @@ export const AuthenticateSchema = Yup.object().shape({
     tab6: Yup.string()
         .required(''),
 });
+export const TestimonialFormSchema = Yup.object().shape({
+    name: Yup.string()
+        .required("This is a required field"),
+    designation: Yup.string()
+        .required('This is a required field'),
+    description: Yup.string()
+        .required('This is a required field'),
+});
 
 export const AccountInfoValidationSchema = Yup.object().shape({
     old: Yup.string()

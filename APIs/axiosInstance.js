@@ -64,6 +64,15 @@ class AxiosInstance {
     async getBusinessCard() {
         return await axios.get(USER_API_BASE_URL + "api/profile/businesscard", this.getAuthHeader());
     }
+
+    async getTestimonial() {
+        return await axios.get(USER_API_BASE_URL + "api/profile/testimonial", this.getAuthHeader());
+    }
+
+    async addTestimonial(data) {
+        return await axios.post(USER_API_BASE_URL + "api/profile/testimonial", data, this.getAuthHeader());
+    }
+
     async getSpecificBusinessCard(username) {
         return await axios.get(USER_API_BASE_URL + `api/profile/businesscard/${username}`, this.getAuthHeader());
     }
@@ -93,6 +102,8 @@ class AxiosInstance {
         console.log('In delete ProfilePic Api')
         return await axios.delete(USER_API_BASE_URL + "api/profile/deletepic", this.getAuthHeader());
     }
+
+
 
 
 }
