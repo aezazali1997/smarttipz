@@ -1,3 +1,5 @@
+import { includes } from 'lodash';
+
 const User = require('../../../models/User');
 const jwt = require('jsonwebtoken');
 
@@ -26,14 +28,19 @@ const handler = async (req, res) => {
                 return res.status(404).send({ error: true, data: [], message: 'User Not Found' })
             }
 
-            const otherUser = await User.findOne({ where: { username: otheruser } });
+            const otherUser = await User.findOne({ attributes: ['id'], where: { username: otheruser } });
+
             if (!otherUser) {
-                return res.status(404).json({ error: true, message: 'User Not Found', data: [] });
+                return res.status(404).json({ error: true, message: 'Other User Not Found', data: [] });
             }
 
             const alreadyFollowed = await user.getFollower();
-            if (!alreadyFollowed) {
-                await user.setFollowed(otheruser);
+            console.log('alreadyFollowed: ', alreadyFollowed);
+            const exists = alreadyFollowed.includes(otherUser);
+            console.log('exists: ', exists);
+
+            if (!exists) {
+                await user.setFollowed(otherUser);
                 await otherUser.setFollower(user);
             }
 

@@ -169,7 +169,8 @@ const UseFetchSetting = (settings) => {
         onSubmit: (values, { setSubmitting, setStatus, resetForm }) => {
             enableAccountLoading();
             setTimeout(() => {
-                axiosInstance.updateProfile({ data: { password: values.new } })
+                const data = { oldPassword: values.old, newPassword: values.new }
+                axiosInstance.changePassword(data)
                     .then(({ data: { message } }) => {
                         swal({
                             text: message,

@@ -16,6 +16,8 @@ module.exports = {
     S3_UPLOAD_SECRET: "Q/8gz45Y2Kxjz7iBJYbo+gWCfc1RTJiNc7wHfMvq",
     S3_UPLOAD_BUCKET: "smart-tipz-data-bucket",
     S3_UPLOAD_REGION: "Asia Pacific (Singapore) ap-southeast-1",
+    SENDER_EMAIL: "mousuleman@gmail.com",
+    SENDGRID_API_KEY: "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"
   },
   images: {
     domains: [

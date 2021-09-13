@@ -3,10 +3,11 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet';
-import { ChatCard, EmojiInput } from '../../../components';
-import socket from '../../../utils/socket';
 import { parseCookies } from 'nookies';
 import { useRouter } from 'next/router';
+import { isEmpty } from 'lodash';
+import { ChatCard, EmojiInput } from '../../../components';
+import socket from '../../../utils/socket';
 import axiosInstance from 'APIs/axiosInstance';
 import { scrollToBottom } from 'helpers';
 

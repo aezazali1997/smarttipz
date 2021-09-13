@@ -18,6 +18,10 @@ const Testimonial = sequelize.define('Testimonial', {
     type: DataTypes.STRING,
     defaultValue: 'https://thumbs.dreamstime.com/b/solid-purple-gradient-user-icon-web-mobile-design-interface-ui-ux-developer-app-137467998.jpg'
   },
+  isDeleted: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  }
 });
 
 module.exports = Testimonial;

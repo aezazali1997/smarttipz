@@ -1,4 +1,4 @@
-.pro-sidebar > .pro-sidebar-inner > .pro-sidebar-layout .pro-sidebar-header {
+.pro-sidebar>.pro-sidebar-inner>.pro-sidebar-layout .pro-sidebar-header {
   border-bottom: 0px solid rgba(173, 173, 173, 0.2);
 }
 
@@ -21,10 +21,30 @@
   color: #714de1 !important;
 }
 
+.sidebar-item {
+  color: white;
+}
+
+.sidebar-item:hover {
+  color: #714de1;
+  background: white;
+}
+
+
+.sidebar-dropdown-item {
+  color: #714de1;
+}
+
+.sidebar-dropdown-item:hover {
+  color: white;
+  background: #714de1;
+}
+
 @media (max-width: 1023px) {
   .sidebar {
     display: none;
   }
+
   .Content {
     margin-left: 0%;
   }

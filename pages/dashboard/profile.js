@@ -3,19 +3,22 @@
 import React, { useEffect } from 'react'
 import axios from 'axios';
 import { Helmet } from 'react-helmet';
+import cookie from 'js-cookie';
 import { parseCookies } from 'nookies';
 import { UseFetchProfile } from 'hooks';
 import videos from 'utils/VdeoSchema.json';
-// import testimonialVideo from 'utils/testimonialSchema.json';
-import { Button, Card, PopupBusinessCard, ProfileCard, Rating, Spinner, TestimonialCard, TestimonialForm } from 'components';
-import cookie from 'js-cookie';
-import { getInputClasses } from 'helpers';
+import { Button, Card, PopupBusinessCard, ProfileCard, Rating, Spinner, TestimonialCard } from 'components';
+import { AddTestimonialModal, EditTestimonialModal } from 'components/Modals';
+import { isEmpty } from 'lodash';
 
 const Profile = ({ profile }) => {
 
-    const { handleShowBusinessCard, showBusinessCard, followed, followers, businessCard, formik, imageUrl, loading,
-        testimonial, handleEditTestimonial, FileInput, handleFileChange, _DeleteImg, openFileDialog } = UseFetchProfile(profile);
-    const { name, about, rating, views, picture, phone, email, accountType, username, showUsername, showName } = profile;
+    const { showBusinessCard, followed, followers, businessCard, formik, imageUrl, loading, testimonial, showModal,
+        uploading, modalTitle, loadingTestimonial, handleShowBusinessCard, FileInput, handleFileChange, _DeleteImg,
+        openFileDialog, _AddTestimonial, handleShowModal, _EditTestimonial, _DeleteTestimonial
+    } = UseFetchProfile(profile);
+    const { name, about, rating, views, picture, phone, email, accountType, username, showUsername, showName
+    } = profile;
     const { website } = businessCard;
 
     useEffect(() => {
@@ -100,7 +103,7 @@ const Profile = ({ profile }) => {
                     </div>
                     {accountType === "Business" && (
                         <div className="flex w-full mt-2 px-2 " onClick={handleShowBusinessCard}>
-                            <p className="text-xs no-underline hover:underline text-indigo-600 cursor-pointer">
+                            <p className="text-xs font-medium no-underline hover:underline text cursor-pointer">
                                 Virtual Business Card
                             </p>
                         </div>
@@ -168,76 +171,53 @@ const Profile = ({ profile }) => {
             {accountType === 'Business' && (
                 <div className="flex flex-col w-full px-2  mt-8">
                     <h1 className="text-md font-medium">Customer Testimonials</h1>
-                    <div className="flex flex-col w-full mt-6 justify-center lg:justify-start">
-                        <form onSubmit={formik.handleSubmit}>
-                            <div className="flex flex-col lg:flex-row w-full space-y-5 lg:space-y-0 md:space-x-3">
-                                <div className="flex w-full lg:w-1/6 px-2 py-1">
-                                    <div className="flex flex-col relative justify-between space-y-4 h-36 lg:w-full">
-                                        <div className="flex justify-center">
-                                            {
-                                                imageUrl ?
-                                                    <img className="h-20 w-20 rounded-full object-cover "
-                                                        src={imageUrl}
-                                                        alt="testimonial"
-                                                    />
-                                                    :
-                                                    <img
-                                                        className="h-20 rounded-full object-cober w-20"
-                                                        src="https://thumbs.dreamstime.com/b/solid-purple-gradient-user-icon-web-mobile-design-interface-ui-ux-developer-app-137467998.jpg"
-                                                        alt=""
-                                                    />
-                                            }
-                                        </div>
-                                        <div className="flex w-full space-x-1">
-
-                                            <FileInput onChange={handleFileChange} />
-
-                                            <button
-                                                type="button"
-                                                onClick={openFileDialog}
-                                                className="px-2 py-1 w-full flex justify-center items-center text-white text-sm bg-indigo-600 rounded-md hover:bg-indigo-700">
-                                                Upload
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={_DeleteImg}
-                                                className="px-2 py-1 w-full flex items-center justify-center text-white text-sm bg-red-600 rounded-md hover:bg-red-700">
-                                                Remove
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="flex flex-col w-full lg:w-5/6">
-                                    <TestimonialForm
-                                        formik={formik}
-                                        getInputClasses={getInputClasses}
-                                        loading={loading} />
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div className="flex w-full mt-6 justify-center lg:justify-start">
-                        <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
-                            {
-                                testimonial.map((res, index) => (
-                                    <div key={index}>
-                                        <TestimonialCard
-                                            _Edit={handleEditTestimonial}
-                                            image={res.picture}
-                                            name={res.ownerName}
-                                            designation={res.designation}
-                                            description={res.description}
-                                            data={res}
-                                        />
-                                    </div>
-                                ))
-                            }
+                    <div className="flex flex-col w-full mt-6 justify-center lg:justify-start space-y-4">
+                        <div className="flex w-full justify-center">
+                            <Button
+                                onSubmit={_AddTestimonial}
+                                type="button"
+                                childrens={'Add Testimonial'}
+                                classNames={"px-3 py-2 flex justify-center items-center text-white text-sm btn rounded-md "}
+                            />
                         </div>
+                        {
+                            loadingTestimonial ? (
+                                <div className="flex w-full justify-center">
+                                    <span className="flex flex-col items-center">
+                                        <Spinner />
+                                        <p className="text-sm text-gray-400"> Loading Testimonials</p>
+                                    </span>
+                                </div>
+                            )
+                                :
+                                isEmpty(testimonial) ? (
+                                    <div className="flex w-full justify-center items-center">
+                                        <p className="text-gray-500"> No Testimonials Yet</p>
+                                    </div>
+                                )
+                                    :
+                                    <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
+                                        {
+                                            testimonial.map((res, index) => (
+                                                <div key={index}>
+                                                    <TestimonialCard
+                                                        _Edit={_EditTestimonial}
+                                                        _Delete={_DeleteTestimonial}
+                                                        image={res.picture}
+                                                        name={res.ownerName}
+                                                        designation={res.designation}
+                                                        description={res.description}
+                                                        data={res}
+                                                    />
+                                                </div>
+                                            ))
+                                        }
+                                    </div>
+                        }
                     </div>
-
                 </div>
-            )}
+            )
+            }
             {
                 showBusinessCard && (
                     <PopupBusinessCard
@@ -249,8 +229,41 @@ const Profile = ({ profile }) => {
                         phone={phone}
 
                     />
-                )}
+                )
+            }
             {/* section ends here */}
+            {
+                showModal && (
+                    modalTitle === 'Add Testimonial' ?
+                        <AddTestimonialModal
+                            formik={formik}
+                            loading={loading}
+                            imageUrl={imageUrl}
+                            uploading={uploading}
+                            FileInput={FileInput}
+                            _DeleteImg={_DeleteImg}
+                            openFileDialog={openFileDialog}
+                            handleShowModal={handleShowModal}
+                            handleFileChange={handleFileChange}
+                        />
+                        :
+                        modalTitle === 'Edit Testimonial' ?
+                            <EditTestimonialModal
+                                formik={formik}
+                                loading={loading}
+                                imageUrl={imageUrl}
+                                uploading={uploading}
+                                FileInput={FileInput}
+                                _DeleteImg={_DeleteImg}
+                                openFileDialog={openFileDialog}
+                                handleShowModal={handleShowModal}
+                                handleFileChange={handleFileChange}
+
+                            />
+                            :
+                            ''
+                )
+            }
         </div>
     )
 }

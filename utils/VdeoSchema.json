@@ -1,32 +1,72 @@
 [
     {
         "id":1,
+        "category":"category1",
     "image":"https://img.freepik.com/free-photo/pretty-smiling-joyfully-female-with-fair-hair-dressed-casually-looking-with-satisfaction_176420-15187.jpg?size=626&ext=jpg&ga=GA1.2.2003212417.1626566400",
-    "title":"My Business",
+    "title":"Video 1",
     "like":"129",
     "comment":"89",
     "share":"13"
     },
     {
         "id":2,
+        "category":"category1",
     "image":"https://img.freepik.com/free-photo/pretty-smiling-joyfully-female-with-fair-hair-dressed-casually-looking-with-satisfaction_176420-15187.jpg?size=626&ext=jpg&ga=GA1.2.2003212417.1626566400",
-    "title":"Business",
+    "title":"Video 2",
     "like":"129",
     "comment":"89",
     "share":"13"
     },
     {
         "id":3,
+        "category":"category1",
     "image":"https://img.freepik.com/free-photo/pretty-smiling-joyfully-female-with-fair-hair-dressed-casually-looking-with-satisfaction_176420-15187.jpg?size=626&ext=jpg&ga=GA1.2.2003212417.1626566400",
-    "title":"My Business",
+    "title":"Video 3",
     "like":"129",
     "comment":"89",
     "share":"13"
     },
     {
         "id":4,
+    "category":"category1",
+        "image":"https://img.freepik.com/free-photo/pretty-smiling-joyfully-female-with-fair-hair-dressed-casually-looking-with-satisfaction_176420-15187.jpg?size=626&ext=jpg&ga=GA1.2.2003212417.1626566400",
+    "title":"Video 4",
+    "like":"129",
+    "comment":"89",
+    "share":"13"
+    },
+    {
+        "id":5,
+        "category":"category2",
     "image":"https://img.freepik.com/free-photo/pretty-smiling-joyfully-female-with-fair-hair-dressed-casually-looking-with-satisfaction_176420-15187.jpg?size=626&ext=jpg&ga=GA1.2.2003212417.1626566400",
-    "title":"Business",
+    "title":"Video 5",
+    "like":"129",
+    "comment":"89",
+    "share":"13"
+    },
+    {
+        "id":6,
+        "category":"category2",
+    "image":"https://img.freepik.com/free-photo/pretty-smiling-joyfully-female-with-fair-hair-dressed-casually-looking-with-satisfaction_176420-15187.jpg?size=626&ext=jpg&ga=GA1.2.2003212417.1626566400",
+    "title":"Video 6",
+    "like":"129",
+    "comment":"89",
+    "share":"13"
+    },
+    {
+        "id":7,
+       "category":"category2",
+    "image":"https://img.freepik.com/free-photo/pretty-smiling-joyfully-female-with-fair-hair-dressed-casually-looking-with-satisfaction_176420-15187.jpg?size=626&ext=jpg&ga=GA1.2.2003212417.1626566400",
+    "title":"Video 7",
+    "like":"129",
+    "comment":"89",
+    "share":"13"
+    },
+    {
+        "id":8,
+    "category":"category2",
+        "image":"https://img.freepik.com/free-photo/pretty-smiling-joyfully-female-with-fair-hair-dressed-casually-looking-with-satisfaction_176420-15187.jpg?size=626&ext=jpg&ga=GA1.2.2003212417.1626566400",
+    "title":"Video 8",
     "like":"129",
     "comment":"89",
     "share":"13"

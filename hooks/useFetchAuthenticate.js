@@ -58,7 +58,7 @@ const UseFetchAuthenticate = () => {
                     }
                     console.log(data);
                     axiosInstance.authenticate(data)
-                        .then(({ data: { error, data: { token, username, image }, message } }) => {
+                        .then(({ data: { error, data: { token, username, image, id }, message } }) => {
                             disableLoading();
                             console.log(message, error, data);
                             swal({
@@ -71,6 +71,7 @@ const UseFetchAuthenticate = () => {
                             cookie.set('token', token);
                             cookie.set('username', username);
                             localStorage.setItem('image', image);
+                            localStorage.setItem('id', id);
                             router.push('/dashboard/profile');
                         })
                         .catch((e) => {

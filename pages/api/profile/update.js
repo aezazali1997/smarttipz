@@ -1,53 +1,38 @@
+import { isEmpty } from 'lodash';
 const jwt = require('jsonwebtoken');
 const User = require('../../../models/User');
-const bcrypt = require('bcryptjs');
 
 const handler = async (req, res) => {
+  if (req.method === 'POST') {
 
-  const {
-    body: { data, businessCard },
-    headers
-  } = req;
+    const {
+      body,
+      body: { data, businessCard },
+      headers
+    } = req;
 
-  try {
-    if (!headers.authorization) {
-      return res.status(401).send({ error: true, data: [], message: 'Please Login' })
-    }
-
-    const { username } = jwt.verify(
-      headers.authorization.split(' ')[1],
-      process.env.SECRET_KEY
-    );
-
-    const { about, name, email, accessible, accountType, phone, picture, views, rating, showPhone, showUsername, showName } = data
-
-    const user = await User.findOne({ where: { username } });
-    if (!user) {
-      throw new Error('Please Login');
-    }
-    if (accountType !== 'Business') {
-      if (data.password) {
-        const encpass = await bcrypt.hash(data.password, 12);
-        data.password = encpass;
+    try {
+      if (!headers.authorization) {
+        return res.status(401).send({ error: true, data: [], message: 'Please Login' })
       }
-      await user.update({
-        name,
-        username,
-        email,
-        avgRating: rating,
-        totalViews: views,
-        about,
-        picture,
-        phoneNumber: phone,
-        showUsername,
-        showName,
-        showPhone,
-        accessible,
-        accountType
-      });
-    }
-    else {
-      console.log("data: ", data);
+
+      const { username } = jwt.verify(
+        headers.authorization.split(' ')[1],
+        process.env.SECRET_KEY
+      );
+
+      if (isEmpty(body)) {
+        return res.status(404).send({ error: true, data: [], message: 'No data passed to server' })
+      }
+
+      const { about, name, email, accessible, accountType, phone, picture, views, rating, showPhone, showUsername, showName } = data
+
+      const user = await User.findOne({ where: { username } });
+
+      if (isEmpty(user)) {
+        return res.status(404).send({ error: true, data: [], message: 'No user found' })
+      }
+
       await user.update({
         name,
         username,
@@ -63,17 +48,23 @@ const handler = async (req, res) => {
         accessible,
         accountType
       });
-      const business = await user.getBusiness();
-      if (businessCard.website) {
-        business.link = businessCard.website;
-        business.save();
+
+      if (accountType === 'Business') {
+        const business = await user.getBusiness();
+        if (businessCard.website) {
+          business.link = businessCard.website;
+          business.save();
+        }
+        const card = await business.getBusinessCard();
+        if (card) await card.update(businessCard);
       }
-      const card = await business.getBusinessCard();
-      if (card) await card.update(businessCard);
+      res.status(200).json({ message: 'Updated successfully' });
+    } catch (err) {
+      res.status(500).json({ error: true, message: err.message });
     }
-    res.status(200).json({ message: 'Updated successfully' });
-  } catch (err) {
-    res.status(500).json({ error: true, message: err.message });
+  }
+  else {
+    res.status(404).send({ message: 'API Not Found' })
   }
 };
 

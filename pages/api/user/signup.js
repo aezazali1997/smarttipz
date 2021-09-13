@@ -61,7 +61,7 @@ const handler = async (req, res) => {
         phoneNumber: phone,
         password: encPassword,
         accountType,
-        varificationCode: '111222'
+        varificationCode: varificationCode
       });
 
       if (accountType === 'Business') {
@@ -78,13 +78,11 @@ const handler = async (req, res) => {
         connected: false
       });
 
-      // const mail = await sendEmail(
-      //   email,
-      //   'Account Varification',
-      //   `<p>Your account validation code is: ${varificationCode}</p>`
-      // );
-
-      //   console.log('here: ',re)
+      await sendEmail(
+        email,
+        'Account Varification',
+        `<p>Your account validation code is: ${varificationCode}</p>`
+      );
 
       res.status(201).json({ error: false, data: [], message: 'User successfuly signed up.' });
     } catch (err) {

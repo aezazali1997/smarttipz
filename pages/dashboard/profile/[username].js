@@ -3,27 +3,28 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
 import { Helmet } from 'react-helmet';
-import { Card, PopupBusinessCard, ProfileCard, Rating, TestimonialCard } from '../../../components';
-import videos from '../../../utils/VdeoSchema.json';
-import testimonialVideo from '../../../utils/testimonialSchema.json';
-import axiosInstance from 'APIs/axiosInstance';
 import { parseCookies } from 'nookies';
 import axios from 'axios';
+import { isEmpty } from 'lodash';
+import videos from '../../../utils/VdeoSchema.json';
+import axiosInstance from 'APIs/axiosInstance';
+import { Card, PopupBusinessCard, ProfileCard, Rating, TestimonialCard, Spinner } from '../../../components';
 
 
 const UserProfile = ({ profile }) => {
-    console.log('userprofile: ', profile);
     let router = useRouter();
     const [followed, setFollowed] = useState([]);
     const [followers, setFollowers] = useState([]);
+    const [testimonials, setTestimonials] = useState([]);
     const [personalInfo, setPersonalInfo] = useState({});
     const [isFollowing, setIsFollowing] = useState(false);
     const [canMessage, setCanMessage] = useState(false);
     const [showBusinessCard, setShowBusinessCard] = useState(false);
+    const [loadingTestimonial, setLoadingTestimonial] = useState(false);
     const [businessCard, setBusinessCard] = useState('');
 
-    const gotoMessaging = () => {
-        router.push(`/dashboard/messages/${profile?.username}`)
+    const gotoMessaging = ({ id }) => {
+        router.push(`/dashboard/messages/${id}`)
     }
 
     useEffect(() => {
@@ -33,10 +34,18 @@ const UserProfile = ({ profile }) => {
             console.log(followers, followed);
             setFollowed(followed);
             setFollowers(followers);
+            let Followed = followers.filter(user => user.id === parseInt(localStorage.getItem('id')) && user);
+            if (!isEmpty(Followed)) {
+                console.log(Followed);
+                setIsFollowing(true);
+                setCanMessage(true)
+            }
+
         }).catch(e => {
             console.log(e);
         })
         if (accountType === 'Business') {
+            enableLoadTestimonial();
             console.log('business');
             axiosInstance.getSpecificBusinessCard(username).then(({ data: { data } }) => {
                 console.log('data', data)
@@ -44,8 +53,24 @@ const UserProfile = ({ profile }) => {
             }).catch(e => {
                 console.log('Error in Api BusinessCard: ', e);
             })
+            axiosInstance.getSpecificTestimonials(username).then(({ data: { data } }) => {
+                setTestimonials(data);
+                disableLoadTestimonial();
+            }).catch(e => {
+                disableLoadTestimonial();
+                console.log('Error in Api Testimonials: ', e.response.data.message);
+            })
+
         }
     }, [])
+
+    const enableLoadTestimonial = () => {
+        setLoadingTestimonial(true);
+    };
+
+    const disableLoadTestimonial = () => {
+        setLoadingTestimonial(false);
+    };
 
     const _Follow = () => {
         axiosInstance.followUser({ username: profile?.username }).then(({ data: { data } }) => {
@@ -62,7 +87,7 @@ const UserProfile = ({ profile }) => {
         setShowBusinessCard(showBusinessCard => !showBusinessCard)
     };
 
-    const { name, about, rating, views, picture, phone, showPhone, email, accountType, username, showName, showUsername } = personalInfo;
+    const { id, name, about, rating, views, picture, phone, showPhone, email, accountType, username, showName, showUsername } = personalInfo;
     const { website } = businessCard;
 
     return (
@@ -155,7 +180,7 @@ const UserProfile = ({ profile }) => {
                             {isFollowing ? 'Following' : 'Follow'}
                         </button>
 
-                        {canMessage ? <button onClick={gotoMessaging} className="messageBtn">
+                        {canMessage ? <button onClick={() => gotoMessaging(id)} className="messageBtn">
                             Message
                         </button> : ''
                         }
@@ -177,6 +202,8 @@ const UserProfile = ({ profile }) => {
                                             comment={comment}
                                             like={like}
                                             share={share}
+                                            views={200}
+                                            rating={4.5}
                                         />
                                     ))
                                 }
@@ -198,6 +225,8 @@ const UserProfile = ({ profile }) => {
                                     comment={comment}
                                     like={like}
                                     share={share}
+                                    views={200}
+                                    rating={3.5}
                                 />
                             ))
                         }
@@ -210,18 +239,36 @@ const UserProfile = ({ profile }) => {
                 <div className="flex flex-col w-full px-2  mt-8">
                     <h1 className="text-md font-medium">Customer Testimonials</h1>
                     <div className="flex w-full mt-6 justify-center lg:justify-start">
-                        <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
-                            {
-                                testimonialVideo.map(({ image, description, designation, name }) => (
-                                    <TestimonialCard
-                                        image={image}
-                                        name={name}
-                                        designation={designation}
-                                        description={description}
-                                    />
-                                ))
-                            }
-                        </div>
+                        {
+                            loadingTestimonial ? (
+                                <div className="flex w-full justify-center">
+                                    <span className="flex flex-col items-center">
+                                        <Spinner />
+                                        <p className="text-sm text-gray-400"> Loading Testimonials</p>
+                                    </span>
+                                </div>
+                            )
+                                :
+                                isEmpty(testimonials) ? (
+                                    <div className="flex w-full justify-center items-center">
+                                        <p className="text-gray-500"> No Testimonials Yet</p>
+                                    </div>
+                                )
+                                    :
+                                    <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
+                                        {
+                                            testimonials.map(({ picture, description, designation, ownerName }) => (
+                                                <TestimonialCard
+                                                    image={picture}
+                                                    name={ownerName}
+                                                    designation={designation}
+                                                    description={description}
+                                                    otherUser={true}
+                                                />
+                                            ))
+                                        }
+                                    </div>
+                        }
                     </div>
 
                 </div>

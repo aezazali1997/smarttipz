@@ -1,31 +1,32 @@
-const nodemailer = require("nodemailer");
+const sgMail = require('@sendgrid/mail')
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
-const sendEmail = async (to, subject, body) => {
-  let transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: {
-      user: process.env.TEMP_EMAIL,
-      pass: process.env.TEMP_MAILPASS,
-    },
-    tls: {
-      rejectUnauthorized: false
+const SendEmail = (email, subject, content) => {
+
+  try {
+    const msg = {
+      to: `${email}`, // Change to your recipient
+      from: {
+        email: process.env.SENDER_EMAIL, // Change to your verified sender
+        name: 'Smart Tipz'
+      },
+      subject: `${subject}`,
+      html: `${content}`
     }
-  });
 
-  let mailOptions = {
-    from: process.env.TEMP_EMAIL,
-    to: to,
-    subject: subject,
-    html: body,
-  };
-
-  const response = await transporter.sendMail(mailOptions);
-  console.log('response', response);
-  return response;
-
-
-};
-
-module.exports = sendEmail;
+    sgMail
+      .send(msg)
+      .then((response) => {
+        console.log(response[0].statusCode)
+        console.log(response[0].headers)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+    console.log("Email sent successfully");
+  }
+  catch (e) {
+    console.log(e.message)
+  }
+}
+module.exports = SendEmail;

@@ -1,3 +1,5 @@
+const randomString = require('randomstring');
+
 const User = require('../../../models/User');
 const Joi = require('joi');
 const sendEmail = require('../../../utils/sendMail');
@@ -6,7 +8,7 @@ const handler = async (req, res) => {
   if (req.method === 'POST') {
     const validateResend = (data) => {
       const schema = Joi.object({
-        username: Joi.string().required()
+        email: Joi.string().required()
       });
       return schema.validate(data);
     };
@@ -15,22 +17,25 @@ const handler = async (req, res) => {
 
     if (error) return res.status(400).json({ error: error.details[0].message });
 
-    const { username } = req.body;
+    const { email } = req.body;
 
     try {
-      const user = await User.findOne({ where: { username } });
+      const user = await User.findOne({ where: { email } });
       if (!user) {
         throw new Error('No user found');
       }
+      let verificationCode = randomString.generate({
+        length: 6,
+        charset: 'numeric'
+      });
 
-      const varificationCode = Math.round(Math.random() * 1000000);
-      await user.update({ varificationCode: '111222' });
+      await user.update({ varificationCode: verificationCode });
 
-      console.log('VerifyCode: ', varificationCode);
+      console.log('VerifyCode: ', verificationCode);
       sendEmail(
         user.email,
         'Account Varification',
-        `<p>Your account validation code is: ${varificationCode}</p>`
+        `<p>Your account validation code is: ${verificationCode}</p>`
       );
 
       res.status(200).json({ error: false, message: 'Varification code sent', data: [] });

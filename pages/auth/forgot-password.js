@@ -76,7 +76,7 @@ const ForgetPassword = () => {
 
                             <Button
                                 type={"submit"}
-                                classNames={"flex w-full mt-5 justify-center bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-md"}
+                                classNames={"flex w-full mt-5 justify-center btn text-white p-3 rounded-md"}
                                 childrens={'Next'}
                                 loading={loading}
                             />

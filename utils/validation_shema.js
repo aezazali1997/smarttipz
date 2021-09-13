@@ -91,7 +91,7 @@ export const AuthenticateSchema = Yup.object().shape({
         .required(''),
 });
 export const TestimonialFormSchema = Yup.object().shape({
-    name: Yup.string()
+    ownerName: Yup.string()
         .required("This is a required field"),
     designation: Yup.string()
         .required('This is a required field'),

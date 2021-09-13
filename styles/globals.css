@@ -51,3 +51,12 @@
   @apply: bg-indigo-600;
   background-color: #714de1;
 }
+
+.background {
+  background: #714de1;
+}
+
+.text {
+  color: #714de1;
+}
+

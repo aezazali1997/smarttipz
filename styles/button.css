@@ -53,6 +53,13 @@
   background: #6740df;
 }
 
+.icon {
+  color: #714de1;
+}
+.icon:hover {
+  color: #6740df;
+}
+
 .btn-disable{
   background: #866adb;
   pointer-events: none;

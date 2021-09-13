@@ -214,7 +214,7 @@ const Authenticate = () => {
 
                         <p className="text-gray-400 text-sm sm:text-md lg:text-lg text-center lg:text-left">Enter six digit code that we sent to your
                             email address to verify your account: <span onClick={resendOTP}
-                                className="cursor-pointer text-sm font-semibold text-indigo-600 no-underline hover:underline hover:text-indigo-700" >Resend OTP</span>
+                                className="cursor-pointer text-sm font-semibold icon no-underline hover:underline" >Resend OTP</span>
                         </p>
                     </div>
                     <div className="flex  w-full lg:max-w-md flex-col mt-6">

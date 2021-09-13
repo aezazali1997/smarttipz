@@ -33,8 +33,12 @@ class AxiosInstance {
         return await axios.post(USER_API_BASE_URL + "api/user/forgot", { email });
     }
 
-    async resendOTP(username) {
-        return await axios.post(USER_API_BASE_URL + "api/user/resend", { username });
+    async changePassword(data) {
+        return await axios.put(USER_API_BASE_URL + "api/user/password", data, this.getAuthHeader());
+    }
+
+    async resendOTP(email) {
+        return await axios.post(USER_API_BASE_URL + "api/user/resend", { email });
     }
 
     async profile() {
@@ -69,12 +73,21 @@ class AxiosInstance {
         return await axios.get(USER_API_BASE_URL + "api/profile/testimonial", this.getAuthHeader());
     }
 
+    async getSpecificTestimonials(username) {
+        return await axios.get(USER_API_BASE_URL + `api/profile/testimonial/${username}`, this.getAuthHeader());
+    }
+
     async addTestimonial(data) {
         return await axios.post(USER_API_BASE_URL + "api/profile/testimonial", data, this.getAuthHeader());
     }
 
     async updateTestimonial(data) {
         return await axios.put(USER_API_BASE_URL + "api/profile/testimonial", data, this.getAuthHeader());
+    }
+
+    async deleteTestimonial(id) {
+        console.log('In Delete Testiomonial Api: ', id);
+        return await axios.delete(USER_API_BASE_URL + `api/profile/testimonial/${id}`, this.getAuthHeader());
     }
 
     async getSpecificBusinessCard(username) {

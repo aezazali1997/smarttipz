@@ -44,7 +44,7 @@ const Setting = ({ settings }) => {
 
               <button
                 onClick={openFileDialog}
-                className="px-2 py-1 w-1/2 flex justify-center items-center text-white text-sm bg-indigo-600 rounded-md hover:bg-indigo-700">
+                className="px-2 py-1 w-1/2 flex justify-center items-center text-white text-sm rounded-md btn">
                 Upload
               </button>
               <button
@@ -197,7 +197,7 @@ const Setting = ({ settings }) => {
                     {accountType === "Business" ? 'Business Intro' : 'About me'}
                   </label>
                 </div>
-                <p className="flex justify-end text-sm mb-5 w-full">{about.length} / 150</p>
+                <p className="flex justify-end text-sm mb-5 w-full">{about?.length} / 150</p>
                 {
                   accountType === 'Business' ?
                     <InputField

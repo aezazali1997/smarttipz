@@ -9,6 +9,7 @@ import logo from '../../public/ST-2.png';
 import { getInputClasses } from 'helpers';
 import { Button, InputField, Modal, Footer, PhoneInput } from 'components';
 import { UseFetchSignup } from 'hooks';
+import { parseCookies } from 'nookies';
 
 
 const Signup = () => {
@@ -35,7 +36,7 @@ const Signup = () => {
 						<p className=" font-bold text-3xl text-center lg:text-left lg:text-3xl">Sign Up</p>
 						<p className="text-gray-400 text-md text-center lg:text-left">Let's create your account</p>
 						<p className="text-gray-400 text-sm lg:text-left">Already have an account? <Link href='/auth/login'>
-							<a className="cursor-pointer font-semibold text-indigo-600 no-underline hover:underline hover:text-indigo-700">
+							<a className="cursor-pointer font-semibold text no-underline hover:underline hover:text-indigo-700">
 								Login</a>
 						</Link>
 						</p>
@@ -54,7 +55,7 @@ const Signup = () => {
 						<p className=" font-bold text-3xl text-center lg:text-left lg:text-5xl">Sign Up</p>
 						<p className="text-gray-400 text-lg text-center lg:text-left">Let's create your account</p>
 						<p className="text-gray-400 text-sm text-center lg:text-left">Already have an account? <Link href='/auth/login'>
-							<a className="cursor-pointer font-semibold text-indigo-600 no-underline hover:underline hover:text-indigo-700">
+							<a className="cursor-pointer font-semibold text no-underline hover:underline hover:text-indigo-700">
 								Login</a>
 						</Link>
 						</p>
@@ -287,9 +288,9 @@ const Signup = () => {
 							}
 							<div className="flex mb-5" >
 								<label
-									className="flex items-center text-sm cursor-pointer text-indigo-700  font-semibold">
+									className="flex items-center text-sm cursor-pointer text  font-semibold">
 									<input onChange={toggleModal} type="checkbox" color={'#714de1'} checked={agree} className="form-checkbox" />
-									<span className="ml-2">I agree to the <span>terms and conditions</span></span>
+									<span className="ml-2">I agree to the terms and conditions</span>
 								</label>
 							</div>
 
@@ -350,6 +351,7 @@ const Signup = () => {
 							</div>
 						)}
 						confirmButton={'I Agree'}
+						confirmBtnType={'button'}
 						handleModal={toggleModal}
 						handleConfirm={_Confirm}
 						handleCancel={_Cancel}
@@ -359,6 +361,23 @@ const Signup = () => {
 			<Footer logo={logo} />
 		</div>
 	)
+}
+
+export const getServerSideProps = async (context) => {
+	const { token } = parseCookies(context);
+	if (token)
+		return {
+			redirect: {
+				permanent: false,
+				destination: "/dashboard/profile",
+			},
+			props: {},
+		};
+	else {
+		return {
+			props: {}
+		}
+	}
 }
 
 export default Signup;

@@ -1,10 +1,11 @@
 import React from 'react'
 
-const Select = ({ classNames, name, id, handleChange, data }) => {
+const Select = ({ classNames, value, name, id, handleChange, data }) => {
     return (
         <select
             id={id}
             name={name}
+            value={value}
             onChange={handleChange}
             className={classNames}>
             {

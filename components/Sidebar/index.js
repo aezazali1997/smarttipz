@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faNewspaper, faUserCircle, faCog, faPlayCircle, faSignOutAlt, faComment, faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/router';
-import Badge from 'components/Badge';
+// import Badge from 'components/Badge';
 
 const Sidebar = ({ logout }) => {
 
@@ -22,7 +22,7 @@ const Sidebar = ({ logout }) => {
 
     let Active = (path) => {
         return asPath === path ?
-            'bg-white text-indigo-600' : 'text-white'
+            'bg-white text' : 'sidebar-item'
     }
 
     const toggleDropdown = () => {
@@ -30,13 +30,13 @@ const Sidebar = ({ logout }) => {
     }
 
     let ActiveDropdown = (path) => {
-        return asPath === path ? 'text-white bg-indigo-600' : 'text-indigo-600';
+        return asPath === path ? 'text-white background' : 'sidebar-dropdown-item';
     }
 
     return (
         <div className="sidebar">
             <nav
-                className='flex flex-col w-full h-full pt-10 px-5 text-white justify-between relative navbar'
+                className='flex flex-col w-full h-full py-5 px-5 text-white justify-between relative navbar'
                 role='navigation'
             >
                 <div className="py-5 flex items-center flex-col ">
@@ -44,29 +44,29 @@ const Sidebar = ({ logout }) => {
                         <Image src={logo} alt="brand" /></a>
                     </Link>
                 </div>
-                <div className=' lg:flex flex-col space-y-2 overflow-y-auto'>
+                <div className='lg:flex h-full flex-col space-y-2 overflow-y-auto'>
                     <>
                         <Link href='/dashboard/news-feed' className='p-4  font-sans nav-link nav-link-ltr'>
-                            <div className={`flex flex-row items-center py-2 px-3 rounded-lg w-52 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
+                            <div className={`flex flex-row items-center py-2 px-3 rounded-lg w-52 font-medium cursor-pointer
                             ${Active('/dashboard/news-feed')}`}>
 
                                 <FontAwesomeIcon icon={faNewspaper} /> &nbsp;News Feed
                             </div>
                         </Link>
                         <Link href='/dashboard/profile' className='p-4 font-sans nav-link nav-link-ltr'>
-                            <div className={`py-2 px-3 rounded-lg w-52 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
+                            <div className={`py-2 px-3 rounded-lg w-52 font-medium  cursor-pointer
                               ${Active('/dashboard/profile')}`}>
                                 <FontAwesomeIcon icon={faUserCircle} />&nbsp;Profile
                             </div>
                         </Link>
                         <Link href='/dashboard/videos' className='p-4 font-sans nav-link nav-link-ltr' >
-                            <div className={`py-2 px-3 rounded-lg w-52 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
+                            <div className={`py-2 px-3 rounded-lg w-52 font-medium  cursor-pointer
                             ${Active("/dashboard/videos")}`}>
                                 <FontAwesomeIcon icon={faPlayCircle} />&nbsp;Videos
                             </div>
                         </Link>
                         <Link href='/dashboard/messages' className='p-4 font-sans nav-link nav-link-ltr' >
-                            <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-52 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
+                            <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-52 font-medium  cursor-pointer
                             ${Active("/dashboard/messages")}`}>
                                 <div>
                                     <FontAwesomeIcon icon={faComment} />&nbsp;Messages
@@ -74,61 +74,62 @@ const Sidebar = ({ logout }) => {
                                 {/* <Badge /> */}
                             </div>
                         </Link>
-                        <button onClick={toggleDropdown} className={`flex items-center justify-between py-2 px-3 rounded-lg w-52 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
-                           ${dropdown ? 'bg-white text-indigo-600' : 'text-white'}`}>
-                            <div>
-                                <FontAwesomeIcon icon={faClipboardList} />&nbsp;Policies
-                            </div>
-                            {
-                                dropdown ?
-                                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
-                                    </svg> :
-                                    <svg className="w-6 h-6 pointer-events-none" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                                    </svg>
-
-                            }
-                        </button>
-                        {
-                            dropdown ? (
-                                <div className="flex  flex-col space-y-2 bg-white p-2 w-52 rounded-lg z-40">
-                                    <Link href='/privacy-policy' className='p-4 font-sans nav-link nav-link-ltr' >
-                                        <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium hover:text-white hover:bg-indigo-600 cursor-pointer
-                            ${ActiveDropdown("/privacy-policy")}`}>
-                                            <div>
-                                                Privacy Policy
-                                            </div>
-                                        </div>
-                                    </Link>
-                                    <Link href='/terms-and-conditions' className='p-4 font-sans nav-link nav-link-ltr' >
-                                        <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium hover:text-white hover:bg-indigo-600 cursor-pointer
-                            ${ActiveDropdown("/terms-and-conditions")}`}>
-                                            <div>
-                                                Terms & Conditions
-                                            </div>
-                                        </div>
-                                    </Link>
-                                    <Link href='/copyrights' className='p-4 font-sans nav-link nav-link-ltr' >
-                                        <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium hover:text-white hover:bg-indigo-600 cursor-pointer
-                            ${ActiveDropdown("/copyrights")}`}>
-                                            <div>
-                                                Copyrights
-                                            </div>
-                                        </div>
-                                    </Link>
-                                    <Link href='/trademark-license' className='p-4 font-sans nav-link nav-link-ltr' >
-                                        <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium hover:text-white hover:bg-indigo-600 cursor-pointer
-                            ${ActiveDropdown("/trademark-license")}`}>
-                                            <div>
-                                                Trademark License
-                                            </div>
-                                        </div>
-                                    </Link>
+                        <div className="inline-block relative space-y-1">
+                            <button onClick={toggleDropdown} className={`flex items-center justify-between py-2 px-3 rounded-lg w-52 font-medium  cursor-pointer
+                           ${dropdown ? 'bg-white text-indigo-600' : 'text-white'}`} >
+                                <div>
+                                    <FontAwesomeIcon icon={faClipboardList} />&nbsp;Policies
                                 </div>
-                            ) : ('')}
+                                {
+                                    dropdown ?
+                                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
+                                        </svg> :
+                                        <svg className="w-6 h-6 pointer-events-none" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                                        </svg>
+                                }
+                            </button>
+                            {
+                                dropdown ? (
+                                    <div className="absolute flex flex-col space-y-2 bg-white p-2 w-52 rounded-lg z-40 ease-in-out">
+                                        <Link href='/privacy-policy' className='p-4 font-sans nav-link nav-link-ltr' >
+                                            <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
+                            ${ActiveDropdown("/privacy-policy")}`}>
+                                                <div>
+                                                    Privacy Policy
+                                                </div>
+                                            </div>
+                                        </Link>
+                                        <Link href='/terms-and-conditions' className='p-4 font-sans nav-link nav-link-ltr' >
+                                            <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
+                            ${ActiveDropdown("/terms-and-conditions")}`}>
+                                                <div>
+                                                    Terms & Conditions
+                                                </div>
+                                            </div>
+                                        </Link>
+                                        <Link href='/copyrights' className='p-4 font-sans nav-link nav-link-ltr' >
+                                            <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
+                            ${ActiveDropdown("/copyrights")}`}>
+                                                <div>
+                                                    Copyrights
+                                                </div>
+                                            </div>
+                                        </Link>
+                                        <Link href='/trademark-license' className='p-4 font-sans nav-link nav-link-ltr' >
+                                            <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
+                            ${ActiveDropdown("/trademark-license")}`}>
+                                                <div>
+                                                    Trademark License
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    </div>
+                                ) : ('')}
+                        </div>
                         <Link href='/dashboard/setting' className='p-4 font-sans nav-link nav-link-ltr' >
-                            <div className={`py-2 px-3 rounded-lg w-52 font-medium hover:text-indigo-600 hover:bg-white cursor-pointer
+                            <div className={`py-2 px-3 rounded-lg w-52 font-medium sidebar-item cursor-pointer
                             ${Active("/dashboard/setting")}`}>
                                 <FontAwesomeIcon icon={faCog} />&nbsp;Settings
                             </div>

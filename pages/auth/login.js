@@ -8,6 +8,7 @@ import login from '../../public/login.png';
 import { getInputClasses } from 'helpers';
 import { Button, Footer, InputField } from 'components';
 import { UseFetchLogin } from 'hooks';
+import { parseCookies } from 'nookies';
 
 
 const Login = () => {
@@ -42,7 +43,7 @@ const Login = () => {
                             <p className="text-gray-400 text-md text-center lg:text-left">New user?&nbsp;
                                 <Link
                                     href="/auth/signup">
-                                    <a className="text-blue-800 text-md font-semibold hover:underline"
+                                    <a className="text text-md font-semibold hover:underline"
                                     >Create an account
                                     </a>
                                 </Link></p>
@@ -149,7 +150,7 @@ const Login = () => {
                                     <p className="text-sm w-full text-gray-500 text-center ">
                                         <Link
                                             href="/auth/forgot-password">
-                                            <a className="text-blue-800 text-sm font-semibold hover:underline"
+                                            <a className="text text-sm font-semibold hover:underline"
                                             >Forgot Password?
                                             </a>
                                         </Link>
@@ -171,5 +172,20 @@ const Login = () => {
         </div>
     )
 }
-
+export const getServerSideProps = async (context) => {
+    const { token } = parseCookies(context);
+    if (token)
+        return {
+            redirect: {
+                permanent: false,
+                destination: "/dashboard/profile",
+            },
+            props: {},
+        };
+    else {
+        return {
+            props: {}
+        }
+    }
+}
 export default Login;

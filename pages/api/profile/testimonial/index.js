@@ -1,3 +1,5 @@
+import { isEmpty } from 'lodash';
+
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 
@@ -22,7 +24,7 @@ const handler = async (req, res) => {
 
       const business = await user.getBusiness();
 
-      const testimonials = await business.getTestimonials();
+      const testimonials = await business.getTestimonials({ where: { isDeleted: false }, order: [["createdAt", "DESC"]] });
 
       console.log(testimonials);
 
@@ -36,10 +38,10 @@ const handler = async (req, res) => {
   else if (req.method === 'POST') {
     const validateAddTestimonial = (data) => {
       const schema = Joi.object({
-        name: Joi.string().required(),
+        ownerName: Joi.string().required(),
         designation: Joi.string().required(),
         description: Joi.string().required(),
-        image: Joi.string().optional().allow(''),
+        picture: Joi.string().optional().allow(''),
       });
       return schema.validate(data);
     };
@@ -63,16 +65,54 @@ const handler = async (req, res) => {
         return res.status(404).json({ error: true, data: [], message: 'No user found' });
       }
 
-      const { name, description, designation, image } = req.body;
+      const { ownerName, description, designation, picture } = req.body;
 
       const business = await user.getBusiness();
 
-      await Testimonial.create({ username, ownerName: name, description, designation, picture: image, BusinessId: business.id });
+      await Testimonial.create({ username, ownerName, description, designation, picture, BusinessId: business.id });
 
       res.status(201).json({ error: false, message: 'Testimonial Added Successfully', data: [] });
 
     } catch (err) {
       res.status(500).json({ error: true, message: err.message, data: [] });
+    }
+  }
+  else if (req.method === 'PUT') {
+    const { body, headers } = req;
+    try {
+      if (!headers.authorization) {
+        return res.status(401).send({ error: true, data: [], message: 'Please Login' })
+      }
+      const { username } = jwt.verify(
+        req.headers.authorization.split(' ')[1],
+        process.env.SECRET_KEY
+      );
+
+      if (isEmpty(body)) {
+        return res.status(400).send({ error: true, data: [], message: 'No data send to server' })
+      }
+
+      console.log('body: ', body);
+      const { ownerName, designation, description, picture, id } = body;
+
+      const testimonial = await Testimonial.findOne({ where: { id } });
+
+      if (!testimonial) {
+        return res.status(404).send({ error: true, data: [], message: 'No testimonial found' })
+      }
+
+      await testimonial.update({
+        id,
+        username,
+        ownerName,
+        designation,
+        description,
+        picture
+      });
+      res.status(200).send({ error: false, message: 'Testimonial Updated successfully', data: [] });
+
+    } catch (err) {
+      res.status(500).send({ error: true, message: err.message, data: [] });
     }
   }
   else {

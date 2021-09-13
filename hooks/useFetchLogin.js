@@ -47,7 +47,7 @@ const UseFetchLogin = () => {
                 const data = { email, password }
                 localStorage.setItem('email', email);
                 axiosInstance.login(data)
-                    .then(({ data: { data: { username, token, image }, message } }) => {
+                    .then(({ data: { data: { username, token, image, id }, message } }) => {
                         disableLoading();
                         setError(false);
                         setStatus(message);
@@ -55,13 +55,14 @@ const UseFetchLogin = () => {
                         cookie.set('token', token);
                         cookie.set('username', username);
                         localStorage.setItem('image', image);
+                        localStorage.setItem('id', id);
                         router.push('/dashboard/profile');
                     })
                     .catch((e) => {
                         console.log(e.response.status);
                         if (e.response.status === 405) {
-                            axiosInstance.resendOTP(username)
-                                .then(({ data: { data, message, error }, status }) => {
+                            axiosInstance.resendOTP(email)
+                                .then(() => {
                                     swal({
                                         title: "Email Not Verified",
                                         text: 'Confirmation code sent to email address',
