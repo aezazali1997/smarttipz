@@ -155,7 +155,7 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                     background: "#714de1",
                     height: "100vh",
                     position: "fixed",
-                    zIndex: 35,
+                    zIndex: 60,
                     overflow: "hidden",
                 },
                 root: {
@@ -175,6 +175,18 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                     overflowY: "auto",
                     WebkitOverflowScrolling: "touch",
                     transition: "left .3s ease-out, right .3s ease-out"
+                },
+                overlay: {
+                    zIndex: 50,
+                    position: "fixed",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    opacity: 0,
+                    visibility: "hidden",
+                    transition: "opacity .3s ease-out, visibility .3s ease-out",
+                    backgroundColor: "rgba(0,0,0,.3)"
                 },
             }}
         >
