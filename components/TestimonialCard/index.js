@@ -24,7 +24,7 @@ const TestimonialCard = ({ image, name, designation, description, data, _Edit, _
                     <div className="flex flex-col ">
                         <div className="tracking-wide text-md text-black font-semibold">{name}</div>
                         <p className="block text-xs leading-tight text-gray-600">{designation}</p>
-                        <p className="text-sm text-black">{description}</p>
+                        <p className=" break-all text-sm text-black whitespace-pre-wrap">{description}</p>
                     </div>
                     {!otherUser && (
                         <div className="flex flex-col items-center justify-center divide-y-2 space-y-2">

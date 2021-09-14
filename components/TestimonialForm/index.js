@@ -57,7 +57,7 @@ const Index = ({ formik, getInputClasses }) => {
                     autoComplete="off" />
                 <label
                     htmlFor="about"
-                    className="absolute top-0 left-0 px-2 py-3 h-full pointer-events-none transform origin-left transition-all duration-100 ease-in-out ">
+                    className="absolute top-0 left-0 px-2 py-3 pointer-events-none transform origin-left transition-all duration-100 ease-in-out ">
                     Description
                 </label>
             </div>

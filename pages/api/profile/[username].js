@@ -24,6 +24,7 @@ const handler = async (req, res) => {
             console.log('params: ', username);
             const user = await User.findOne({
                 attributes: [
+                    'id',
                     'name',
                     'email',
                     'avgRating',
@@ -44,13 +45,14 @@ const handler = async (req, res) => {
                 return res.status(404).send({ error: true, data: [], message: 'User Not Found' })
             }
 
-            const { name, email, avgRating, totalViews, about, picture, phoneNumber, showPhone, accessible, showName,
+            const { id, name, email, avgRating, totalViews, about, picture, phoneNumber, showPhone, accessible, showName,
                 showUsername, accountType } = user;
 
             res.status(200).json({
                 error: false,
                 message: 'Data fetched successfully',
                 data: {
+                    id: id,
                     name: name,
                     email: email,
                     username,

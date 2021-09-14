@@ -80,7 +80,7 @@ const handler = async (req, res) => {
 
       await sendEmail(
         email,
-        'Account Varification',
+        'Account Authentication',
         `<p>Your account validation code is: ${varificationCode}</p>`
       );
 

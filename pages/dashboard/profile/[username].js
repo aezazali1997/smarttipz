@@ -23,27 +23,11 @@ const UserProfile = ({ profile }) => {
     const [loadingTestimonial, setLoadingTestimonial] = useState(false);
     const [businessCard, setBusinessCard] = useState('');
 
-    const gotoMessaging = ({ id }) => {
-        router.push(`/dashboard/messages/${id}`)
-    }
 
     useEffect(() => {
+        console.log('profile: ', profile);
         const { accountType, username } = profile;
         setPersonalInfo(profile);
-        axiosInstance.getSpecificFollow(username).then(({ data: { data: { followers, followed } } }) => {
-            console.log(followers, followed);
-            setFollowed(followed);
-            setFollowers(followers);
-            let Followed = followers.filter(user => user.id === parseInt(localStorage.getItem('id')) && user);
-            if (!isEmpty(Followed)) {
-                console.log(Followed);
-                setIsFollowing(true);
-                setCanMessage(true)
-            }
-
-        }).catch(e => {
-            console.log(e);
-        })
         if (accountType === 'Business') {
             enableLoadTestimonial();
             console.log('business');
@@ -60,9 +44,26 @@ const UserProfile = ({ profile }) => {
                 disableLoadTestimonial();
                 console.log('Error in Api Testimonials: ', e.response.data.message);
             })
-
         }
     }, [])
+
+    useEffect(() => {
+        const { username } = profile;
+        axiosInstance.getSpecificFollow(username).then(({ data: { data: { followers, followed } } }) => {
+            console.log(followers, followed);
+            setFollowed(followed);
+            setFollowers(followers);
+            let Followed = followers.filter(user => user?.id === parseInt(localStorage.getItem('id')) && user);
+            if (!isEmpty(Followed)) {
+                console.log(Followed);
+                setIsFollowing(true);
+                setCanMessage(true)
+            }
+
+        }).catch(e => {
+            console.log(e);
+        })
+    }, [isFollowing, profile])
 
     const enableLoadTestimonial = () => {
         setLoadingTestimonial(true);
@@ -73,19 +74,22 @@ const UserProfile = ({ profile }) => {
     };
 
     const _Follow = () => {
-        axiosInstance.followUser({ username: profile?.username }).then(({ data: { data } }) => {
-            setIsFollowing(data);
-            setCanMessage(canMessage => !canMessage);
+        axiosInstance.followUser({ username: profile?.username }).then(({ data: { data: { follow } } }) => {
+            setIsFollowing(follow);
+            setCanMessage(follow);
         })
             .catch(err => {
                 console.log('FollowUser API Failed: ', err);
             })
-
     }
     let handleShowBusinessCard = () => {
         console.log('clicked');
         setShowBusinessCard(showBusinessCard => !showBusinessCard)
     };
+
+    const gotoMessaging = (id) => {
+        router.push(`/dashboard/messages/${id}`)
+    }
 
     const { id, name, about, rating, views, picture, phone, showPhone, email, accountType, username, showName, showUsername } = personalInfo;
     const { website } = businessCard;
@@ -101,13 +105,17 @@ const UserProfile = ({ profile }) => {
             {/* section starts here*/}
             <div className="md:hidden flex flex-col w-full">
                 <ProfileCard
+                    otherUser={true}
                     data={personalInfo}
                     followed={followed}
                     followers={followers}
+                    canMessage={canMessage}
                     website={website || ''}
-                    handleShowBusinessCard={handleShowBusinessCard}
+                    isFollowing={isFollowing}
                     showBusinessCard={showBusinessCard}
-                    otherUser={true}
+                    _Follow={_Follow}
+                    gotoMessaging={gotoMessaging}
+                    handleShowBusinessCard={handleShowBusinessCard}
                 />
             </div>
             <div className="hidden md:flex flex-row w-full h-auto">
@@ -164,9 +172,12 @@ const UserProfile = ({ profile }) => {
                     </div>
                     {/* section ends here */}
                     <div className="flex w-full mt-2 px-2">
-                        <p className="text-sm">
-                            {about || 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat pidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'}
-                        </p>
+                        {about ?
+                            <p className="text-sm">
+                                {about}
+                            </p> :
+                            <p className="text-sm text-gray-400"> {accountType === 'Business' ? 'Intro' : 'About'}</p>
+                        }
                     </div>
                     {accountType === "Business" && (
                         <div className="flex w-full mt-2 px-2 " onClick={handleShowBusinessCard}>
@@ -176,13 +187,16 @@ const UserProfile = ({ profile }) => {
                         </div>
                     )}
                     <div className="flex w-full mt-3 items-center px-2 space-x-6">
-                        <button onClick={_Follow} className="followingBtn">
+                        <button onClick={_Follow} className={isFollowing ? 'followingBtn' : 'followBtn'}>
                             {isFollowing ? 'Following' : 'Follow'}
                         </button>
 
-                        {canMessage ? <button onClick={() => gotoMessaging(id)} className="messageBtn">
-                            Message
-                        </button> : ''
+                        {canMessage &&
+                            <button
+                                onClick={() => gotoMessaging(id)}
+                                className='msgBtn'>
+                                Message
+                            </button>
                         }
                     </div>
                 </div>

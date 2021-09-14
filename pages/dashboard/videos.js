@@ -34,7 +34,7 @@ const Videos = () => {
             {/*SEO Support End */}
             <div className="flex items-center space-x-2">
                 <div className="flex h-10 justify-center text-md text-black font-sans"> Categories:</div>
-                <div className={`floating-input mb-5 relative`}>
+                <div className={`floating-input mb-5 relative z-0`}>
                     <select
                         type='select'
                         id='videos'

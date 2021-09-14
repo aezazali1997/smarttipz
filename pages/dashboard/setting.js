@@ -197,7 +197,7 @@ const Setting = ({ settings }) => {
                     {accountType === "Business" ? 'Business Intro' : 'About me'}
                   </label>
                 </div>
-                <p className="flex justify-end text-sm mb-5 w-full">{about?.length} / 150</p>
+                <p className="flex justify-end text-sm mb-5 w-full">{about?.length || 0} / 150</p>
                 {
                   accountType === 'Business' ?
                     <InputField

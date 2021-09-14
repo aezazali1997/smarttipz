@@ -1,4 +1,4 @@
-import { includes } from 'lodash';
+import { includes, isEmpty } from 'lodash';
 
 const User = require('../../../models/User');
 const jwt = require('jsonwebtoken');
@@ -34,21 +34,31 @@ const handler = async (req, res) => {
                 return res.status(404).json({ error: true, message: 'Other User Not Found', data: [] });
             }
 
-            const alreadyFollowed = await user.getFollower();
-            console.log('alreadyFollowed: ', alreadyFollowed);
-            const exists = alreadyFollowed.includes(otherUser);
-            console.log('exists: ', exists);
+            console.log(otherUser);
+            const follower = await user.getFollower({ where: { followedId: otherUser.id } });
+            const followed = await user.getFollowed({ where: { followingId: user.id } });
+            console.log('alreadyFollowed: ', follower);
 
-            if (!exists) {
+            if (!isEmpty(follower) || !isEmpty(followed)) {
                 await user.setFollowed(otherUser);
                 await otherUser.setFollower(user);
+                res.status(201).send({
+                    error: false,
+                    message: 'Data fetched successfully',
+                    data: { follow: true }
+                });
+            }
+            else {
+                await following.destroy();
+                await followed.destroy();
+                res.status(201).send({
+                    error: false,
+                    message: 'Data fetched successfully',
+                    data: { follow: false }
+                });
             }
 
-            res.status(201).send({
-                error: false,
-                message: 'Data fetched successfully',
-                data: []
-            });
+
         } catch (err) {
             res.status(500).send({ error: true, data: [], message: err.message });
         }

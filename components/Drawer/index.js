@@ -77,7 +77,7 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                             </Link>
                             <div className="inline-block relative space-y-1">
                                 <button onClick={toggleDropdown} className={`flex items-center justify-between py-2 px-3 rounded-lg w-52 font-medium sidebar-item cursor-pointer
-                           ${dropdown ? 'bg-white text-indigo-600' : 'text-white'}`}>
+                           ${dropdown ? 'bg-white text' : 'text-white'}`}>
                                     <div>
                                         <FontAwesomeIcon icon={faClipboardList} />&nbsp;Policies
                                     </div>

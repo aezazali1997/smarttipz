@@ -5,10 +5,11 @@ import Rating from '../RatingStar';
 import Image from 'next/image';
 import PopupBusinessCard from '../PopupBusinessCard';
 
-const ProfileCard = ({ data, otherUser, handleShowBusinessCard, showBusinessCard, followed, followers, website }) => {
+const ProfileCard = ({ data, otherUser, handleShowBusinessCard, showBusinessCard, followed, followers, website,
+    _Follow, gotoMessaging, isFollowing, canMessage }) => {
 
 
-    const { name, about, rating, email, views, picture, phone, accountType, username, showPhone, showName, showUsername } = data;
+    const { id, name, about, rating, email, views, picture, phone, accountType, username, showPhone, showName, showUsername } = data;
 
     return (
         <div className="flex flex-col w-full relative items-center space-y-3">
@@ -25,7 +26,13 @@ const ProfileCard = ({ data, otherUser, handleShowBusinessCard, showBusinessCard
                 <h1 className="text-black text-lg font-sans font-semibold">{accountType === 'Personal' ? showName ? name : showUsername ? username : '' : name}</h1>
                 <h1 className=" text-sm font-sans text-gray-400">{otherUser ? showPhone ? phone : '' : phone}</h1>
             </div>
-            <p className="text-sm text-black text-center">{about || 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat pidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'}</p>
+            {about ?
+                <p className="text-sm text-black text-center">
+
+                    {about}
+                </p> :
+                <p className="text-sm text-gray-400 text-center"> {accountType === 'Business' ? 'Intro' : 'About'}</p>
+            }
             {accountType === "Business" && (
                 <div className="flex w-full mt-2 px-2 justify-center " onClick={handleShowBusinessCard}>
                     <p className="text-xs no-underline hover:underline text-indigo-600 cursor-pointer">
@@ -61,12 +68,14 @@ const ProfileCard = ({ data, otherUser, handleShowBusinessCard, showBusinessCard
                             </div>
                         </div>
                         <div className="flex w-full justify-between space-x-2">
-                            <button className="followingBtn w-full">
-                                Following
+                            <button onClick={_Follow}
+                                className={`${isFollowing ? 'followingBtn' : 'followBtn'}  w-full`}
+                            >
+                                {isFollowing ? 'Following' : 'Follow'}
                             </button>
-                            <button className="messageBtn w-full">
+                            {canMessage && <button onClick={() => gotoMessaging(id)} className="msgBtn w-full">
                                 Message
-                            </button>
+                            </button>}
                         </div>
 
                     </>

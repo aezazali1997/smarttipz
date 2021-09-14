@@ -97,9 +97,12 @@ const Profile = ({ profile }) => {
                     </div>
                     {/* section ends here */}
                     <div className="flex w-full mt-2 px-2">
-                        <p className="text-sm">
-                            {about || 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat pidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'}
-                        </p>
+                        {about ?
+                            <p className="text-sm">
+                                {about}
+                            </p> :
+                            <p className="text-sm text-gray-400"> {accountType === 'Business' ? 'Intro' : 'About'}</p>
+                        }
                     </div>
                     {accountType === "Business" && (
                         <div className="flex w-full mt-2 px-2 " onClick={handleShowBusinessCard}>
