@@ -4,6 +4,7 @@ const User = require('../../../models/User');
 const Business = require('../../../models/Business');
 const Session = require('../../../models/Session');
 const sendEmail = require('../../../utils/sendMail');
+const jwt = require('jsonwebtoken');
 
 const Joi = require('joi');
 
@@ -71,7 +72,6 @@ const handler = async (req, res) => {
         await newUser.setBusiness(newBusiness);
       }
 
-
       await Session.create({
         userId: newUser.id,
         username: newUser.username,
@@ -84,7 +84,9 @@ const handler = async (req, res) => {
         `<p>Your account validation code is: ${varificationCode}</p>`
       );
 
-      res.status(201).json({ error: false, data: [], message: 'User successfuly signed up.' });
+      const token = jwt.sign({ email: newUser.email }, process.env.SECRET_KEY);
+
+      res.status(201).json({ error: false, data: token, message: 'User successfuly signed up.' });
     } catch (err) {
       res.status(422).json({ error: true, message: err.message, data: [] });
     }

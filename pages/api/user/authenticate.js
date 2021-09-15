@@ -16,13 +16,19 @@ const handler = async (req, res) => {
 
     const { error } = validateAuthenticate(body);
 
-    if (error) return res.status(400).send({ error: true, data: [], message: error.details[0].message });
+    if (error)
+      return res.status(400).send({ error: true, data: [], message: error.details[0].message });
 
-    const { email, varificationCode } = body;
+    const { varificationCode } = body;
 
     console.log(body);
 
     try {
+      if (!req.headers.authorization) {
+        return res.status(401).send({ error: true, data: [], message: 'Please Authenticate' });
+      }
+      const { email } = jwt.verify(req.headers.authorization.split(' ')[1], process.env.SECRET_KEY);
+
       const user = await User.findOne({ where: { email } });
       if (!user) {
         return res.status(400).json({ error: true, message: 'Validation failed', data: [] });
@@ -45,12 +51,13 @@ const handler = async (req, res) => {
 
       res
         .status(200)
-        .json({ error: false, data: { id, username: user.username, image: picture, token }, message: 'User verified' });
-
+        .json({
+          error: false,
+          data: { id, username: user.username, image: picture, token },
+          message: 'User verified'
+        });
     } catch (err) {
-      res
-        .status(500)
-        .send({ error: false, data: [], message: 'API Failed' });
+      res.status(500).send({ error: false, data: [], message: 'API Failed' });
     }
   } else {
     res.status(404).end('Page Not Found');
