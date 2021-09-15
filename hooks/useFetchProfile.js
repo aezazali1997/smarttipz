@@ -167,7 +167,7 @@ const UseFetchProfile = (profile) => {
                     picture: imageUrl
                 };
                 if (modalTitle === 'Add Testimonial') {
-                    axiosInstance.addTestimonial(payload).then(({ data: { data } }) => {
+                    axiosInstance.addTestimonial(payload).then(() => {
                         let copyTestimonial = [...testimonial];
                         let newArray = [payload, ...copyTestimonial];
                         setTestimonial(newArray);
@@ -182,7 +182,7 @@ const UseFetchProfile = (profile) => {
                 }
                 else if (modalTitle === 'Edit Testimonial') {
                     payload.id = res.id;
-                    axiosInstance.updateTestimonial(payload).then(({ data: { message } }) => {
+                    axiosInstance.updateTestimonial(payload).then(() => {
                         let copyTestimonial = [...testimonial];
                         let newArray = copyTestimonial.map((item) => {
                             if (item.id !== payload?.id) return item;

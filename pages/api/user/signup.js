@@ -86,7 +86,7 @@ const handler = async (req, res) => {
 
       const token = jwt.sign({ email: newUser.email }, process.env.SECRET_KEY);
 
-      res.status(201).json({ error: false, data: token, message: 'User successfuly signed up.' });
+      res.status(201).json({ error: false, data: { OTPToken: token }, message: 'User successfuly signed up.' });
     } catch (err) {
       res.status(422).json({ error: true, message: err.message, data: [] });
     }

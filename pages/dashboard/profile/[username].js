@@ -74,9 +74,9 @@ const UserProfile = ({ profile }) => {
     };
 
     const _Follow = () => {
-        axiosInstance.followUser({ username: profile?.username }).then(({ data: { data } }) => {
-            setIsFollowing(data);
-            setCanMessage(canMessage => !canMessage);
+        axiosInstance.followUser({ username: profile?.username }).then(({ data: { data: { follow } } }) => {
+            setIsFollowing(follow);
+            setCanMessage(canMessage => canMessage = follow);
         })
             .catch(err => {
                 console.log('FollowUser API Failed: ', err);
@@ -194,7 +194,7 @@ const UserProfile = ({ profile }) => {
                         {canMessage &&
                             <button
                                 onClick={() => gotoMessaging(id)}
-                                className='msgBtn'>
+                                className='followBtn'>
                                 Message
                             </button>
                         }

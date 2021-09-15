@@ -1,17 +1,21 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
+import Link from 'next/link';
 import Helmet from 'react-helmet';
 import { Button } from '../../components';
 import logo from '../../public/ST-2.png';
 import { getInputClasses } from '../../helpers';
 import { UseFetchAuthenticate } from '../../hooks';
-import { movetoNext, movetoPrevious } from '../../helpers';
+import { movetoNext } from '../../helpers';
+import { useRouter } from 'next/router';
 
 const Authenticate = () => {
 
-    const { loading, formik, resendOTP } = UseFetchAuthenticate();
+    const { loading, formik, verified, resendOTP } = UseFetchAuthenticate();
+
+    if (!verified) return null
 
     return (
         <div className="flex flex-col h-screen pt-5 p-5 xs:p-10 pb-2 space-y-2">

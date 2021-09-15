@@ -1,3 +1,5 @@
+import { optional } from 'joi';
+
 const randomString = require('randomstring');
 const jwt = require('jsonwebtoken');
 
@@ -9,7 +11,8 @@ const handler = async (req, res) => {
   if (req.method === 'POST') {
     const validateResend = (data) => {
       const schema = Joi.object({
-        email: Joi.string().required()
+        email: Joi.string().email().optional().allow(null).allow(''),
+        Token: Joi.string().optional().allow(null).allow('')
       });
       return schema.validate(data);
     };
@@ -18,12 +21,26 @@ const handler = async (req, res) => {
 
     if (error) return res.status(400).json({ error: error.details[0].message });
 
-    const { email } = req.body;
+    const { email, Token } = req.body;
+
+    let userEmail = '';
 
     try {
-      const user = await User.findOne({ where: { email } });
+      if (Token && Token !== '') {
+        console.log('hasToken')
+        const { email } = jwt.verify(
+          Token,
+          process.env.SECRET_KEY
+        );
+        userEmail = email;
+      } else {
+        console.log('noToken')
+        userEmail = email;
+      }
+
+      const user = await User.findOne({ where: { email: userEmail } });
       if (!user) {
-        throw new Error('No user found');
+        res.status(404).json({ error: true, message: 'No user found', data: [] });
       }
       let verificationCode = randomString.generate({
         length: 6,
@@ -39,11 +56,11 @@ const handler = async (req, res) => {
         `<p>Your account validation code is: ${verificationCode}</p>`
       );
 
-      const token = jwt.sign({ email: newUser.email }, process.env.SECRET_KEY);
+      const token = jwt.sign({ email: user.email }, process.env.SECRET_KEY);
 
-      res.status(200).json({ error: false, message: 'Varification code sent', data: token });
+      res.status(200).json({ error: false, message: 'Varification code sent', data: { OTPToken: token } });
     } catch (err) {
-      res.status(400).json({ error: true, message: err.message, data: [] });
+      res.status(500).json({ error: true, message: err.message, data: [] });
     }
   } else {
     res.status(404).end('Page Not Found');

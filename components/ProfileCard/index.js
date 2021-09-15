@@ -73,7 +73,7 @@ const ProfileCard = ({ data, otherUser, handleShowBusinessCard, showBusinessCard
                             >
                                 {isFollowing ? 'Following' : 'Follow'}
                             </button>
-                            {canMessage && <button onClick={() => gotoMessaging(id)} className="msgBtn w-full">
+                            {canMessage && <button onClick={() => gotoMessaging(id)} className="followBtn w-full">
                                 Message
                             </button>}
                         </div>

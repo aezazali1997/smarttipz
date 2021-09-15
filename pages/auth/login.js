@@ -13,7 +13,7 @@ import { parseCookies } from 'nookies';
 
 const Login = () => {
 
-    const { toggleAlert, showPassword, setShowPassword, showAlert, formik, loading, error } = UseFetchLogin();
+    const { toggleAlert, setShowPassword, showPassword, showAlert, formik, loading, error } = UseFetchLogin();
 
     return (
         <div className="flex flex-col h-screen w-full">

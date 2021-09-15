@@ -64,8 +64,8 @@ const UseFetchSignup = () => {
                 }
                 console.log(data);
                 axiosInstance.signup(data)
-                    .then(({ data: { data, error, message } }) => {
-                        console.log('res >>', data);
+                    .then(({ data: { data: { OTPToken }, message } }) => {
+                        console.log('res >>', OTPToken);
                         disableLoading();
                         swal({
                             text: message,
@@ -74,7 +74,7 @@ const UseFetchSignup = () => {
                             timer: 5000,
                             icon: 'success'
                         })
-                        localStorage.setItem('email', email);
+                        localStorage.setItem('otpToken', OTPToken);
                         router.push({ pathname: '/auth/authenticate', state: { email } })
                     })
                     .catch((e) => {
@@ -107,15 +107,6 @@ const UseFetchSignup = () => {
         console.log('type: ', type);
         setAccountType(type);
     }
-
-    // const ActiveTab = (account) => {
-    //     if (account === accountType) {
-    //         return 'bg-purple-600 text-white'
-    //     }
-    //     else {
-    //         return 'text-purple-600 bg-white'
-    //     }
-    // }
 
     return { showPassword, loading, formik, showModal, agree, accountType, phone, _HandlePhone, _SelectAccount, setShowPassword, toggleModal, _Confirm, _Cancel };
 }

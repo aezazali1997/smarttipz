@@ -6,7 +6,7 @@ const handler = async (req, res) => {
   if (req.method === 'POST') {
     const validateAuthenticate = (data) => {
       const schema = Joi.object({
-        email: Joi.string().email().required(),
+        OTPToken: Joi.string().required(),
         varificationCode: Joi.string().required().length(6)
       });
       return schema.validate(data);
@@ -19,15 +19,13 @@ const handler = async (req, res) => {
     if (error)
       return res.status(400).send({ error: true, data: [], message: error.details[0].message });
 
-    const { varificationCode } = body;
+    const { varificationCode, OTPToken } = body;
 
     console.log(body);
 
     try {
-      if (!req.headers.authorization) {
-        return res.status(401).send({ error: true, data: [], message: 'Please Authenticate' });
-      }
-      const { email } = jwt.verify(req.headers.authorization.split(' ')[1], process.env.SECRET_KEY);
+
+      const { email } = jwt.verify(OTPToken, process.env.SECRET_KEY);
 
       const user = await User.findOne({ where: { email } });
       if (!user) {

@@ -45,7 +45,6 @@ const UseFetchLogin = () => {
             enableLoading();
             setTimeout(() => {
                 const data = { email, password }
-                localStorage.setItem('email', email);
                 axiosInstance.login(data)
                     .then(({ data: { data: { username, token, image, id }, message } }) => {
                         disableLoading();
@@ -61,8 +60,9 @@ const UseFetchLogin = () => {
                     .catch((e) => {
                         console.log(e.response.status);
                         if (e.response.status === 405) {
-                            axiosInstance.resendOTP(email)
-                                .then(() => {
+                            const data = { email: email }
+                            axiosInstance.resendOTP(data)
+                                .then(({ data: { data: { OTPToken } } }) => {
                                     swal({
                                         title: "Email Not Verified",
                                         text: 'Confirmation code sent to email address',
@@ -71,6 +71,7 @@ const UseFetchLogin = () => {
                                         timer: 5000,
                                         icon: 'info'
                                     })
+                                    localStorage.setItem('otpToken', OTPToken);
                                     disableLoading();
                                     router.push('/auth/authenticate');
                                 })

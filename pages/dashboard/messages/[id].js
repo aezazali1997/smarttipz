@@ -65,6 +65,10 @@ const UserMessage = () => {
         }
     }
 
+    let _GoBack = () => {
+        router.back();
+    }
+
 
     return (
         <div className="h-screen flex flex-col">
@@ -76,7 +80,7 @@ const UserMessage = () => {
             </div> */}
             <header>
                 <div className='flex items-center bg-white space-x-10 p-5 w-full py-3 shadow-md'>
-                    <span className="flex border rounded-full hover:shadow-md p-1 cursor-pointer">
+                    <span onClick={_GoBack} className="flex border rounded-full hover:shadow-md p-1 cursor-pointer">
                         <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path fillRule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414zm-6 0a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
                         </svg>

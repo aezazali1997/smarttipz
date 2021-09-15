@@ -37,8 +37,8 @@ class AxiosInstance {
         return await axios.put(USER_API_BASE_URL + "api/user/password", data, this.getAuthHeader());
     }
 
-    async resendOTP(email) {
-        return await axios.post(USER_API_BASE_URL + "api/user/resend", { email });
+    async resendOTP(data) {
+        return await axios.post(USER_API_BASE_URL + "api/user/resend", data);
     }
 
     async profile() {

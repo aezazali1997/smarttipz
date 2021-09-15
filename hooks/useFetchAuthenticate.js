@@ -1,6 +1,6 @@
 import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import swal from 'sweetalert';
 import axiosInstance from '../APIs/axiosInstance';
 import { AuthenticateSchema } from '../utils/validation_shema';
@@ -10,6 +10,13 @@ const UseFetchAuthenticate = () => {
 
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [verified, setIsVerified] = useState(null);
+
+    useEffect(() => {
+        setIsVerified(localStorage.getItem('otpToken'));
+        !localStorage.getItem('otpToken') && router.push('/auth/login')
+    }, [verified])
+
 
     const enableLoading = () => {
         setLoading(true);
@@ -29,8 +36,11 @@ const UseFetchAuthenticate = () => {
     }
 
     const resendOTP = () => {
-        if (localStorage.getItem('email')) {
-            axiosInstance.resendOTP(localStorage.getItem('email'))
+        if (localStorage.getItem('otpToken')) {
+            const data = {
+                Token: localStorage.getItem('otpToken')
+            }
+            axiosInstance.resendOTP(data)
                 .then(() => {
                     swal({
                         text: 'Confirmation code sent to email address',
@@ -50,11 +60,11 @@ const UseFetchAuthenticate = () => {
         validateOnBlur: true,
         onSubmit: ({ tab1, tab2, tab3, tab4, tab5, tab6 }, { setSubmitting, setStatus }) => {
             setTimeout(() => {
-                if (localStorage.getItem('email')) {
+                if (localStorage.getItem('otpToken')) {
                     enableLoading();
                     const data = {
                         varificationCode: `${tab1}${tab2}${tab3}${tab4}${tab5}${tab6}`,
-                        email: localStorage.getItem('email')
+                        OTPToken: localStorage.getItem('otpToken')
                     }
                     console.log(data);
                     axiosInstance.authenticate(data)
@@ -69,9 +79,10 @@ const UseFetchAuthenticate = () => {
                                 icon: 'success'
                             })
                             cookie.set('token', token);
+                            localStorage.setItem('id', id);
                             cookie.set('username', username);
                             localStorage.setItem('image', image);
-                            localStorage.setItem('id', id);
+                            localStorage.removeItem('otpToken');
                             router.push('/dashboard/profile');
                         })
                         .catch((e) => {
@@ -90,7 +101,7 @@ const UseFetchAuthenticate = () => {
         },
     });
 
-    return { loading, formik, resendOTP };
+    return { loading, formik, verified, resendOTP };
 
 }
 

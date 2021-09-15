@@ -1,17 +1,21 @@
-import { includes } from 'lodash';
+import { includes, isEmpty } from 'lodash';
 
 const User = require('../../../models/User');
 const jwt = require('jsonwebtoken');
 
 const handler = async (req, res) => {
   if (req.method === 'POST') {
-    const { headers, body } = req;
+    const { headers, body, body: { username: otheruser } } = req;
 
     try {
       if (!headers.authorization) {
         return res.status(401).send({ error: true, data: [], message: 'Please Login' });
       }
       const { username } = jwt.verify(headers.authorization.split(' ')[1], process.env.SECRET_KEY);
+
+      if (isEmpty(body)) {
+        return res.status(404).send({ error: true, data: [], message: 'No data passed to server' });
+      }
 
       const user = await User.findOne({
         attributes: ['id'],
@@ -23,7 +27,7 @@ const handler = async (req, res) => {
 
       const otherUser = await User.findOne({
         attributes: ['id'],
-        where: { username: body.otheruser }
+        where: { username: otheruser }
       });
 
       if (!otherUser) {

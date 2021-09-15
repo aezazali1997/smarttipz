@@ -19,6 +19,11 @@
   align-items: center;
 }
 
+.followBtn:hover {
+  background: #714de1;
+  color: white;
+}
+
 .followingBtn {
   border: 2px solid #714de1;
   border-radius: 10px;
@@ -39,6 +44,11 @@
   font-size: medium;
   align-items: center;
 }
+
+.followingBtn:hover {
+  background: #6740df;
+}
+
 
 .btn {
   background: #714de1;
@@ -97,13 +107,6 @@
   }
 
   .followingBtn {
-    padding-left: 2px;
-    padding-right: 2px;
-    padding-top: 3px;
-    padding-bottom: 3px;
-  }
-
-  .msgBtn {
     padding-left: 2px;
     padding-right: 2px;
     padding-top: 3px;
