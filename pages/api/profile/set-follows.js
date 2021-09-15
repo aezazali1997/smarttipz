@@ -1,4 +1,4 @@
-import { includes, isEmpty } from 'lodash';
+import { includes } from 'lodash';
 
 const User = require('../../../models/User');
 const jwt = require('jsonwebtoken');
