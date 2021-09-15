@@ -1,4 +1,5 @@
 const randomString = require('randomstring');
+const jwt = require('jsonwebtoken');
 
 const User = require('../../../models/User');
 const Joi = require('joi');
@@ -38,7 +39,9 @@ const handler = async (req, res) => {
         `<p>Your account validation code is: ${verificationCode}</p>`
       );
 
-      res.status(200).json({ error: false, message: 'Varification code sent', data: [] });
+      const token = jwt.sign({ email: newUser.email }, process.env.SECRET_KEY);
+
+      res.status(200).json({ error: false, message: 'Varification code sent', data: token });
     } catch (err) {
       res.status(400).json({ error: true, message: err.message, data: [] });
     }
