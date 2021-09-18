@@ -6,6 +6,7 @@ import { Helmet } from 'react-helmet';
 import { parseCookies } from 'nookies';
 import axios from 'axios';
 import { isEmpty } from 'lodash';
+import swal from 'sweetalert';
 import videos from '../../../utils/VdeoSchema.json';
 import axiosInstance from 'APIs/axiosInstance';
 import { Card, PopupBusinessCard, ProfileCard, Rating, TestimonialCard, Spinner } from '../../../components';
@@ -25,17 +26,14 @@ const UserProfile = ({ profile }) => {
 
 
     useEffect(() => {
-        console.log('profile: ', profile);
         const { accountType, username } = profile;
         setPersonalInfo(profile);
         if (accountType === 'Business') {
             enableLoadTestimonial();
-            console.log('business');
             axiosInstance.getSpecificBusinessCard(username).then(({ data: { data } }) => {
-                console.log('data', data)
                 setBusinessCard(data);
             }).catch(e => {
-                console.log('Error in Api BusinessCard: ', e);
+                console.log('Error in Api BusinessCard: ', e.response.data.message);
             })
             axiosInstance.getSpecificTestimonials(username).then(({ data: { data } }) => {
                 setTestimonials(data);
@@ -50,12 +48,10 @@ const UserProfile = ({ profile }) => {
     useEffect(() => {
         const { username } = profile;
         axiosInstance.getSpecificFollow(username).then(({ data: { data: { followers, followed } } }) => {
-            console.log(followers, followed);
             setFollowed(followed);
             setFollowers(followers);
             let Followed = followers.filter(user => user?.id === parseInt(localStorage.getItem('id')) && user);
             if (!isEmpty(Followed)) {
-                console.log(Followed);
                 setIsFollowing(true);
                 setCanMessage(true)
             }
@@ -64,6 +60,7 @@ const UserProfile = ({ profile }) => {
             console.log(e);
         })
     }, [isFollowing, profile])
+
 
     const enableLoadTestimonial = () => {
         setLoadingTestimonial(true);
@@ -83,15 +80,22 @@ const UserProfile = ({ profile }) => {
             })
     }
     let handleShowBusinessCard = () => {
-        console.log('clicked');
         setShowBusinessCard(showBusinessCard => !showBusinessCard)
     };
 
-    const gotoMessaging = (id) => {
-        router.push(`/dashboard/messages/${id}`)
+    const gotoMessaging = (id, accessible) => {
+        if (accessible === false) {
+            swal({
+                buttons: false,
+                text: 'This user has turned off messages'
+            })
+        }
+        else {
+            router.push(`/dashboard/messages/${id}`)
+        }
     }
 
-    const { id, name, about, rating, views, picture, phone, showPhone, email, accountType, username, showName, showUsername } = personalInfo;
+    const { id, name, about, rating, views, picture, phone, showPhone, email, accountType, username, showName, showUsername, accessible } = personalInfo;
     const { website } = businessCard;
 
     return (
@@ -193,7 +197,7 @@ const UserProfile = ({ profile }) => {
 
                         {canMessage &&
                             <button
-                                onClick={() => gotoMessaging(id)}
+                                onClick={() => gotoMessaging(id, accessible)}
                                 className='followBtn'>
                                 Message
                             </button>

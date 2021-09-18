@@ -9,7 +9,7 @@ const ProfileCard = ({ data, otherUser, handleShowBusinessCard, showBusinessCard
     _Follow, gotoMessaging, isFollowing, canMessage }) => {
 
 
-    const { id, name, about, rating, email, views, picture, phone, accountType, username, showPhone, showName, showUsername } = data;
+    const { id, name, about, rating, email, views, picture, phone, accountType, username, showPhone, showName, showUsername, accessible } = data;
 
     return (
         <div className="flex flex-col w-full relative items-center space-y-3">
@@ -73,7 +73,7 @@ const ProfileCard = ({ data, otherUser, handleShowBusinessCard, showBusinessCard
                             >
                                 {isFollowing ? 'Following' : 'Follow'}
                             </button>
-                            {canMessage && <button onClick={() => gotoMessaging(id)} className="followBtn w-full">
+                            {canMessage && <button onClick={() => gotoMessaging(id, accessible)} className="followBtn w-full">
                                 Message
                             </button>}
                         </div>
