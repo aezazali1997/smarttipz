@@ -14,11 +14,11 @@ const Sidebar = ({ logout }) => {
     const { asPath } = router;
     const [dropdown, setShowDropdown] = useState(false);
 
-    useEffect(() => {
-        asPath === '/privacy-policy' || asPath === '/terms-and-conditions' || asPath === '/copyrights'
-            || asPath === '/trademark-license'
-            ? setShowDropdown(true) : setShowDropdown(false);
-    }, [])
+    // useEffect(() => {
+    //     asPath === '/privacy-policy' || asPath === '/terms-and-conditions' || asPath === '/copyrights'
+    //         || asPath === '/trademark-license'
+    //         ? setShowDropdown(true) : setShowDropdown(false);
+    // }, [])
 
     let Active = (path) => {
         return asPath === path ?
@@ -94,7 +94,7 @@ const Sidebar = ({ logout }) => {
                                 dropdown ? (
                                     <div className="absolute flex flex-col space-y-2 bg-white p-2 w-52 rounded-lg z-40 ease-in-out">
                                         <Link href='/privacy-policy' className='p-4 font-sans nav-link nav-link-ltr' >
-                                            <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
+                                            <div onClick={() => toggleDropdown()} className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
                             ${ActiveDropdown("/privacy-policy")}`}>
                                                 <div>
                                                     Privacy Policy
@@ -102,7 +102,7 @@ const Sidebar = ({ logout }) => {
                                             </div>
                                         </Link>
                                         <Link href='/terms-and-conditions' className='p-4 font-sans nav-link nav-link-ltr' >
-                                            <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
+                                            <div onClick={() => toggleDropdown()} className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
                             ${ActiveDropdown("/terms-and-conditions")}`}>
                                                 <div>
                                                     Terms & Conditions
@@ -110,7 +110,7 @@ const Sidebar = ({ logout }) => {
                                             </div>
                                         </Link>
                                         <Link href='/copyrights' className='p-4 font-sans nav-link nav-link-ltr' >
-                                            <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
+                                            <div onClick={() => toggleDropdown()} className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
                             ${ActiveDropdown("/copyrights")}`}>
                                                 <div>
                                                     Copyrights
@@ -118,7 +118,7 @@ const Sidebar = ({ logout }) => {
                                             </div>
                                         </Link>
                                         <Link href='/trademark-license' className='p-4 font-sans nav-link nav-link-ltr' >
-                                            <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
+                                            <div onClick={() => toggleDropdown()} className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
                             ${ActiveDropdown("/trademark-license")}`}>
                                                 <div>
                                                     Trademark License

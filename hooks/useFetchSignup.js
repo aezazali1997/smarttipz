@@ -27,7 +27,8 @@ const UseFetchSignup = () => {
         setLoading(false);
     };
     const toggleModal = () => {
-        setShowModal(!showModal);
+        setAgree(!agree);
+        // setShowModal(!showModal);
     };
     const _HandlePhone = (value) => {
         setPhone(value);

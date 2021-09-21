@@ -27,7 +27,7 @@ const ProfileCard = ({ data, otherUser, handleShowBusinessCard, showBusinessCard
                 <h1 className=" text-sm font-sans text-gray-400">{otherUser ? showPhone ? phone : '' : phone}</h1>
             </div>
             {about ?
-                <p className="text-sm text-black text-center">
+                <p className="text-sm text-black text-center max-w-xs">
 
                     {about}
                 </p> :
@@ -36,7 +36,7 @@ const ProfileCard = ({ data, otherUser, handleShowBusinessCard, showBusinessCard
             {accountType === "Business" && (
                 <div className="flex w-full mt-2 px-2 justify-center " onClick={handleShowBusinessCard}>
                     <p className="text-xs no-underline hover:underline text-indigo-600 cursor-pointer">
-                        Virtual Business Card
+                        Contact details
                     </p>
                 </div>
             )}

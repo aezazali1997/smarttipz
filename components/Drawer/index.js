@@ -16,10 +16,10 @@ const Drawer = ({ isOpen, toggle, logout }) => {
     const { asPath } = router;
     const [dropdown, setShowDropdown] = useState(false);
 
-    useEffect(() => {
-        asPath === '/privacy-policy' || asPath === '/terms-and-conditions'
-            ? setShowDropdown(true) : setShowDropdown(false);
-    }, [])
+    // useEffect(() => {
+    //     asPath === '/privacy-policy' || asPath === '/terms-and-conditions'
+    //         ? setShowDropdown(true) : setShowDropdown(false);
+    // }, [])
 
     let Active = (path) => {
         return asPath === path ?
@@ -32,6 +32,11 @@ const Drawer = ({ isOpen, toggle, logout }) => {
 
     let ActiveDropdown = (path) => {
         return asPath === path ? 'text-white background' : 'sidebar-dropdown-item';
+    }
+
+    let handleClose = () => {
+        toggleDropdown();
+        toggle();
     }
 
     return (
@@ -96,7 +101,7 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                                     dropdown ? (
                                         <div className="flex flex-col absolute space-y-2 bg-white p-2 w-52 rounded-lg transition delay-100 duration-300 ease-in-out">
                                             <Link href='/privacy-policy' className='p-4 font-sans nav-link nav-link-ltr' >
-                                                <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
+                                                <div onClick={() => handleClose()} className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
                             ${ActiveDropdown("/privacy-policy")}`}>
                                                     <div>
                                                         Privacy Policy
@@ -104,7 +109,7 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                                                 </div>
                                             </Link>
                                             <Link href='/terms-and-conditions' className='p-4 font-sans nav-link nav-link-ltr' >
-                                                <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
+                                                <div onClick={() => handleClose()} className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
                             ${ActiveDropdown("/terms-and-conditions")}`}>
                                                     <div>
                                                         Terms & Conditions
@@ -112,7 +117,7 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                                                 </div>
                                             </Link>
                                             <Link href='/copyrights' className='p-4 font-sans nav-link nav-link-ltr' >
-                                                <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
+                                                <div onClick={() => handleClose()} className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
                             ${ActiveDropdown("/copyrights")}`}>
                                                     <div>
                                                         Copyrights Reserved
@@ -120,7 +125,7 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                                                 </div>
                                             </Link>
                                             <Link href='/trademark-license' className='p-4 font-sans nav-link nav-link-ltr' >
-                                                <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
+                                                <div onClick={() => handleClose()} className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
                             ${ActiveDropdown("/trademark-license")}`}>
                                                     <div>
                                                         Trademark License

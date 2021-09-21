@@ -155,6 +155,14 @@ const UserProfile = ({ profile }) => {
                                     />
                                     &nbsp; <p className="text-xs"> Rating</p></span>
                             </div>
+                            <div className="flex w-full mt-2 px-2">
+                                {about ?
+                                    <p className="text-sm text-justify break-words md:max-w-xs">
+                                        {about}
+                                    </p> :
+                                    <p className="text-sm text-gray-400"> {accountType === 'Business' ? 'Intro' : 'About'}</p>
+                                }
+                            </div>
                         </div>
                         {
 
@@ -175,18 +183,11 @@ const UserProfile = ({ profile }) => {
                         </div>
                     </div>
                     {/* section ends here */}
-                    <div className="flex w-full mt-2 px-2">
-                        {about ?
-                            <p className="text-sm">
-                                {about}
-                            </p> :
-                            <p className="text-sm text-gray-400"> {accountType === 'Business' ? 'Intro' : 'About'}</p>
-                        }
-                    </div>
+
                     {accountType === "Business" && (
                         <div className="flex w-full mt-2 px-2 " onClick={handleShowBusinessCard}>
                             <p className="text-xs no-underline hover:underline text-indigo-600 cursor-pointer">
-                                Virtual Business Card
+                                Contact details
                             </p>
                         </div>
                     )}

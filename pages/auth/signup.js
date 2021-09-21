@@ -328,7 +328,7 @@ const Signup = () => {
 					</svg>
 				</span> */}
 			</div>
-			{
+			{/* {
 				showModal && (
 					<Modal
 						title={'Terms and Conditions'}
@@ -357,7 +357,7 @@ const Signup = () => {
 						handleCancel={_Cancel}
 					/>
 				)
-			}
+			} */}
 			<Footer logo={logo} />
 		</div>
 	)

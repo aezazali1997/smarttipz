@@ -12,7 +12,7 @@ const Testimonial = sequelize.define('Testimonial', {
     type: DataTypes.STRING
   },
   description: {
-    type: DataTypes.STRING(500)
+    type: DataTypes.STRING(700)
   },
   picture: {
     type: DataTypes.STRING,

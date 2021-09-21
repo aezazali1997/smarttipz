@@ -1,3 +1,4 @@
+import { max } from "lodash";
 import * as Yup from "yup";
 
 export const SignupSchema = Yup.object().shape({
@@ -97,6 +98,7 @@ export const TestimonialFormSchema = Yup.object().shape({
         .required('This is a required field'),
     description: Yup.string()
         .required('This is a required field'),
+
 });
 
 export const AccountInfoValidationSchema = Yup.object().shape({

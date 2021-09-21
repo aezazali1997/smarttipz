@@ -5,11 +5,11 @@ import axios from 'axios';
 import { Helmet } from 'react-helmet';
 import cookie from 'js-cookie';
 import { parseCookies } from 'nookies';
+import { isEmpty } from 'lodash';
 import { UseFetchProfile } from 'hooks';
 import videos from 'utils/VdeoSchema.json';
 import { Button, Card, PopupBusinessCard, ProfileCard, Rating, Spinner, TestimonialCard } from 'components';
 import { AddTestimonialModal, EditTestimonialModal } from 'components/Modals';
-import { isEmpty } from 'lodash';
 
 const Profile = ({ profile }) => {
 
@@ -76,6 +76,14 @@ const Profile = ({ profile }) => {
                                     />
                                     &nbsp; <p className="text-xs"> Rating</p></span>
                             </div>
+                            <div className="flex w-full mt-2 px-2">
+                                {about ?
+                                    <p className="text-sm text-justify break-words md:max-w-xs">
+                                        {about}
+                                    </p> :
+                                    <p className="text-sm text-gray-400"> {accountType === 'Business' ? 'Intro' : 'About'}</p>
+                                }
+                            </div>
                         </div>
                         {
 
@@ -96,18 +104,11 @@ const Profile = ({ profile }) => {
                         </div>
                     </div>
                     {/* section ends here */}
-                    <div className="flex w-full mt-2 px-2">
-                        {about ?
-                            <p className="text-sm">
-                                {about}
-                            </p> :
-                            <p className="text-sm text-gray-400"> {accountType === 'Business' ? 'Intro' : 'About'}</p>
-                        }
-                    </div>
+
                     {accountType === "Business" && (
                         <div className="flex w-full mt-2 px-2 " onClick={handleShowBusinessCard}>
                             <p className="text-xs font-medium no-underline hover:underline text cursor-pointer">
-                                Virtual Business Card
+                                Contact details
                             </p>
                         </div>
                     )}

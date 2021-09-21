@@ -85,7 +85,7 @@ const Setting = ({ settings }) => {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                           <ReactTooltip id="showName" place="top" effect="solid" border={false} borderColor="white" clickable={false}>
-                            {showName ? 'Click to hide name' : 'Click to show name'}
+                            {showName ? 'Click to hide name in profile' : 'Click to display name in profile'}
                           </ReactTooltip>
                         </span>
                         <div className="relative inline-block w-10 mr-2 self-center select-none transition duration-200 ease-in">
@@ -122,7 +122,7 @@ const Setting = ({ settings }) => {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                           <ReactTooltip id="showUsername" place="top" effect="solid" border={false} borderColor="white" clickable={false}>
-                            {showUsername ? 'Click to hide username' : 'Click to show username'}
+                            {showUsername ? 'Click to hide username in profile' : 'Click to display username in profile'}
                           </ReactTooltip>
                         </span>
                         <div className="relative inline-block w-10 mr-2 self-center select-none transition duration-200 ease-in">
@@ -193,7 +193,7 @@ const Setting = ({ settings }) => {
                     autoComplete="off" />
                   <label
                     htmlFor="about"
-                    className="absolute top-0 left-0 px-2 py-3 h-full pointer-events-none transform origin-left transition-all duration-100 ease-in-out ">
+                    className="absolute top-0 left-0 px-2 py-3 h-full text-sm pointer-events-none transform origin-left transition-all duration-100 ease-in-out ">
                     {accountType === "Business" ? 'Business Intro' : 'About me'}
                   </label>
                 </div>
@@ -263,7 +263,7 @@ const Setting = ({ settings }) => {
                 />
               </div>
               <div className={accountType === 'Business' ? "flex flex-col space-y-2" : "hidden"}>
-                <h1 className="text-lg font-semibold">Virtual Business Card</h1>
+                <h1 className="text-lg font-semibold">Contact Details</h1>
                 <BusinessCard
                   image={imageUrl}
                   phone={phone}
