@@ -2,11 +2,12 @@ import axiosInstance from 'APIs/axiosInstance';
 import { useFormik } from 'formik';
 import { useS3Upload } from 'next-s3-upload';
 import React, { useEffect, useState } from 'react'
-import { TestimonialFormSchema } from 'utils/validation_shema';
+import { RequestTestimonialFormSchema } from 'utils/validation_shema';
 import Swal from 'sweetalert2';
+import swal from 'sweetalert';
 
 const initial = {
-    ownerName: '', designation: '', description: ''
+    email: ''
 };
 
 const UseFetchProfile = (profile) => {
@@ -21,7 +22,8 @@ const UseFetchProfile = (profile) => {
     const [imageUrl, setImageUrl] = useState('');
     const [testimonial, setTestimonial] = useState([]);
     const [showModal, setShowModal] = useState(false);
-    const [modalTitle, setModalTitle] = useState('Add Testimonial');
+    const [showRequestTestimonial, setShowRequestTestimonial] = useState(false);
+    // const [modalTitle, setModalTitle] = useState('Add Testimonial');
     const [initialValues, setInitialValues] = useState(initial);
 
     let { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
@@ -73,17 +75,36 @@ const UseFetchProfile = (profile) => {
     };
 
     const _AddTestimonial = () => {
-        setModalTitle('Add Testimonial');
-        setInitialValues(initial);
-        setImageUrl('');
-        setShowModal(true);
+        setShowRequestTestimonial(!showRequestTestimonial);
+
+        // setModalTitle('Add Testimonial');
+        // setInitialValues(initial);
+        // setImageUrl('');
+        // setShowModal(true);
     }
 
-    const _EditTestimonial = (data) => {
-        setModalTitle('Edit Testimonial');
-        setInitialValues(data);
-        setImageUrl(data?.picture);
-        setShowModal(true);
+    const _EditTestimonial = (id, isVisible) => {
+        console.log(id, isVisible)
+
+        axiosInstance.updateTestimonial({ id, isVisible }).then(({ data: { data, message } }) => {
+            console.log('success: ', message);
+            const CopyOriginalArray = [...testimonial];
+            let updatedArray = CopyOriginalArray.map((item, index) => {
+                if (item.id !== id) return item;
+                else {
+                    item.isVisible = !isVisible;
+                    return item;
+                }
+            })
+            setTestimonial(updatedArray);
+
+        }).catch(({ data: { message } }) => {
+            console.log('error: ', message);
+        })
+        // setModalTitle('Edit Testimonial');
+        // setInitialValues(data);
+        // setImageUrl(data?.picture);
+        // setShowModal(true);
     }
 
     const _DeleteTestimonial = (data) => {
@@ -155,56 +176,73 @@ const UseFetchProfile = (profile) => {
     const formik = useFormik({
         enableReinitialize: true,
         initialValues,
-        validationSchema: TestimonialFormSchema,
+        validationSchema: RequestTestimonialFormSchema,
         validateOnBlur: true,
-        onSubmit: (res, { resetForm }) => {
+        onSubmit: ({ email }, { resetForm }) => {
             enableLoading();
             setTimeout(() => {
-                const payload = {
-                    ownerName: res.ownerName,
-                    designation: res.designation,
-                    description: res.description,
-                    picture: imageUrl
-                };
-                if (modalTitle === 'Add Testimonial') {
-                    axiosInstance.addTestimonial(payload).then(() => {
-                        let copyTestimonial = [...testimonial];
-                        let newArray = [payload, ...copyTestimonial];
-                        setTestimonial(newArray);
-                        disableLoading();
-                        resetForm(initial)
-                        setImageUrl('');
-                        handleShowModal();
-                    }).catch(e => {
-                        console.log('Error in Api Testimonial: ', e.response.data.message);
-                        disableLoading();
+                axiosInstance.requestTestimonial({ email }).then(({ data: { message } }) => {
+                    swal({
+                        text: message,
+                        icon: 'success',
+                        buttons: false,
+                        timer: 3000
                     })
-                }
-                else if (modalTitle === 'Edit Testimonial') {
-                    payload.id = res.id;
-                    axiosInstance.updateTestimonial(payload).then(() => {
-                        let copyTestimonial = [...testimonial];
-                        let newArray = copyTestimonial.map((item) => {
-                            if (item.id !== payload?.id) return item;
-                            else {
-                                const { ownerName, designation, description, picture } = payload;
-                                item.ownerName = ownerName;
-                                item.designation = designation;
-                                item.description = description;
-                                item.picture = picture;
-                                return item;
-                            }
-                        });
-                        setTestimonial(newArray);
-                        disableLoading();
-                        resetForm(initial)
-                        setImageUrl('');
-                        handleShowModal();
-                    }).catch(e => {
-                        console.log('Error in Api Testimonial: ', e.response.data.message);
-                        disableLoading();
+                    disableLoading()
+                }).catch(({ response: { data: { message } } }) => {
+                    swal({
+                        text: message,
+                        icon: 'error',
+                        buttons: false,
+                        timer: 3000
                     })
-                }
+                    disableLoading()
+                })
+                // const payload = {
+                //     ownerName: res.ownerName,
+                //     designation: res.designation,
+                //     description: res.description,
+                //     picture: imageUrl
+                // };
+                // if (modalTitle === 'Add Testimonial') {
+                //     axiosInstance.addTestimonial(payload).then(() => {
+                //         let copyTestimonial = [...testimonial];
+                //         let newArray = [payload, ...copyTestimonial];
+                //         setTestimonial(newArray);
+                //         disableLoading();
+                //         resetForm(initial)
+                //         setImageUrl('');
+                //         handleShowModal();
+                //     }).catch(e => {
+                //         console.log('Error in Api Testimonial: ', e.response.data.message);
+                //         disableLoading();
+                //     })
+                // }
+                // else if (modalTitle === 'Edit Testimonial') {
+                //     payload.id = res.id;
+                //     axiosInstance.updateTestimonial(payload).then(() => {
+                //         let copyTestimonial = [...testimonial];
+                //         let newArray = copyTestimonial.map((item) => {
+                //             if (item.id !== payload?.id) return item;
+                //             else {
+                //                 const { ownerName, designation, description, picture } = payload;
+                //                 item.ownerName = ownerName;
+                //                 item.designation = designation;
+                //                 item.description = description;
+                //                 item.picture = picture;
+                //                 return item;
+                //             }
+                //         });
+                //         setTestimonial(newArray);
+                //         disableLoading();
+                //         resetForm(initial)
+                //         setImageUrl('');
+                //         handleShowModal();
+                //     }).catch(e => {
+                //         console.log('Error in Api Testimonial: ', e.response.data.message);
+                //         disableLoading();
+                //     })
+                // }
             }, 1000);
         },
     });
@@ -212,8 +250,8 @@ const UseFetchProfile = (profile) => {
 
     return {
         followed, followers, showModal, businessCard, showBusinessCard, formik, imageUrl, loading, testimonial, uploading,
-        modalTitle, loadingTestimonial, _AddTestimonial, handleShowBusinessCard, _EditTestimonial, _DeleteImg, handleFileChange,
-        FileInput, openFileDialog, handleShowModal, _DeleteTestimonial
+        loadingTestimonial, _AddTestimonial, handleShowBusinessCard, _EditTestimonial, _DeleteImg, handleFileChange,
+        FileInput, openFileDialog, handleShowModal, _DeleteTestimonial, showRequestTestimonial
     }
 }
 

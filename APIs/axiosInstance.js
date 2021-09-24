@@ -6,9 +6,8 @@ class AxiosInstance {
 
     getUserInfo() {
         const cookie = parseCookies();
-
         let token = cookie?.token || null;
-        console.log('token', token);
+        // console.log('token', token);
         return token;
     }
 
@@ -82,6 +81,7 @@ class AxiosInstance {
     }
 
     async updateTestimonial(data) {
+        console.log('API:', data)
         return await axios.put(USER_API_BASE_URL + "api/profile/testimonial", data, this.getAuthHeader());
     }
 
@@ -118,6 +118,11 @@ class AxiosInstance {
     async removeProfilePic() {
         console.log('In delete ProfilePic Api')
         return await axios.delete(USER_API_BASE_URL + "api/profile/deletepic", this.getAuthHeader());
+    }
+
+    async requestTestimonial(data) {
+        console.log('In request Testimonial Api: ', data);
+        return await axios.post(USER_API_BASE_URL + "api/profile/testimonial/request", data, this.getAuthHeader());
     }
 
 

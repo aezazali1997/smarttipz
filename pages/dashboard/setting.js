@@ -7,7 +7,7 @@ import ReactTooltip from 'react-tooltip';
 // import profile from '../../public/profile.jpg';
 import { getInputClasses } from 'helpers';
 import { UseFetchSetting } from 'hooks';
-import { AccountSetting, BusinessCard, Button, PhoneInput, InputField } from 'components';
+import { AccountSetting, BusinessCard, Button, PhoneInput, InputField, Switch } from 'components';
 
 const Setting = ({ settings }) => {
 
@@ -88,17 +88,13 @@ const Setting = ({ settings }) => {
                             {showName ? 'Click to hide name in profile' : 'Click to display name in profile'}
                           </ReactTooltip>
                         </span>
-                        <div className="relative inline-block w-10 mr-2 self-center select-none transition duration-200 ease-in">
-                          <input
-                            checked={showName}
-                            onChange={_OnChange}
-                            type="checkbox"
-                            name="showName"
-                            id="showName"
-                            className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" />
-                          <label htmlFor="showName" className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                        </div>
-                      </div>)}
+                        <Switch
+                          name={'showName'}
+                          checked={showName}
+                          onChange={_OnChange}
+                        />
+                      </div>
+                    )}
                 </div>
                 <div className="flex w-full justify-between space-x-3">
                   <InputField
@@ -125,16 +121,11 @@ const Setting = ({ settings }) => {
                             {showUsername ? 'Click to hide username in profile' : 'Click to display username in profile'}
                           </ReactTooltip>
                         </span>
-                        <div className="relative inline-block w-10 mr-2 self-center select-none transition duration-200 ease-in">
-                          <input
-                            checked={showUsername}
-                            onChange={_OnChange}
-                            type="checkbox"
-                            name="showUsername"
-                            id="showUsername"
-                            className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" />
-                          <label htmlFor="showUsername" className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                        </div>
+                        <Switch
+                          name={'showUserName'}
+                          checked={showUsername}
+                          onChange={_OnChange}
+                        />
                       </div>)}
                 </div>
                 <InputField
@@ -167,16 +158,11 @@ const Setting = ({ settings }) => {
                         {showPhone ? 'Click to hide number' : 'Click to show number'}
                       </ReactTooltip>
                     </span>
-                    <div className="relative inline-block w-10 mr-2 self-center select-none transition duration-200 ease-in">
-                      <input
-                        checked={showPhone}
-                        onChange={_OnChange}
-                        type="checkbox"
-                        name="showPhone"
-                        id="showPhone"
-                        className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" />
-                      <label htmlFor="showPhone" className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                    </div>
+                    <Switch
+                      name={'showPhone'}
+                      checked={showPhone}
+                      onChange={_OnChange}
+                    />
                   </div>
                 </div>
                 <div className='floating-input relative'>
@@ -224,16 +210,11 @@ const Setting = ({ settings }) => {
                         {accessible ? 'Click to disable messages' : 'Click to enable messages'}
                       </ReactTooltip>
                     </span>
-                    <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-                      <input
-                        checked={accessible}
-                        onChange={_OnChange}
-                        type="checkbox"
-                        name="accessible"
-                        id="accessible"
-                        className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" />
-                      <label htmlFor="accessible" className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                    </div>
+                    <Switch
+                      name={'accessible'}
+                      checked={accessible}
+                      onChange={_OnChange}
+                    />
                   </div>
                 </div>
               </div>

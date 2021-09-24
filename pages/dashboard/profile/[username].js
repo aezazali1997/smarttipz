@@ -276,14 +276,16 @@ const UserProfile = ({ profile }) => {
                                     :
                                     <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
                                         {
-                                            testimonials.map(({ picture, description, designation, ownerName }) => (
-                                                <TestimonialCard
-                                                    image={picture}
-                                                    name={ownerName}
-                                                    designation={designation}
-                                                    description={description}
-                                                    otherUser={true}
-                                                />
+                                            testimonials.map(({ picture, description, designation, ownerName, isVisible }) => (
+                                                isVisible && (
+                                                    <TestimonialCard
+                                                        image={picture}
+                                                        name={ownerName}
+                                                        designation={designation}
+                                                        description={description}
+                                                        otherUser={true}
+                                                    />
+                                                )
                                             ))
                                         }
                                     </div>

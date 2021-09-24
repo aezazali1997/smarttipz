@@ -42,6 +42,7 @@ const handler = async (req, res) => {
         designation: Joi.string().required(),
         description: Joi.string().required(),
         picture: Joi.string().optional().allow(''),
+        username: Joi.string().required()
       });
       return schema.validate(data);
     };
@@ -52,20 +53,19 @@ const handler = async (req, res) => {
       return res.status(400).json({ error: true, message: error.details[0].message, data: [] });
 
     try {
-      if (!req.headers.authorization) {
-        return res.status(401).json({ error: true, data: [], message: 'Please Login' });
-      }
-      const { username } = jwt.verify(
-        req.headers.authorization.split(' ')[1],
-        process.env.SECRET_KEY
-      );
+      // if (!req.headers.authorization) {
+      //   return res.status(401).json({ error: true, data: [], message: 'Please Login' });
+      // }
+      // const { username } = jwt.verify(
+      //   req.headers.authorization.split(' ')[1],
+      //   process.env.SECRET_KEY
+      // );
+      const { ownerName, description, designation, picture, username } = req.body;
 
       const user = await User.findOne({ where: { username, accountType: "Business" } });
       if (!user) {
         return res.status(404).json({ error: true, data: [], message: 'No user found' });
       }
-
-      const { ownerName, description, designation, picture } = req.body;
 
       const business = await user.getBusiness();
 
@@ -78,7 +78,7 @@ const handler = async (req, res) => {
     }
   }
   else if (req.method === 'PUT') {
-    const { body, headers } = req;
+    const { body, body: { id, isVisible }, headers } = req;
     try {
       if (!headers.authorization) {
         return res.status(401).send({ error: true, data: [], message: 'Please Login' })
@@ -93,21 +93,28 @@ const handler = async (req, res) => {
       }
 
       console.log('body: ', body);
-      const { ownerName, designation, description, picture, id } = body;
+      // const { ownerName, designation, description, picture, id } = body;
+
+      // const testimonial = await Testimonial.findOne({ where: { id } });
+
+      // if (!testimonial) {
+      //   return res.status(404).send({ error: true, data: [], message: 'No testimonial found' })
+      // }
+
+      // await testimonial.update({
+      //   id,
+      //   username,
+      //   ownerName,
+      //   designation,
+      //   description,
+      //   picture
+      // });
 
       const testimonial = await Testimonial.findOne({ where: { id } });
-
-      if (!testimonial) {
-        return res.status(404).send({ error: true, data: [], message: 'No testimonial found' })
-      }
-
       await testimonial.update({
         id,
         username,
-        ownerName,
-        designation,
-        description,
-        picture
+        isVisible: !isVisible
       });
       res.status(200).send({ error: false, message: 'Testimonial Updated successfully', data: [] });
 

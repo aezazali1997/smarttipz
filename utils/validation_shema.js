@@ -1,6 +1,15 @@
 import { max } from "lodash";
 import * as Yup from "yup";
 
+
+const Email = (requiredText) => {
+    return Yup.string()
+        .email("Wrong email format")
+        .min(3, "Minimum 3 characters")
+        .max(50, "Maximum 50 characters")
+        .required(requiredText)
+}
+
 export const SignupSchema = Yup.object().shape({
     name: Yup.string()
         .min(3, "Please enter at least 3 characters")
@@ -21,12 +30,7 @@ export const SignupSchema = Yup.object().shape({
     //     }),
     website: Yup.string().url().required("Business Website address is a required field"),
 
-    email: Yup.string()
-        .email("Wrong email format")
-        .min(3, "Minimum 3 characters")
-        .max(50, "Maximum 50 characters")
-        .required('Business Email is a required field'),
-
+    email: Email('Business Email is a required field'),
     // phone: Yup.string().required()
     //     .min(11, "Minimum 11 characters"),
 
@@ -44,12 +48,7 @@ export const PersonalSignupSchema = Yup.object().shape({
         .min(3, "Please enter at least 3 characters")
         .required("Username is a required field"),
 
-    email: Yup.string()
-        .email("Wrong email format")
-        .min(3, "Minimum 3 characters")
-        .max(50, "Maximum 50 characters")
-        .required('Email is a required field'),
-
+    email: Email('Email is a required field'),
     // phone: Yup.string().required()
     //     .min(11, "Minimum 11 characters"),
 
@@ -61,8 +60,7 @@ export const PersonalSignupSchema = Yup.object().shape({
 
 export const LoginSchema = Yup.object().shape({
     checked: Yup.boolean(),
-    email: Yup.string().email()
-        .required("Email is a required field"),
+    email: Email('Email is a required field'),
     password: Yup.string()
         .min(3, "Minimum 3 characters")
         .max(50, "Maximum 50 characters")
@@ -70,11 +68,7 @@ export const LoginSchema = Yup.object().shape({
 });
 
 export const ForgetPasswordSchema = Yup.object().shape({
-    email: Yup.string()
-        .email("Wrong email format")
-        .min(3, "Minimum 3 characters")
-        .max(50, "Maximum 50 characters")
-        .required('Email is a required field'),
+    email: Email('Email is a required field'),
 });
 
 export const AuthenticateSchema = Yup.object().shape({
@@ -91,7 +85,11 @@ export const AuthenticateSchema = Yup.object().shape({
     tab6: Yup.string()
         .required(''),
 });
-export const TestimonialFormSchema = Yup.object().shape({
+export const RequestTestimonialFormSchema = Yup.object().shape({
+    email: Email('Email is a required field')
+});
+
+export const AddTestimonialFormSchema = Yup.object().shape({
     ownerName: Yup.string()
         .required("This is a required field"),
     designation: Yup.string()
