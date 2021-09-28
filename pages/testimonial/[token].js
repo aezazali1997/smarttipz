@@ -11,7 +11,7 @@ import axiosInstance from 'APIs/axiosInstance';
 import swal from 'sweetalert';
 
 
-const RequestTestimonial = ({ id, username }) => {
+const RequestTestimonial = ({ ownerEmail, username }) => {
 
     const router = useRouter();
 
@@ -64,6 +64,7 @@ const RequestTestimonial = ({ id, username }) => {
                 const payload = {
                     username,
                     ownerName: res.ownerName,
+                    ownerEmail,
                     designation: res.designation,
                     description: res.description,
                     picture: imageUrl
@@ -159,11 +160,11 @@ const RequestTestimonial = ({ id, username }) => {
 export const getServerSideProps = async (context) => {
     const { query: { token } } = context;
     try {
-        const { data: { data: { id, username } } } = await axios.post(`${process.env.BASE_URL}api/profile/testimonial/verify`, { token })
+        const { data: { data: { ownerEmail, username } } } = await axios.post(`${process.env.BASE_URL}api/profile/testimonial/verify`, { token })
         return {
             props: {
-                id: id,
-                username: username
+                ownerEmail,
+                username
             }
         }
     }

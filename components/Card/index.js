@@ -2,11 +2,12 @@
 import { Rating } from 'components';
 import React from 'react'
 // import Image from 'next/image';
+import ReactTooltip from 'react-tooltip';
 
 const Card = ({ image, like, comment, share, title, views, rating }) => {
     return (
         <div className="px-1">
-            <div className="max-w-sm overflow-hidden cursor-pointer">
+            <div className="max-w-sm overflow-hidden">
                 <img className="w-full rounded-lg"
                     src={image} alt="Sunset in the mountains" layout="fill" />
                 <div className="py-2 flex flex-row justify-between space-x-2">
@@ -16,7 +17,6 @@ const Card = ({ image, like, comment, share, title, views, rating }) => {
                             <svg xmlns="http://www.w3.org/2000/svg" width="11.825" height="11.825" viewBox="0 0 11.825 11.825">
                                 <path id="Icon_awesome-thumbs-up" data-name="Icon awesome-thumbs-up" d="M2.4,5.173H.554A.554.554,0,0,0,0,5.728v5.543a.554.554,0,0,0,.554.554H2.4a.554.554,0,0,0,.554-.554V5.728A.554.554,0,0,0,2.4,5.173ZM1.478,10.9a.554.554,0,1,1,.554-.554A.554.554,0,0,1,1.478,10.9Zm7.391-9.02c0,.98-.6,1.529-.769,2.184H10.45a1.38,1.38,0,0,1,1.375,1.342,1.672,1.672,0,0,1-.449,1.136l0,0a1.929,1.929,0,0,1-.215,1.835,1.826,1.826,0,0,1-.378,1.727,1.226,1.226,0,0,1-.142,1.031c-.471.677-1.64.687-2.628.687H7.945a6.63,6.63,0,0,1-2.761-.733,3.635,3.635,0,0,0-1.216-.374.277.277,0,0,1-.272-.277V5.5a.277.277,0,0,1,.082-.2C4.692,4.4,5.086,3.446,5.836,2.7a2.8,2.8,0,0,0,.586-1.36C6.525.908,6.74,0,7.206,0,7.76,0,8.869.185,8.869,1.881Z" fill="#714de1" />
                             </svg>&nbsp;<p className="text-xs">{like}</p>
-
                         </span>
                         <span className="flex flex-row w-full items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" width="11.824" height="11.825" viewBox="0 0 11.824 11.825">
@@ -45,6 +45,20 @@ const Card = ({ image, like, comment, share, title, views, rating }) => {
                         />
                         &nbsp; <p className="text-xs"> Rating</p></span>
                 </div>
+                <span className="flex justify-end pt-1">
+                    <div data-tip data-for="disclaimer" className="text flex justify-end w-40 font-sans hover:underline cursor-pointer">
+                        Disclaimer
+                    </div>
+                    <ReactTooltip className="max-w-md break-words" id="disclaimer" place="top" effect="solid" border={false} borderColor="white" clickable={false}>
+                        Although the information contained in these
+                        videos has been produced and processed from sources believed to be
+                        reliable, no warranty, expressed or implied, is made regarding
+                        accuracy, adequacy, completeness, legality, reliability or usefulness of
+                        the information. Any reliance you place on such information is
+                        therefore strictly at your own risk
+                    </ReactTooltip>
+                </span>
+
             </div>
         </div>
     )

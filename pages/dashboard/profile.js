@@ -8,16 +8,17 @@ import { parseCookies } from 'nookies';
 import { isEmpty } from 'lodash';
 import { UseFetchProfile } from 'hooks';
 import videos from 'utils/VdeoSchema.json';
-import { Button, Card, InputField, PopupBusinessCard, ProfileCard, Rating, Spinner, TestimonialCard } from 'components';
+import { Button, Card, CustomLoader, InputField, PopupBusinessCard, ProfileCard, Rating, Spinner, TestimonialCard } from 'components';
 // import { AddTestimonialModal, EditTestimonialModal } from 'components/Modals';
 import { getInputClasses } from 'helpers';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const Profile = ({ profile }) => {
 
   const { showBusinessCard, followed, followers, businessCard, formik, imageUrl, loading, testimonial, showModal,
     uploading, modalTitle, loadingTestimonial, handleShowBusinessCard, FileInput, handleFileChange, _DeleteImg,
     openFileDialog, _AddTestimonial, handleShowModal, _EditTestimonial, _DeleteTestimonial, showRequestTestimonial
-  } = UseFetchProfile(profile);
+    , filteredTestimonial, fetchMoreData, hasMore } = UseFetchProfile(profile);
   const { name, about, rating, views, picture, phone, email, accountType, username, showUsername, showName
   } = profile;
   const { website } = businessCard;
@@ -229,31 +230,57 @@ const Profile = ({ profile }) => {
                 </div>
               )
                 :
-                isEmpty(testimonial) ? (
+                isEmpty(filteredTestimonial) ? (
                   <div className="flex w-full justify-center items-center">
                     <p className="text-gray-500"> No Testimonials Yet</p>
                   </div>
                 )
                   :
-                  <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
-                    {
-                      testimonial.map(({ id, picture, ownerName, designation, description, isVisible }, index) => (
-                        <div key={index}>
-                          <TestimonialCard
-                            _Toggle={() => _EditTestimonial(id, isVisible)}
-                            // _Edit={_EditTestimonial}
-                            // _Delete={_DeleteTestimonial}
-                            image={picture}
-                            name={ownerName}
-                            designation={designation}
-                            description={description}
-                            checked={isVisible}
-                          // data={res}
-                          />
-                        </div>
-                      ))
+                  <InfiniteScroll
+                    dataLength={filteredTestimonial?.length} //This is important field to render the next data
+                    next={fetchMoreData}
+                    hasMore={hasMore}
+                    loader={(
+                      <div className="flex justify-center items-center w-full">
+                        <CustomLoader />
+                      </div>
+                    )}
+                    endMessage={
+                      <p style={{ textAlign: 'center' }}>
+                        <b>Yay! You have seen it all</b>
+                      </p>
                     }
-                  </div>
+                  // below props only if you need pull down functionality
+                  // refreshFunction={this.refresh}
+                  // pullDownToRefresh
+                  // pullDownToRefreshThreshold={50}
+                  // pullDownToRefreshContent={
+                  //   <h3 style={{ textAlign: 'center' }}>&#8595; Pull down to refresh</h3>
+                  // }
+                  // releaseToRefreshContent={
+                  //   <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
+                  // }
+                  >
+                    <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
+                      {
+                        filteredTestimonial.map(({ id, picture, ownerName, designation, description, isVisible }, index) => (
+                          <div key={index}>
+                            <TestimonialCard
+                              _Toggle={() => _EditTestimonial(id, isVisible)}
+                              // _Edit={_EditTestimonial}
+                              // _Delete={_DeleteTestimonial}
+                              image={picture}
+                              name={ownerName}
+                              designation={designation}
+                              description={description}
+                              checked={isVisible}
+                            // data={res}
+                            />
+                          </div>
+                        ))
+                      }
+                    </div>
+                  </InfiniteScroll>
             }
           </div>
         </div>

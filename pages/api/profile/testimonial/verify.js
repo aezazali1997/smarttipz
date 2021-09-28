@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash';
+import _, { isEmpty } from 'lodash';
 
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
@@ -13,19 +13,19 @@ const handler = async (req, res) => {
 
         try {
 
-            const { username, id } = jwt.verify(
+            const { username, ownerEmail } = jwt.verify(
                 token,
                 process.env.SECRET_KEY
             );
-            console.log('here', username, id);
+            console.log('here', username, ownerEmail);
 
-            const data = await Testimonial.findOne({ attributes: ['token'], where: { username, } });
-            console.log('here: ', data, data && _.isEqual(data, token));
-            if (data && _.isEqual(data, token)) {
+            const data = await Testimonial.findOne({ attributes: ['ownerEmail'], where: { username, ownerEmail } });
+            // console.log('here: ', data, data && _.isEqual(data, token));
+            if (data) {
                 return res.status(400).send({ error: true, message: 'You have already reviewed', data: [] });
             }
             else {
-                return res.status(200).send({ error: false, message: '', data: { id, username } });
+                return res.status(200).send({ error: false, message: '', data: { username, ownerEmail } });
             }
         }
         catch (err) {

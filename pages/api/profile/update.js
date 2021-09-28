@@ -25,7 +25,8 @@ const handler = async (req, res) => {
         return res.status(404).send({ error: true, data: [], message: 'No data passed to server' })
       }
 
-      const { about, name, email, accessible, accountType, phone, picture, views, rating, showPhone, showUsername, showName } = data
+      const { about, name, email, accessible, accountType, phone, picture, views, rating, showPhone,
+        showUsername, showName, tip } = data
 
       const user = await User.findOne({ where: { username } });
 
@@ -46,7 +47,8 @@ const handler = async (req, res) => {
         showUsername,
         showName,
         accessible,
-        accountType
+        accountType,
+        tip
       });
 
       if (accountType === 'Business') {

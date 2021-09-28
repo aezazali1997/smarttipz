@@ -8,6 +8,9 @@ const Testimonial = sequelize.define('Testimonial', {
   ownerName: {
     type: DataTypes.STRING
   },
+  ownerEmail: {
+    type: DataTypes.STRING
+  },
   designation: {
     type: DataTypes.STRING
   },

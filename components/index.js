@@ -3,6 +3,7 @@ export { default as Badge } from './Badge';
 export { default as Select } from './Select';
 export { default as Switch } from './Switch';
 export { default as Spinner } from './Spinner';
+export { default as CustomLoader } from './customLoader';
 export { default as InputField } from './InputField';
 export { default as PhoneInput } from './CodePhone';
 export { default as Rating } from './RatingStar';

@@ -84,6 +84,10 @@ const User = sequelize.define('User', {
     type: DataTypes.BOOLEAN,
     defaultValue: true
   },
+  tip: {
+    type: DataTypes.INTEGER,
+    defaultValue: 1
+  },
   createdBy: {
     type: DataTypes.INTEGER
   },

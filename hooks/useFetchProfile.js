@@ -20,7 +20,9 @@ const UseFetchProfile = (profile) => {
     const [uploading, setUploading] = useState(false);
     const [loadingTestimonial, setLoadingTestimonial] = useState(true);
     const [imageUrl, setImageUrl] = useState('');
+    const [hasMore, setHasMore] = useState(false);
     const [testimonial, setTestimonial] = useState([]);
+    const [filteredTestimonial, setFilteredTestimonial] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [showRequestTestimonial, setShowRequestTestimonial] = useState(false);
     // const [modalTitle, setModalTitle] = useState('Add Testimonial');
@@ -47,17 +49,36 @@ const UseFetchProfile = (profile) => {
                 console.log('Error in Api BusinessCard: ', e.response.data.message);
             })
             axiosInstance.getTestimonial().then(({ data: { data } }) => {
+                const slicedData = data.slice(0, 5);
+                if (data?.length !== slicedData?.length) {
+                    setHasMore(true);
+                };
                 setTestimonial(data);
+                setFilteredTestimonial(slicedData);
                 disableLoadTestimonial();
             }).catch(e => {
                 disableLoadTestimonial();
                 console.log('Error in Api Testimonials: ', e.response.data.message);
             })
-
         }
     }, []);
 
     useEffect(() => { }, [testimonial])
+
+
+    let fetchMoreData = () => {
+        let copyAllTestimonials = [...testimonial];
+        let copyFilteredTestimonials = [...filteredTestimonial];
+        let moreData = copyAllTestimonials.slice(copyFilteredTestimonials?.length, copyFilteredTestimonials?.length + 5)
+        let updatedTestimonials = [...copyAllTestimonials, ...moreData];
+        if (testimonial?.length !== updatedTestimonials?.length) {
+            setHasMore(true);
+        }
+        else {
+            setHasMore(false);
+        }
+        setFilteredTestimonial(updatedTestimonials);
+    }
 
     let handleShowBusinessCard = () => {
         setShowBusinessCard(showBusinessCard => !showBusinessCard)
@@ -188,14 +209,24 @@ const UseFetchProfile = (profile) => {
                         buttons: false,
                         timer: 3000
                     })
-                    disableLoading()
-                }).catch(({ response: { data: { message } } }) => {
-                    swal({
-                        text: message,
-                        icon: 'error',
-                        buttons: false,
-                        timer: 3000
-                    })
+                    _AddTestimonial();
+                    resetForm({ email: '' });
+                    disableLoading();
+                }).catch(({ response: { data: { message }, status } }) => {
+                    status === 404 ?
+                        swal({
+                            text: message,
+                            icon: 'info',
+                            buttons: false,
+                            timer: 3000
+                        })
+                        :
+                        swal({
+                            text: message,
+                            icon: 'error',
+                            buttons: false,
+                            timer: 3000
+                        })
                     disableLoading()
                 })
                 // const payload = {
@@ -251,7 +282,8 @@ const UseFetchProfile = (profile) => {
     return {
         followed, followers, showModal, businessCard, showBusinessCard, formik, imageUrl, loading, testimonial, uploading,
         loadingTestimonial, _AddTestimonial, handleShowBusinessCard, _EditTestimonial, _DeleteImg, handleFileChange,
-        FileInput, openFileDialog, handleShowModal, _DeleteTestimonial, showRequestTestimonial
+        FileInput, openFileDialog, handleShowModal, _DeleteTestimonial, showRequestTestimonial, fetchMoreData, filteredTestimonial,
+        hasMore
     }
 }
 

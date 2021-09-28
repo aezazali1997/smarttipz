@@ -42,7 +42,8 @@ const handler = async (req, res) => {
         designation: Joi.string().required(),
         description: Joi.string().required(),
         picture: Joi.string().optional().allow(''),
-        username: Joi.string().required()
+        username: Joi.string().required(),
+        ownerEmail: Joi.string().email().required()
       });
       return schema.validate(data);
     };
@@ -60,7 +61,7 @@ const handler = async (req, res) => {
       //   req.headers.authorization.split(' ')[1],
       //   process.env.SECRET_KEY
       // );
-      const { ownerName, description, designation, picture, username } = req.body;
+      const { ownerName, description, designation, picture, username, ownerEmail } = req.body;
 
       const user = await User.findOne({ where: { username, accountType: "Business" } });
       if (!user) {
@@ -69,7 +70,7 @@ const handler = async (req, res) => {
 
       const business = await user.getBusiness();
 
-      await Testimonial.create({ username, ownerName, description, designation, picture, BusinessId: business.id });
+      await Testimonial.create({ username, ownerName, description, designation, picture, BusinessId: business.id, ownerEmail });
 
       res.status(201).json({ error: false, message: 'Testimonial Added Successfully', data: [] });
 

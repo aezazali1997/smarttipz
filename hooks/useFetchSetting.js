@@ -20,7 +20,7 @@ const UseFetchSetting = (settings) => {
     const [accountLoading, setAccountLoading] = useState(false);
     const [personalInfo, setPersonalInfo] = useState({
         phone: '', accessible: '', name: '', email: '', showPhone: '', about: '', username: '',
-        accountType: '', showName: '', showUsername: ''
+        accountType: '', showName: '', showUsername: '', tip: ''
     });
     const [updated, setUpdated] = useState(false);
     const [imageUrl, setImageUrl] = useState('');

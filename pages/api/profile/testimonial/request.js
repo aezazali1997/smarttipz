@@ -36,12 +36,17 @@ const handler = async (req, res) => {
                 process.env.SECRET_KEY
             );
 
-            const { id } = await User.findOne({ attributes: ['id'], where: { username } });
+            const { id, name } = await User.findOne({ attributes: ['id', 'name'], where: { username } });
             if (!id) {
                 return res.status(404).json({ error: true, data: [], message: 'No user found' });
             }
 
-            const token = jwt.sign({ id, username }, process.env.SECRET_KEY);
+            let requestedUser = await Testimonial.findAll({ where: { ownerEmail: email } });
+            if (requestedUser) {
+                return res.status(404).send({ error: true, data: [], message: 'User with this email has already added testimonial' })
+            }
+
+            const token = jwt.sign({ username, ownerEmail: email }, process.env.SECRET_KEY);
 
             // await Testimonial.update({ token }, { where: { username: username } })
 
@@ -54,7 +59,7 @@ const handler = async (req, res) => {
                 subject: 'Testimonial Request',
                 templateId: 'd-d2f73fe79778431ba1644a1aa8474f2c',
                 dynamicTemplateData: {
-                    username: username,
+                    username: name,
                     clientToken: token
                 },
             }
