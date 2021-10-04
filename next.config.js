@@ -2,11 +2,11 @@ const prod = process.env.NODE_ENV === 'production';
 module.exports = {
   env: {
     BASE_URL: prod ? 'https://smart-tipz.herokuapp.com/' : 'http://localhost:3000/',
-    HOST: 'chunee.db.elephantsql.com',
-    DB_DATABASE: 'cnjqyhlh',
-    DB_USERNAME: 'cnjqyhlh',
-    DB_PASSWORD: 'UjxgpDUN-LisiJugvQFmDKqzZ7xp3Y3v',
-    DB_PORT: 5432,
+    HOST: 'smart-tipz-db.cglz1r4s1t1g.ap-southeast-1.rds.amazonaws.com',
+    DB_DATABASE: 'postgres',
+    DB_USERNAME: 'postgres',
+    DB_PASSWORD: 'Cipher$1357',
+    DB_PORT: 3306,
     PORT: 3000,
     EMAIL_SECRET: 'atemperaryemailsecretkey',
     SECRET_KEY: 'atemperarysecretkey',
