@@ -39,14 +39,14 @@ const UseFetchProfile = (profile) => {
         axiosInstance.getFollow().then(({ data: { data: { followers, followed } } }) => {
             setFollowed(followed);
             setFollowers(followers);
-        }).catch(e => {
-            console.log(e.response.data.message);
+        }).catch(({ response: { data: { message } } }) => {
+            console.log(message);
         })
         if (accountType === 'Business') {
             axiosInstance.getBusinessCard().then(({ data: { data } }) => {
                 setBusinessCard(data);
-            }).catch(e => {
-                console.log('Error in Api BusinessCard: ', e.response.data.message);
+            }).catch(({ response: { data: { message } } }) => {
+                console.log('Error in Api BusinessCard: ', message);
             })
             axiosInstance.getTestimonial().then(({ data: { data } }) => {
                 const slicedData = data.slice(0, 5);
@@ -56,9 +56,9 @@ const UseFetchProfile = (profile) => {
                 setTestimonial(data);
                 setFilteredTestimonial(slicedData);
                 disableLoadTestimonial();
-            }).catch(e => {
+            }).catch(({ response: { data: { message } } }) => {
                 disableLoadTestimonial();
-                console.log('Error in Api Testimonials: ', e.response.data.message);
+                console.log('Error in Api Testimonials: ', message);
             })
         }
     }, []);
@@ -105,10 +105,7 @@ const UseFetchProfile = (profile) => {
     }
 
     const _EditTestimonial = (id, isVisible) => {
-        console.log(id, isVisible)
-
         axiosInstance.updateTestimonial({ id, isVisible }).then(({ data: { data, message } }) => {
-            console.log('success: ', message);
             const CopyOriginalArray = [...testimonial];
             let updatedArray = CopyOriginalArray.map((item, index) => {
                 if (item.id !== id) return item;
@@ -119,7 +116,7 @@ const UseFetchProfile = (profile) => {
             })
             setTestimonial(updatedArray);
 
-        }).catch(({ data: { message } }) => {
+        }).catch(({ response: { data: { message } } }) => {
             console.log('error: ', message);
         })
         // setModalTitle('Edit Testimonial');

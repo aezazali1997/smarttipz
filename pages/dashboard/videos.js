@@ -17,10 +17,10 @@ const Videos = () => {
 
     let _ChangeFilter = (e) => {
         const { value } = e.target;
-        console.log('value: ', value);
+        // console.log('value: ', value);
         let FilteredVideos =
             value === 'all' ? Videos : Videos.filter(video => video.category === value && (video));
-        console.log('filtered: ', FilteredVideos);
+        // console.log('filtered: ', FilteredVideos);
         setFilter(value);
         setFilterVideos(FilteredVideos)
     }

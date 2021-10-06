@@ -29,7 +29,7 @@ const Messages = () => {
         socket.auth = { username, otherUserID: null };
         socket.connect();
         axiosInstance.threads().then(({ data: { data } }) => {
-            console.log("data", data);
+            // console.log("data", data);
             setUserList(userList => userList = data);
             _DisableLoading(false);
         }).catch(e => {
@@ -50,8 +50,8 @@ const Messages = () => {
                 return item;
             })
             setUserList(copyArray);
-            console.log({ copyArray })
-            console.log("message: ", message);
+            // console.log({ copyArray })
+            // console.log("message: ", message);
         });
 
         socket.on('user disconnected', (userID) => {
@@ -62,17 +62,17 @@ const Messages = () => {
                 return item;
             })
             setUserList(copyArray);
-            console.log({ copyArray })
+            // console.log({ copyArray })
             console.log('user Disconnected')
         });
 
         socket.on('newUser', (res) => {
-            console.log('res', res);
+            // console.log('res', res);
             let copyArray = [...userList];
             copyArray = copyArray.filter(user => user.id !== res.id);
-            console.log({ copyArray });
+            // console.log({ copyArray });
             let updatedArray = [res, ...copyArray]
-            console.log({ updatedArray });
+            // console.log({ updatedArray });
             setUserList(updatedArray);
         })
     }, [userList]);
@@ -83,9 +83,9 @@ const Messages = () => {
                 .then(({ data: { data } }) => {
                     let copyArray = [...userList];
                     copyArray = copyArray.filter(user => user.id !== data.id);
-                    console.log({ copyArray });
+                    // console.log({ copyArray });
                     let updatedArray = [data, ...copyArray]
-                    console.log({ updatedArray });
+                    // console.log({ updatedArray });
                     setUserList(updatedArray);
                 })
                 .catch(e => {

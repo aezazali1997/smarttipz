@@ -32,20 +32,16 @@ const MessageWindow = ({ message, setMessage, selected, goBackToUserList }) => {
     }, [selected])
 
     useEffect(() => {
-        console.log('updated');
         socket.on('recieveMessage', (res) => {
             console.log('res', res);
             let copyArray = [...userMessages];
-            console.log({ copyArray });
             let updatedArray = [...copyArray, res]
-            console.log({ updatedArray });
             setMessages(updatedArray);
             scrollToBottom(messagesEndRef);
         })
     }, [userMessages]);
 
     let handleOnEnter = (text) => {
-        console.log('sentText', text);
         if (text !== '') {
             socket.emit("sendMessage", { message: text, to: selected?.id });
         }

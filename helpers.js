@@ -14,12 +14,10 @@ export const getInputClasses = (formik, fieldname) => {
 export const movetoNext = (e, nextFieldId, prevFieldId) => {
     const { value, maxLength } = e.target;
     if ((e.keyCode === 37 || e.keyCode === 39) && value.length >= maxLength) {
-        console.log('here')
     }
 
     else if (e.keyCode === 8) {
         if (prevFieldId !== null) {
-            console.log('delete');
             document.getElementById(prevFieldId).focus();
         }
     }

@@ -75,7 +75,6 @@ const UseFetchSetting = (settings) => {
     };
 
     let handleFileChange = async file => {
-        console.log(file);
         let { url } = await uploadToS3(file);
         axiosInstance.uploadProfilePic(url)
             .then(({ data: { data: { img } } }) => {
@@ -113,12 +112,10 @@ const UseFetchSetting = (settings) => {
                             :
                             { ...copyOriginal, [name]: checked }
             : { ...copyOriginal, [name]: value });
-        console.log(newObject)
         setPersonalInfo(newObject);
     }
 
     const _ChangeCountryCode = value => {
-        console.log('value: ', value);
         setCountryCode(value)
     }
 

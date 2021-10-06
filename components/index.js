@@ -12,6 +12,8 @@ export { default as Card } from './Card';
 export { default as Tabs } from './Tabs';
 export { default as Modal } from './Modal';
 export { default as Sidebar } from './Sidebar';
+export { default as Dropzone } from './Dropzone';
+export { default as LanguageInput } from './LanguageInput';
 export { default as Drawer } from './Drawer';
 export { default as TestimonialCard } from './TestimonialCard';
 export { default as ChatCard } from './ChatCard';

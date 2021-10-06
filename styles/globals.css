@@ -8,7 +8,9 @@
 @import './messages.module.css';
 @import './businessCard.css';
 @import './customLoader.css';
+@import './dropzone.css';
 @import 'react-phone-input-2/lib/style.css';
+@import "react-languages-select/css/react-languages-select.css";
 
 @tailwind base;
 @tailwind components;
@@ -61,3 +63,30 @@
   color: #714de1;
 }
 
+.danger {
+  color: #FA4343
+}
+
+.warning {
+  color: #FCD34D
+}
+
+.success {
+  color: #34D399
+}
+
+.flag-select {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  vertical-align: inherit;
+  padding-bottom: 5px;
+  border-radius: 5px;
+  border:1px;
+  background:#F9FAFB ;
+  text-align: left;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}

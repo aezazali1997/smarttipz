@@ -46,20 +46,20 @@ const UserMessage = () => {
     }, [id]);
 
     useEffect(() => {
-        console.log('updated');
+        // console.log('updated');
         socket.on('recieveMessage', (res) => {
-            console.log('res', res);
+            // console.log('res', res);
             let copyArray = [...messageList];
-            console.log({ copyArray });
+            // console.log({ copyArray });
             let updatedArray = [...copyArray, res]
-            console.log({ updatedArray });
+            // console.log({ updatedArray });
             setMessageList(updatedArray);
             scrollToBottom(messagesEndRef);
         })
     }, [messageList]);
 
     let handleOnEnter = (text) => {
-        console.log('enter', text)
+        // console.log('enter', text)
         if (text !== '') {
             socket.emit("sendMessage", { message: text, to: ID });
         }

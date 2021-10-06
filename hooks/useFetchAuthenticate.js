@@ -66,11 +66,9 @@ const UseFetchAuthenticate = () => {
                         varificationCode: `${tab1}${tab2}${tab3}${tab4}${tab5}${tab6}`,
                         OTPToken: localStorage.getItem('otpToken')
                     }
-                    console.log(data);
                     axiosInstance.authenticate(data)
                         .then(({ data: { error, data: { token, username, image, id }, message } }) => {
                             disableLoading();
-                            console.log(message, error, data);
                             swal({
                                 text: message,
                                 buttons: false,
@@ -85,11 +83,11 @@ const UseFetchAuthenticate = () => {
                             localStorage.removeItem('otpToken');
                             router.push('/dashboard/profile');
                         })
-                        .catch((e) => {
-                            console.log('Error', e)
+                        .catch(({ reponse: { data: { message } } }) => {
+                            console.log('Error', message)
                             disableLoading();
                             swal({
-                                text: e.response.data.message,
+                                text: message,
                                 buttons: false,
                                 dangerMode: true,
                                 timer: 3000,

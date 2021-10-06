@@ -7,7 +7,6 @@ class AxiosInstance {
     getUserInfo() {
         const cookie = parseCookies();
         let token = cookie?.token || null;
-        // console.log('token', token);
         return token;
     }
 
@@ -45,7 +44,6 @@ class AxiosInstance {
     }
 
     async getSpecificprofile(username) {
-        console.log("username:", username)
         return await axios.get(USER_API_BASE_URL + `api/profile/${username}`, this.getAuthHeader());
     }
 
@@ -81,12 +79,11 @@ class AxiosInstance {
     }
 
     async updateTestimonial(data) {
-        console.log('API:', data)
         return await axios.put(USER_API_BASE_URL + "api/profile/testimonial", data, this.getAuthHeader());
     }
 
     async deleteTestimonial(id) {
-        console.log('In Delete Testiomonial Api: ', id);
+        console.log('In Delete Testiomonial Api');
         return await axios.delete(USER_API_BASE_URL + `api/profile/testimonial/${id}`, this.getAuthHeader());
     }
 
