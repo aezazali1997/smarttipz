@@ -25,7 +25,7 @@ const TestimonialCard = ({ image, name, designation, description, checked, other
                     <div className="flex flex-col ">
                         <div className="tracking-wide text-md text-black font-semibold">{name}</div>
                         <p className="block text-xs leading-tight text-gray-600">{designation}</p>
-                        <p className=" break-all text-sm text-black whitespace-pre-wrap">{description}</p>
+                        <p className=" break-words text-sm text-black whitespace-pre-wrap">{description}</p>
                     </div>
                     {!otherUser && (
 

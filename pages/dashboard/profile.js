@@ -138,11 +138,7 @@ const Profile = ({ profile }) => {
                     <Card
                       image={image}
                       title={title}
-                      comment={comment}
-                      like={like}
-                      share={share}
                       views={200}
-                      rating={3}
                     />
                   ))
                 }
@@ -166,6 +162,7 @@ const Profile = ({ profile }) => {
                   share={share}
                   views={200}
                   rating={3.5}
+                  disclaimer={true}
                 />
               ))
             }
@@ -299,6 +296,7 @@ const Profile = ({ profile }) => {
           />
         )
       }
+
       {/* section ends here */}
       {/* {
         showModal && (

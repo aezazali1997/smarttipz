@@ -1,12 +1,15 @@
 import React from 'react'
 import ReactLanguageSelect from 'react-languages-select';
 
-const LanguageInput = ({ setSelectedLanguage, classNames }) => {
+const LanguageInput = ({ handleChange, classNames }) => {
     return (
         <ReactLanguageSelect
             className={classNames}
-            names={"international"}
-            onSelect={(languageCode) => setSelectedLanguage(languageCode)}
+            searchable={true}
+            defaultLanguage={''}
+            searchPlaceholder="Search for a language"
+            names={"both"}
+            onSelect={e => handleChange(e)}
         />
     )
 }

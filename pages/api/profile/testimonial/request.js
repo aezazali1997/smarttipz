@@ -42,7 +42,7 @@ const handler = async (req, res) => {
             }
 
             let requestedUser = await Testimonial.findAll({ where: { ownerEmail: email } });
-            if (requestedUser) {
+            if (!isEmpty(requestedUser)) {
                 return res.status(404).send({ error: true, data: [], message: 'User with this email has already added testimonial' })
             }
 

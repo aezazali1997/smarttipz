@@ -2,23 +2,49 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("./db");
 
 const Video = sequelize.define("Video", {
-  name: {
+  title: {
     type: DataTypes.STRING,
     allowNull: false,
+  },
+  url: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  thumbnail: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  description: {
+    type: DataTypes.STRING(500),
+    allowNull: false
+  },
+  category: {
+    type: DataTypes.STRING
+  },
+  language: {
+    type: DataTypes.STRING
   },
   isFree: {
     type: DataTypes.BOOLEAN,
   },
-  videoType: {
+  agree: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
+  mediaType: {
     type: DataTypes.STRING,
   },
-  numFiveStars: {
+  isApproved: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
+  },
+  rating: {
     type: DataTypes.INTEGER,
   },
-  numTips: {
+  tip: {
     type: DataTypes.INTEGER,
   },
-  numComments: {
+  comment: {
     type: DataTypes.INTEGER,
   },
   approvedBy: {

@@ -122,6 +122,15 @@ class AxiosInstance {
         return await axios.post(USER_API_BASE_URL + "api/profile/testimonial/request", data, this.getAuthHeader());
     }
 
+    async uploadMedia(media) {
+        console.log('In upload Media Api: ', media);
+        return await axios.post(USER_API_BASE_URL + "api/s3-bucket-upload", media);
+    }
+
+    async uploadNewsFeed(payload) {
+        console.log('In upload News Feed Api: ', payload);
+        return await axios.post(USER_API_BASE_URL + "api/profile/upload-video", payload, this.getAuthHeader());
+    }
 
 
 

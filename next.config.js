@@ -15,12 +15,13 @@ module.exports = {
     S3_UPLOAD_KEY: "AKIARG4Q332L5DQGZTV4",
     S3_UPLOAD_SECRET: "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",
     S3_UPLOAD_BUCKET: "smart-tipz-data-bucket",
-    S3_UPLOAD_REGION: "Asia Pacific (Singapore) ap-southeast-1",
+    S3_UPLOAD_REGION: "ap-southeast-1",
     SENDER_EMAIL: "mousuleman@gmail.com",
     SENDGRID_API_KEY: "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"
   },
   images: {
     domains: [
+      `smart-tipz-data-bucket.s3.amazonaws.com`,
       `${process.env.S3_UPLOAD_BUCKET}.amazonaws.com`,
       'smart-tipz-data-bucket.s3.ap-southeast-1.amazonaws.com',
       'thumbs.dreamstime.com'

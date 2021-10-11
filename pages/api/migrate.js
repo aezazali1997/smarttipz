@@ -10,13 +10,13 @@ const User = require('../../models/User');
 const Business = require('../../models/Business');
 
 const handler = async (req, res) => {
-    await User.sync({ force: true });
+    // await User.sync({ force: true });
     // const response1 = await sequelize.sync({ force: true });
     // console.log('response: ', response, response1);
     // Business.sync({ force: true });
     // BusinessCard.sync({ force: true });
     // Session.sync({ alter: true });
-    // Video.sync({ force: true });
+    Video.sync({ alter: true });
     // Testimonial.sync({ alter: true });
     // Chat.sync({ force: true });
     res.status(200).send({ message: "Tables created Successfully" });

@@ -67,6 +67,7 @@ const Videos = () => {
                             share={share}
                             views={250}
                             rating={5}
+                            disclaimer={true}
                         />
                     ))
                 }

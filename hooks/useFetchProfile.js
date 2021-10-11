@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { RequestTestimonialFormSchema } from 'utils/validation_shema';
 import Swal from 'sweetalert2';
 import swal from 'sweetalert';
+import axios from 'axios';
 
 const initial = {
     email: ''
@@ -25,10 +26,14 @@ const UseFetchProfile = (profile) => {
     const [filteredTestimonial, setFilteredTestimonial] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [showRequestTestimonial, setShowRequestTestimonial] = useState(false);
+    const [showUploadModal, setShowUploadModal] = useState(false);
+    const [urls, setUrls] = useState('');
+    const [thumbnailUrl, setThumbnailUrl] = useState('');
     // const [modalTitle, setModalTitle] = useState('Add Testimonial');
     const [initialValues, setInitialValues] = useState(initial);
 
     let { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
+    let thumbnailRef = useRef();
 
     useEffect(() => {
         const { accountType, username, isApproved } = profile;
@@ -64,7 +69,6 @@ const UseFetchProfile = (profile) => {
     }, []);
 
     useEffect(() => { }, [testimonial])
-
 
     let fetchMoreData = () => {
         let copyAllTestimonials = [...testimonial];
@@ -275,6 +279,72 @@ const UseFetchProfile = (profile) => {
         },
     });
 
+    let onChangeThumbnail = async ({ target }) => {
+        const { files } = target;
+        console.log("files: ", files);
+        for (let i = 0; i < files.length; i++) {
+            console.log('file: ', files[0]);
+            let file = files[0];
+            console.log("file: ", file);
+            let fileParts = file.name.split(".");
+            console.log('fileParts:', fileParts);
+            let fileName = fileParts[0];
+            console.log('fileName: ', fileName);
+            let fileType = fileParts[1];
+            console.log('fileType: ', fileType);
+            try {
+                const res = await axios
+                    .post("/api/media-upload", {
+                        fileName,
+                        fileType
+                    })
+                const signedRequest = res.data.signedRequest;
+                console.log('signedRequest: ', signedRequest);
+                const url = res.data.url;
+                console.log('url: ', url);
+                setThumbnailUrl(url);
+
+                let options = {
+                    headers: {
+                        "Content-Type": fileType
+                    }
+                };
+                try {
+                    const response = await axios
+                        .put(signedRequest, file, options)
+                    console.log('response: ', response);
+                } catch (e) {
+                    console.log('error: ', e);
+                }
+            } catch (e) {
+                console.log('error: ', e);
+            }
+
+        }
+    }
+
+    let _OnThumbnailClick = () => {
+        thumbnailRef.current.click();
+    }
+
+    let _OnRemoveThumbnail = () => {
+        setThumbnailUrl('');
+    }
+
+    let _ToggleUploadModal = () => {
+        setUrls('');
+        setThumbnailUrl('');
+        setAgree(false);
+        setSelectedLanguage('');
+        setInitialValues(initials);
+        setShowModal(!showModal);
+    }
+
+
+    let _HandleLanguageChange = (value) => {
+        console.log({ language: value });
+        setSelectedLanguage(value);
+    }
 
     return {
         followed, followers, showModal, businessCard, showBusinessCard, formik, imageUrl, loading, testimonial, uploading,

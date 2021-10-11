@@ -99,6 +99,18 @@ export const AddTestimonialFormSchema = Yup.object().shape({
 
 });
 
+export const UploadVideoSchema = Yup.object().shape({
+    title: Yup.string()
+        .required("This is a required field"),
+    category: Yup.string()
+        .required('This is a required field'),
+    description: Yup.string()
+        .required('This is a required field'),
+    language: Yup.string()
+        .required('This is a required field'),
+
+});
+
 export const AccountInfoValidationSchema = Yup.object().shape({
     old: Yup.string()
         .required("This is a required field "),

@@ -4,3 +4,4 @@ export { default as UseFetchAuthenticate } from './useFetchAuthenticate';
 export { default as UseForgotPassword } from './useForgotPassword';
 export { default as UseFetchSetting } from './useFetchSetting';
 export { default as UseFetchProfile } from './useFetchProfile';
+export { default as UseFetchNewsFeed } from './useFetchNewsFeed';
