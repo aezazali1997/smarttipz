@@ -1,8 +1,8 @@
 import axiosInstance from 'APIs/axiosInstance';
 import { useFormik } from 'formik';
 import { useS3Upload } from 'next-s3-upload';
-import React, { useEffect, useState } from 'react'
-import { RequestTestimonialFormSchema } from 'utils/validation_shema';
+import React, { useEffect, useRef, useState } from 'react'
+import { RequestTestimonialFormSchema, UploadPhotoVideoSchema } from 'utils/validation_shema';
 import Swal from 'sweetalert2';
 import swal from 'sweetalert';
 import axios from 'axios';
@@ -10,6 +10,14 @@ import axios from 'axios';
 const initial = {
     email: ''
 };
+
+const initials = {
+    title: '',
+    description: '',
+    category: '',
+    language: '',
+    mediaType: ''
+}
 
 const UseFetchProfile = (profile) => {
 
@@ -26,11 +34,16 @@ const UseFetchProfile = (profile) => {
     const [filteredTestimonial, setFilteredTestimonial] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [showRequestTestimonial, setShowRequestTestimonial] = useState(false);
-    const [showUploadModal, setShowUploadModal] = useState(false);
+    const [MediaType, setMediaType] = useState(null);
     const [urls, setUrls] = useState('');
     const [thumbnailUrl, setThumbnailUrl] = useState('');
-    // const [modalTitle, setModalTitle] = useState('Add Testimonial');
+    const [agree, setAgree] = useState(false);
     const [initialValues, setInitialValues] = useState(initial);
+    const [modalTitle, setModalTitle] = useState('');
+    const [catalogues, setCatalogues] = useState([]);
+    const [fetchingCatalogues, setFetchCatalogues] = useState(true);
+    const [myVideos, setMyVideos] = useState([]);
+    const [fetchingMyVideos, setFetchMyVideos] = useState(true);
 
     let { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
     let thumbnailRef = useRef();
@@ -68,7 +81,40 @@ const UseFetchProfile = (profile) => {
         }
     }, []);
 
-    useEffect(() => { }, [testimonial])
+    const fetchCatalogues = async () => {
+        enableFetchCatalogue();
+        try {
+            const { data: { data: { catalogues } } } = await axiosInstance.getCatalogues();
+            setCatalogues(catalogues);
+            console.log('catalogues: ', catalogues);
+            disableFetchCatalogue();
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log('Error in catalogue Api: ', message);
+            disableFetchCatalogue();
+        }
+    }
+
+    const fetchMyVideos = async () => {
+        enableFetchMyVideos();
+        try {
+            const { data: { data: { videos } } } = await axiosInstance.getVideos();
+            setMyVideos(videos);
+            console.log('videos: ', videos);
+            disableFetchMyVideos();
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log('Error in videos Api: ', message);
+            disableFetchMyVideos();
+        }
+    }
+
+    useEffect(() => {
+        fetchCatalogues();
+        fetchMyVideos();
+    }, []);
+
+    useEffect(() => { }, [testimonial, catalogues])
 
     let fetchMoreData = () => {
         let copyAllTestimonials = [...testimonial];
@@ -96,16 +142,11 @@ const UseFetchProfile = (profile) => {
     };
 
     const _DeleteImg = () => {
-        setImageUrl('');
+        setUrls('');
     };
 
     const _AddTestimonial = () => {
         setShowRequestTestimonial(!showRequestTestimonial);
-
-        // setModalTitle('Add Testimonial');
-        // setInitialValues(initial);
-        // setImageUrl('');
-        // setShowModal(true);
     }
 
     const _EditTestimonial = (id, isVisible) => {
@@ -123,10 +164,6 @@ const UseFetchProfile = (profile) => {
         }).catch(({ response: { data: { message } } }) => {
             console.log('error: ', message);
         })
-        // setModalTitle('Edit Testimonial');
-        // setInitialValues(data);
-        // setImageUrl(data?.picture);
-        // setShowModal(true);
     }
 
     const _DeleteTestimonial = (data) => {
@@ -195,103 +232,167 @@ const UseFetchProfile = (profile) => {
         setLoadingTestimonial(false);
     };
 
+    const enableFetchCatalogue = () => {
+        setFetchCatalogues(true);
+    };
+
+    const disableFetchCatalogue = () => {
+        setFetchCatalogues(false);
+    };
+
+    const enableFetchMyVideos = () => {
+        setFetchMyVideos(true);
+    };
+
+    const disableFetchMyVideos = () => {
+        setFetchMyVideos(false);
+    };
+
+
+    const _OnRequestTestimonial = (values, resetForm) => {
+        // console.log('in RequestTestimonial')
+        const { email } = values
+        enableLoading();
+        axiosInstance.requestTestimonial({ email }).then(({ data: { message } }) => {
+            swal({
+                text: message,
+                icon: 'success',
+                buttons: false,
+                timer: 3000
+            })
+            _AddTestimonial();
+            resetForm({ email: '' });
+            disableLoading();
+        }).catch(({ response: { data: { message }, status } }) => {
+            status === 404 ?
+                swal({
+                    text: message,
+                    icon: 'info',
+                    buttons: false,
+                    timer: 3000
+                })
+                :
+                swal({
+                    text: message,
+                    icon: 'error',
+                    buttons: false,
+                    timer: 3000
+                })
+            disableLoading()
+        })
+    }
+
+    const _OnUploadMedia = async (values, setSubmitting, resetForm) => {
+        // console.log('In Upload Media')
+        setSubmitting(true);
+        // console.log('values => ', values);
+        values.url = urls;
+        values.thumbnail = thumbnailUrl;
+        values.category = 'catalogue';
+        values.agree = agree;
+        console.log(values);
+        try {
+            const res = await axiosInstance.uploadNewsFeed(values)
+            // console.log(res);
+            const { data: { message } } = res;
+            Swal.fire({
+                text: message,
+                timer: 3000,
+                icon: 'success',
+                showCancelButton: false,
+                showConfirmButton: false
+            })
+            resetForm(initials);
+            setSubmitting(false);
+            _CloseUploadModal();
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log('API Failed: ', message);
+            Swal.fire({
+                text: message,
+                timer: 3000,
+                icon: 'error',
+                showCancelButton: false,
+                showConfirmButton: false
+            })
+            setSubmitting(false);
+        }
+    }
+
+
     const formik = useFormik({
         enableReinitialize: true,
         initialValues,
-        validationSchema: RequestTestimonialFormSchema,
+        validationSchema: (modalTitle === '' ? RequestTestimonialFormSchema : UploadPhotoVideoSchema),
         validateOnBlur: true,
-        onSubmit: ({ email }, { resetForm }) => {
-            enableLoading();
-            setTimeout(() => {
-                axiosInstance.requestTestimonial({ email }).then(({ data: { message } }) => {
-                    swal({
-                        text: message,
-                        icon: 'success',
-                        buttons: false,
-                        timer: 3000
-                    })
-                    _AddTestimonial();
-                    resetForm({ email: '' });
-                    disableLoading();
-                }).catch(({ response: { data: { message }, status } }) => {
-                    status === 404 ?
-                        swal({
-                            text: message,
-                            icon: 'info',
-                            buttons: false,
-                            timer: 3000
-                        })
-                        :
-                        swal({
-                            text: message,
-                            icon: 'error',
-                            buttons: false,
-                            timer: 3000
-                        })
-                    disableLoading()
-                })
-                // const payload = {
-                //     ownerName: res.ownerName,
-                //     designation: res.designation,
-                //     description: res.description,
-                //     picture: imageUrl
-                // };
-                // if (modalTitle === 'Add Testimonial') {
-                //     axiosInstance.addTestimonial(payload).then(() => {
-                //         let copyTestimonial = [...testimonial];
-                //         let newArray = [payload, ...copyTestimonial];
-                //         setTestimonial(newArray);
-                //         disableLoading();
-                //         resetForm(initial)
-                //         setImageUrl('');
-                //         handleShowModal();
-                //     }).catch(e => {
-                //         console.log('Error in Api Testimonial: ', e.response.data.message);
-                //         disableLoading();
-                //     })
-                // }
-                // else if (modalTitle === 'Edit Testimonial') {
-                //     payload.id = res.id;
-                //     axiosInstance.updateTestimonial(payload).then(() => {
-                //         let copyTestimonial = [...testimonial];
-                //         let newArray = copyTestimonial.map((item) => {
-                //             if (item.id !== payload?.id) return item;
-                //             else {
-                //                 const { ownerName, designation, description, picture } = payload;
-                //                 item.ownerName = ownerName;
-                //                 item.designation = designation;
-                //                 item.description = description;
-                //                 item.picture = picture;
-                //                 return item;
-                //             }
-                //         });
-                //         setTestimonial(newArray);
-                //         disableLoading();
-                //         resetForm(initial)
-                //         setImageUrl('');
-                //         handleShowModal();
-                //     }).catch(e => {
-                //         console.log('Error in Api Testimonial: ', e.response.data.message);
-                //         disableLoading();
-                //     })
-                // }
-            }, 1000);
-        },
+        onSubmit: (values, { resetForm, setSubmitting }) => {
+            modalTitle === '' ?
+                _OnRequestTestimonial(values, resetForm)
+                :
+                _OnUploadMedia(values, setSubmitting, resetForm)
+
+
+            // const payload = {
+            //     ownerName: res.ownerName,
+            //     designation: res.designation,
+            //     description: res.description,
+            //     picture: imageUrl
+            // };
+            // if (modalTitle === 'Add Testimonial') {
+            //     axiosInstance.addTestimonial(payload).then(() => {
+            //         let copyTestimonial = [...testimonial];
+            //         let newArray = [payload, ...copyTestimonial];
+            //         setTestimonial(newArray);
+            //         disableLoading();
+            //         resetForm(initial)
+            //         setImageUrl('');
+            //         handleShowModal();
+            //     }).catch(e => {
+            //         console.log('Error in Api Testimonial: ', e.response.data.message);
+            //         disableLoading();
+            //     })
+            // }
+            // else if (modalTitle === 'Edit Testimonial') {
+            //     payload.id = res.id;
+            //     axiosInstance.updateTestimonial(payload).then(() => {
+            //         let copyTestimonial = [...testimonial];
+            //         let newArray = copyTestimonial.map((item) => {
+            //             if (item.id !== payload?.id) return item;
+            //             else {
+            //                 const { ownerName, designation, description, picture } = payload;
+            //                 item.ownerName = ownerName;
+            //                 item.designation = designation;
+            //                 item.description = description;
+            //                 item.picture = picture;
+            //                 return item;
+            //             }
+            //         });
+            //         setTestimonial(newArray);
+            //         disableLoading();
+            //         resetForm(initial)
+            //         setImageUrl('');
+            //         handleShowModal();
+            //     }).catch(e => {
+            //         console.log('Error in Api Testimonial: ', e.response.data.message);
+            //         disableLoading();
+            //     })
+            // }
+        }
     });
 
     let onChangeThumbnail = async ({ target }) => {
         const { files } = target;
-        console.log("files: ", files);
+        // console.log("files: ", files);
         for (let i = 0; i < files.length; i++) {
-            console.log('file: ', files[0]);
+            // console.log('file: ', files[0]);
             let file = files[0];
-            console.log("file: ", file);
+            // console.log("file: ", file);
             let fileParts = file.name.split(".");
-            console.log('fileParts:', fileParts);
+            // console.log('fileParts:', fileParts);
             let fileName = fileParts[0];
-            console.log('fileName: ', fileName);
+            // console.log('fileName: ', fileName);
             let fileType = fileParts[1];
-            console.log('fileType: ', fileType);
+            // console.log('fileType: ', fileType);
             try {
                 const res = await axios
                     .post("/api/media-upload", {
@@ -299,9 +400,9 @@ const UseFetchProfile = (profile) => {
                         fileType
                     })
                 const signedRequest = res.data.signedRequest;
-                console.log('signedRequest: ', signedRequest);
+                // console.log('signedRequest: ', signedRequest);
                 const url = res.data.url;
-                console.log('url: ', url);
+                // console.log('url: ', url);
                 setThumbnailUrl(url);
 
                 let options = {
@@ -312,7 +413,7 @@ const UseFetchProfile = (profile) => {
                 try {
                     const response = await axios
                         .put(signedRequest, file, options)
-                    console.log('response: ', response);
+                    // console.log('response: ', response);
                 } catch (e) {
                     console.log('error: ', e);
                 }
@@ -331,26 +432,34 @@ const UseFetchProfile = (profile) => {
         setThumbnailUrl('');
     }
 
-    let _ToggleUploadModal = () => {
+    let _OpenUploadModal = () => {
+        setModalTitle('Upload Photo/Video');
+        // setSelectedLanguage('');
+        setInitialValues(initials);
+        setShowModal(true);
+    }
+
+    let _CloseUploadModal = () => {
+        setModalTitle('');
         setUrls('');
         setThumbnailUrl('');
         setAgree(false);
-        setSelectedLanguage('');
-        setInitialValues(initials);
-        setShowModal(!showModal);
+        setShowModal(false);
     }
 
-
-    let _HandleLanguageChange = (value) => {
-        console.log({ language: value });
-        setSelectedLanguage(value);
+    let ChangeAgreement = (e) => {
+        const { checked } = e.target;
+        setAgree(checked);
     }
+
 
     return {
         followed, followers, showModal, businessCard, showBusinessCard, formik, imageUrl, loading, testimonial, uploading,
         loadingTestimonial, _AddTestimonial, handleShowBusinessCard, _EditTestimonial, _DeleteImg, handleFileChange,
         FileInput, openFileDialog, handleShowModal, _DeleteTestimonial, showRequestTestimonial, fetchMoreData, filteredTestimonial,
-        hasMore
+        hasMore, _OnRemoveThumbnail, onChangeThumbnail, MediaType, thumbnailRef, modalTitle,
+        agree, thumbnailUrl, urls, setUrls, setMediaType, ChangeAgreement, _OnThumbnailClick,
+        _CloseUploadModal, _OpenUploadModal, catalogues, setCatalogues, fetchingCatalogues, myVideos, fetchingMyVideos
     }
 }
 

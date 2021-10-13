@@ -1,22 +1,37 @@
 /* eslint-disable react/jsx-key */
+import axiosInstance from 'APIs/axiosInstance';
+import { isEmpty } from 'lodash';
 import React, { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet';
-import videos from '../../utils/VdeoSchema.json';
-import { Card } from '../../components';
+import { Card, Spinner } from '../../components';
 const Videos = () => {
 
     const [filterdVideos, setFilterVideos] = useState([]);
     const [Videos, setVideos] = useState([]);
     const [filter, setFilter] = useState('all');
+    const [loading, setLoading] = useState(true);
 
+    const fetchMyVideos = async () => {
+        setLoading(true);
+        try {
+            const { data: { data: { videos } } } = await axiosInstance.getVideos();
+            setVideos(videos);
+            setFilterVideos(videos);
+            console.log('videos: ', videos);
+            setLoading(false);
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log('Error in videos Api: ', message);
+            setLoading(false);
+        }
+    }
 
     useEffect(() => {
-        setVideos(videos);
-        setFilterVideos(videos);
+        fetchMyVideos();
     }, [])
 
-    let _ChangeFilter = (e) => {
-        const { value } = e.target;
+    let _ChangeFilter = ({ target }) => {
+        const { value } = target;
         // console.log('value: ', value);
         let FilteredVideos =
             value === 'all' ? Videos : Videos.filter(video => video.category === value && (video));
@@ -45,8 +60,8 @@ const Videos = () => {
                         placeholder="name@example.com"
                     >
                         <option value="all">All</option>
-                        <option value="category1">Category 1</option>
-                        <option value="category2">Category 2</option>
+                        <option value="Category1">Category 1</option>
+                        <option value="Category2">Category 2</option>
                     </select>
                     <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                         <svg xmlns="http://www.w3.org/2000/svg" className="text-gray-500 pointer-events-none" width="19.524" height="19.524" viewBox="0 0 19.524 19.524">
@@ -56,22 +71,42 @@ const Videos = () => {
                     </div>
                 </div>
             </div>
-            <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
-                {
-                    filterdVideos.map(({ title, image, like, comment, share }) => (
-                        <Card
-                            image={image}
-                            title={title}
-                            comment={comment}
-                            like={like}
-                            share={share}
-                            views={250}
-                            rating={5}
-                            disclaimer={true}
-                        />
-                    ))
-                }
-            </div>
+            {
+                loading ? (
+                    <div className="flex w-full justify-center">
+                        <span className="flex flex-col items-center">
+                            <Spinner />
+                            <p className="text-sm text-gray-400"> Loading Videos</p>
+                        </span>
+                    </div>
+                )
+                    :
+                    isEmpty(filterdVideos) ? (
+                        <div className="flex w-full justify-center items-center">
+                            <p className="text-gray-500"> No Videos</p>
+                        </div>
+                    )
+                        :
+
+                        <div className="flex flex-col w-full sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
+                            {
+                                filterdVideos.map(({ title, url, thumbnail, mediaType, like, comment, share }) => (
+                                    <Card
+                                        image={url}
+                                        thumbnail={thumbnail}
+                                        mediaType={mediaType}
+                                        title={title}
+                                        comment={comment}
+                                        like={like}
+                                        share={share}
+                                        views={250}
+                                        rating={5}
+                                        disclaimer={true}
+                                    />
+                                ))
+                            }
+                        </div>
+            }
         </div>
     )
 }

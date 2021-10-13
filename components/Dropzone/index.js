@@ -8,19 +8,21 @@ import { useDropzone } from 'react-dropzone'
 import Image from 'next/image';
 import axios from 'axios';
 
-const MyDropzone = ({ setMaterial }) => {
+const MyDropzone = ({ setMaterial, setMediaType, accept, heading }) => {
 
     const onDrop = useCallback(async (acceptedFiles) => {
         console.log('acceptedFiles:', acceptedFiles);
         // FOR SINGLE IMAGE/VIDEO //
         for (let i = 0; i < acceptedFiles.length; i++) {
             let file = acceptedFiles[0];
+            setMediaType(file);
             console.log("file: ", file);
             let fileParts = file.name.split(".");
             console.log('fileParts:', fileParts);
             let fileName = fileParts[0];
             console.log('fileName: ', fileName);
             let fileType = fileParts[1];
+
             console.log('fileType: ', fileType);
             try {
                 const res = await axios
@@ -78,7 +80,7 @@ const MyDropzone = ({ setMaterial }) => {
 
     return (
         <div {...getRootProps()}>
-            <input {...getInputProps()} multiple={false} accept="video/*" />
+            <input {...getInputProps()} multiple={false} accept={accept} />
             {
                 isDragActive ?
                     <div className="flex flex-col w-full p-3 h-32">
@@ -88,7 +90,7 @@ const MyDropzone = ({ setMaterial }) => {
                         <div className="flex flex-col w-full justify-center items-center cursor-pointer border-transparent rounded-lg bg-gray-50 hover:bg-gray-200 p-2 space-y-2">
                             <FontAwesomeIcon icon={faFileVideo} className="text-6xl text" />
                             <div>
-                                <p className="text-center text-lg font-semibold">Add Video</p>
+                                <p className="text-center text-lg font-semibold">{heading}</p>
                                 <p className="text-gray-700 text-center text-sm">or drag and drop</p>
                             </div>
                         </div>

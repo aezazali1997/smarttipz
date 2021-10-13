@@ -132,6 +132,13 @@ class AxiosInstance {
         return await axios.post(USER_API_BASE_URL + "api/profile/upload-video", payload, this.getAuthHeader());
     }
 
+    async getCatalogues() {
+        return await axios.get(USER_API_BASE_URL + "api/profile/catalogue", this.getAuthHeader());
+    }
+
+    async getVideos() {
+        return await axios.get(USER_API_BASE_URL + "api/profile/videos", this.getAuthHeader());
+    }
 
 
 }

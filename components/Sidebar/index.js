@@ -47,32 +47,40 @@ const Sidebar = ({ logout }) => {
                 <div className='lg:flex h-full flex-col space-y-2 overflow-y-auto'>
                     <>
                         <Link href='/dashboard/news-feed' className='p-4  font-sans nav-link nav-link-ltr'>
-                            <div className={`flex flex-row items-center py-2 px-3 rounded-lg w-52 font-medium cursor-pointer
+                            <a>
+                                <div className={`flex flex-row items-center py-2 px-3 rounded-lg w-52 font-medium cursor-pointer
                             ${Active('/dashboard/news-feed')}`}>
 
-                                <FontAwesomeIcon icon={faNewspaper} /> &nbsp;News Feed
-                            </div>
+                                    <FontAwesomeIcon icon={faNewspaper} /> &nbsp;News Feed
+                                </div>
+                            </a>
                         </Link>
                         <Link href='/dashboard/profile' className='p-4 font-sans nav-link nav-link-ltr'>
-                            <div className={`py-2 px-3 rounded-lg w-52 font-medium  cursor-pointer
+                            <a>
+                                <div className={`py-2 px-3 rounded-lg w-52 font-medium  cursor-pointer
                               ${Active('/dashboard/profile')}`}>
-                                <FontAwesomeIcon icon={faUserCircle} />&nbsp;Profile
-                            </div>
+                                    <FontAwesomeIcon icon={faUserCircle} />&nbsp;Profile
+                                </div>
+                            </a>
                         </Link>
                         <Link href='/dashboard/videos' className='p-4 font-sans nav-link nav-link-ltr' >
-                            <div className={`py-2 px-3 rounded-lg w-52 font-medium  cursor-pointer
+                            <a>
+                                <div className={`py-2 px-3 rounded-lg w-52 font-medium  cursor-pointer
                             ${Active("/dashboard/videos")}`}>
-                                <FontAwesomeIcon icon={faPlayCircle} />&nbsp;Videos
-                            </div>
+                                    <FontAwesomeIcon icon={faPlayCircle} />&nbsp;Videos
+                                </div>
+                            </a>
                         </Link>
                         <Link href='/dashboard/messages' className='p-4 font-sans nav-link nav-link-ltr' >
-                            <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-52 font-medium  cursor-pointer
+                            <a>
+                                <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-52 font-medium  cursor-pointer
                             ${Active("/dashboard/messages")}`}>
-                                <div>
-                                    <FontAwesomeIcon icon={faComment} />&nbsp;Messages
+                                    <div>
+                                        <FontAwesomeIcon icon={faComment} />&nbsp;Messages
+                                    </div>
+                                    {/* <Badge /> */}
                                 </div>
-                                {/* <Badge /> */}
-                            </div>
+                            </a>
                         </Link>
                         <div className="inline-block relative space-y-1">
                             <button onClick={toggleDropdown} className={`flex items-center justify-between py-2 px-3 rounded-lg w-52 font-medium sidebar-item cursor-pointer
@@ -94,45 +102,55 @@ const Sidebar = ({ logout }) => {
                                 dropdown ? (
                                     <div className="absolute flex flex-col space-y-2 bg-white p-2 w-52 rounded-lg z-40 ease-in-out">
                                         <Link href='/privacy-policy' className='p-4 font-sans nav-link nav-link-ltr' >
-                                            <div onClick={() => toggleDropdown()} className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
+                                            <a>
+                                                <div onClick={() => toggleDropdown()} className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
                             ${ActiveDropdown("/privacy-policy")}`}>
-                                                <div>
-                                                    Privacy Policy
+                                                    <div>
+                                                        Privacy Policy
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </a>
                                         </Link>
                                         <Link href='/terms-and-conditions' className='p-4 font-sans nav-link nav-link-ltr' >
-                                            <div onClick={() => toggleDropdown()} className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
+                                            <a>
+                                                <div onClick={() => toggleDropdown()} className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
                             ${ActiveDropdown("/terms-and-conditions")}`}>
-                                                <div>
-                                                    Terms & Conditions
+                                                    <div>
+                                                        Terms & Conditions
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </a>
                                         </Link>
                                         <Link href='/copyrights' className='p-4 font-sans nav-link nav-link-ltr' >
-                                            <div onClick={() => toggleDropdown()} className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
+                                            <a>
+                                                <div onClick={() => toggleDropdown()} className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
                             ${ActiveDropdown("/copyrights")}`}>
-                                                <div>
-                                                    Copyrights
+                                                    <div>
+                                                        Copyrights
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </a>
                                         </Link>
                                         <Link href='/trademark-license' className='p-4 font-sans nav-link nav-link-ltr' >
-                                            <div onClick={() => toggleDropdown()} className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
+                                            <a>
+                                                <div onClick={() => toggleDropdown()} className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
                             ${ActiveDropdown("/trademark-license")}`}>
-                                                <div>
-                                                    Trademark License
+                                                    <div>
+                                                        Trademark License
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </a>
                                         </Link>
                                     </div>
                                 ) : ('')}
                         </div>
                         <Link href='/dashboard/setting' className='p-4 font-sans nav-link nav-link-ltr' >
-                            <div className={`py-2 px-3 rounded-lg w-52 font-medium sidebar-item cursor-pointer
+                            <a>
+                                <div className={`py-2 px-3 rounded-lg w-52 font-medium sidebar-item cursor-pointer
                             ${Active("/dashboard/setting")}`}>
-                                <FontAwesomeIcon icon={faCog} />&nbsp;Settings
-                            </div>
+                                    <FontAwesomeIcon icon={faCog} />&nbsp;Settings
+                                </div>
+                            </a>
                         </Link>
                     </>
                 </div>

@@ -1,15 +1,24 @@
 /* eslint-disable @next/next/no-img-element */
-import { Rating } from 'components';
+import { Rating, VideoPlayer } from 'components';
 import React from 'react'
 // import Image from 'next/image';
 import ReactTooltip from 'react-tooltip';
 
-const Card = ({ image, like, comment, share, title, views, rating, disclaimer }) => {
+const Card = ({ image, like, comment, share, title, views, rating, disclaimer, mediaType, thumbnail }) => {
     return (
         <div className="px-1">
             <div className="max-w-sm overflow-hidden">
-                <img className="w-full rounded-lg"
-                    src={image} alt="Sunset in the mountains" layout="fill" />
+                {
+                    mediaType ?
+                        mediaType === 'image' ?
+                            <img className="w-full rounded-lg h-48"
+                                src={image} alt="Sunset in the mountains" layout="fill" />
+                            :
+                            <VideoPlayer poster={thumbnail} src={image} />
+                        :
+                        <img className="w-full rounded-lg"
+                            src={image} alt="Sunset in the mountains" layout="fill" />
+                }
                 <div className="py-2 flex flex-row justify-between space-x-2">
                     <div className="flex w-full text-sm">{title}</div>
                     <div className="flex flex-row w-full items-start space-x-3">

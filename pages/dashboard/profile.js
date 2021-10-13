@@ -8,7 +8,7 @@ import { parseCookies } from 'nookies';
 import { isEmpty } from 'lodash';
 import { UseFetchProfile } from 'hooks';
 import videos from 'utils/VdeoSchema.json';
-import { Button, Card, CustomLoader, InputField, PopupBusinessCard, ProfileCard, Rating, Spinner, TestimonialCard } from 'components';
+import { Button, Card, CustomLoader, InputField, MediaUploadForm, PopupBusinessCard, ProfileCard, Rating, Spinner, TestimonialCard } from 'components';
 // import { AddTestimonialModal, EditTestimonialModal } from 'components/Modals';
 import { getInputClasses } from 'helpers';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -17,8 +17,11 @@ const Profile = ({ profile }) => {
 
   const { showBusinessCard, followed, followers, businessCard, formik, imageUrl, loading, testimonial, showModal,
     uploading, modalTitle, loadingTestimonial, handleShowBusinessCard, FileInput, handleFileChange, _DeleteImg,
-    openFileDialog, _AddTestimonial, handleShowModal, _EditTestimonial, _DeleteTestimonial, showRequestTestimonial
-    , filteredTestimonial, fetchMoreData, hasMore } = UseFetchProfile(profile);
+    openFileDialog, _AddTestimonial, _EditTestimonial, _DeleteTestimonial, showRequestTestimonial,
+    filteredTestimonial, fetchMoreData, hasMore, _OnRemoveThumbnail, onChangeThumbnail, MediaType, thumbnailRef,
+    agree, thumbnailUrl, urls, setUrls, setMediaType, ChangeAgreement, _OnThumbnailClick, _CloseUploadModal,
+    _OpenUploadModal, fetchingCatalogues, catalogues, myVideos, fetchingMyVideos
+  } = UseFetchProfile(profile);
   const { name, about, rating, views, picture, phone, email, accountType, username, showUsername, showName
   } = profile;
   const { website } = businessCard;
@@ -127,47 +130,96 @@ const Profile = ({ profile }) => {
         </div>
       </div>
       {/* section ends here */}
-      {/* section starts here */}{
+      {/* section starts here */}
+      {
         accountType === 'Business' && (
-          <div className="flex flex-col w-full px-2  mt-8">
-            <h1 className="text-md font-medium">My Catalogue</h1>
-            <div className="flex w-full mt-6 justify-center lg:justify-start" >
-              <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
-                {
-                  videos && videos.map(({ title, image, like, comment, share }) => (
-                    <Card
-                      image={image}
-                      title={title}
-                      views={200}
-                    />
-                  ))
-                }
-              </div>
+          <>
+            <div className="flex w-full justify-end items-center px-2 mt-8">
+              <Button
+                onSubmit={_OpenUploadModal}
+                type="button"
+                childrens={'Upload Photo/Video'}
+                classNames={"px-3 py-2 flex justify-center items-center text-white text-sm btn rounded-md "}
+              />
             </div>
-          </div>
+            <div className="flex flex-col w-full px-2 mt-4">
+              <h1 className="text-md font-medium">My Catalogue</h1>
+              {
+                fetchingCatalogues ? (
+                  <div className="flex w-full justify-center">
+                    <span className="flex flex-col items-center">
+                      <Spinner />
+                      <p className="text-sm text-gray-400"> Loading Catalogues</p>
+                    </span>
+                  </div>
+                )
+                  :
+                  isEmpty(catalogues) ? (
+                    <div className="flex w-full justify-center items-center">
+                      <p className="text-gray-500"> No Catalogues Yet</p>
+                    </div>
+                  )
+                    :
+
+                    <div className="flex w-full mt-6 justify-center lg:justify-start">
+                      <div className="flex flex-col w-full sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
+                        {
+                          catalogues.map(({ title, url, mediaType, like, comment, share, thumbnail }) => (
+                            <Card
+                              image={url}
+                              title={title}
+                              views={200}
+                              mediaType={mediaType}
+                              thumbnail={thumbnail}
+                            />
+                          ))
+                        }
+                      </div>
+                    </div>
+              }
+            </div>
+          </>
         )}
       {/* section ends here */}
       {/* section starts here */}
       <div className="flex flex-col w-full px-2  mt-8">
         <h1 className="text-md font-medium">My Videos</h1>
-        <div className="flex w-full mt-6 justify-center lg:justify-start" >
-          <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
-            {
-              videos && videos.map(({ title, image, like, comment, share }) => (
-                <Card
-                  image={image}
-                  title={title}
-                  comment={comment}
-                  like={like}
-                  share={share}
-                  views={200}
-                  rating={3.5}
-                  disclaimer={true}
-                />
-              ))
-            }
-          </div>
-        </div>
+        {
+          fetchingMyVideos ? (
+            <div className="flex w-full justify-center">
+              <span className="flex flex-col items-center">
+                <Spinner />
+                <p className="text-sm text-gray-400"> Loading Videos</p>
+              </span>
+            </div>
+          )
+            :
+            isEmpty(myVideos) ? (
+              <div className="flex w-full justify-center items-center">
+                <p className="text-gray-500"> No Videos Yet</p>
+              </div>
+            )
+              :
+              <div className="flex w-full mt-6 justify-center lg:justify-start" >
+                <div className="flex flex-col w-full sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
+                  {
+                    myVideos.map(({ title, url, mediaType, thumbnail, like, comment, share }) => (
+                      <Card
+                        image={url}
+                        title={title}
+                        thumbnail={thumbnail}
+                        mediaType={mediaType}
+                        comment={comment}
+                        like={like}
+                        share={share}
+                        views={200}
+                        rating={3.5}
+                        disclaimer={true}
+                      />
+                    ))
+                  }
+                </div>
+              </div>}
       </div>
       {/* section ends here */}
       {/* section starts here */}
@@ -213,7 +265,6 @@ const Profile = ({ profile }) => {
                       classNames={"px-3 py-2 flex h-auto sm:h-12 justify-center items-center text-white text-sm btn rounded-md "}
                       loading={loading}
                     />
-
                   </div>
                 </form>
               )}
@@ -295,6 +346,31 @@ const Profile = ({ profile }) => {
 
           />
         )
+      }
+
+
+      {showModal && (
+        <MediaUploadForm
+          title={modalTitle}
+          heading='Upload Photo/Video'
+          urls={urls}
+          agree={agree}
+          formik={formik}
+          accept={'video/*, image/*'}
+          MediaType={MediaType}
+          thumbnailUrl={thumbnailUrl}
+          thumbnailRef={thumbnailRef}
+          setUrls={setUrls}
+          _DeleteImg={_DeleteImg}
+          setMediaType={setMediaType}
+          ChangeAgreement={ChangeAgreement}
+          onChangeThumbnail={onChangeThumbnail}
+          _OnThumbnailClick={_OnThumbnailClick}
+          _CloseUploadModal={_CloseUploadModal}
+          _OnRemoveThumbnail={_OnRemoveThumbnail}
+
+        />
+      )
       }
 
       {/* section ends here */}

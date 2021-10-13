@@ -1,6 +1,7 @@
 const User = require('../../../models/User');
 const Video = require('../../../models/Video');
 const jwt = require('jsonwebtoken');
+const sequelize = require('sequelize');
 
 const handler = async (req, res) => {
   if (req.method === 'GET') {
@@ -17,17 +18,24 @@ const handler = async (req, res) => {
         attributes: ['id'],
         where: { username }
       });
+
       if (!user) {
         return res.status(404).send({ error: true, data: [], message: 'User Not Found' })
       }
+      const { id } = user;
 
-      const vids = await Video.findAll({ where: { UserId: user.id } });
+      const videos = await Video.findAll({
+        where: {
+          UserId: id,
+          category: {
+            [sequelize.Op.not]: 'catalogue'
+          }
+        }
+      });
 
       res.status(200).json({
         message: 'success',
-        data: {
-          videos: vids.map((vid) => vid.name)
-        }
+        data: { videos }
       });
     } catch (err) {
       console.log("Videos Api Failed Error: ", err.message);

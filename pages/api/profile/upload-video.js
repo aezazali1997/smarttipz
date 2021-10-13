@@ -14,7 +14,7 @@ const handler = async (req, res) => {
         category: Joi.string().required(),
         description: Joi.string().required(),
         language: Joi.string().required(),
-        thumbnail: Joi.string().required(),
+        thumbnail: Joi.string().optional().allow(''),
         title: Joi.string().required(),
         url: Joi.string().required(),
         mediaType: Joi.string().required(),
@@ -23,6 +23,7 @@ const handler = async (req, res) => {
       return schema.validate(data);
     };
     console.log(body);
+
     const { error } = validateUploadVideo(req.body);
 
     if (error) return res.status(400).json({ error: error.details[0].message });

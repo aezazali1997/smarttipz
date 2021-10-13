@@ -1,7 +1,6 @@
 import axiosInstance from 'APIs/axiosInstance';
 import axios from 'axios';
 import { useFormik } from 'formik';
-import { useS3Upload } from 'next-s3-upload';
 import React, { useEffect, useRef, useState } from 'react'
 import Swal from 'sweetalert2';
 import { UploadVideoSchema } from 'utils/validation_shema';
@@ -12,11 +11,13 @@ const UseFetchNewsFeed = () => {
         title: '',
         description: '',
         category: '',
-        language: ''
+        language: '',
+        mediaType: ''
     }
 
+
     const [showModal, setShowModal] = useState(false);
-    const [files, setFile] = useState([]);
+    const [MediaType, setMediaType] = useState(null);
     const [urls, setUrls] = useState('');
     const [thumbnailUrl, setThumbnailUrl] = useState('');
     const [selectedLanguage, setSelectedLanguage] = useState("");
@@ -24,24 +25,21 @@ const UseFetchNewsFeed = () => {
     const [loading, setLoading] = useState(false);
     const [initialValues, setInitialValues] = useState(initials);
 
-    let { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
-
-
     let thumbnailRef = useRef();
 
     let onChangeThumbnail = async ({ target }) => {
         const { files } = target;
-        console.log("files: ", files);
+        // console.log("files: ", files);
         for (let i = 0; i < files.length; i++) {
-            console.log('file: ', files[0]);
+            // console.log('file: ', files[0]);
             let file = files[0];
-            console.log("file: ", file);
+            // console.log("file: ", file);
             let fileParts = file.name.split(".");
-            console.log('fileParts:', fileParts);
+            // console.log('fileParts:', fileParts);
             let fileName = fileParts[0];
-            console.log('fileName: ', fileName);
+            // console.log('fileName: ', fileName);
             let fileType = fileParts[1];
-            console.log('fileType: ', fileType);
+            // console.log('fileType: ', fileType);
             try {
                 const res = await axios
                     .post("/api/media-upload", {
@@ -49,9 +47,9 @@ const UseFetchNewsFeed = () => {
                         fileType
                     })
                 const signedRequest = res.data.signedRequest;
-                console.log('signedRequest: ', signedRequest);
+                // console.log('signedRequest: ', signedRequest);
                 const url = res.data.url;
-                console.log('url: ', url);
+                // console.log('url: ', url);
                 setThumbnailUrl(url);
 
                 let options = {
@@ -62,7 +60,7 @@ const UseFetchNewsFeed = () => {
                 try {
                     const response = await axios
                         .put(signedRequest, file, options)
-                    console.log('response: ', response);
+                    // console.log('response: ', response);
                 } catch (e) {
                     console.log('error: ', e);
                 }
@@ -81,13 +79,21 @@ const UseFetchNewsFeed = () => {
         setThumbnailUrl('');
     }
 
-    let _ToggleUploadModal = () => {
+    let _OpenUploadModal = () => {
         setUrls('');
         setThumbnailUrl('');
         setAgree(false);
         setSelectedLanguage('');
         setInitialValues(initials);
-        setShowModal(!showModal);
+        setShowModal(true);
+    }
+
+    let _CloseUploadModal = () => {
+        setUrls('');
+        setThumbnailUrl('');
+        setAgree(false);
+        setSelectedLanguage('');
+        setShowModal(false);
     }
 
     const enableLoading = () => {
@@ -130,9 +136,7 @@ const UseFetchNewsFeed = () => {
         values.mediaType = 'video';
         console.log(values);
         try {
-            const res = await axiosInstance.uploadNewsFeed(values)
-            console.log(res);
-            const { data: { message } } = res;
+            const { data: { message } } = await axiosInstance.uploadNewsFeed(values)
             Swal.fire({
                 text: message,
                 timer: 3000,
@@ -142,7 +146,7 @@ const UseFetchNewsFeed = () => {
             })
             resetForm(initials);
             setSubmitting(false);
-            _ToggleUploadModal();
+            _CloseUploadModal();
         }
         catch ({ response: { data: { message } } }) {
             console.log('API Failed: ', message);
@@ -165,15 +169,14 @@ const UseFetchNewsFeed = () => {
         validateOnBlur: true,
         onSubmit: (values, { setSubmitting, setStatus, resetForm }) => {
             _OnSubmit(values, setSubmitting, resetForm);
-        },
-
+        }
     });
 
 
     return {
-        formik, _HandleLanguageChange, selectedLanguage, _DeleteImg, ChangeAgreement, agree, files, urls,
-        setUrls, setFile, showModal, _ToggleUploadModal, loading, thumbnailRef, _OnRemoveThumbnail,
-        onChangeThumbnail, _OnThumbnailClick, thumbnailUrl, FileInput, openFileDialog
+        formik, _HandleLanguageChange, selectedLanguage, _DeleteImg, ChangeAgreement, agree, urls,
+        setUrls, showModal, _OpenUploadModal, _CloseUploadModal, loading, thumbnailRef, _OnRemoveThumbnail,
+        onChangeThumbnail, _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType
     }
 }
 

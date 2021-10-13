@@ -1,0 +1,31 @@
+.video {
+    padding-top: 0% !important;
+}
+
+.video-react.video-react-fluid {
+    width: 100%;
+    max-width: 100%;
+    height: 192px !important;
+    border-top-left-radius: 8px !important;
+    border-top-right-radius: 8px !important;
+}
+
+.video-react .video-react-poster {
+    display: inline-block;
+    vertical-align: middle;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-size: cover;
+    background-color: #000000;
+    border-top-left-radius: 8px !important;
+    border-top-right-radius: 8px !important;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+}
