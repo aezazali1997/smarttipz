@@ -30,7 +30,8 @@ const handler = async (req, res) => {
           category: {
             [sequelize.Op.not]: 'catalogue'
           }
-        }
+        },
+        order: [["createdAt", "DESC"]]
       });
 
       res.status(200).json({

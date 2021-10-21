@@ -203,19 +203,21 @@ const Profile = ({ profile }) => {
               <div className="flex w-full mt-6 justify-center lg:justify-start" >
                 <div className="flex flex-col w-full sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
                   {
-                    myVideos.map(({ title, url, mediaType, thumbnail, like, comment, share }) => (
-                      <Card
-                        image={url}
-                        title={title}
-                        thumbnail={thumbnail}
-                        mediaType={mediaType}
-                        comment={comment}
-                        like={like}
-                        share={share}
-                        views={200}
-                        rating={3.5}
-                        disclaimer={true}
-                      />
+                    myVideos.map(({ title, url, mediaType, thumbnail, like, comment, share }, index) => (
+                      <div key={index}>
+                        <Card
+                          image={url}
+                          title={title}
+                          thumbnail={thumbnail}
+                          mediaType={mediaType}
+                          comment={comment}
+                          like={like}
+                          share={share}
+                          views={200}
+                          rating={3.5}
+                          disclaimer={true}
+                        />
+                      </div>
                     ))
                   }
                 </div>

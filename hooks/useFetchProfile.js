@@ -302,6 +302,7 @@ const UseFetchProfile = (profile) => {
                 showCancelButton: false,
                 showConfirmButton: false
             })
+            setCatalogues([values, ...catalogues])
             resetForm(initials);
             setSubmitting(false);
             _CloseUploadModal();

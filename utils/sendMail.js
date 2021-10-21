@@ -1,7 +1,7 @@
 const sgMail = require('@sendgrid/mail')
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
-const SendEmail = (email, subject, content) => {
+const SendEmail = (email, subject, content, templateId) => {
 
   try {
     const msg = {
@@ -11,7 +11,10 @@ const SendEmail = (email, subject, content) => {
         name: 'Smart Tipz'
       },
       subject: `${subject}`,
-      html: `${content}`
+      templateId: templateId,
+      dynamicTemplateData: {
+        message: `${content}`,
+      },
     }
 
     sgMail

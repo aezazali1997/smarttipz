@@ -25,7 +25,10 @@ const handler = async (req, res) => {
             console.log('user: ', user);
             const { id } = user;
 
-            const videos = await Video.findAll({ where: { UserId: id, category: 'catalogue' } })
+            const videos = await Video.findAll({
+                where: { UserId: id, category: 'catalogue' },
+                order: [["createdAt", "DESC"]]
+            })
 
             console.log('videos: ', videos);
 

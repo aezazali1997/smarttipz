@@ -33,7 +33,7 @@ const handler = async (req, res) => {
       await user.update({ password: encNewPassword });
       console.log(newPassword);
 
-      await sendEmail(email, 'New Password', `<p>Your new password is: ${newPassword}</p>`);
+      await sendEmail(email, 'New Password', `Your new password is: ${newPassword}`, 'd-590a0a1629cd4d6bba034bed9b0d1d6a');
 
       res.status(201).json({ error: false, message: 'New password sent', data: [] });
     } catch (err) {

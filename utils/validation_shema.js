@@ -104,8 +104,7 @@ export const UploadVideoSchema = Yup.object().shape({
         .required("This is a required field"),
     category: Yup.string()
         .required('This is a required field'),
-    description: Yup.string()
-        .required('This is a required field'),
+    description: Yup.string(),
     language: Yup.string()
         .required('This is a required field'),
 });

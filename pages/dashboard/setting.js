@@ -198,7 +198,7 @@ const Setting = ({ settings }) => {
                     label={'Business Website link'}
                   />
                 }
-                <div className="flex  w-full whitespace-preborder bg-gray-50 rounded-md h-12">
+                <div className="flex w-full whitespace-preborder bg-gray-50 rounded-md h-12 mb-4">
                   <span className="bg-gray-50 text-md border border-r-0 rounded-md rounded-r-none font-bold border-gray-200 px-3 py-3  h-12">
                     $
                   </span>
@@ -208,7 +208,7 @@ const Setting = ({ settings }) => {
                     value={tip}
                     min={0}
                     onChange={_OnChange}
-                    inputClass={`border bg-gray-50 text-sm border-gray-200 rounded-l-none focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
+                    inputClass={`border bg-gray-50 text-sm border-gray-200  rounded-l-none focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
                     label={'Tip'}
                   />
                 </div>
