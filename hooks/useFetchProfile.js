@@ -36,6 +36,7 @@ const UseFetchProfile = (profile) => {
     const [showRequestTestimonial, setShowRequestTestimonial] = useState(false);
     const [MediaType, setMediaType] = useState(null);
     const [urls, setUrls] = useState('');
+    const [thumbnailFile, setThumbnailFile] = useState('');
     const [thumbnailUrl, setThumbnailUrl] = useState('');
     const [agree, setAgree] = useState(false);
     const [initialValues, setInitialValues] = useState(initial);
@@ -285,9 +286,26 @@ const UseFetchProfile = (profile) => {
     const _OnUploadMedia = async (values, setSubmitting, resetForm) => {
         // console.log('In Upload Media')
         setSubmitting(true);
-        // console.log('values => ', values);
-        values.url = urls;
-        values.thumbnail = thumbnailUrl;
+        console.log('values => ', values);
+        let url = await uploadToS3(MediaType);
+        let Type = MediaType?.type.split('/')[0];
+
+        if (Type === 'video') {
+            if (thumbnailUrl !== '') {
+                console.log('InVideo and also thumbnail notEmpty')
+                let thumbnail = await uploadToS3(thumbnailFile);
+                values.thumbnail = thumbnail.url;
+            }
+            else {
+                console.log('InVideo but thumbnail Empty')
+                values.thumbnail = ''
+            }
+        }
+        else {
+            console.log('No Video')
+            values.thumbnail = '';
+        }
+        values.url = url.url;
         values.category = 'catalogue';
         values.agree = agree;
         console.log(values);
@@ -387,40 +405,42 @@ const UseFetchProfile = (profile) => {
         for (let i = 0; i < files.length; i++) {
             // console.log('file: ', files[0]);
             let file = files[0];
-            // console.log("file: ", file);
-            let fileParts = file.name.split(".");
-            // console.log('fileParts:', fileParts);
-            let fileName = fileParts[0];
-            // console.log('fileName: ', fileName);
-            let fileType = fileParts[1];
-            // console.log('fileType: ', fileType);
-            try {
-                const res = await axios
-                    .post("/api/media-upload", {
-                        fileName,
-                        fileType
-                    })
-                const signedRequest = res.data.signedRequest;
-                // console.log('signedRequest: ', signedRequest);
-                const url = res.data.url;
-                // console.log('url: ', url);
-                setThumbnailUrl(url);
+            setThumbnailFile(file)
+            setThumbnailUrl(URL.createObjectURL(file));
+            // // console.log("file: ", file);
+            // let fileParts = file.name.split(".");
+            // // console.log('fileParts:', fileParts);
+            // let fileName = fileParts[0];
+            // // console.log('fileName: ', fileName);
+            // let fileType = fileParts[1];
+            // // console.log('fileType: ', fileType);
+            // try {
+            //     const res = await axios
+            //         .post("/api/media-upload", {
+            //             fileName,
+            //             fileType
+            //         })
+            //     const signedRequest = res.data.signedRequest;
+            //     // console.log('signedRequest: ', signedRequest);
+            //     const url = res.data.url;
+            //     // console.log('url: ', url);
+            //     setThumbnailUrl(url);
 
-                let options = {
-                    headers: {
-                        "Content-Type": fileType
-                    }
-                };
-                try {
-                    const response = await axios
-                        .put(signedRequest, file, options)
-                    // console.log('response: ', response);
-                } catch (e) {
-                    console.log('error: ', e);
-                }
-            } catch (e) {
-                console.log('error: ', e);
-            }
+            //     let options = {
+            //         headers: {
+            //             "Content-Type": fileType
+            //         }
+            //     };
+            //     try {
+            //         const response = await axios
+            //             .put(signedRequest, file, options)
+            //         // console.log('response: ', response);
+            //     } catch (e) {
+            //         console.log('error: ', e);
+            //     }
+            // } catch (e) {
+            //     console.log('error: ', e);
+            // }
 
         }
     }
@@ -431,6 +451,7 @@ const UseFetchProfile = (profile) => {
 
     let _OnRemoveThumbnail = () => {
         setThumbnailUrl('');
+        setThumbnailFile('');
     }
 
     let _OpenUploadModal = () => {

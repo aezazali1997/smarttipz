@@ -27,9 +27,10 @@ const handler = async (req, res) => {
       const videos = await Video.findAll({
         where: {
           UserId: id,
+          isApproved: true,
           category: {
             [sequelize.Op.not]: 'catalogue'
-          }
+          },
         },
         order: [["createdAt", "DESC"]]
       });

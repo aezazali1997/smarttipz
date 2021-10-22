@@ -11,8 +11,8 @@ const Card = ({ image, like, comment, share, title, views, rating, disclaimer, m
                 {
                     mediaType ?
                         mediaType === 'image' ?
-                            <img className="w-full rounded-lg h-48"
-                                src={image} alt="Sunset in the mountains" layout="fill" />
+                            <img className="w-full rounded-lg h-48 object-cover"
+                                src={image} alt="Sunset in the mountains" />
                             :
                             <VideoPlayer poster={thumbnail} src={image} />
                         :

@@ -2,13 +2,15 @@
 /* eslint-disable react/no-unescaped-entities */
 import { faFileVideo, faImages } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useS3Upload } from 'next-s3-upload';
 import { isEmpty } from 'lodash';
 import React, { useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 import Image from 'next/image';
 import axios from 'axios';
-
 const MyDropzone = ({ setMaterial, setMediaType, accept, heading }) => {
+
+    let { uploadToS3 } = useS3Upload();
 
     const onDrop = useCallback(async (acceptedFiles) => {
         console.log('acceptedFiles:', acceptedFiles);
@@ -17,41 +19,42 @@ const MyDropzone = ({ setMaterial, setMediaType, accept, heading }) => {
             let file = acceptedFiles[0];
             setMediaType(file);
             console.log("file: ", file);
-            let fileParts = file.name.split(".");
-            console.log('fileParts:', fileParts);
-            let fileName = fileParts[0];
-            console.log('fileName: ', fileName);
-            let fileType = fileParts[1];
+            setMaterial(URL.createObjectURL(file));
+            // let fileParts = file.name.split(".");
+            // console.log('fileParts:', fileParts);
+            // let fileName = fileParts[0];
+            // console.log('fileName: ', fileName);
+            // let fileType = fileParts[1];
 
-            console.log('fileType: ', fileType);
-            try {
-                const res = await axios
-                    .post("/api/media-upload", {
-                        fileName,
-                        fileType
-                    })
-                const signedRequest = res.data.signedRequest;
-                console.log('signedRequest: ', signedRequest);
-                const url = res.data.url;
-                console.log('url: ', url);
-                setMaterial(url);
+            // console.log('fileType: ', fileType);
+            // try {
+            //     const res = await axios
+            //         .post(process.env.BASE_URL + "api/media-upload", {
+            //             fileName,
+            //             fileType
+            //         })
+            //     const signedRequest = res.data.signedRequest;
+            //     console.log('signedRequest: ', signedRequest);
+            //     const url = res.data.url;
+            //     console.log('url: ', url);
+            //     setMaterial(url);
 
-                let options = {
-                    headers: {
-                        "Content-Type": fileType
-                    }
-                };
-                try {
-                    const response = await axios
-                        .put(signedRequest, file, options)
-                    console.log('response: ', response);
-                } catch (e) {
-                    console.log('error: ', e);
-                }
-            }
-            catch (e) {
-                console.log('error: ', e);
-            }
+            //     let options = {
+            //         headers: {
+            //             "Content-Type": fileType
+            //         }
+            //     };
+            //     try {
+            //         const response = await axios
+            //             .put(signedRequest, file, options)
+            //         console.log('response: ', response);
+            //     } catch (e) {
+            //         console.log('Inner error: ', e);
+            //     }
+            // }
+            // catch (e) {
+            //     console.log('Outter error: ', e);
+            // }
         }
         // setFileObj(acceptedFiles);
         // let fileArray = [];

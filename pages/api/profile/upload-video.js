@@ -12,9 +12,9 @@ const handler = async (req, res) => {
       const schema = Joi.object({
         url: Joi.string().required(),
         category: Joi.string().required(),
-        description: Joi.string().required(),
+        description: Joi.string().optional().allow('').allow(null),
         language: Joi.string().required(),
-        thumbnail: Joi.string().optional().allow(''),
+        thumbnail: Joi.string().optional().allow('').allow(null),
         title: Joi.string().required(),
         url: Joi.string().required(),
         mediaType: Joi.string().required(),
@@ -22,6 +22,7 @@ const handler = async (req, res) => {
       });
       return schema.validate(data);
     };
+
     console.log(body);
 
     const { error } = validateUploadVideo(req.body);
