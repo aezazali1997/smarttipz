@@ -20,63 +20,8 @@ const MyDropzone = ({ setMaterial, setMediaType, accept, heading }) => {
             setMediaType(file);
             console.log("file: ", file);
             setMaterial(URL.createObjectURL(file));
-            // let fileParts = file.name.split(".");
-            // console.log('fileParts:', fileParts);
-            // let fileName = fileParts[0];
-            // console.log('fileName: ', fileName);
-            // let fileType = fileParts[1];
-
-            // console.log('fileType: ', fileType);
-            // try {
-            //     const res = await axios
-            //         .post(process.env.BASE_URL + "api/media-upload", {
-            //             fileName,
-            //             fileType
-            //         })
-            //     const signedRequest = res.data.signedRequest;
-            //     console.log('signedRequest: ', signedRequest);
-            //     const url = res.data.url;
-            //     console.log('url: ', url);
-            //     setMaterial(url);
-
-            //     let options = {
-            //         headers: {
-            //             "Content-Type": fileType
-            //         }
-            //     };
-            //     try {
-            //         const response = await axios
-            //             .put(signedRequest, file, options)
-            //         console.log('response: ', response);
-            //     } catch (e) {
-            //         console.log('Inner error: ', e);
-            //     }
-            // }
-            // catch (e) {
-            //     console.log('Outter error: ', e);
-            // }
         }
-        // setFileObj(acceptedFiles);
-        // let fileArray = [];
-        // for (let i = 0; i < acceptedFiles.length; i++) {
-        //     fileArray.push(URL.createObjectURL(acceptedFiles[i]))
-        // }
-        // setMaterial([...fileArray]);
-
-        // For multiple Images/Videos //
-        // console.log({ filesObj });
-        // let newFileArray = [...filesObj, ...acceptedFiles];
-        // setFileObj(newFileArray);
-        // console.log('newFileArray', newFileArray)
-        // let fileArray = [];
-        // console.log({ fileArray })
-        // for (let i = 0; i < acceptedFiles.length; i++) {
-        //     fileArray.push(URL.createObjectURL(acceptedFiles[i]))
-        // }
-        // console.log({ material })
-        // let newMaterialArray = [...material, ...fileArray];
-        // console.log('newMaterialArray', newMaterialArray)
-        // setMaterial(newMaterialArray);
+     
     }, [])
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })

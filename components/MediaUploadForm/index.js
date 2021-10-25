@@ -274,10 +274,8 @@ const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, Chan
 									!agree || isEmpty(urls)
 							}
 							className={`w-full inline-flex justify-center rounded-md border-none px-4 py-2 text-base font-medium 
-                				${MediaType === 'video' ?
-									agree && !isEmpty(urls) ? 'btn' : 'btn-disable pointer-events-none'
-									:
-									agree && !isEmpty(urls) ? 'btn' : 'btn-disable pointer-events-none'} 
+                				${formik.isSubmitting ? 'btn-disable pointer-events-none' :
+									agree && !isEmpty(urls) ? 'btn' : 'btn-disable pointer-events-none'}
 								text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm`}
 							childrens={formik.isSubmitting ? 'Uploading' : 'Upload'}
 							loading={formik.isSubmitting}

@@ -10,6 +10,7 @@
 @import './customLoader.css';
 @import './dropzone.css';
 @import './videoplayer.css';
+@import './Carousel.css';
 @import 'react-phone-input-2/lib/style.css';
 @import '../node_modules/video-react/dist/video-react.css';
 @import "react-languages-select/css/react-languages-select.css";

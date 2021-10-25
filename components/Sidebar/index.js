@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/link-passhref */
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import logo from '../../public/logo.png';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -7,12 +7,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faNewspaper, faUserCircle, faCog, faPlayCircle, faSignOutAlt, faComment, faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/router';
 // import Badge from 'components/Badge';
+import { useOutsideClick } from 'hooks';
 
 const Sidebar = ({ logout }) => {
 
     const router = useRouter();
     const { asPath } = router;
     const [dropdown, setShowDropdown] = useState(false);
+    const DropdownRef = useRef();
 
     // useEffect(() => {
     //     asPath === '/privacy-policy' || asPath === '/terms-and-conditions' || asPath === '/copyrights'
@@ -25,16 +27,18 @@ const Sidebar = ({ logout }) => {
             'bg-white text' : 'sidebar-item'
     }
 
+    useOutsideClick(DropdownRef, () => {
+        setShowDropdown(false);
+    })
+
     const toggleDropdown = () => {
         setShowDropdown(!dropdown);
     }
 
+
     let ActiveDropdown = (path) => {
         return asPath === path ? 'text-white background' : 'sidebar-dropdown-item';
     }
-
-
-
 
     return (
         <div className="sidebar">
@@ -85,7 +89,7 @@ const Sidebar = ({ logout }) => {
                                 </div>
                             </a>
                         </Link>
-                        <div className="inline-block relative space-y-1">
+                        <div ref={DropdownRef} className="inline-block relative space-y-1">
                             <button onClick={toggleDropdown} className={`flex items-center justify-between py-2 px-3 rounded-lg w-52 font-medium sidebar-item cursor-pointer
                            ${dropdown ? 'bg-white text' : 'text-white'}`} >
                                 <div>

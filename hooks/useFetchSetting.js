@@ -47,7 +47,7 @@ const UseFetchSetting = (settings) => {
             setPersonalInfo(settings);
         }
         if (accountType === 'Business') {
-            axiosInstance.getBusinessCard().then(({ data: { error, data, message } }) => {
+            axiosInstance.getBusinessCard().then(({ data: { data } }) => {
                 setBusinessCard(data);
             }).catch(e => {
                 console.log('Error in Api BusinessCard: ', e.response.data.message);
@@ -115,6 +115,13 @@ const UseFetchSetting = (settings) => {
         setPersonalInfo(newObject);
     }
 
+    const onChangeBusinessWebsite = (e) => {
+        const { name, value } = e.target;
+        let copyOriginal = { ...businessCard }
+        let newObject = { ...copyOriginal, [name]: value }
+        setBusinessCard(newObject)
+    }
+
     const _ChangeCountryCode = value => {
         setCountryCode(value)
     }
@@ -122,7 +129,6 @@ const UseFetchSetting = (settings) => {
     let _Update = () => {
         enablePersonalLoading();
         personalInfo.phone = countryCode;
-        console.log('personal: ', personalInfo);
         let payload = {
             data: personalInfo,
             accountType: personalInfo.accountType,
@@ -197,7 +203,8 @@ const UseFetchSetting = (settings) => {
 
     return {
         accountLoading, formik, personalInfo, personalLoading, businessCard, countryCode,
-        imageUrl, _Update, _OnChange, _DeleteImg, handleFileChange, FileInput, openFileDialog, _ChangeCountryCode
+        imageUrl, _Update, _OnChange, _DeleteImg, handleFileChange, FileInput, openFileDialog,
+        _ChangeCountryCode, onChangeBusinessWebsite
     }
 }
 

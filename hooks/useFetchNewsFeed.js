@@ -36,42 +36,6 @@ const UseFetchNewsFeed = () => {
             let file = files[0];
             setThumbnailFile(file)
             setThumbnailUrl(URL.createObjectURL(file));
-
-            // console.log("file: ", file);
-            // let fileParts = file.name.split(".");
-            // // console.log('fileParts:', fileParts);
-            // let fileName = fileParts[0];
-            // // console.log('fileName: ', fileName);
-            // let fileType = fileParts[1];
-            // // console.log('fileType: ', fileType);
-            // try {
-            //     const res = await axios
-            //         .post("/api/media-upload", {
-            //             fileName,
-            //             fileType
-            //         })
-            //     const signedRequest = res.data.signedRequest;
-            //     // console.log('signedRequest: ', signedRequest);
-            //     const url = res.data.url;
-            //     // console.log('url: ', url);
-            //     setThumbnailUrl(url);
-
-            //     let options = {
-            //         headers: {
-            //             "Content-Type": fileType
-            //         }
-            //     };
-            //     try {
-            //         const response = await axios
-            //             .put(signedRequest, file, options)
-            //         // console.log('response: ', response);
-            //     } catch (e) {
-            //         console.log('error: ', e);
-            //     }
-            // } catch (e) {
-            //     console.log('error: ', e);
-            // }
-
         }
     }
 

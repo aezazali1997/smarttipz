@@ -8,7 +8,7 @@ import { parseCookies } from 'nookies';
 import { isEmpty } from 'lodash';
 import { UseFetchProfile } from 'hooks';
 import videos from 'utils/VdeoSchema.json';
-import { Button, Card, CustomLoader, InputField, MediaUploadForm, PopupBusinessCard, ProfileCard, Rating, Spinner, TestimonialCard } from 'components';
+import { Button, Card, Carousel, CustomLoader, InputField, MediaUploadForm, PopupBusinessCard, ProfileCard, Rating, Spinner, TestimonialCard } from 'components';
 // import { AddTestimonialModal, EditTestimonialModal } from 'components/Modals';
 import { getInputClasses } from 'helpers';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -160,22 +160,26 @@ const Profile = ({ profile }) => {
                     </div>
                   )
                     :
-
-                    <div className="flex w-full mt-6 justify-center lg:justify-start">
-                      <div className="flex flex-col w-full sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
+                    <div className=" w-auto mt-6 relative">
+                      {/* <div className="flex flex-col w-full sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3"> */}
+                      <Carousel>
                         {
-                          catalogues.map(({ title, url, mediaType, like, comment, share, thumbnail }) => (
-                            <Card
-                              image={url}
-                              title={title}
-                              views={200}
-                              mediaType={mediaType}
-                              thumbnail={thumbnail}
-                            />
+                          catalogues.map(({ title, url, mediaType, thumbnail }, index) => (
+                            <div key={index}>
+                              <Card
+                                image={url}
+                                title={title}
+                                views={200}
+                                mediaType={mediaType}
+                                thumbnail={thumbnail}
+                              />
+                            </div>
                           ))
                         }
-                      </div>
+
+                      </Carousel>
                     </div>
+                //</div>
               }
             </div>
           </>
@@ -200,8 +204,9 @@ const Profile = ({ profile }) => {
               </div>
             )
               :
-              <div className="flex w-full mt-6 justify-center lg:justify-start" >
-                <div className="flex flex-col w-full sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
+              <div className="w-full mt-6 justify-center lg:justify-start" >
+                {/* <div className="flex flex-col w-full sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3"> */}
+                <Carousel>
                   {
                     myVideos.map(({ title, url, mediaType, thumbnail, like, comment, share }, index) => (
                       <div key={index}>
@@ -220,121 +225,123 @@ const Profile = ({ profile }) => {
                       </div>
                     ))
                   }
-                </div>
+                </Carousel>
+                {/* </div> */}
               </div>}
       </div>
       {/* section ends here */}
       {/* section starts here */}
-      {accountType === 'Business' && (
-        <div className="flex flex-col w-full px-2  mt-8">
-          <h1 className="text-md font-medium">Customer Testimonials</h1>
-          <div className="flex flex-col w-full mt-6 justify-center lg:justify-start space-y-4">
-            <div className="flex w-full justify-center">
-              <Button
-                onSubmit={_AddTestimonial}
-                type="button"
-                childrens={'Request Testimonial'}
-                classNames={"px-3 py-2 flex justify-center items-center text-white text-sm btn rounded-md "}
-              />
-            </div>
-            {
-              showRequestTestimonial && (
-                <form onSubmit={formik.handleSubmit}>
-                  <div className="flex flex-col sm:flex-row w-full p-2 ease-in-out transition-all justify-center bg-gray-50">
-                    <div className="flex flex-col w-full sm:w-3/4">
-                      <InputField
-                        name={"email"}
-                        type={"text"}
-                        value={formik.values.email}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        error={formik.touched.email && formik.errors.email}
-                        svg={(
-                          <svg className="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" /><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" /></svg>
-                        )}
-                        inputClass={`${getInputClasses(
-                          formik, "email"
-                        )} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
-                        label={'Email'}
+      {
+        accountType === 'Business' && (
+          <div className="flex flex-col w-full px-2  mt-8">
+            <h1 className="text-md font-medium">Customer Testimonials</h1>
+            <div className="flex flex-col w-full mt-6 justify-center lg:justify-start space-y-4">
+              <div className="flex w-full justify-center">
+                <Button
+                  onSubmit={_AddTestimonial}
+                  type="button"
+                  childrens={'Request Testimonial'}
+                  classNames={"px-3 py-2 flex justify-center items-center text-white text-sm btn rounded-md "}
+                />
+              </div>
+              {
+                showRequestTestimonial && (
+                  <form onSubmit={formik.handleSubmit}>
+                    <div className="flex flex-col sm:flex-row w-full p-2 ease-in-out transition-all justify-center bg-gray-50">
+                      <div className="flex flex-col w-full sm:w-3/4">
+                        <InputField
+                          name={"email"}
+                          type={"text"}
+                          value={formik.values.email}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          error={formik.touched.email && formik.errors.email}
+                          svg={(
+                            <svg className="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" /><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" /></svg>
+                          )}
+                          inputClass={`${getInputClasses(
+                            formik, "email"
+                          )} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
+                          label={'Email'}
+                        />
+                        {formik.touched.email && formik.errors.email ? (
+                          <div className="text-red-700 text-sm mb-4" >{formik.errors.email}</div>
+                        ) : null}
+                      </div>
+                      <Button
+                        type="submit"
+                        childrens={'Send Email'}
+                        classNames={"px-3 py-2 flex h-auto sm:h-12 justify-center items-center text-white text-sm btn rounded-md "}
+                        loading={loading}
                       />
-                      {formik.touched.email && formik.errors.email ? (
-                        <div className="text-red-700 text-sm mb-4" >{formik.errors.email}</div>
-                      ) : null}
                     </div>
-                    <Button
-                      type="submit"
-                      childrens={'Send Email'}
-                      classNames={"px-3 py-2 flex h-auto sm:h-12 justify-center items-center text-white text-sm btn rounded-md "}
-                      loading={loading}
-                    />
-                  </div>
-                </form>
-              )}
-            {
-              loadingTestimonial ? (
-                <div className="flex w-full justify-center">
-                  <span className="flex flex-col items-center">
-                    <Spinner />
-                    <p className="text-sm text-gray-400"> Loading Testimonials</p>
-                  </span>
-                </div>
-              )
-                :
-                isEmpty(filteredTestimonial) ? (
-                  <div className="flex w-full justify-center items-center">
-                    <p className="text-gray-500"> No Testimonials Yet</p>
+                  </form>
+                )}
+              {
+                loadingTestimonial ? (
+                  <div className="flex w-full justify-center">
+                    <span className="flex flex-col items-center">
+                      <Spinner />
+                      <p className="text-sm text-gray-400"> Loading Testimonials</p>
+                    </span>
                   </div>
                 )
                   :
-                  <InfiniteScroll
-                    dataLength={filteredTestimonial?.length} //This is important field to render the next data
-                    next={fetchMoreData}
-                    hasMore={hasMore}
-                    loader={(
-                      <div className="flex justify-center items-center w-full">
-                        <CustomLoader />
-                      </div>
-                    )}
-                    endMessage={
-                      <p style={{ textAlign: 'center' }}>
-                        <b>Yay! You have seen it all</b>
-                      </p>
-                    }
-                  // below props only if you need pull down functionality
-                  // refreshFunction={this.refresh}
-                  // pullDownToRefresh
-                  // pullDownToRefreshThreshold={50}
-                  // pullDownToRefreshContent={
-                  //   <h3 style={{ textAlign: 'center' }}>&#8595; Pull down to refresh</h3>
-                  // }
-                  // releaseToRefreshContent={
-                  //   <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
-                  // }
-                  >
-                    <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
-                      {
-                        filteredTestimonial.map(({ id, picture, ownerName, designation, description, isVisible }, index) => (
-                          <div key={index}>
-                            <TestimonialCard
-                              _Toggle={() => _EditTestimonial(id, isVisible)}
-                              // _Edit={_EditTestimonial}
-                              // _Delete={_DeleteTestimonial}
-                              image={picture}
-                              name={ownerName}
-                              designation={designation}
-                              description={description}
-                              checked={isVisible}
-                            // data={res}
-                            />
-                          </div>
-                        ))
-                      }
+                  isEmpty(filteredTestimonial) ? (
+                    <div className="flex w-full justify-center items-center">
+                      <p className="text-gray-500"> No Testimonials Yet</p>
                     </div>
-                  </InfiniteScroll>
-            }
+                  )
+                    :
+                    <InfiniteScroll
+                      dataLength={filteredTestimonial?.length} //This is important field to render the next data
+                      next={fetchMoreData}
+                      hasMore={hasMore}
+                      loader={(
+                        <div className="flex justify-center items-center w-full">
+                          <CustomLoader />
+                        </div>
+                      )}
+                      endMessage={
+                        <p style={{ textAlign: 'center' }}>
+                          <b>Yay! You have seen it all</b>
+                        </p>
+                      }
+                    // below props only if you need pull down functionality
+                    // refreshFunction={this.refresh}
+                    // pullDownToRefresh
+                    // pullDownToRefreshThreshold={50}
+                    // pullDownToRefreshContent={
+                    //   <h3 style={{ textAlign: 'center' }}>&#8595; Pull down to refresh</h3>
+                    // }
+                    // releaseToRefreshContent={
+                    //   <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
+                    // }
+                    >
+                      <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
+                        {
+                          filteredTestimonial.map(({ id, picture, ownerName, designation, description, isVisible }, index) => (
+                            <div key={index}>
+                              <TestimonialCard
+                                _Toggle={() => _EditTestimonial(id, isVisible)}
+                                // _Edit={_EditTestimonial}
+                                // _Delete={_DeleteTestimonial}
+                                image={picture}
+                                name={ownerName}
+                                designation={designation}
+                                description={description}
+                                checked={isVisible}
+                              // data={res}
+                              />
+                            </div>
+                          ))
+                        }
+                      </div>
+                    </InfiniteScroll>
+              }
+            </div>
           </div>
-        </div>
-      )
+        )
       }
       {
         showBusinessCard && (
@@ -351,28 +358,29 @@ const Profile = ({ profile }) => {
       }
 
 
-      {showModal && (
-        <MediaUploadForm
-          title={modalTitle}
-          heading='Upload Photo/Video'
-          urls={urls}
-          agree={agree}
-          formik={formik}
-          accept={'video/*, image/*'}
-          MediaType={MediaType}
-          thumbnailUrl={thumbnailUrl}
-          thumbnailRef={thumbnailRef}
-          setUrls={setUrls}
-          _DeleteImg={_DeleteImg}
-          setMediaType={setMediaType}
-          ChangeAgreement={ChangeAgreement}
-          onChangeThumbnail={onChangeThumbnail}
-          _OnThumbnailClick={_OnThumbnailClick}
-          _CloseUploadModal={_CloseUploadModal}
-          _OnRemoveThumbnail={_OnRemoveThumbnail}
+      {
+        showModal && (
+          <MediaUploadForm
+            title={modalTitle}
+            heading='Upload Photo/Video'
+            urls={urls}
+            agree={agree}
+            formik={formik}
+            accept={'video/*, image/*'}
+            MediaType={MediaType}
+            thumbnailUrl={thumbnailUrl}
+            thumbnailRef={thumbnailRef}
+            setUrls={setUrls}
+            _DeleteImg={_DeleteImg}
+            setMediaType={setMediaType}
+            ChangeAgreement={ChangeAgreement}
+            onChangeThumbnail={onChangeThumbnail}
+            _OnThumbnailClick={_OnThumbnailClick}
+            _CloseUploadModal={_CloseUploadModal}
+            _OnRemoveThumbnail={_OnRemoveThumbnail}
 
-        />
-      )
+          />
+        )
       }
 
       {/* section ends here */}
@@ -408,7 +416,7 @@ const Profile = ({ profile }) => {
               ''
         )
       } */}
-    </div>
+    </div >
   )
 }
 

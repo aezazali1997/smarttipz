@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/router';
 import cookie from 'js-cookie';
 import { Sidebar, Drawer } from 'components'
-
+import { useOutsideClick } from 'hooks';
 
 const CustomLayout = ({ children }) => {
 
     const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
+    const [dropdown, setShowDropdown] = useState(false);
+
+    const DropdownRef = useRef();
 
     useEffect(() => {
 
@@ -26,6 +29,14 @@ const CustomLayout = ({ children }) => {
     });
 
 
+    useOutsideClick(DropdownRef, () => {
+        setShowDropdown(false);
+    })
+
+    const toggleDropdown = () => {
+        setShowDropdown(!dropdown);
+    }
+
     const toggle = () => {
         setIsOpen(!isOpen);
     };
@@ -40,8 +51,20 @@ const CustomLayout = ({ children }) => {
 
     return (
         <div className={`flex flex-col lg:flex-row w-full h-full`}>
-            <Sidebar logout={_Logout} />
-            <Drawer logout={_Logout} toggle={toggle} isOpen={isOpen} />
+            <Sidebar
+                logout={_Logout}
+                dropdown={dropdown}
+                dropdownRef={DropdownRef}
+                toggleDropdown={toggleDropdown}
+            />
+            <Drawer
+                isOpen={isOpen}
+                toggle={toggle}
+                logout={_Logout}
+                dropdown={dropdown}
+                // dropdownRef={DropdownRef}
+                toggleDropdown={toggleDropdown}
+            />
             <main className='Content'>
                 {
                     localStorage.getItem('isApproved') &&
