@@ -8,12 +8,14 @@ const Index = ({ children }) => {
     return (
         <Carousel
             slidesToShow={4}
+            slidesToScroll={4}
             dragging={false}
             cellSpacing={10}
-            scrollMode="page"
             defaultControlsConfig={{
                 nextButtonText: '>',
                 prevButtonText: '<',
+                prevButtonClassName: 'mb-16 text-2xl font-bold ',
+                nextButtonClassName: 'mb-16 text-2xl font-bold ',
                 pagingDotsContainerClassName: 'hidden',
                 pagingDotsClassName: 'hidden'
             }}
