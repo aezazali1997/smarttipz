@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
 const bcrypt = require('bcryptjs');
-
+const sequelize = require("sequelize");
 const User = require('../../../models/User');
 
 const handler = async (req, res) => {
@@ -27,7 +27,12 @@ const handler = async (req, res) => {
     const { email, password } = body;
 
     try {
-      const user = await User.findOne({ where: { email } });
+      const user = await User.findOne({
+        where: {
+          email,
+          [sequelize.Op.and]: [{ isDeleted: false }, { isBlocked: false }]
+        }
+      });
       if (!user) {
         return res.status(403).json({ error: true, message: 'Validation failed', data: [] });
       }

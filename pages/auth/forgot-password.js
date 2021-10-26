@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
 import React from 'react'
-// import Link from 'next/link'
+import Link from 'next/link'
 import Image from 'next/image';
 import Helmet from 'react-helmet';
 import { Button, InputField } from '../../components';
@@ -80,16 +80,16 @@ const ForgetPassword = () => {
                                 childrens={'Next'}
                                 loading={loading}
                             />
-                            {/* <div className="flex mt-3 w-full ">
+                            <div className="flex mt-3 w-full ">
                                 <p className="text-sm w-full text-gray-500 text-center ">
-                                    <Link
-                                        href="/forgot-password">
+                                    Back to <Link
+                                        href="/auth/login">
                                         <a className="text-blue-800 text-sm font-semibold hover:underline"
-                                        >Try another way
+                                        >Login
                                         </a>
                                     </Link>
                                 </p>
-                            </div> */}
+                            </div>
                         </form>
                     </div>
                 </div>

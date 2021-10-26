@@ -2,6 +2,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react'
 import { Switch } from 'components';
+import ReactTooltip from 'react-tooltip';
 
 const TestimonialCard = ({ image, name, designation, description, checked, otherUser, _Toggle }) => {
     return (
@@ -44,9 +45,14 @@ const TestimonialCard = ({ image, name, designation, description, checked, other
                         </div> */
 
                         // SWITCH FOR ENABLE DISABLE TESTIMONIALS //
-                        <div className="flex flex-col items-center justify-center divide-y-2 space-y-2">
+
+                        <div data-tip data-for='testimonial' className="flex flex-col items-center justify-center divide-y-2 space-y-2">
                             <Switch name="toggleTestimonial" onChange={_Toggle} checked={checked} />
+                            <ReactTooltip className="max-w-md break-words" id='testimonial' place="top" effect="solid" border={false} borderColor="white" clickable={false}>
+                                {checked ? 'This testimonial will be visible to other users' : 'This testimonial will not be visible to other users'}
+                            </ReactTooltip>
                         </div>
+
                     )}
                 </div>
             </div>

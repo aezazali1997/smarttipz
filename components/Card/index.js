@@ -66,10 +66,10 @@ const Card = ({ image, like, comment, share, title, views, rating, disclaimer, m
                 }
                 {disclaimer &&
                     <span className="flex justify-end pt-1">
-                        <div data-tip data-for="disclaimer" className="text flex justify-end w-40 font-sans hover:underline cursor-pointer">
+                        <div data-tip data-for={`disclaimer${title}`} className="text flex justify-end w-40 font-sans hover:underline cursor-pointer">
                             Disclaimer
                         </div>
-                        <ReactTooltip className="max-w-md break-words" id="disclaimer" place="top" effect="solid" border={false} borderColor="white" clickable={false}>
+                        <ReactTooltip className="max-w-md break-words" id={`disclaimer${title}`} place="top" effect="solid" border={false} borderColor="white" clickable={false}>
                             Although the information contained in these
                             videos has been produced and processed from sources believed to be
                             reliable, no warranty, expressed or implied, is made regarding

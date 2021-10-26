@@ -26,7 +26,7 @@ const handler = async (req, res) => {
             const { id } = user;
 
             const videos = await Video.findAll({
-                where: { UserId: id, category: 'catalogue' },
+                where: { UserId: id, category: 'catalogue', isApproved: true },
                 order: [["createdAt", "DESC"]]
             })
 
