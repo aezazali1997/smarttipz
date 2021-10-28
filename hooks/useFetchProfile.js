@@ -44,6 +44,7 @@ const UseFetchProfile = (profile) => {
     const [fetchingCatalogues, setFetchCatalogues] = useState(true);
     const [myVideos, setMyVideos] = useState([]);
     const [fetchingMyVideos, setFetchMyVideos] = useState(true);
+    const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
 
     let { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
     let thumbnailRef = useRef();
@@ -286,25 +287,26 @@ const UseFetchProfile = (profile) => {
         // console.log('In Upload Media')
         setSubmitting(true);
         console.log('values => ', values);
-        let url = await uploadToS3(MediaType);
-        let Type = MediaType?.type.split('/')[0];
+        // let url = await uploadToS3(MediaType);
+        // let Type = MediaType?.type.split('/')[0];
 
-        if (Type === 'video') {
-            if (thumbnailUrl !== '') {
-                console.log('InVideo and also thumbnail notEmpty')
-                let thumbnail = await uploadToS3(thumbnailFile);
-                values.thumbnail = thumbnail.url;
-            }
-            else {
-                console.log('InVideo but thumbnail Empty')
-                values.thumbnail = ''
-            }
-        }
-        else {
-            console.log('No Video')
-            values.thumbnail = '';
-        }
-        values.url = url.url;
+        // if (Type === 'video') {
+        //     if (thumbnailUrl !== '') {
+        //         console.log('InVideo and also thumbnail notEmpty')
+        //         let thumbnail = await uploadToS3(thumbnailFile);
+        //         values.thumbnail = thumbnail.url;
+        //     }
+        //     else {
+        //         console.log('InVideo but thumbnail Empty')
+        //         values.thumbnail = ''
+        //     }
+        // }
+        // else {
+        //     console.log('No Video')
+        //     values.thumbnail = '';
+        // }
+        values.url = urls;
+        values.thumbnail = thumbnailUrl;
         values.category = 'catalogue';
         values.agree = agree;
         console.log(values);
@@ -402,10 +404,13 @@ const UseFetchProfile = (profile) => {
         const { files } = target;
         // console.log("files: ", files);
         for (let i = 0; i < files.length; i++) {
+            setUploadingThumbnail(true);
             // console.log('file: ', files[0]);
             let file = files[0];
             setThumbnailFile(file)
-            setThumbnailUrl(URL.createObjectURL(file));
+            const { url } = await uploadToS3(file);
+            setThumbnailUrl(url);
+            setUploadingThumbnail(false);
 
         }
     }
@@ -445,7 +450,7 @@ const UseFetchProfile = (profile) => {
         loadingTestimonial, _AddTestimonial, handleShowBusinessCard, _EditTestimonial, _DeleteImg, handleFileChange,
         FileInput, openFileDialog, handleShowModal, _DeleteTestimonial, showRequestTestimonial, fetchMoreData, filteredTestimonial,
         hasMore, _OnRemoveThumbnail, onChangeThumbnail, MediaType, thumbnailRef, modalTitle,
-        agree, thumbnailUrl, urls, setUrls, setMediaType, ChangeAgreement, _OnThumbnailClick,
+        agree, thumbnailUrl, urls, setUrls, setMediaType, ChangeAgreement, _OnThumbnailClick, uploadingThumbnail,
         _CloseUploadModal, _OpenUploadModal, catalogues, setCatalogues, fetchingCatalogues, myVideos, fetchingMyVideos
     }
 }

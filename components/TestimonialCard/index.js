@@ -4,7 +4,7 @@ import React from 'react'
 import { Switch } from 'components';
 import ReactTooltip from 'react-tooltip';
 
-const TestimonialCard = ({ image, name, designation, description, checked, otherUser, _Toggle }) => {
+const TestimonialCard = ({ image, name, designation, description, checked, otherUser, _Toggle, index }) => {
     return (
         <div className="max-w-md mx-auto bg-white rounded-xl overflow-hidden md:max-w-2xl">
             <div className="flex items-center space-x-3">
@@ -46,9 +46,9 @@ const TestimonialCard = ({ image, name, designation, description, checked, other
 
                         // SWITCH FOR ENABLE DISABLE TESTIMONIALS //
 
-                        <div data-tip data-for='testimonial' className="flex flex-col items-center justify-center divide-y-2 space-y-2">
+                        <div data-tip data-for={`testimonial${index}`} className="flex flex-col items-center justify-center divide-y-2 space-y-2">
                             <Switch name="toggleTestimonial" onChange={_Toggle} checked={checked} />
-                            <ReactTooltip className="max-w-md break-words" id='testimonial' place="top" effect="solid" border={false} borderColor="white" clickable={false}>
+                            <ReactTooltip className="max-w-md break-words" id={`testimonial${index}`} place="top" effect="solid" border={false} borderColor="white" clickable={false}>
                                 {checked ? 'This testimonial will be visible to other users' : 'This testimonial will not be visible to other users'}
                             </ReactTooltip>
                         </div>
@@ -56,7 +56,7 @@ const TestimonialCard = ({ image, name, designation, description, checked, other
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 

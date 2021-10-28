@@ -24,6 +24,7 @@ const UseFetchNewsFeed = () => {
     const [selectedLanguage, setSelectedLanguage] = useState("");
     const [agree, setAgree] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
     const [initialValues, setInitialValues] = useState(initials);
 
     let thumbnailRef = useRef();
@@ -32,10 +33,13 @@ const UseFetchNewsFeed = () => {
         const { files } = target;
         // console.log("files: ", files);
         for (let i = 0; i < files.length; i++) {
+            setUploadingThumbnail(true);
             // console.log('file: ', files[0]);
             let file = files[0];
             setThumbnailFile(file)
-            setThumbnailUrl(URL.createObjectURL(file));
+            const { url } = await uploadToS3(file)
+            setThumbnailUrl(url);
+            setUploadingThumbnail(false);
         }
     }
 
@@ -99,20 +103,21 @@ const UseFetchNewsFeed = () => {
 
     const _OnSubmit = async (values, setSubmitting, resetForm) => {
         setSubmitting(true);
-        let url = await uploadToS3(MediaType);
-        let thumbnail = '';
-        if (thumbnailUrl !== '') {
-            thumbnail = await uploadToS3(thumbnailFile);
-            values.thumbnail = thumbnail.url;
-        }
-        else {
-            values.thumbnail = '';
-        }
+        // let url = await uploadToS3(MediaType);
+        // let thumbnail = '';
+        // if (thumbnailUrl !== '') {
+        //     thumbnail = await uploadToS3(thumbnailFile);
+        //     values.thumbnail = thumbnail.url;
+        // }
+        // else {
+        //     values.thumbnail = '';
+        // }
 
         console.log('values => ', values);
-        values.url = url.url;
+        values.url = urls;
         values.agree = agree;
         values.mediaType = 'video';
+        values.thumbnail = thumbnailUrl;
         console.log(values);
         try {
             const { data: { message } } = await axiosInstance.uploadNewsFeed(values)
@@ -155,7 +160,8 @@ const UseFetchNewsFeed = () => {
     return {
         formik, _HandleLanguageChange, selectedLanguage, _DeleteImg, ChangeAgreement, agree, urls,
         setUrls, showModal, _OpenUploadModal, _CloseUploadModal, loading, thumbnailRef, _OnRemoveThumbnail,
-        onChangeThumbnail, _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType
+        onChangeThumbnail, _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType,
+        uploadingThumbnail
     }
 }
 

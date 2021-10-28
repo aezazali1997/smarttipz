@@ -7,7 +7,7 @@ import { getInputClasses } from 'helpers';
 import Image from 'next/image';
 const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, ChangeAgreement,
 	agree, setUrls, _CloseUploadModal, thumbnailRef, onChangeThumbnail, _OnRemoveThumbnail,
-	MediaType, setMediaType, accept, title, heading
+	MediaType, setMediaType, accept, title, heading, uploadingThumbnail
 }) => {
 
 	let Type = MediaType?.type.split('/')[0];
@@ -24,13 +24,19 @@ const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, Chan
 								accept={accept}
 								setMediaType={setMediaType}
 								setMaterial={setUrls}
+								Type={Type}
+								urls={urls}
+								_DeleteImg={_DeleteImg}
+
 							/>
 							{
+								isEmpty(urls) && <p className="danger text-sm">This is a required field</p>
+								/* {
 								!isEmpty(urls) ?
 									<div className="flex w-full py-2">
 										<div className="grid grid-cols-5 gap-3">
 											{
-												/* urls.map((url, index) => ( */
+												
 												<div className="flex w-20 h-20 border-transparent bg-gray-100 rounded-md relative">
 													{
 														Type === 'image' ?
@@ -48,7 +54,7 @@ const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, Chan
 										</div>
 									</div>
 									: <p className="danger text-sm">This is a required field</p>
-							}
+							} */}
 							{
 								Type === 'video' &&
 								<div className="flex flex-col space-y-1">
@@ -62,22 +68,29 @@ const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, Chan
 									<div className={`border bg-gray-50 text-sm border-gray-200 focus:outline-none 
                                       rounded-md focus:shadow-sm w-full flex ${!isEmpty(thumbnailUrl) ? 'h-auto' : 'h-12'}`}>
 										<div className="flex justify-between w-2/3 rounded-md border rounded-r-none items-center">
-											{console.log('thumbNail', thumbnailUrl)}
 											{
+												uploadingThumbnail ?
+													<div className="flex justify-center items-center w-full">
+														<p className="text-gray-700 text-center text-sm">Uploading, please wait</p>
+													</div>
+													:
+													!isEmpty(thumbnailUrl) ?
+														<>
+															<div className="flex w-20 h-20 border-transparent bg-gray-100 rounded-md relative">
+																<img src={thumbnailUrl} alt="thumb" />
+															</div>
+															<span onClick={() => _OnRemoveThumbnail()}>
+																<svg className="w-6 h-6 flex justify-center items-center rounded-md cursor-pointer hover:shadow-lg z-50"
+																	fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+																	<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+																</svg>
+															</span>
+														</>
+														: ''}
+
+											{/* {
 												!isEmpty(thumbnailUrl) &&
-												<div className="flex w-20 h-20 border-transparent bg-gray-100 rounded-md relative">
-													<img src={thumbnailUrl} alt="thumb" />
-												</div>
-											}
-											{
-												!isEmpty(thumbnailUrl) &&
-												<span onClick={() => _OnRemoveThumbnail()}>
-													<svg className="w-6 h-6 flex justify-center items-center rounded-md cursor-pointer hover:shadow-lg z-50"
-														fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-														<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-													</svg>
-												</span>
-											}
+											} */}
 										</div>
 										<Button
 											type='button'

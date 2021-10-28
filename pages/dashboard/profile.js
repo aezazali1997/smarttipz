@@ -20,7 +20,7 @@ const Profile = ({ profile }) => {
     openFileDialog, _AddTestimonial, _EditTestimonial, _DeleteTestimonial, showRequestTestimonial,
     filteredTestimonial, fetchMoreData, hasMore, _OnRemoveThumbnail, onChangeThumbnail, MediaType, thumbnailRef,
     agree, thumbnailUrl, urls, setUrls, setMediaType, ChangeAgreement, _OnThumbnailClick, _CloseUploadModal,
-    _OpenUploadModal, fetchingCatalogues, catalogues, myVideos, fetchingMyVideos
+    _OpenUploadModal, fetchingCatalogues, catalogues, myVideos, fetchingMyVideos, uploadingThumbnail
   } = UseFetchProfile(profile);
   const { name, about, rating, views, picture, phone, email, accountType, username, showUsername, showName
   } = profile;
@@ -331,6 +331,7 @@ const Profile = ({ profile }) => {
                                 designation={designation}
                                 description={description}
                                 checked={isVisible}
+                                index={index}
                               // data={res}
                               />
                             </div>
@@ -378,6 +379,7 @@ const Profile = ({ profile }) => {
             _OnThumbnailClick={_OnThumbnailClick}
             _CloseUploadModal={_CloseUploadModal}
             _OnRemoveThumbnail={_OnRemoveThumbnail}
+            uploadingThumbnail={uploadingThumbnail}
 
           />
         )

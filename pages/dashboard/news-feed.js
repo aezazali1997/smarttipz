@@ -11,7 +11,8 @@ const NewsFeed = () => {
 
   const { formik, _DeleteImg, ChangeAgreement, agree, urls, setUrls, showModal,
     _OpenUploadModal, _CloseUploadModal, thumbnailRef, _OnRemoveThumbnail, onChangeThumbnail,
-    _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType
+    _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType,
+    uploadingThumbnail,
   } = UseFetchNewsFeed();
 
   return (
@@ -56,7 +57,7 @@ const NewsFeed = () => {
             _OnThumbnailClick={_OnThumbnailClick}
             _CloseUploadModal={_CloseUploadModal}
             _OnRemoveThumbnail={_OnRemoveThumbnail}
-
+            uploadingThumbnail={uploadingThumbnail}
           />
         )
       }
