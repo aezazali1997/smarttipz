@@ -20,7 +20,9 @@ const Card = ({ image, like, comment, share, title, views, rating, disclaimer, m
                             src={image} alt="Sunset in the mountains" layout="fill" />
                 }
                 <div className="py-2 flex flex-row justify-between space-x-2">
-                    <div className="flex w-full text-sm">{title}</div>
+                    <div className="flex w-full text-sm ">
+                        <p className=" overflow-ellipsis overflow-hidden"> {title}</p>
+                    </div>
                     <div className="flex flex-row w-full items-start space-x-3">
                         {
                             like &&
@@ -69,7 +71,7 @@ const Card = ({ image, like, comment, share, title, views, rating, disclaimer, m
                         <div data-tip data-for={`disclaimer${title}`} className="text flex justify-end w-40 font-sans hover:underline cursor-pointer">
                             Disclaimer
                         </div>
-                        <ReactTooltip className="max-w-md break-words" id={`disclaimer${title}`} place="top" effect="solid" border={false} borderColor="white" clickable={false}>
+                        <ReactTooltip className="max-w-md break-words" id={`disclaimer${title}`} place="top" effect="solid" border={false} borderColor="white" clickable={false} >
                             Although the information contained in these
                             videos has been produced and processed from sources believed to be
                             reliable, no warranty, expressed or implied, is made regarding
