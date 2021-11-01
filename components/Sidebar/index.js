@@ -46,12 +46,14 @@ const Sidebar = ({ logout }) => {
                 className='flex flex-col w-full h-full py-5 px-5 text-white justify-between relative navbar'
                 role='navigation'
             >
-                <div className="py-5 flex items-center flex-col ">
-                    <Link href='/dashboard/news-feed'><a>
-                        <Image src={logo} alt="brand" /></a>
-                    </Link>
+                <div className="py-5 flex items-center flex-col relative">
+                    {/* <Link href='/dashboard/news-feed' > */}
+                    {/* <a className="relative"> */}
+                    <Image src='https://smart-tipz-data-bucket.s3.ap-southeast-1.amazonaws.com/public/ST-2-W.png' alt="brand" layout="fill" />
+                    {/* </a>
+                    </Link> */}
                 </div>
-                <div className='lg:flex h-full flex-col space-y-2 overflow-y-auto'>
+                <div className='lg:flex h-full pt-4 flex-col space-y-2 overflow-y-auto'>
                     <>
                         <Link href='/dashboard/news-feed' className='p-4  font-sans nav-link nav-link-ltr'>
                             <a>

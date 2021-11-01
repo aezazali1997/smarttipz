@@ -53,12 +53,12 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                     className='flex flex-col w-auto h-full py-5 px-5 text-white justify-between relative navbar'
                     role='navigation'
                 >
-                    <div className="py-5 flex items-center flex-col ">
-                        <Link href='/dashboard/news-feed'>
-                            <Image src={logo} alt="brand" />
-                        </Link>
+                    <div className="py-5 flex items-center flex-col relative">
+                        {/* <Link href='/dashboard/news-feed'> */}
+                        <Image src='https://smart-tipz-data-bucket.s3.ap-southeast-1.amazonaws.com/public/ST-2-W.png' alt="brand" layout="fill" />
+                        {/* </Link> */}
                     </div>
-                    <div className=' lg:flex flex-col  h-full space-y-2 overflow-y-auto'>
+                    <div className=' lg:flex flex-col  h-full pt-4 space-y-2 overflow-y-auto'>
                         <>
                             <Link href='/dashboard/news-feed' className='p-4 font-sans nav-link nav-link-ltr'>
                                 <div onClick={toggle} className={`flex flex-row items-center py-2 px-3 rounded-lg w-52 font-medium sidebar-item cursor-pointer

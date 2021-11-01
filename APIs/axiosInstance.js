@@ -136,9 +136,9 @@ class AxiosInstance {
         return await axios.get(USER_API_BASE_URL + "api/profile/catalogue", this.getAuthHeader());
     }
 
-    async getVideos() {
-        return await axios.get(USER_API_BASE_URL + "api/profile/videos", this.getAuthHeader());
-    }
+    // async getVideos() {
+    //     return await axios.get(USER_API_BASE_URL + "api/profile/videos", this.getAuthHeader());
+    // }
 
 
 }
