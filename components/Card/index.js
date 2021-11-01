@@ -20,10 +20,10 @@ const Card = ({ image, like, comment, share, title, views, rating, disclaimer, m
                             src={image} alt="Sunset in the mountains" layout="fill" />
                 }
                 <div className="py-2 flex flex-row justify-between space-x-2">
-                    <div className="flex w-full text-sm ">
-                        <p className=" overflow-ellipsis overflow-hidden"> {title}</p>
+                    <div className="flex w-1/2 text-sm">
+                        <p className="whitespace-nowrap overflow-ellipsis overflow-hidden"> {title}</p>
                     </div>
-                    <div className="flex flex-row w-full items-start space-x-3">
+                    <div className="flex flex-row w-1/2 items-start space-x-3">
                         {
                             like &&
                             <span className="flex flex-row w-full items-center">

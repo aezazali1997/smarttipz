@@ -48,8 +48,8 @@ const TestimonialCard = ({ image, name, designation, description, checked, other
 
                         <div data-tip data-for={`testimonial${index}`} className="flex flex-col items-center justify-center divide-y-2 space-y-2">
                             <Switch name="toggleTestimonial" onChange={_Toggle} checked={checked} />
-                            <ReactTooltip className="max-w-md break-words" id={`testimonial${index}`} place="top" effect="solid" border={false} borderColor="white" clickable={false}>
-                                {checked ? 'Click to hide testimonial' : 'Click to display testimonial'}
+                            <ReactTooltip className="max-w-md break-words" id={`testimonial${index}`} place="top" effect="float" border={false} borderColor="white" clickable={false}>
+                                {checked ? 'Click to hide testimonial' : 'Click to show testimonial'}
                             </ReactTooltip>
                         </div>
 
