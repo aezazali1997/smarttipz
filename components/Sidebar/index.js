@@ -41,6 +41,9 @@ const Sidebar = ({ logout }) => {
     }
 
     return (
+
+
+
         <div className="sidebar">
             <nav
                 className='flex flex-col w-full h-full py-5 px-5 text-white justify-between relative navbar'
