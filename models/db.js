@@ -1,14 +1,12 @@
 const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize(
-  //   'postgres://cnjqyhlh:UjxgpDUN-LisiJugvQFmDKqzZ7xp3Y3v@chunee.db.elephantsql.com/cnjqyhlh'
-  // );
 
-  process.env.DB_DATABASE,
-  process.env.DB_USERNAME,
-  process.env.DB_PASSWORD,
+  process.env.NEXT_PUBLIC_DB_DATABASE,
+  process.env.NEXT_PUBLIC_DB_USERNAME,
+  process.env.NEXT_PUBLIC_DB_PASSWORD,
   {
-    host: process.env.HOST,
+    host: process.env.NEXT_PUBLIC_HOST,
     dialect: 'postgres'
   }
 );

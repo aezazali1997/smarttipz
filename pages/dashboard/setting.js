@@ -288,7 +288,7 @@ export const getServerSideProps = async (context) => {
       props: {},
     };
   else {
-    const res = await axios.get(`${process.env.BASE_URL}api/profile`, { headers: { Authorization: "Bearer " + token } })
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}api/profile`, { headers: { Authorization: "Bearer " + token } })
     const { data } = res.data;
     return {
       props: {

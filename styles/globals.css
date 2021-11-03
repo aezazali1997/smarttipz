@@ -14,7 +14,7 @@
 @import 'react-phone-input-2/lib/style.css';
 @import '../node_modules/video-react/dist/video-react.css';
 @import "react-languages-select/css/react-languages-select.css";
-@import "react-alice-carousel/lib/alice-carousel.css";
+/* @import "react-alice-carousel/lib/alice-carousel.css"; */
 
 @tailwind base;
 @tailwind components;

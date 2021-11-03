@@ -67,19 +67,20 @@ const Card = ({ image, like, comment, share, title, views, rating, disclaimer, m
                     </div>
                 }
                 {disclaimer &&
-                    <span className="flex justify-end pt-1">
-                        <div data-tip data-for={`disclaimer${title}`} className="text flex justify-end w-40 font-sans hover:underline cursor-pointer">
-                            Disclaimer
+                    <div className="flex justify-end pt-1">
+                        <div>
+                            <p data-tip data-for={`disclaimer${title}`} className="text flex justify-end w-40 font-sans hover:underline cursor-pointer"> Disclaimer</p>
+                            <ReactTooltip className="max-w-sm break-words absolute" id={`disclaimer${title}`}
+                                place="top" effect="solid" border={false} borderColor="white" clickable={false} >
+                                Although the information contained in these
+                                videos has been produced and processed from sources believed to be
+                                reliable, no warranty, expressed or implied, is made regarding
+                                accuracy, adequacy, completeness, legality, reliability or usefulness of
+                                the information. Any reliance you place on such information is
+                                therefore strictly at your own risk
+                            </ReactTooltip>
                         </div>
-                        <ReactTooltip className="max-w-md break-words" id={`disclaimer${title}`} place="top" effect="solid" border={false} borderColor="white" clickable={false} >
-                            Although the information contained in these
-                            videos has been produced and processed from sources believed to be
-                            reliable, no warranty, expressed or implied, is made regarding
-                            accuracy, adequacy, completeness, legality, reliability or usefulness of
-                            the information. Any reliance you place on such information is
-                            therefore strictly at your own risk
-                        </ReactTooltip>
-                    </span>
+                    </div>
                 }
             </div>
         </div>

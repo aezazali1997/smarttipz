@@ -1,5 +1,5 @@
 import axios from "axios";
-export const USER_API_BASE_URL = process.env.BASE_URL;
+export const USER_API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 import { parseCookies } from 'nookies';
 
 class AxiosInstance {

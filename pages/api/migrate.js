@@ -10,7 +10,7 @@ const User = require('../../models/User');
 const Business = require('../../models/Business');
 
 const handler = async (req, res) => {
-    // await User.sync({ force: true });
+    // await User.sync({ alter: true });
     // const response1 = await sequelize.sync({ force: true });
     // console.log('response: ', response, response1);
     // Business.sync({ force: true });

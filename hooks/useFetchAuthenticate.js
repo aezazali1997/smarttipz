@@ -83,7 +83,7 @@ const UseFetchAuthenticate = () => {
                             localStorage.removeItem('otpToken');
                             router.push('/dashboard/profile');
                         })
-                        .catch(({ reponse: { data: { message } } }) => {
+                        .catch(({ response: { data: { message } } }) => {
                             console.log('Error', message)
                             disableLoading();
                             swal({

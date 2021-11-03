@@ -55,7 +55,7 @@ const Sidebar = ({ logout }) => {
                 </div>
                 <div className='lg:flex h-full pt-4 flex-col space-y-2 overflow-y-auto'>
                     <>
-                        <Link href='/dashboard/news-feed' className='p-4  font-sans nav-link nav-link-ltr'>
+                        <Link href='/dashboard/news-feed' className='p-4 font-sans nav-link nav-link-ltr'>
                             <a>
                                 <div className={`flex flex-row items-center py-2 px-3 rounded-lg w-52 font-medium cursor-pointer
                             ${Active('/dashboard/news-feed')}`}>

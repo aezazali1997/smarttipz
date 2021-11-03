@@ -160,7 +160,7 @@ const RequestTestimonial = ({ ownerEmail, username }) => {
 export const getServerSideProps = async (context) => {
     const { query: { token } } = context;
     try {
-        const { data: { data: { ownerEmail, username } } } = await axios.post(`${process.env.BASE_URL}api/profile/testimonial/verify`, { token })
+        const { data: { data: { ownerEmail, username } } } = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}api/profile/testimonial/verify`, { token })
         return {
             props: {
                 ownerEmail,
