@@ -9,6 +9,8 @@ import { useDropzone } from 'react-dropzone'
 import Image from 'next/image';
 import axios from 'axios';
 import { CustomLoader } from 'components';
+
+
 const MyDropzone = ({ setMaterial, setMediaType, accept, heading, urls, Type, _DeleteImg }) => {
 
     let { uploadToS3 } = useS3Upload();

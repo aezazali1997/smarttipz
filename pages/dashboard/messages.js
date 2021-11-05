@@ -50,8 +50,6 @@ const Messages = () => {
                 return item;
             })
             setUserList(copyArray);
-            // console.log({ copyArray })
-            // console.log("message: ", message);
         });
 
         socket.on('user disconnected', (userID) => {
@@ -62,17 +60,13 @@ const Messages = () => {
                 return item;
             })
             setUserList(copyArray);
-            // console.log({ copyArray })
             console.log('user Disconnected')
         });
 
         socket.on('newUser', (res) => {
-            // console.log('res', res);
             let copyArray = [...userList];
             copyArray = copyArray.filter(user => user.id !== res.id);
-            // console.log({ copyArray });
             let updatedArray = [res, ...copyArray]
-            // console.log({ updatedArray });
             setUserList(updatedArray);
         })
     }, [userList]);
@@ -83,9 +77,7 @@ const Messages = () => {
                 .then(({ data: { data } }) => {
                     let copyArray = [...userList];
                     copyArray = copyArray.filter(user => user.id !== data.id);
-                    // console.log({ copyArray });
                     let updatedArray = [data, ...copyArray]
-                    // console.log({ updatedArray });
                     setUserList(updatedArray);
                 })
                 .catch(e => {

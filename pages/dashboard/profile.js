@@ -6,12 +6,11 @@ import { Helmet } from 'react-helmet';
 import cookie from 'js-cookie';
 import { parseCookies } from 'nookies';
 import { isEmpty } from 'lodash';
-import { UseFetchProfile } from 'hooks';
-import videos from 'utils/VdeoSchema.json';
-import { Button, Card, Carousel, CustomLoader, InputField, MediaUploadForm, PopupBusinessCard, ProfileCard, Rating, Spinner, TestimonialCard } from 'components';
-// import { AddTestimonialModal, EditTestimonialModal } from 'components/Modals';
-import { getInputClasses } from 'helpers';
 import InfiniteScroll from 'react-infinite-scroll-component';
+// import { AddTestimonialModal, EditTestimonialModal } from 'components/Modals';
+import { UseFetchProfile } from 'hooks';
+import { getInputClasses } from 'helpers';
+import { Button, Card, Carousel, CustomLoader, InputField, MediaUploadForm, PopupBusinessCard, ProfileCard, Rating, Spinner, TestimonialCard } from 'components';
 
 const Profile = ({ profile }) => {
 
@@ -69,7 +68,6 @@ const Profile = ({ profile }) => {
                 <h1 className=" text-md lg:text-2xl font-semibold">{accountType === 'Personal' ? showName ? name : showUsername ? username : '' : name}</h1>
               </div>
               <h2 className="text-sm text-gray-500">{phone}</h2>
-              {/* <h2 className="text-sm text-gray-500">Marketing Specialist</h2> */}
               <div className="flex lg:flex-row lg:justify-between w-full md:max-w-xs mt-1">
                 <span className="flex w-full items-center">
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -83,7 +81,7 @@ const Profile = ({ profile }) => {
               </div>
               <div className="flex w-full mt-2 px-2">
                 {about ?
-                  <p className="text-sm text-justify break-words md:max-w-xs">
+                  <p className="text-sm break-words md:max-w-xs">
                     {about}
                   </p> :
                   <p className="text-sm text-gray-400"> {accountType === 'Business' ? 'Intro' : 'About'}</p>
@@ -117,16 +115,6 @@ const Profile = ({ profile }) => {
               </p>
             </div>
           )}
-          {/* <div className="flex w-full mt-3 items-center px-2 space-x-6">
-                        <button className="followingBtn">
-                            Following
-                        </button>
-
-                        {showMessages ? <button onClick={gotoMessaging} className="messageBtn">
-                            Message
-                        </button> : ''
-                        }
-                    </div> */}
         </div>
       </div>
       {/* section ends here */}
@@ -161,7 +149,6 @@ const Profile = ({ profile }) => {
                   )
                     :
                     <div className=" w-auto mt-6 relative">
-                      {/* <div className="flex flex-col w-full sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3"> */}
                       <Carousel>
                         {
                           catalogues.map(({ title, url, mediaType, thumbnail }, index) => (
@@ -179,7 +166,6 @@ const Profile = ({ profile }) => {
 
                       </Carousel>
                     </div>
-                //</div>
               }
             </div>
           </>
@@ -205,7 +191,6 @@ const Profile = ({ profile }) => {
             )
               :
               <div className="w-full mt-6 justify-center lg:justify-start" >
-                {/* <div className="flex flex-col w-full sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3"> */}
                 <Carousel>
                   {
                     myVideos.map(({ title, url, mediaType, thumbnail, like, comment, share }, index) => (
@@ -226,7 +211,6 @@ const Profile = ({ profile }) => {
                     ))
                   }
                 </Carousel>
-                {/* </div> */}
               </div>}
       </div>
       {/* section ends here */}
@@ -346,15 +330,17 @@ const Profile = ({ profile }) => {
       }
       {
         showBusinessCard && (
-          <PopupBusinessCard
-            _ShowCard={handleShowBusinessCard}
-            name={name}
-            image={picture}
-            website={website || ''}
-            email={email}
-            phone={phone}
+          <div className="hidden md:flex">
+            <PopupBusinessCard
+              _ShowCard={handleShowBusinessCard}
+              name={name}
+              image={picture}
+              website={website || ''}
+              email={email}
+              phone={phone}
 
-          />
+            />
+          </div>
         )
       }
 

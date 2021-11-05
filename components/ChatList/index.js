@@ -1,7 +1,7 @@
 import React from 'react'
+import { isEmpty } from 'lodash';
 import ChatCard from '../ChatCard'
 import Searchbar from '../Searchbar';
-import { isEmpty } from 'lodash';
 
 const ChatList = ({ users, _OnSelect }) => {
     return (

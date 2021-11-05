@@ -1,10 +1,12 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable @next/next/no-img-element */
 import React from 'react'
-import { Modal, Button, InputField, Dropzone } from 'components';
 import { isEmpty } from 'lodash';
+// import Image from 'next/image';
 import { getInputClasses } from 'helpers';
-import Image from 'next/image';
+import { Modal, Button, InputField, Dropzone } from 'components';
+
+
 const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, ChangeAgreement,
 	agree, setUrls, _CloseUploadModal, thumbnailRef, onChangeThumbnail, _OnRemoveThumbnail,
 	MediaType, setMediaType, accept, title, heading, uploadingThumbnail
@@ -31,30 +33,7 @@ const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, Chan
 							/>
 							{
 								isEmpty(urls) && <p className="danger text-sm">This is a required field</p>
-								/* {
-								!isEmpty(urls) ?
-									<div className="flex w-full py-2">
-										<div className="grid grid-cols-5 gap-3">
-											{
-												
-												<div className="flex w-20 h-20 border-transparent bg-gray-100 rounded-md relative">
-													{
-														Type === 'image' ?
-															<img src={urls} alt="photo" className="object-contain" />
-															:
-															<video src={urls}></video>
-													}
-													<span onClick={() => _DeleteImg()}
-														className="rounded-full w-5 h-5 absolute top-0 right-0 shadow-lg text-center bg-white danger
-                                  flex justify-center items-center cursor-pointer">
-														x
-													</span>
-												</div>
-											}
-										</div>
-									</div>
-									: <p className="danger text-sm">This is a required field</p>
-							} */}
+							}
 							{
 								Type === 'video' &&
 								<div className="flex flex-col space-y-1">
@@ -88,9 +67,6 @@ const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, Chan
 														</>
 														: ''}
 
-											{/* {
-												!isEmpty(thumbnailUrl) &&
-											} */}
 										</div>
 										<Button
 											type='button'
@@ -117,9 +93,9 @@ const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, Chan
 									)} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
 									label={'Title'}
 								/>
-								{formik.touched.title && formik.errors.title ? (
+								{formik.touched.title && formik.errors.title &&
 									<div className="text-red-700 text-sm mb-4" >{formik.errors.title}</div>
-								) : null}
+								}
 								<div className={`floating-input relative 
 												${formik.touched.description && formik.errors.description ? 'mb-1' : 'mb-4'}`}>
 									<textarea
@@ -142,9 +118,9 @@ const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, Chan
 										Description
 									</label>
 								</div>
-								{formik.touched.description && formik.errors.description ? (
-									<div className="text-red-700 text-sm mb-4" >{formik.errors.description}</div>
-								) : null}
+								{formik.touched.description && formik.errors.description &&
+									<div div className="text-red-700 text-sm mb-4" >{formik.errors.description}</div>
+								}
 								{
 									title === 'Upload Video' &&
 									<>
@@ -172,9 +148,9 @@ const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, Chan
 												</svg>
 											</div>
 										</div>
-										{formik.touched.category && formik.errors.category ? (
+										{formik.touched.category && formik.errors.category &&
 											<div className="text-red-700 text-sm mb-4" >{formik.errors.category}</div>
-										) : null}
+										}
 									</>
 								}
 								{
@@ -204,12 +180,12 @@ const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, Chan
 												</svg>
 											</div>
 										</div>
-										{formik.touched.mediaType && formik.errors.mediaType ? (
+										{formik.touched.mediaType && formik.errors.mediaType &&
 											<div className="text-red-700 text-sm mb-4" >{formik.errors.mediaType}</div>
-										) : null}
+										}
 									</>}
 								<div className={`floating-input relative 
-                          ${formik.touched.language && formik.errors.language ? 'mb-1' : 'mb-4'}`}>
+                         			 ${formik.touched.language && formik.errors.language ? 'mb-1' : 'mb-4'}`}>
 									<select
 										type={'select'}
 										id={'language'}
@@ -254,9 +230,9 @@ const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, Chan
 										</svg>
 									</div>
 								</div>
-								{formik.touched.language && formik.errors.language ? (
+								{formik.touched.language && formik.errors.language &&
 									<div className="text-red-700 text-sm mb-4" >{formik.errors.language}</div>
-								) : null}
+								}
 
 								<div className="flex mb-4" >
 									<label
@@ -269,7 +245,8 @@ const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, Chan
 							</div>
 						</div>
 					</>
-				)}
+				)
+				}
 				footer={(
 					<>
 						<button

@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-import axiosInstance from 'APIs/axiosInstance';
-import { scrollToBottom } from 'helpers';
+import React, { useEffect, useRef, useState } from 'react'
 import { isEmpty } from 'lodash';
 import { parseCookies } from 'nookies';
-import React, { useEffect, useRef, useState } from 'react'
+import axiosInstance from 'APIs/axiosInstance';
+import { scrollToBottom } from 'helpers';
 import socket from '../../utils/socket';
 import ChatCard from '../ChatCard';
 import EmojiInput from '../EmojiInput';

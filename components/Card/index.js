@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
-import { Rating, VideoPlayer } from 'components';
 import React from 'react'
 // import Image from 'next/image';
 import ReactTooltip from 'react-tooltip';
+import { Rating, VideoPlayer } from 'components';
 
 const Card = ({ image, like, comment, share, title, views, rating, disclaimer, mediaType, thumbnail }) => {
     return (
@@ -70,7 +70,7 @@ const Card = ({ image, like, comment, share, title, views, rating, disclaimer, m
                     <div className="flex justify-end pt-1">
                         <div>
                             <p data-tip data-for={`disclaimer${title}`} className="text flex justify-end w-40 font-sans hover:underline cursor-pointer"> Disclaimer</p>
-                            <ReactTooltip className="max-w-sm break-words absolute" id={`disclaimer${title}`}
+                            <ReactTooltip className="md:max-w-sm mx-w-md break-words z-50" id={`disclaimer${title}`}
                                 place="top" effect="solid" border={false} borderColor="white" clickable={false} >
                                 Although the information contained in these
                                 videos has been produced and processed from sources believed to be

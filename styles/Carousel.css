@@ -1,44 +1,15 @@
 .CarouselRightIcon {
-    position: absolute;
-    margin: 0px;
-    padding: 0px;
     right: -20px;
-    font-family: inherit;
-    font-size: 1.8rem;
-    line-height: inherit;
-    font-weight: 500;
-    overflow: visible;
-    text-transform: none;
-    text-decoration: none;
-    text-align: center;
-    -webkit-text-align: center;
-    vertical-align: baseline;
-    white-space: nowrap;
-    user-select: none;
-    cursor: pointer;
-    border: 1px solid #6A6A7C;
-    background: #ffffffde;
-    box-shadow: lightgrey 0px 4px 8px 0px;
-    display: flex;
-    -webkit-box-pack: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    align-items: center;
-    color: black;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    -ms-border-radius: 50%;
-    -o-border-radius: 50%;
 }
 
 .CarouselLeftIcon {
+    right: 10px;
+}
+
+.CarouselLeftIcon, .CarouselRightIcon {
     position: absolute;
     margin: 0px;
     padding: 0px;
-    right: 10px;
     font-family: inherit;
     font-size: 1.8rem;
     line-height: inherit;
@@ -71,7 +42,7 @@
 }
 
 .iconin {
-    width: 3em;
+    width: 3rem;
     height: 3rem;
     display: inline-block;
     font-size: inherit;

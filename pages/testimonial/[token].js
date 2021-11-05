@@ -53,45 +53,47 @@ const RequestTestimonial = ({ ownerEmail, username }) => {
         setImageUrl('');
     };
 
+    const _HandleSubmit = async (res, resetForm) => {
+        const { ownerName, designation, description } = res;
+        enableLoading();
+        const payload = {
+            username,
+            ownerName: ownerName,
+            ownerEmail,
+            designation: designation,
+            description: description,
+            picture: imageUrl
+        };
+        try {
+            const { data: { message } } = await axiosInstance.addTestimonial(payload);
+            swal({
+                text: message,
+                icon: 'success',
+                timer: 4000,
+                buttons: false
+            })
+            router.push('/auth/login');
+            disableLoading()
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log('Error in Api Testimonial: ', message);
+            swal({
+                text: message,
+                icon: 'error',
+                timer: 4000,
+                buttons: false
+            })
+            disableLoading();
+        }
+    }
+
     const formik = useFormik({
         enableReinitialize: true,
         initialValues,
         validationSchema: AddTestimonialFormSchema,
         validateOnBlur: true,
         onSubmit: (res, { resetForm }) => {
-            enableLoading();
-            setTimeout(() => {
-                const payload = {
-                    username,
-                    ownerName: res.ownerName,
-                    ownerEmail,
-                    designation: res.designation,
-                    description: res.description,
-                    picture: imageUrl
-                };
-                console.log(payload);
-
-                axiosInstance.addTestimonial(payload).then(({ data: { data, message } }) => {
-                    swal({
-                        text: message,
-                        icon: 'success',
-                        timer: 4000,
-                        buttons: false
-                    })
-                    router.push('/auth/login');
-
-                    disableLoading()
-                }).catch(({ response: { data: { message } } }) => {
-                    console.log('Error in Api Testimonial: ', message);
-                    swal({
-                        text: message,
-                        icon: 'error',
-                        timer: 4000,
-                        buttons: false
-                    })
-                    disableLoading();
-                })
-            })
+            _HandleSubmit(res, resetForm)
         }
     })
 

@@ -16,7 +16,6 @@ export { default as Card } from './Card';
 export { default as ProfileCard } from './ProfileCard';
 export { default as ChatCard } from './ChatCard';
 export { default as VideoPlayer } from './VideoPlayer';
-export { default as Tabs } from './Tabs';
 export { default as Modal } from './Modal';
 export { default as Dropzone } from './Dropzone';
 export { default as Sidebar } from './Sidebar';

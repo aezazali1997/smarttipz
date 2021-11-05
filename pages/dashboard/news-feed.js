@@ -2,10 +2,10 @@
 /* eslint-disable @next/next/no-img-element */
 import { faFileVideo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { MediaUploadForm } from 'components';
-import { UseFetchNewsFeed } from 'hooks';
 import React from 'react';
 import { Helmet } from 'react-helmet';
+import { MediaUploadForm } from 'components';
+import { UseFetchNewsFeed } from 'hooks';
 
 const NewsFeed = () => {
 

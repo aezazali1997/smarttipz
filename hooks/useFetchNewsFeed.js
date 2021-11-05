@@ -31,10 +31,8 @@ const UseFetchNewsFeed = () => {
 
     let onChangeThumbnail = async ({ target }) => {
         const { files } = target;
-        // console.log("files: ", files);
         for (let i = 0; i < files.length; i++) {
             setUploadingThumbnail(true);
-            // console.log('file: ', files[0]);
             let file = files[0];
             setThumbnailFile(file)
             const { url } = await uploadToS3(file)
@@ -94,7 +92,6 @@ const UseFetchNewsFeed = () => {
     }
 
     let _HandleLanguageChange = (value) => {
-        console.log({ language: value });
         setSelectedLanguage(value);
     }
 
@@ -113,12 +110,10 @@ const UseFetchNewsFeed = () => {
         //     values.thumbnail = '';
         // }
 
-        console.log('values => ', values);
         values.url = urls;
         values.agree = agree;
         values.mediaType = 'video';
         values.thumbnail = thumbnailUrl;
-        console.log(values);
         try {
             const { data: { message } } = await axiosInstance.uploadNewsFeed(values)
             Swal.fire({

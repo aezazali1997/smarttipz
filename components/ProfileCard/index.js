@@ -94,15 +94,16 @@ const ProfileCard = ({ data, otherUser, handleShowBusinessCard, showBusinessCard
 
             {
                 showBusinessCard && (
-                    <PopupBusinessCard
-                        _ShowCard={handleShowBusinessCard}
-                        name={name}
-                        image={picture}
-                        website={website}
-                        email={email}
-                        phone={phone}
-
-                    />
+                    <div className="md:hidden flex">
+                        <PopupBusinessCard
+                            _ShowCard={handleShowBusinessCard}
+                            name={name}
+                            image={picture}
+                            website={website}
+                            email={email}
+                            phone={phone}
+                        />
+                    </div>
                 )}
         </div>
     )

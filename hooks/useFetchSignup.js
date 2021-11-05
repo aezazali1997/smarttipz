@@ -34,6 +34,45 @@ const UseFetchSignup = () => {
         setPhone(value);
     };
 
+    const _HandleSubmit = async (name, email, password, username, website, setSubmitting) => {
+        enableLoading();
+        const data = {
+            name,
+            username,
+            email,
+            phone: phone,
+            password,
+            accountType: accountType,
+            // businessName,
+            website: website || ''
+        }
+        try {
+            const { data: { data: { OTPToken }, message } } = await axiosInstance.signup(data);
+            disableLoading();
+            swal({
+                text: message,
+                buttons: false,
+                dangerMode: true,
+                timer: 5000,
+                icon: 'success'
+            })
+            localStorage.setItem('otpToken', OTPToken);
+            router.push({ pathname: '/auth/authenticate', state: { email } })
+        }
+        catch (e) {
+            disableLoading();
+            setSubmitting(false);
+            swal({
+                text: e.response.data.message,
+                buttons: false,
+                dangerMode: true,
+                timer: 3000,
+                icon: 'error'
+            })
+        }
+    }
+
+
     const initialValues = {
         name: '',
         username: '',
@@ -44,53 +83,14 @@ const UseFetchSignup = () => {
         website: '',
         accountType: '',
     }
+
     const formik = useFormik({
         enableReinitialize: true,
         initialValues,
         validationSchema: (accountType === 'Business' ? SignupSchema : PersonalSignupSchema),
         validateOnBlur: true,
-        onSubmit: ({ name, email, password, username, website },
-            { setSubmitting }) => {
-            setTimeout(() => {
-                enableLoading();
-                const data = {
-                    name,
-                    username,
-                    email,
-                    phone: phone,
-                    password,
-                    accountType: accountType,
-                    // businessName,
-                    website: website || ''
-                }
-                console.log(data);
-                axiosInstance.signup(data)
-                    .then(({ data: { data: { OTPToken }, message } }) => {
-                        console.log('res >>', OTPToken);
-                        disableLoading();
-                        swal({
-                            text: message,
-                            buttons: false,
-                            dangerMode: true,
-                            timer: 5000,
-                            icon: 'success'
-                        })
-                        localStorage.setItem('otpToken', OTPToken);
-                        router.push({ pathname: '/auth/authenticate', state: { email } })
-                    })
-                    .catch((e) => {
-                        console.log('Error', e.response.data.message)
-                        disableLoading();
-                        setSubmitting(false);
-                        swal({
-                            text: e.response.data.message,
-                            buttons: false,
-                            dangerMode: true,
-                            timer: 3000,
-                            icon: 'error'
-                        })
-                    });
-            }, 1000);
+        onSubmit: ({ name, email, password, username, website }, { setSubmitting }) => {
+            _HandleSubmit(name, email, password, username, website, setSubmitting)
         },
     });
 
@@ -105,7 +105,6 @@ const UseFetchSignup = () => {
     }
 
     const _SelectAccount = (type) => {
-        console.log('type: ', type);
         setAccountType(type);
     }
 

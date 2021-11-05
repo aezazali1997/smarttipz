@@ -59,13 +59,11 @@ const UseFetchProfile = (profile) => {
             setFollowed(followed);
             setFollowers(followers);
         }).catch(({ response: { data: { message } } }) => {
-            console.log(message);
         })
         if (accountType === 'Business') {
             axiosInstance.getBusinessCard().then(({ data: { data } }) => {
                 setBusinessCard(data);
             }).catch(({ response: { data: { message } } }) => {
-                console.log('Error in Api BusinessCard: ', message);
             })
             axiosInstance.getTestimonial().then(({ data: { data } }) => {
                 const slicedData = data.slice(0, 5);
@@ -77,7 +75,6 @@ const UseFetchProfile = (profile) => {
                 disableLoadTestimonial();
             }).catch(({ response: { data: { message } } }) => {
                 disableLoadTestimonial();
-                console.log('Error in Api Testimonials: ', message);
             })
         }
     }, []);
@@ -87,7 +84,6 @@ const UseFetchProfile = (profile) => {
         try {
             const { data: { data: { catalogues } } } = await axiosInstance.getCatalogues();
             setCatalogues(catalogues);
-            console.log('catalogues: ', catalogues);
             disableFetchCatalogue();
         }
         catch ({ response: { data: { message } } }) {
@@ -101,7 +97,6 @@ const UseFetchProfile = (profile) => {
         try {
             const { data: { data: { videos } } } = await axiosInstance.getVideos();
             setMyVideos(videos);
-            console.log('videos: ', videos);
             disableFetchMyVideos();
         }
         catch ({ response: { data: { message } } }) {
@@ -251,7 +246,6 @@ const UseFetchProfile = (profile) => {
 
 
     const _OnRequestTestimonial = (values, resetForm) => {
-        // console.log('in RequestTestimonial')
         const { email } = values
         enableLoading();
         axiosInstance.requestTestimonial({ email }).then(({ data: { message } }) => {
@@ -284,9 +278,7 @@ const UseFetchProfile = (profile) => {
     }
 
     const _OnUploadMedia = async (values, setSubmitting, resetForm) => {
-        // console.log('In Upload Media')
         setSubmitting(true);
-        console.log('values => ', values);
         // let url = await uploadToS3(MediaType);
         // let Type = MediaType?.type.split('/')[0];
 
@@ -309,10 +301,8 @@ const UseFetchProfile = (profile) => {
         values.thumbnail = thumbnailUrl;
         values.category = 'catalogue';
         values.agree = agree;
-        console.log(values);
         try {
             const res = await axiosInstance.uploadNewsFeed(values)
-            // console.log(res);
             const { data: { message } } = res;
             Swal.fire({
                 text: message,
@@ -402,10 +392,8 @@ const UseFetchProfile = (profile) => {
 
     let onChangeThumbnail = async ({ target }) => {
         const { files } = target;
-        // console.log("files: ", files);
         for (let i = 0; i < files.length; i++) {
             setUploadingThumbnail(true);
-            // console.log('file: ', files[0]);
             let file = files[0];
             setThumbnailFile(file)
             const { url } = await uploadToS3(file);

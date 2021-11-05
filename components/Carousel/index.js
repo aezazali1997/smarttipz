@@ -1,38 +1,43 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from 'react'
-// import Carousel from 'nuka-carousel';
 import ItemsCarousel from 'react-items-carousel';
 
 const Index = ({ children }) => {
 
-    const [renderItems, setRenderItems] = useState(4)
-    // const [renderSlither, setRenderSlither] = useState(true)
+    const [renderItems, setRenderItems] = useState(4);
+    const [renderArrow, setRenderArrow] = useState(false);
     const [activeItemIndex, setActiveItemIndex] = useState(0);
     const chevronWidth = 40;
 
     const handleResize = () => {
-        window.innerWidth > 1024 && window.innerWidth < 3000 ? setRenderItems(4) :
-            window.innerWidth > 464 && window.innerWidth < 1024 ? setRenderItems(2) :
-                window.innerWidth > 0 && window.innerWidth < 464 ? setRenderItems(1) :
-                    setRenderItems(5)
+        if (window.innerWidth > 1024 && window.innerWidth < 3000) {
+            setRenderItems(4)
+            setRenderArrow(false);
+        }
+        else if (window.innerWidth > 464 && window.innerWidth < 1024) {
+            setRenderItems(2);
+            setRenderArrow(true);
+        }
+        else if (window.innerWidth > 0 && window.innerWidth < 464) {
+            setRenderItems(1);
+            setRenderArrow(true);
+        }
+        else {
+            setRenderItems(5)
+            setRenderArrow(false);
+        }
     }
 
-    // const handleSlither = () => {
-    //     window.innerWidth < 1024 ? setRenderSlither(true) : setRenderSlither(false)
-    // }
-
     useEffect(() => {
-        handleResize();
-        // handleSlither();
+        handleResize()
     }, [])
 
     useEffect(() => {
-        window.addEventListener("resize", handleResize);
-        // window.addEventListener("arrow", handleSlither);
+        // create an event listener
+        window.addEventListener("resize", handleResize)
     })
 
-    // create an event listener
 
 
     return (
@@ -41,15 +46,15 @@ const Index = ({ children }) => {
             activeItemIndex={activeItemIndex}
             numberOfCards={renderItems}
             slidesToScroll={renderItems}
-            // showSlither={renderSlither}
             gutter={10}
+            alwaysShowChevrons={renderArrow}
             leftChevron={
-                <div div className={"CarouselLeftIcon hidden lg:flex"} >
+                <div className={"CarouselLeftIcon"} >
                     <span className="iconin">&lt;</span>
                 </div>
             }
             rightChevron={
-                <div div className={"CarouselRightIcon hidden lg:flex"} >
+                <div className={"CarouselRightIcon"} >
                     <span className="iconin">&gt;</span>
                 </div>
             }
@@ -58,22 +63,6 @@ const Index = ({ children }) => {
         >
             {children}
         </ItemsCarousel>
-        // <Carousel
-        //     slidesToShow={renderItems}
-        //     slidesToScroll={renderItems}
-        //     dragging={false}
-        //     cellSpacing={10}
-        //     defaultControlsConfig={{
-        //         nextButtonText: '>',
-        //         prevButtonText: '<',
-        //         prevButtonClassName: 'mb-16 text-2xl font-bold ',
-        //         nextButtonClassName: 'mb-16 text-2xl font-bold ',
-        //         pagingDotsContainerClassName: 'hidden',
-        //         pagingDotsClassName: 'hidden'
-        //     }}
-        // >
-        //     {children}
-        // </Carousel>
     )
 }
 

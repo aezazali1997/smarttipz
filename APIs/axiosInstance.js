@@ -15,7 +15,6 @@ class AxiosInstance {
     }
 
     async signup(payload) {
-        console.log('In signup API')
         return await axios.post(USER_API_BASE_URL + "api/user/signup", payload);
     }
 
@@ -83,7 +82,6 @@ class AxiosInstance {
     }
 
     async deleteTestimonial(id) {
-        console.log('In Delete Testiomonial Api');
         return await axios.delete(USER_API_BASE_URL + `api/profile/testimonial/${id}`, this.getAuthHeader());
     }
 
@@ -108,38 +106,28 @@ class AxiosInstance {
     }
 
     async uploadProfilePic(url) {
-        console.log({ url })
         return await axios.post(USER_API_BASE_URL + "api/profile/uploadpic", { link: url }, this.getAuthHeader());
     }
 
     async removeProfilePic() {
-        console.log('In delete ProfilePic Api')
         return await axios.delete(USER_API_BASE_URL + "api/profile/deletepic", this.getAuthHeader());
     }
 
     async requestTestimonial(data) {
-        console.log('In request Testimonial Api: ', data);
         return await axios.post(USER_API_BASE_URL + "api/profile/testimonial/request", data, this.getAuthHeader());
     }
 
     async uploadMedia(media) {
-        console.log('In upload Media Api: ', media);
         return await axios.post(USER_API_BASE_URL + "api/s3-bucket-upload", media);
     }
 
     async uploadNewsFeed(payload) {
-        console.log('In upload News Feed Api: ', payload);
         return await axios.post(USER_API_BASE_URL + "api/profile/upload-video", payload, this.getAuthHeader());
     }
 
     async getCatalogues() {
         return await axios.get(USER_API_BASE_URL + "api/profile/catalogue", this.getAuthHeader());
     }
-
-    // async getVideos() {
-    //     return await axios.get(USER_API_BASE_URL + "api/profile/videos", this.getAuthHeader());
-    // }
-
 
 }
 
