@@ -6,7 +6,8 @@
     right: 10px;
 }
 
-.CarouselLeftIcon, .CarouselRightIcon {
+.CarouselLeftIcon,
+.CarouselRightIcon {
     position: absolute;
     margin: 0px;
     padding: 0px;
@@ -47,4 +48,9 @@
     display: inline-block;
     font-size: inherit;
     padding: 0px;
+}
+
+.gwZiig {
+    /* width: 100%; */
+    /* overflow-x: clip !important; */
 }

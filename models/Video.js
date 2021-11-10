@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("./db");
+const PostLike = require("./Like");
 
 const Video = sequelize.define("Video", {
   title: {
@@ -51,5 +52,9 @@ const Video = sequelize.define("Video", {
     type: DataTypes.INTEGER,
   },
 });
+
+Video.hasMany(PostLike);
+PostLike.belongsTo(Video);
+
 
 module.exports = Video;

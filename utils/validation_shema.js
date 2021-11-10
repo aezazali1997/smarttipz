@@ -28,7 +28,7 @@ export const SignupSchema = Yup.object().shape({
     //         otherwise: Yup.string()
     //             .min(3, "Please enter at least 3 characters")
     //     }),
-    website: Yup.string().url().required("Business Website address is a required field"),
+    website: Yup.string().required("Business Website address is a required field"),
 
     email: Email('Business Email is a required field'),
     // phone: Yup.string().required()

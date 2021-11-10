@@ -1,0 +1,207 @@
+import { useFormik } from 'formik';
+import React, { useEffect, useRef, useState } from 'react'
+import Swal from 'sweetalert2';
+import { useS3Upload } from 'next-s3-upload';
+import { UploadVideoSchema } from 'utils/validation_shema';
+import axiosInstance from 'src/APIs/axiosInstance';
+import { isEmpty } from 'lodash';
+
+const UseFetchNewsFeed = () => {
+
+    const initials = {
+        title: '',
+        description: '',
+        category: '',
+        language: '',
+        mediaType: ''
+    }
+
+    let { uploadToS3 } = useS3Upload();
+    const [showModal, setShowModal] = useState(false);
+    const [MediaType, setMediaType] = useState(null);
+    const [urls, setUrls] = useState('');
+    const [thumbnailFile, setThumbnailFile] = useState('');
+    const [thumbnailUrl, setThumbnailUrl] = useState('');
+    const [selectedLanguage, setSelectedLanguage] = useState("");
+    const [agree, setAgree] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
+    const [initialValues, setInitialValues] = useState(initials);
+    const [posts, setPosts] = useState([]);
+
+    let thumbnailRef = useRef();
+
+    let GetPosts = async () => {
+        try {
+            const { data: { data: { videos } } } = await axiosInstance.getNewsFeedPosts();
+            setPosts(videos);
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log(message);
+        }
+    }
+
+    useEffect(() => {
+        GetPosts();
+    }, [])
+
+
+    let onChangeThumbnail = async ({ target }) => {
+        const { files } = target;
+        for (let i = 0; i < files.length; i++) {
+            setUploadingThumbnail(true);
+            let file = files[0];
+            setThumbnailFile(file)
+            const { url } = await uploadToS3(file)
+            setThumbnailUrl(url);
+            setUploadingThumbnail(false);
+        }
+    }
+
+    let _OnThumbnailClick = () => {
+        thumbnailRef.current.click();
+    }
+
+    let _OnRemoveThumbnail = () => {
+        setThumbnailFile('');
+        setThumbnailUrl('');
+    }
+
+    let _OpenUploadModal = () => {
+        setUrls('');
+        setThumbnailUrl('');
+        setThumbnailFile('')
+        setAgree(false);
+        setSelectedLanguage('');
+        setInitialValues(initials);
+        setShowModal(true);
+    }
+
+    let _CloseUploadModal = () => {
+        setUrls('');
+        setThumbnailUrl('');
+        setAgree(false);
+        setSelectedLanguage('');
+        setShowModal(false);
+    }
+
+    const enableLoading = () => {
+        setLoading(true);
+    };
+
+    const disableLoading = () => {
+        setLoading(false);
+    };
+
+
+    let ChangeAgreement = (e) => {
+        const { checked } = e.target;
+        setAgree(checked);
+    }
+
+    let _DeleteImg = () => {
+        let copyUrls = '';
+        // let copyFiles = [...files];
+        // copyUrls.splice(index, 1);
+        // copyFiles.splice(index, 1);
+        setUrls(copyUrls)
+        // setFile(copyFiles);
+    }
+
+    let _HandleLanguageChange = (value) => {
+        setSelectedLanguage(value);
+    }
+
+    useEffect(() => { }, [urls, posts])
+
+
+    const _OnSubmit = async (values, setSubmitting, resetForm) => {
+        setSubmitting(true);
+        // let url = await uploadToS3(MediaType);
+        // let thumbnail = '';
+        // if (thumbnailUrl !== '') {
+        //     thumbnail = await uploadToS3(thumbnailFile);
+        //     values.thumbnail = thumbnail.url;
+        // }
+        // else {
+        //     values.thumbnail = '';
+        // }
+
+        values.url = urls;
+        values.agree = agree;
+        values.mediaType = 'video';
+        values.thumbnail = thumbnailUrl;
+        try {
+            const { data: { message } } = await axiosInstance.uploadNewsFeed(values)
+            Swal.fire({
+                text: message,
+                timer: 3000,
+                icon: 'success',
+                showCancelButton: false,
+                showConfirmButton: false
+            })
+            GetPosts();
+            resetForm(initials);
+            setSubmitting(false);
+            _CloseUploadModal();
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log('API Failed: ', message);
+            Swal.fire({
+                text: message,
+                timer: 3000,
+                icon: 'error',
+                showCancelButton: false,
+                showConfirmButton: false
+            })
+            setSubmitting(false);
+        }
+
+    }
+
+    const formik = useFormik({
+        enableReinitialize: true,
+        initialValues,
+        validationSchema: UploadVideoSchema,
+        validateOnBlur: true,
+        onSubmit: (values, { setSubmitting, setStatus, resetForm }) => {
+            _OnSubmit(values, setSubmitting, resetForm);
+        }
+    });
+
+    const HandleLikePost = async (id) => {
+        try {
+            const { data: { data, message } } = await axiosInstance.likePost({ videoId: id });
+            console.log('success: ', message);
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log('Like Post Api failed: ', message);
+        }
+    }
+
+    const HandleCheckLike = async (postLikes) => {
+        // if (!isEmpty(postLikes)) {
+        //     console.log('in if')
+        //     const newPost = [];
+        //     for (let post = 0; post < postLikes.length; post++) {
+        //         postLikes[post].reviewerId == parseInt(localStorage.getItem('id')) && newPost.push(postLikes[post])
+        //     }
+        //     console.log('data: ', newPost);
+        //     if (!isEmpty(newPost)) 'text-purple-600'
+        //     else 'text-gray-600 hover:text-purple-600'
+        // }
+        // else {
+        //     console.log('in else')
+        //     return 'text-gray-600 hover:text-purple-600'
+        // }
+    }
+
+    return {
+        formik, _HandleLanguageChange, selectedLanguage, _DeleteImg, ChangeAgreement, agree, urls,
+        setUrls, showModal, _OpenUploadModal, _CloseUploadModal, loading, thumbnailRef, _OnRemoveThumbnail,
+        onChangeThumbnail, _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType,
+        uploadingThumbnail, posts, HandleLikePost, HandleCheckLike
+    }
+}
+
+export default UseFetchNewsFeed;
