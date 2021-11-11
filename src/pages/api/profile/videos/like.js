@@ -63,19 +63,45 @@ const handler = async (req, res) => {
                 where: { username, isBlocked: false, isDeleted: false }
             });
 
-            const video = await Video.findOne({ where: { id: videoId } });
+            console.log('id => ', id);
 
-            const like = await PostLike.create({
-                reviewerId: id
+            const video = await Video.findOne({
+                attributes: ['id'],
+                where: { id: videoId, isApproved: true }
             });
 
-            await like.setVideo(video);
+            console.log('video => ', video);
 
-            res.status(201).json({
-                error: false,
-                message: 'Post liked successfully',
-                data: {}
-            });
+
+            const post = await PostLike.findOne({ where: { VideoId: video.id, reviewerId: id } });
+
+            console.log('post => ', post);
+
+
+            if (post === null) {
+                const like = await PostLike.create({
+                    reviewerId: id,
+                    isLiked: true
+                });
+
+                await like.setVideo(video);
+                res.status(201).json({
+                    error: false,
+                    message: 'Post liked',
+                    data: {}
+                });
+            }
+            else {
+                await PostLike.update({
+                    isLiked: false
+                }, { where: { reviewerId: id } });
+                res.status(200).json({
+                    error: false,
+                    message: 'Post Unliked',
+                    data: {}
+                });
+            }
+
         } catch (err) {
             console.log("Videos Api Failed Error: ", err.message);
             res.status(500).send({ error: true, data: [], message: err.message });

@@ -1,4 +1,5 @@
 const { DataTypes } = require("sequelize");
+const Comment = require("./Comment");
 const sequelize = require("./db");
 const PostLike = require("./Like");
 
@@ -21,6 +22,10 @@ const Video = sequelize.define("Video", {
   },
   category: {
     type: DataTypes.STRING
+  },
+  catalogue: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   },
   language: {
     type: DataTypes.STRING
@@ -55,6 +60,9 @@ const Video = sequelize.define("Video", {
 
 Video.hasMany(PostLike);
 PostLike.belongsTo(Video);
+
+Video.hasMany(Comment);
+Comment.belongsTo(Video);
 
 
 module.exports = Video;

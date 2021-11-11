@@ -26,14 +26,11 @@ const handler = async (req, res) => {
             const { id } = user;
 
             const videos = await Video.findAll({
-                where: { UserId: id, category: 'catalogue', isApproved: true },
+                where: { UserId: id, catalogue: true, isApproved: true },
                 order: [["createdAt", "DESC"]]
             })
 
             console.log('videos: ', videos);
-
-            // const { name, email, avgRating, totalViews, about, picture, phoneNumber, showPhone, accessible,
-            //     accountType, showUsername, showName, isApproved, tip } = user;
 
             res.status(200).json({
                 error: false,
@@ -43,7 +40,48 @@ const handler = async (req, res) => {
         } catch (err) {
             res.status(500).send({ error: true, data: [], message: err.message });
         }
-    } else {
+    }
+
+    else if (req.method === 'POST') {
+        const { body: { videoId, catalogue }, headers: { authorization } } = req;
+
+
+        try {
+            if (!authorization) {
+                return res.status(401).send({ error: true, data: [], message: 'Please Login' })
+            };
+            const { username } = jwt.verify(
+                authorization.split(' ')[1],
+                process.env.SECRET_KEY
+            );
+
+            const user = await User.findOne({
+                attributes: ['id'],
+                where: { username }
+            });
+            if (!user) {
+                return res.status(404).send({ error: true, data: [], message: 'User Not Found' })
+            }
+
+            console.log('user: ', user);
+
+            const { id } = user;
+
+            await Video.update({ catalogue: !catalogue }, {
+                where: { id: videoId, isApproved: true },
+            })
+
+            res.status(200).json({
+                error: false,
+                message: 'Video added to catalogue',
+                data: {}
+            });
+        } catch (err) {
+            res.status(500).send({ error: true, data: [], message: err.message });
+        }
+    }
+
+    else {
         res.status(404).end('Page Not Found');
     }
 };

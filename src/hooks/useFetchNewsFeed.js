@@ -28,6 +28,7 @@ const UseFetchNewsFeed = () => {
     const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
     const [initialValues, setInitialValues] = useState(initials);
     const [posts, setPosts] = useState([]);
+    const [catalogueCount, setCatalogueCount] = useState(0);
 
     let thumbnailRef = useRef();
 
@@ -35,11 +36,16 @@ const UseFetchNewsFeed = () => {
         try {
             const { data: { data: { videos } } } = await axiosInstance.getNewsFeedPosts();
             setPosts(videos);
+            videos.filter(video => video.catalogue === true &&
+                setCatalogueCount(catalogueCount => catalogueCount + 1))
+
         }
         catch ({ response: { data: { message } } }) {
             console.log(message);
         }
     }
+
+    console.log('catalogueCount', catalogueCount);
 
     useEffect(() => {
         GetPosts();
@@ -173,34 +179,75 @@ const UseFetchNewsFeed = () => {
         try {
             const { data: { data, message } } = await axiosInstance.likePost({ videoId: id });
             console.log('success: ', message);
+            GetPosts();
         }
         catch ({ response: { data: { message } } }) {
             console.log('Like Post Api failed: ', message);
         }
     }
 
-    const HandleCheckLike = async (postLikes) => {
-        // if (!isEmpty(postLikes)) {
-        //     console.log('in if')
-        //     const newPost = [];
+    const HandleCheckLike = (postLikes) => {
+        // if (postLikes) {
+        //     const data = [];
         //     for (let post = 0; post < postLikes.length; post++) {
-        //         postLikes[post].reviewerId == parseInt(localStorage.getItem('id')) && newPost.push(postLikes[post])
+        //         if (postLikes[post].reviewerId == parseInt(localStorage.getItem('id'))) {
+        //             data.push(postLikes[post]);
+        //         }
         //     }
-        //     console.log('data: ', newPost);
-        //     if (!isEmpty(newPost)) 'text-purple-600'
-        //     else 'text-gray-600 hover:text-purple-600'
+        //     if (!data) {
+        //         return 'text-gray-600 hover:text-purple-600';
+        //     }
+        //     else {
+        //         if (data[0].isLiked === true) {
+        //             return 'text-purple-600';
+        //         }
+        //         else {
+        //             return 'text-gray-600 hover:text-purple-600';
+        //         }
+        //     }
         // }
         // else {
-        //     console.log('in else')
-        //     return 'text-gray-600 hover:text-purple-600'
+        //     'text-gray-600 hover:text-purple-600'
         // }
+
     }
+
+
+    const _HandleCatalogue = async (videoId, catalogue) => {
+        if (catalogueCount < 5) {
+            try {
+                const data = await axiosInstance.addToCatalogue({ videoId, catalogue });
+                console.log({ data });
+                const originalArray = [...posts];
+                let newArray = originalArray.map((item, i) => {
+                    if (item.id !== videoId) return item;
+                    item.catalogue = !catalogue;
+                    return item;
+                })
+                setPosts(newArray)
+            }
+            catch ({ response: { data: { message } } }) {
+                console.log('error in Api: ', message);
+            }
+        }
+        else {
+            Swal.fire({
+                text: 'You can add only 5 videos in catalogue, please delete any to proceed',
+                // timer: 4000,
+                icon: 'info',
+                showConfirmButton: true,
+                showCancelButton: false
+            })
+        }
+    }
+
+
 
     return {
         formik, _HandleLanguageChange, selectedLanguage, _DeleteImg, ChangeAgreement, agree, urls,
         setUrls, showModal, _OpenUploadModal, _CloseUploadModal, loading, thumbnailRef, _OnRemoveThumbnail,
         onChangeThumbnail, _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType,
-        uploadingThumbnail, posts, HandleLikePost, HandleCheckLike
+        uploadingThumbnail, posts, HandleLikePost, HandleCheckLike, _HandleCatalogue
     }
 }
 

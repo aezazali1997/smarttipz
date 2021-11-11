@@ -1,13 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
+import React, { useCallback, useState } from 'react'
+import { useDropzone } from 'react-dropzone'
+import { isEmpty } from 'lodash';
 import { faFileVideo, faImages } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useS3Upload } from 'next-s3-upload';
-import { isEmpty } from 'lodash';
-import React, { useCallback, useState } from 'react'
-import { useDropzone } from 'react-dropzone'
-import Image from 'next/image';
-import axios from 'axios';
 import { CustomLoader } from 'src/components';
 
 

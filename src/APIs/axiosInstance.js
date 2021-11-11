@@ -137,6 +137,10 @@ class AxiosInstance {
         return await axios.post(USER_API_BASE_URL + "api/profile/videos/like", reviewerId, this.getAuthHeader());
     }
 
+    async addToCatalogue(data) {
+        return await axios.post(USER_API_BASE_URL + "api/profile/catalogue", data, this.getAuthHeader());
+    }
+
 }
 
 export default new AxiosInstance;

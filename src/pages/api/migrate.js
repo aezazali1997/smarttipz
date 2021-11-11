@@ -1,3 +1,4 @@
+import Comment from 'models/Comment';
 
 const sequelize = require('models/db');
 
@@ -13,13 +14,14 @@ const User = require('models/User');
 const Business = require('models/Business');
 
 const handler = async (req, res) => {
-    sequelize.sync({ force: true });
+    // sequelize.sync({ force: true });
     // User.sync({ force: true });
     // await Business.sync({ force: true });
     // await BusinessCard.sync({ force: true });
     // await Session.sync({ force: true });
-    // Video.sync({ force: true });
-    // Like.sync({ force: true });
+    Video.sync({ alter: true });
+    // Like.sync({ alter: true });
+    // Comment.sync({ alter: true });
     // await Testimonial.sync({ force: true });
     // await Chat.sync({ force: true });
     res.status(200).send({ message: "Tables created Successfully" });

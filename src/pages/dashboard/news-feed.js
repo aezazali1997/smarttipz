@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { MediaUploadForm, VideoPlayer } from 'src/components';
+import { PostActionDropdown } from 'src/components/Dropdown';
 import { UseFetchNewsFeed } from 'src/hooks';
 
 const NewsFeed = () => {
@@ -12,7 +13,7 @@ const NewsFeed = () => {
   const { formik, _DeleteImg, ChangeAgreement, agree, urls, setUrls, showModal,
     _OpenUploadModal, _CloseUploadModal, thumbnailRef, _OnRemoveThumbnail, onChangeThumbnail,
     _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType,
-    uploadingThumbnail, posts, HandleLikePost, HandleCheckLike
+    uploadingThumbnail, posts, HandleLikePost, HandleCheckLike, _HandleCatalogue
   } = UseFetchNewsFeed();
 
   return (
@@ -39,10 +40,10 @@ const NewsFeed = () => {
       </div>
       <div className="space-y-4">
         {
-          posts && posts.map(({ id, description, title, tip, url, thumbnail, PostLikees }, index) => (
+          posts && posts.map(({ id, description, title, url, UserId, thumbnail, PostLikees, catalogue }, index) => (
             <div key={index}>
               <div className="mx-auto max-w-md shadow flex flex-col justify-center rounded-lg 
-      bg-white space-y-2">
+                bg-white space-y-2">
                 <div className="flex w-full py-2 px-3 justify-between">
                   <div className="flex">
                     <img src="https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"
@@ -53,9 +54,12 @@ const NewsFeed = () => {
                     </div>
                   </div>
                   <div className="flex items-center justify-start">
-                    <svg className="w-6 h-6 text-gray-400 rounded-full hover:bg-gray-200 p-1 cursor-pointer" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                    </svg>
+                    <PostActionDropdown
+                      _HandleCatalogue={() => _HandleCatalogue(id, catalogue)}
+                      catalogue={catalogue}
+                      ownerId={UserId}
+
+                    />
                   </div>
                 </div>
                 <p className="px-6 text-sm">{description}</p>
@@ -89,7 +93,8 @@ const NewsFeed = () => {
                   </div>
                   <div className="flex justify-evenly py-1 px-2 space-x-1">
                     <div onClick={() => HandleLikePost(id)} className="flex justify-center hover:bg-gray-100 items-center py-1 px-3 w-full rounded-md ">
-                      <p className={`cursor-pointer w-full text-center text-gray-600 hover:text-purple-600`}>Like</p>
+                      <p className={`cursor-pointer w-full text-center 
+                      `}>Like</p>
                     </div>
                     <div className="flex justify-center hover:bg-gray-100 items-center py-1 px-3 w-full rounded-md">
                       <p className="cursor-pointer w-full text-center text-gray-600 hover:text-purple-600">Comment</p>
@@ -129,7 +134,7 @@ const NewsFeed = () => {
         )
       }
 
-    </div>
+    </div >
   )
 }
 

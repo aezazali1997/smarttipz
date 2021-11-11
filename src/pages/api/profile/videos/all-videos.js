@@ -1,4 +1,3 @@
-import { attempt } from 'lodash';
 import PostLikee from 'models/Like';
 
 const User = require('models/User');
@@ -28,9 +27,9 @@ const handler = async (req, res) => {
                 }],
                 where: {
                     isApproved: true,
-                    category: {
-                        [sequelize.Op.not]: 'catalogue'
-                    },
+                    // category: {
+                    //     [sequelize.Op.not]: 'catalogue'
+                    // },
                 },
                 order: [["createdAt", "DESC"]]
             });
