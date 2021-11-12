@@ -29,16 +29,20 @@ const UseFetchNewsFeed = () => {
     const [initialValues, setInitialValues] = useState(initials);
     const [posts, setPosts] = useState([]);
     const [catalogueCount, setCatalogueCount] = useState(0);
-
     let thumbnailRef = useRef();
 
     let GetPosts = async () => {
         try {
             const { data: { data: { videos } } } = await axiosInstance.getNewsFeedPosts();
             setPosts(videos);
-            videos.filter(video => video.catalogue === true &&
-                setCatalogueCount(catalogueCount => catalogueCount + 1))
-
+            console.log(videos)
+            var count = 0;
+            for (let i = 0; i < videos.length; i++) {
+                if (videos[i].catalogue === true) {
+                    count = count + 1;
+                }
+            }
+            setCatalogueCount(count)
         }
         catch ({ response: { data: { message } } }) {
             console.log(message);
@@ -214,9 +218,16 @@ const UseFetchNewsFeed = () => {
 
 
     const _HandleCatalogue = async (videoId, catalogue) => {
-        if (catalogueCount < 5) {
+        if (catalogueCount < 5 || catalogue === true) {
+            console.log('here: ', catalogueCount);
             try {
                 const data = await axiosInstance.addToCatalogue({ videoId, catalogue });
+                if (catalogue) {
+                    setCatalogueCount(catalogueCount => catalogueCount - 1)
+                }
+                else {
+                    setCatalogueCount(catalogueCount => catalogueCount + 1)
+                }
                 console.log({ data });
                 const originalArray = [...posts];
                 let newArray = originalArray.map((item, i) => {
@@ -241,13 +252,25 @@ const UseFetchNewsFeed = () => {
         }
     }
 
+    const _HandleDeleteVideo = async (index, videoId) => {
+        try {
+            const res = await axiosInstance.deleteVideo(videoId);
+            setCatalogueCount(catalogueCount => catalogueCount - 1)
+            const originalArray = [...posts];
+            originalArray.splice(index, 1)
+            setPosts(originalArray);
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log('Api Failed: ', message);
+        }
+    }
 
 
     return {
         formik, _HandleLanguageChange, selectedLanguage, _DeleteImg, ChangeAgreement, agree, urls,
         setUrls, showModal, _OpenUploadModal, _CloseUploadModal, loading, thumbnailRef, _OnRemoveThumbnail,
         onChangeThumbnail, _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType,
-        uploadingThumbnail, posts, HandleLikePost, HandleCheckLike, _HandleCatalogue
+        uploadingThumbnail, posts, HandleLikePost, HandleCheckLike, _HandleCatalogue, _HandleDeleteVideo
     }
 }
 

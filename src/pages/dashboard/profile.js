@@ -10,7 +10,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 // import { AddTestimonialModal, EditTestimonialModal } from 'components/Modals';
 import { UseFetchProfile } from 'src/hooks';
 import { getInputClasses } from 'helpers';
-import { Button, Card, Carousel, CustomLoader, InputField, MediaUploadForm, PopupBusinessCard, ProfileCard, Rating, Spinner, TestimonialCard } from 'src/components';
+import { Button, Card, Carousel, CustomLoader, InputField, MediaUploadForm, NewsfeedCard, PopupBusinessCard, ProfileCard, Rating, Spinner, TestimonialCard } from 'src/components';
 
 const Profile = ({ profile }) => {
 
@@ -19,7 +19,8 @@ const Profile = ({ profile }) => {
     openFileDialog, _AddTestimonial, _EditTestimonial, _DeleteTestimonial, showRequestTestimonial,
     filteredTestimonial, fetchMoreData, hasMore, _OnRemoveThumbnail, onChangeThumbnail, MediaType, thumbnailRef,
     agree, thumbnailUrl, urls, setUrls, setMediaType, ChangeAgreement, _OnThumbnailClick, _CloseUploadModal,
-    _OpenUploadModal, fetchingCatalogues, catalogues, myVideos, fetchingMyVideos, uploadingThumbnail
+    _OpenUploadModal, fetchingCatalogues, catalogues, myVideos, fetchingMyVideos, uploadingThumbnail,
+    _HandleCatalogue, _HandleDeleteVideo
   } = UseFetchProfile(profile);
   const { name, about, rating, views, picture, phone, email, accountType, username, showUsername, showName
   } = profile;
@@ -151,19 +152,44 @@ const Profile = ({ profile }) => {
                 </div>
               )
                 :
-                <div className=" w-auto mt-6 relative">
+                <div className="w-auto mt-6 relative">
                   <Carousel>
                     {
-                      catalogues.map(({ title, url, mediaType, thumbnail }, index) => (
+                      catalogues.map(({ id, UserId, title, url, mediaType, thumbnail, catalogue, description, User, }, index) => (
                         <div key={index}>
+                          <NewsfeedCard
+                            id={id}
+                            UserId={UserId}
+                            index={index}
+                            catalogue={catalogue}
+                            url={url}
+                            User={User}
+                            views={200}
+                            rating={2.5}
+                            mediaType={mediaType}
+                            description={description}
+                            title={title}
+                            width={'max-w-sm'}
+                            thumbnail={thumbnail}
+                            _HandleDeleteVideo={_HandleDeleteVideo}
+                            _HandleCatalogue={_HandleCatalogue}
+                          />
+                        </div>
+                        /* <div key={index}>
                           <Card
                             image={url}
                             title={title}
                             views={200}
                             mediaType={mediaType}
                             thumbnail={thumbnail}
+                            id={id}
+                            rating={3.5}
+                            menu={true}
+                            catalogue={catalogue}
+                            UserId={UserId}
+                            _HandleCatalogue={_HandleCatalogue}
                           />
-                        </div>
+                        </div> */
                       ))
                     }
 
@@ -196,8 +222,28 @@ const Profile = ({ profile }) => {
               <div className="w-full mt-6 justify-center lg:justify-start" >
                 <Carousel>
                   {
-                    myVideos.map(({ title, url, mediaType, thumbnail, like, comment, share }, index) => (
+                    myVideos.map(({ title, url, mediaType, thumbnail, like, comment, share, description, id, UserId, catalogue, User }, index) => (
                       <div key={index}>
+                        <NewsfeedCard
+                          id={id}
+                          UserId={UserId}
+                          index={index}
+                          catalogue={catalogue}
+                          url={url}
+                          User={User}
+                          views={200}
+                          rating={2.5}
+                          mediaType={mediaType}
+                          description={description}
+                          title={title}
+                          isPost={true}
+                          width={'max-w-sm'}
+                          thumbnail={thumbnail}
+                          _HandleCatalogue={_HandleCatalogue}
+                          _HandleDeleteVideo={_HandleDeleteVideo}
+                        />
+                      </div>
+                      /* <div key={index}>
                         <Card
                           image={url}
                           title={title}
@@ -209,8 +255,16 @@ const Profile = ({ profile }) => {
                           views={200}
                           rating={3.5}
                           disclaimer={true}
+                          id={id}
+                          catalogue={catalogue}
+                          UserId={UserId}
+                          isPost={true}
+                          menu={true}
+                          index={index}
+                          _HandleCatalogue={_HandleCatalogue}
+                          _HandleDeleteVideo={_HandleDeleteVideo}
                         />
-                      </div>
+                      </div> */
                     ))
                   }
                 </Carousel>

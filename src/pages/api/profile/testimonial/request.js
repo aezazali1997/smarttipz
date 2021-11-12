@@ -54,7 +54,7 @@ const handler = async (req, res) => {
                 to: `${email}`, // Change to your recipient
                 from: {
                     email: process.env.SENDER_EMAIL, // Change to your verified sender
-                    name: 'Smart Tipz'
+                    name: 'SmartTipz'
                 }, // Change to your verified sender
                 subject: 'Testimonial Request',
                 templateId: 'd-d2f73fe79778431ba1644a1aa8474f2c',

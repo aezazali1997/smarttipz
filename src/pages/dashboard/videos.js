@@ -3,7 +3,8 @@ import axiosInstance from 'src/APIs/axiosInstance';
 import { isEmpty } from 'lodash';
 import React, { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet';
-import { Card, Spinner } from 'src/components';
+import { Card, NewsfeedCard, Spinner } from 'src/components';
+import Swal from 'sweetalert2';
 
 const Videos = () => {
 
@@ -11,14 +12,20 @@ const Videos = () => {
     const [Videos, setVideos] = useState([]);
     const [filter, setFilter] = useState('all');
     const [loading, setLoading] = useState(true);
-
+    const [catalogueCount, setCatalogueCount] = useState(0);
     const fetchMyVideos = async () => {
         setLoading(true);
         try {
             const { data: { data: { videos } } } = await axiosInstance.getVideos();
             setVideos(videos);
             setFilterVideos(videos);
-            console.log('videos: ', videos);
+            var count = 0;
+            for (let i = 0; i < videos.length; i++) {
+                if (videos[i].catalogue === true) {
+                    count = count + 1;
+                }
+            }
+            setCatalogueCount(count)
             setLoading(false);
         }
         catch ({ response: { data: { message } } }) {
@@ -33,13 +40,60 @@ const Videos = () => {
 
     let _ChangeFilter = ({ target }) => {
         const { value } = target;
-        // console.log('value: ', value);
         let FilteredVideos =
             value === 'all' ? Videos : Videos.filter(video => video.category === value && (video));
-        // console.log('filtered: ', FilteredVideos);
         setFilter(value);
         setFilterVideos(FilteredVideos)
     }
+
+    const _HandleCatalogue = async (videoId, catalogue) => {
+        if (catalogueCount < 5 || catalogue === true) {
+            console.log('here: ', catalogueCount);
+            try {
+                const data = await axiosInstance.addToCatalogue({ videoId, catalogue });
+                if (catalogue) {
+                    setCatalogueCount(catalogueCount => catalogueCount - 1)
+                }
+                else {
+                    setCatalogueCount(catalogueCount => catalogueCount + 1)
+                }
+                const originalArray = [...Videos];
+                let newArray = originalArray.map((item, i) => {
+                    if (item.id !== videoId) return item;
+                    item.catalogue = !catalogue;
+                    return item;
+                })
+                setVideos(newArray)
+            }
+            catch ({ response: { data: { message } } }) {
+                console.log('error in Api: ', message);
+            }
+        }
+        else {
+            Swal.fire({
+                text: 'You can add only 5 videos in catalogue, please delete any to proceed',
+                // timer: 4000,
+                icon: 'info',
+                showConfirmButton: true,
+                showCancelButton: false
+            })
+        }
+    }
+
+    const _HandleDeleteVideo = async (index, videoId) => {
+        try {
+            const res = await axiosInstance.deleteVideo(videoId);
+            setCatalogueCount(catalogueCount => catalogueCount - 1)
+            const originalArray = [...Videos];
+            originalArray.splice(index, 1)
+            setVideos(originalArray);
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log('Api Failed: ', message);
+        }
+    }
+
+
 
     return (
         <div className="flex flex-col h-screen w-full p-5 space-y-1">
@@ -91,19 +145,47 @@ const Videos = () => {
 
                         <div className="flex flex-col w-full sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
                             {
-                                filterdVideos.map(({ title, url, thumbnail, mediaType, like, comment, share }) => (
-                                    <Card
+                                filterdVideos.map(({ title, url, thumbnail, mediaType, id, UserId, description, User, like, comment, share, catalogue }, index) => (
+                                    <div key={index}>
+                                        <NewsfeedCard
+                                            id={id}
+                                            UserId={UserId}
+                                            index={index}
+                                            catalogue={catalogue}
+                                            url={url}
+                                            User={User}
+                                            views={200}
+                                            rating={2.5}
+                                            mediaType={mediaType}
+                                            description={description}
+                                            title={title}
+                                            isPost={true}
+                                            width={'max-w-sm'}
+                                            thumbnail={thumbnail}
+                                            _HandleCatalogue={_HandleCatalogue}
+                                            _HandleDeleteVideo={_HandleDeleteVideo}
+                                        />
+                                    </div>
+                                    /* <Card
                                         image={url}
                                         thumbnail={thumbnail}
                                         mediaType={mediaType}
                                         title={title}
-                                        comment={comment}
-                                        like={like}
-                                        share={share}
+                                        comment={4}
+                                        like={2}
+                                        share={3}
                                         views={250}
                                         rating={5}
                                         disclaimer={true}
-                                    />
+                                        id={id}
+                                        UserId={UserId}
+                                        menu={true}
+                                        isPost={true}
+                                        index={index}
+                                        catalogue={catalogue}
+                                        _HandleCatalogue={_HandleCatalogue}
+                                        _HandleDeleteVideo={_HandleDeleteVideo}
+                                    /> */
                                 ))
                             }
                         </div>

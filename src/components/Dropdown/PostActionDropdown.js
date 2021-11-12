@@ -6,7 +6,7 @@ import axios from "axios";
 import axiosInstance from "src/APIs/axiosInstance";
 import Swal from "sweetalert2";
 
-const PostActionDropdown = ({ _HandleCatalogue, catalogue, ownerId }) => {
+const PostActionDropdown = ({ _HandleCatalogue, _HandleDeleteVideo, catalogue, ownerId, isPost }) => {
     // dropdown props
     const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
     const btnDropdownRef = React.createRef();
@@ -38,8 +38,8 @@ const PostActionDropdown = ({ _HandleCatalogue, catalogue, ownerId }) => {
             >
                 <div className="items-center flex">
                     <span className="">
-                        <svg className="w-6 h-6 text-gray-400 rounded-full hover:bg-gray-200 p-1 cursor-pointer" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                        <svg className="w-7 h-7 text-gray-400 hover:text-purple-600 cursor-pointer rounded-full" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
                         </svg>
                     </span>
                 </div>
@@ -54,25 +54,25 @@ const PostActionDropdown = ({ _HandleCatalogue, catalogue, ownerId }) => {
                 {
                     parseInt(localStorage.getItem('id')) == ownerId &&
                     <>
-                        <a
-                            href="#pablo"
+                        <div
                             className={
-                                "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700 hover:bg-gray-200"
+                                "text-sm py-2 px-4 font-normal block w-full cursor-pointer whitespace-nowrap bg-transparent text-blueGray-700 hover:bg-gray-200"
                             }
                             onClick={_HandleCatalogue}
                         >
                             {catalogue ? 'Remove from Catalogue' : 'Add to Catalogue'}
-                        </a>
-
-                        <a
-                            href="#pablo"
-                            className={
-                                "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700 hover:bg-gray-200"
-                            }
-                            onClick={(e) => e.preventDefault()}
-                        >
-                            Delete Video
-                        </a>
+                        </div>
+                        {
+                            isPost &&
+                            <div
+                                className={
+                                    "text-sm py-2 px-4 font-normal block w-full cursor-pointer whitespace-nowrap bg-transparent text-blueGray-700 hover:bg-gray-200"
+                                }
+                                onClick={_HandleDeleteVideo}
+                            >
+                                Delete Video
+                            </div>
+                        }
                     </>
                 }
             </div>

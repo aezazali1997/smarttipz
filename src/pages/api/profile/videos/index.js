@@ -25,6 +25,10 @@ const handler = async (req, res) => {
             const { id } = user;
 
             const videos = await Video.findAll({
+                include: [
+                    {
+                        model: User, attributes: ['name']
+                    }],
                 where: {
                     UserId: id,
                     isApproved: true,
@@ -43,7 +47,33 @@ const handler = async (req, res) => {
             console.log("Videos Api Failed Error: ", err.message);
             res.status(500).send({ error: true, data: [], message: err.message });
         }
-    } else {
+    }
+    else if (req.method === 'DELETE') {
+        const { query: { id }, headers: { authorization } } = req;
+
+        try {
+            if (!authorization) {
+                return res.status(401).send({ error: true, data: [], message: 'Please Login' })
+            };
+
+            const { username } = jwt.verify(
+                authorization.split(' ')[1],
+                process.env.SECRET_KEY
+            );
+
+            await Video.update(
+                { isApproved: false }, {
+                where: { id },
+            });
+
+            res.status(200).json({ error: false, data: {}, message: 'Video deleted successfuly.' });
+        }
+        catch (err) {
+            console.log(err)
+            res.status(500).send({ error: true, data: [], message: err.message });
+        }
+    }
+    else {
         res.status(404).end('Page Not Found');
     }
 };

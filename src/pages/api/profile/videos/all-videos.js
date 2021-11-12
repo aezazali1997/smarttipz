@@ -24,6 +24,9 @@ const handler = async (req, res) => {
             const videos = await Video.findAll({
                 include: [{
                     model: PostLikee
+
+                }, {
+                    model: User, attributes: ['name']
                 }],
                 where: {
                     isApproved: true,

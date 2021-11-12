@@ -8,7 +8,7 @@ const SendEmail = (email, subject, content, templateId) => {
       to: `${email}`, // Change to your recipient
       from: {
         email: process.env.SENDER_EMAIL, // Change to your verified sender
-        name: 'Smart Tipz'
+        name: 'SmartTipz'
       },
       subject: `${subject}`,
       templateId: templateId,

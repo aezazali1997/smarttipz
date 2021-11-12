@@ -45,6 +45,7 @@ const UseFetchProfile = (profile) => {
     const [myVideos, setMyVideos] = useState([]);
     const [fetchingMyVideos, setFetchMyVideos] = useState(true);
     const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
+    const [catalogueCount, setCatalogueCount] = useState(0);
 
     let { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
     let thumbnailRef = useRef();
@@ -97,6 +98,13 @@ const UseFetchProfile = (profile) => {
         try {
             const { data: { data: { videos } } } = await axiosInstance.getVideos();
             setMyVideos(videos);
+            var count = 0;
+            for (let i = 0; i < videos.length; i++) {
+                if (videos[i].catalogue === true) {
+                    count = count + 1;
+                }
+            }
+            setCatalogueCount(count);
             disableFetchMyVideos();
         }
         catch ({ response: { data: { message } } }) {
@@ -432,15 +440,73 @@ const UseFetchProfile = (profile) => {
         setAgree(checked);
     }
 
+    console.log('catalogueCount: ', catalogueCount);
+
+    const _HandleCatalogue = async (videoId, catalogue) => {
+        if (catalogueCount < 5 || catalogue === true) {
+            console.log('here: ', catalogueCount);
+            try {
+                const data = await axiosInstance.addToCatalogue({ videoId, catalogue });
+                const originalArray = [...catalogues];
+                const originalVideoArray = [...myVideos];
+                if (catalogue) {
+                    let newArray = originalArray.filter(item => item.id !== videoId && item)
+                    setCatalogues(newArray)
+                    setCatalogueCount(catalogueCount => catalogueCount - 1)
+                }
+                else {
+                    fetchCatalogues();
+                    setCatalogueCount(catalogueCount => catalogueCount + 1)
+                }
+                let newArray = originalVideoArray.map((item) => {
+                    if (item.id !== videoId) return item;
+                    item.catalogue = !catalogue;
+                    return item;
+                })
+                setMyVideos(newArray)
+            }
+            catch ({ response: { data: { message } } }) {
+                console.log('error in Api: ', message);
+            }
+        }
+        else {
+            Swal.fire({
+                text: 'You can add only 5 videos in catalogue, please delete any to proceed',
+                // timer: 4000,
+                icon: 'info',
+                showConfirmButton: true,
+                showCancelButton: false
+            })
+        }
+    }
+
+    const _HandleDeleteVideo = async (index, videoId) => {
+        console.log(index, videoId);
+        try {
+            const res = await axiosInstance.deleteVideo(videoId);
+            const originalArray = [...myVideos];
+            const originalCatalogueArray = [...catalogues];
+            // console.log(originalCatalogueArray)
+            let newArray = originalCatalogueArray.filter(item => item.id !== videoId && item)
+            originalArray.splice(index, 1)
+            // console.log('newArray: ', newArray)
+            // console.log('originalArray: ', originalArray)
+            setCatalogues([...newArray]);
+            setMyVideos([...originalArray]);
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log('Api Failed: ', message);
+        }
+    }
 
     return {
         followed, followers, showModal, businessCard, showBusinessCard, formik, imageUrl, loading, testimonial, uploading,
         loadingTestimonial, _AddTestimonial, handleShowBusinessCard, _EditTestimonial, _DeleteImg, handleFileChange,
         FileInput, openFileDialog, handleShowModal, _DeleteTestimonial, showRequestTestimonial, fetchMoreData, filteredTestimonial,
-        hasMore, _OnRemoveThumbnail, onChangeThumbnail, MediaType, thumbnailRef, modalTitle,
+        hasMore, _OnRemoveThumbnail, onChangeThumbnail, MediaType, thumbnailRef, modalTitle, _HandleCatalogue,
         agree, thumbnailUrl, urls, setUrls, setMediaType, ChangeAgreement, _OnThumbnailClick, uploadingThumbnail,
-        _CloseUploadModal, _OpenUploadModal, catalogues, setCatalogues, fetchingCatalogues, myVideos, fetchingMyVideos
+        _CloseUploadModal, _OpenUploadModal, catalogues, setCatalogues, fetchingCatalogues, myVideos, fetchingMyVideos,
+        _HandleDeleteVideo
     }
 }
-
 export default UseFetchProfile;

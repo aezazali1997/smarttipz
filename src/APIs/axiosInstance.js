@@ -141,6 +141,10 @@ class AxiosInstance {
         return await axios.post(USER_API_BASE_URL + "api/profile/catalogue", data, this.getAuthHeader());
     }
 
+    async deleteVideo(videoId) {
+        return await axios.delete(USER_API_BASE_URL + `api/profile/videos?id=${videoId}`, this.getAuthHeader());
+    }
+
 }
 
 export default new AxiosInstance;

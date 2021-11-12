@@ -3,11 +3,25 @@ import React from 'react'
 // import Image from 'next/image';
 import ReactTooltip from 'react-tooltip';
 import { Rating, VideoPlayer } from 'src/components';
+import { PostActionDropdown } from '../Dropdown';
 
-const Card = ({ image, like, comment, share, title, views, rating, disclaimer, mediaType, thumbnail }) => {
+const Card = ({ image, like, comment, share, title, views, rating, disclaimer, mediaType, thumbnail,
+    _HandleCatalogue, UserId, catalogue, id, menu, isPost, _HandleDeleteVideo, index }) => {
     return (
         <div className="px-1">
             <div className="max-w-sm overflow-hidden">
+                {
+                    menu &&
+                    <div className="flex justify-end py-2">
+                        <PostActionDropdown
+                            _HandleCatalogue={() => _HandleCatalogue(id, catalogue)}
+                            _HandleDeleteVideo={() => _HandleDeleteVideo(index, id)}
+                            catalogue={catalogue}
+                            ownerId={UserId}
+                            isPost={isPost}
+                        />
+                    </div>
+                }
                 {
                     mediaType ?
                         mediaType === 'image' ?
@@ -23,7 +37,7 @@ const Card = ({ image, like, comment, share, title, views, rating, disclaimer, m
                     <div className="flex w-1/2 text-sm">
                         <p className="whitespace-nowrap overflow-ellipsis overflow-hidden"> {title}</p>
                     </div>
-                    <div className="flex flex-row w-1/2 items-start space-x-3">
+                    <div className="flex flex-row w-auto items-start space-x-3">
                         {
                             like &&
                             <span className="flex flex-row w-full items-center">
@@ -55,7 +69,7 @@ const Card = ({ image, like, comment, share, title, views, rating, disclaimer, m
                 {
                     rating &&
                     <div className="flex justify-between w-full">
-                        <span className="flex w-full items-center">
+                        <span className="flex flex-col w-full md:flex-row md:items-center">
                             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                                 <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" /></svg>
                             &nbsp;<p className="text-xs">{views} Views</p></span>

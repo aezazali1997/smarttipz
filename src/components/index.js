@@ -30,3 +30,5 @@ export { default as WebInbox } from './WebInbox';
 export { default as PopupBusinessCard } from './PopupBusinessCard';
 export { default as TestimonialForm } from './TestimonialForm';
 export { default as MediaUploadForm } from './MediaUploadForm';
+export { default as NewsfeedCard } from './NewsFeedCard';
+
