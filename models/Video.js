@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const Comment = require("./Comment");
+// const Comment = require("./Comment");
 const sequelize = require("./db");
 const PostLike = require("./Like");
 
@@ -61,8 +61,8 @@ const Video = sequelize.define("Video", {
 Video.hasMany(PostLike);
 PostLike.belongsTo(Video);
 
-Video.hasMany(Comment);
-Comment.belongsTo(Video);
+// Video.hasMany(Comment);
+// Comment.belongsTo(Video);
 
 
 module.exports = Video;
