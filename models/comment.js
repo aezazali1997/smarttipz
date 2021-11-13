@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("./db");
 
-const Comment = sequelize.define("Comment", {
+const Comments = sequelize.define("Comment", {
 
     reviewerId: {
         type: DataTypes.INTEGER,
@@ -13,4 +13,4 @@ const Comment = sequelize.define("Comment", {
     }
 });
 
-module.exports = Comment;
+module.exports = Comments;
