@@ -23,21 +23,7 @@ const handler = async (req, res) => {
 
             console.log('params: ', username);
             const user = await User.findOne({
-                attributes: [
-                    'id',
-                    'name',
-                    'email',
-                    'avgRating',
-                    'totalViews',
-                    'about',
-                    'picture',
-                    'phoneNumber',
-                    'showPhone',
-                    'accessible',
-                    'accountType',
-                    'showName',
-                    'showUsername'
-                ],
+                attributes: ['id'],
                 where: { username }
             });
             console.log('user: ', user);

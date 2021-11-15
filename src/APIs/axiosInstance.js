@@ -62,6 +62,10 @@ class AxiosInstance {
         return await axios.get(USER_API_BASE_URL + "api/profile/videos", this.getAuthHeader());
     }
 
+    async getSpecificVideos(username) {
+        return await axios.get(USER_API_BASE_URL + `api/profile/videos/${username}`, this.getAuthHeader());
+    }
+
     async getNewsFeedPosts() {
         return await axios.get(USER_API_BASE_URL + "api/profile/videos/all-videos", this.getAuthHeader());
     }
@@ -131,6 +135,9 @@ class AxiosInstance {
 
     async getCatalogues() {
         return await axios.get(USER_API_BASE_URL + "api/profile/catalogue", this.getAuthHeader());
+    }
+    async getSpecificCatalogues(username) {
+        return await axios.get(USER_API_BASE_URL + `api/profile/catalogue/${username}`, this.getAuthHeader());
     }
 
     async likePost(reviewerId) {

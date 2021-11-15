@@ -7,9 +7,8 @@ import { parseCookies } from 'nookies';
 import axios from 'axios';
 import { isEmpty } from 'lodash';
 import swal from 'sweetalert';
-import videos from 'utils/VdeoSchema.json';
 import axiosInstance from 'src/APIs/axiosInstance';
-import { Card, PopupBusinessCard, ProfileCard, Rating, TestimonialCard, Spinner } from 'src/components';
+import { Card, PopupBusinessCard, ProfileCard, Rating, TestimonialCard, Spinner, NewsfeedCard, Carousel } from 'src/components';
 
 
 const UserProfile = ({ profile }) => {
@@ -23,7 +22,10 @@ const UserProfile = ({ profile }) => {
     const [showBusinessCard, setShowBusinessCard] = useState(false);
     const [loadingTestimonial, setLoadingTestimonial] = useState(false);
     const [businessCard, setBusinessCard] = useState('');
-
+    const [fetchingMyVideos, setFetchMyVideos] = useState(true);
+    const [myVideos, setMyVideos] = useState([]);
+    const [catalogues, setCatalogues] = useState([]);
+    const [fetchingCatalogues, setFetchCatalogues] = useState(true);
 
     useEffect(() => {
         const { accountType, username } = profile;
@@ -62,6 +64,57 @@ const UserProfile = ({ profile }) => {
     }, [isFollowing, profile])
 
 
+
+    const fetchCatalogues = async (username) => {
+        enableFetchCatalogue();
+        try {
+            const { data: { data: { catalogues } } } = await axiosInstance.getSpecificCatalogues(username);
+            setCatalogues(catalogues);
+            disableFetchCatalogue();
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log('Error in catalogue Api: ', message);
+            disableFetchCatalogue();
+        }
+    }
+
+    const fetchMyVideos = async (username) => {
+        enableFetchMyVideos();
+        try {
+            const { data: { data: { videos } } } = await axiosInstance.getSpecificVideos(username);
+            setMyVideos(videos);
+            disableFetchMyVideos();
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log('Error in videos Api: ', message);
+            disableFetchMyVideos();
+        }
+    }
+
+
+    useEffect(() => {
+        const { username } = profile;
+        fetchCatalogues(username);
+        fetchMyVideos(username);
+    }, []);
+
+
+    const enableFetchCatalogue = () => {
+        setFetchCatalogues(true);
+    };
+
+    const disableFetchCatalogue = () => {
+        setFetchCatalogues(false);
+    };
+
+    const enableFetchMyVideos = () => {
+        setFetchMyVideos(true);
+    };
+
+    const disableFetchMyVideos = () => {
+        setFetchMyVideos(false);
+    };
+
     const enableLoadTestimonial = () => {
         setLoadingTestimonial(true);
     };
@@ -79,6 +132,7 @@ const UserProfile = ({ profile }) => {
                 console.log('FollowUser API Failed: ', err);
             })
     }
+
     let handleShowBusinessCard = () => {
         setShowBusinessCard(showBusinessCard => !showBusinessCard)
     };
@@ -206,54 +260,145 @@ const UserProfile = ({ profile }) => {
                     </div>
                 </div>
             </div>
-            {/* section ends here */}
-            {/* section starts here */}{
-                accountType === 'Business' && (
-                    <div className="flex flex-col w-full px-2  mt-8">
-                        <h1 className="text-md font-medium">My Catalogue</h1>
-                        <div className="flex w-full mt-6 justify-center lg:justify-start" >
-                            <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
-                                {
-                                    videos && videos.map(({ title, image, like, comment, share }) => (
-                                        <Card
-                                            image={image}
-                                            title={title}
-                                            comment={comment}
-                                            like={like}
-                                            share={share}
-                                            views={200}
-                                            rating={4.5}
-                                        />
-                                    ))
-                                }
+            <>
+                <div className="flex flex-col w-full px-2 mt-4">
+                    <h1 className="text-md font-medium">
+                        {accountType === 'Personal' ? showName ? name + "'s"
+                            : showUsername ? username + "'s" : '' : name + "'s"} Catalogue
+                    </h1>
+                    {
+                        fetchingCatalogues ? (
+                            <div className="flex w-full justify-center">
+                                <span className="flex flex-col items-center">
+                                    <Spinner />
+                                    <p className="text-sm text-gray-400"> Loading Catalogues</p>
+                                </span>
                             </div>
-                        </div>
-                    </div>
-                )}
+                        )
+                            :
+                            isEmpty(catalogues) ? (
+                                <div className="flex w-full justify-center items-center">
+                                    <p className="text-gray-500"> No Catalogues Yet</p>
+                                </div>
+                            )
+                                :
+                                <div className="w-auto mt-6 relative">
+                                    <Carousel>
+                                        {
+                                            catalogues.map(({ id, UserId, title, url, mediaType, thumbnail, catalogue, description, User }, index) => (
+                                                <div key={index} className="my-2 px-5">
+                                                    <NewsfeedCard
+                                                        id={id}
+                                                        UserId={UserId}
+                                                        index={index}
+                                                        catalogue={catalogue}
+                                                        url={url}
+                                                        User={User}
+                                                        views={200}
+                                                        rating={2.5}
+                                                        mediaType={mediaType}
+                                                        description={description}
+                                                        title={title}
+                                                        width={'max-w-xs'}
+                                                        thumbnail={thumbnail}
+                                                    />
+                                                </div>
+                                                /* <div key={index}>
+                                                  <Card
+                                                    image={url}
+                                                    title={title}
+                                                    views={200}
+                                                    mediaType={mediaType}
+                                                    thumbnail={thumbnail}
+                                                    id={id}
+                                                    rating={3.5}
+                                                    menu={true}
+                                                    catalogue={catalogue}
+                                                    UserId={UserId}
+                                                    _HandleCatalogue={_HandleCatalogue}
+                                                  />
+                                                </div> */
+                                            ))
+                                        }
+
+                                    </Carousel>
+                                </div>
+                    }
+                </div>
+            </>
+            {/* )} */}
             {/* section ends here */}
             {/* section starts here */}
             <div className="flex flex-col w-full px-2  mt-8">
-                <h1 className="text-md font-medium">My Videos</h1>
-                <div className="flex w-full mt-6 justify-center lg:justify-start" >
-                    <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
-                        {
-                            videos && videos.map(({ title, image, like, comment, share }) => (
-                                <Card
-                                    image={image}
-                                    title={title}
-                                    comment={comment}
-                                    like={like}
-                                    share={share}
-                                    views={200}
-                                    rating={3.5}
-                                />
-                            ))
-                        }
-                    </div>
-                </div>
+                <h1 className="text-md font-medium">Videos</h1>
+                {
+                    fetchingMyVideos ? (
+                        <div className="flex w-full justify-center">
+                            <span className="flex flex-col items-center">
+                                <Spinner />
+                                <p className="text-sm text-gray-400"> Loading Videos</p>
+                            </span>
+                        </div>
+                    )
+                        :
+                        isEmpty(myVideos) ? (
+                            <div className="flex w-full justify-center items-center">
+                                <p className="text-gray-500"> No Videos Yet</p>
+                            </div>
+                        )
+                            :
+                            <div className="w-full mt-6 justify-center lg:justify-start" >
+                                <Carousel>
+                                    {
+                                        myVideos.map(({ title, url, mediaType, thumbnail, like, comment, share, description, id, UserId, catalogue, User }, index) => (
+                                            <div key={index} className="my-2 px-5">
+                                                <NewsfeedCard
+                                                    id={id}
+                                                    UserId={UserId}
+                                                    index={index}
+                                                    catalogue={catalogue}
+                                                    url={url}
+                                                    User={User}
+                                                    views={200}
+                                                    rating={2.5}
+                                                    mediaType={mediaType}
+                                                    description={description}
+                                                    title={title}
+                                                    isPost={true}
+                                                    width={'max-w-xs'}
+                                                    thumbnail={thumbnail}
+                                                />
+                                            </div>
+                                            /* <div key={index}>
+                                              <Card
+                                                image={url}
+                                                title={title}
+                                                thumbnail={thumbnail}
+                                                mediaType={mediaType}
+                                                comment={comment}
+                                                like={like}
+                                                share={share}
+                                                views={200}
+                                                rating={3.5}
+                                                disclaimer={true}
+                                                id={id}
+                                                catalogue={catalogue}
+                                                UserId={UserId}
+                                                isPost={true}
+                                                menu={true}
+                                                index={index}
+                                                _HandleCatalogue={_HandleCatalogue}
+                                                _HandleDeleteVideo={_HandleDeleteVideo}
+                                              />
+                                            </div> */
+                                        ))
+                                    }
+                                </Carousel>
+                            </div>}
             </div>
             {/* section ends here */}
             {/* section starts here */}
+
             {accountType === 'Business' && (
                 <div className="flex flex-col w-full px-2  mt-8">
                     <h1 className="text-md font-medium">Customer Testimonials</h1>

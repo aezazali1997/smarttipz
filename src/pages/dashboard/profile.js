@@ -10,7 +10,10 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 // import { AddTestimonialModal, EditTestimonialModal } from 'components/Modals';
 import { UseFetchProfile } from 'src/hooks';
 import { getInputClasses } from 'helpers';
-import { Button, Card, Carousel, CustomLoader, InputField, MediaUploadForm, NewsfeedCard, PopupBusinessCard, ProfileCard, Rating, Spinner, TestimonialCard } from 'src/components';
+import {
+  Button, Card, Carousel, CustomLoader, InputField, MediaUploadForm,
+  NewsfeedCard, PopupBusinessCard, ProfileCard, Rating, Spinner, TestimonialCard
+} from 'src/components';
 
 const Profile = ({ profile }) => {
 
@@ -155,8 +158,8 @@ const Profile = ({ profile }) => {
                 <div className="w-auto mt-6 relative">
                   <Carousel>
                     {
-                      catalogues.map(({ id, UserId, title, url, mediaType, thumbnail, catalogue, description, User, }, index) => (
-                        <div key={index}>
+                      catalogues.map(({ id, UserId, title, url, mediaType, thumbnail, catalogue, description, User }, index) => (
+                        <div key={index} className="my-2 px-5">
                           <NewsfeedCard
                             id={id}
                             UserId={UserId}
@@ -169,7 +172,7 @@ const Profile = ({ profile }) => {
                             mediaType={mediaType}
                             description={description}
                             title={title}
-                            width={'max-w-sm'}
+                            width={'max-w-xs'}
                             thumbnail={thumbnail}
                             _HandleDeleteVideo={_HandleDeleteVideo}
                             _HandleCatalogue={_HandleCatalogue}
@@ -223,7 +226,7 @@ const Profile = ({ profile }) => {
                 <Carousel>
                   {
                     myVideos.map(({ title, url, mediaType, thumbnail, like, comment, share, description, id, UserId, catalogue, User }, index) => (
-                      <div key={index}>
+                      <div key={index} className="my-2 px-5">
                         <NewsfeedCard
                           id={id}
                           UserId={UserId}
@@ -237,7 +240,7 @@ const Profile = ({ profile }) => {
                           description={description}
                           title={title}
                           isPost={true}
-                          width={'max-w-sm'}
+                          width={'max-w-xs'}
                           thumbnail={thumbnail}
                           _HandleCatalogue={_HandleCatalogue}
                           _HandleDeleteVideo={_HandleDeleteVideo}

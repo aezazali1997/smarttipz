@@ -1,6 +1,7 @@
 export { default as Button } from './Button';
 export { default as Badge } from './Badge';
 export { default as Select } from './Select';
+export { default as ProgressBar } from './ProgessBar';
 export { default as Switch } from './Switch';
 export { default as Spinner } from './Spinner';
 export { default as Rating } from './RatingStar';

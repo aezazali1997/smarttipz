@@ -18,14 +18,14 @@ const NewsFeed = () => {
 
   return (
 
-    <div className="flex flex-col min-h-screen w-full py-5 items-center bg-gray-50">
+    <div className="flex flex-col min-h-screen w-full py-5 px-3 items-center bg-gray-50">
       {/*SEO Support*/}
       <Helmet>
         <title>News Feed | Smart Tipz</title>
       </Helmet>
       {/*SEO Support End */}
       <div className="w-full mb-4">
-        <div className="mx-auto max-w-md shadow flex flex-col justify-center 
+        <div className="mx-auto max-w-lg shadow flex flex-col justify-center 
                     rounded-lg bg-white divide-y space-y-4">
           <div className="space-y-3" onClick={_OpenUploadModal}>
             <div className="flex flex-col w-full justify-center items-center cursor-pointer 
@@ -54,7 +54,7 @@ const NewsFeed = () => {
                 rating={2.5}
                 description={description}
                 title={title}
-                width={'max-w-md'}
+                width={'max-w-lg'}
                 thumbnail={thumbnail}
                 _HandleDeleteVideo={_HandleDeleteVideo}
                 _HandleCatalogue={_HandleCatalogue}

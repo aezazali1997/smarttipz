@@ -5,7 +5,7 @@ import ItemsCarousel from 'react-items-carousel';
 
 const Index = ({ children }) => {
 
-    const [renderItems, setRenderItems] = useState(4);
+    const [renderItems, setRenderItems] = useState(3);
     const [renderArrow, setRenderArrow] = useState(false);
     const [activeItemIndex, setActiveItemIndex] = useState(0);
     const chevronWidth = 40;
@@ -13,7 +13,7 @@ const Index = ({ children }) => {
     const handleResize = () => {
 
         if (window.innerWidth > 1024 && window.innerWidth < 1920) {
-            setRenderItems(4)
+            setRenderItems(3)
             setRenderArrow(false);
         }
         else if (window.innerWidth > 464 && window.innerWidth < 1024) {

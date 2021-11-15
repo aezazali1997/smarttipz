@@ -4,7 +4,7 @@
 
 .video-react.video-react-fluid {
     width: 100%;
-    padding-top:0px !important;
+    padding-top: 0px !important;
     max-width: 100%;
     height: 192px !important;
     border-top-left-radius: 8px !important;
@@ -30,3 +30,20 @@
     left: 0;
     height: 100%;
 }
+
+
+.video-react .video-react-video {
+    position: relative !important;
+    top: 0;
+    left: 0;
+    width: 43rem !important;
+    height: 192px !important;
+    border-top-left-radius: 8 px !important;
+    border-top-right-radius: 8 px !important;
+}
+
+/* .video-react.video-react-fluid {
+    height: 192px !important;
+    border-top-left-radius: 8px !important;
+    border-top-right-radius: 8px !important;
+} */

@@ -6,12 +6,12 @@ import { isEmpty } from 'lodash';
 import { faFileVideo, faImages } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useS3Upload } from 'next-s3-upload';
-import { CustomLoader } from 'src/components';
+import { CustomLoader, ProgressBar } from 'src/components';
 
 
 const MyDropzone = ({ setMaterial, setMediaType, accept, heading, urls, Type, _DeleteImg }) => {
 
-    let { uploadToS3 } = useS3Upload();
+    let { uploadToS3, files } = useS3Upload();
     const [uploading, setUploading] = useState(false);
 
     const onDrop = useCallback(async (acceptedFiles) => {
@@ -27,6 +27,7 @@ const MyDropzone = ({ setMaterial, setMediaType, accept, heading, urls, Type, _D
             setUploading(false)
         }
     }, [])
+    console.log('files: ', files);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
@@ -40,8 +41,14 @@ const MyDropzone = ({ setMaterial, setMediaType, accept, heading, urls, Type, _D
                     :
                     uploading ?
                         <div className="flex flex-col justify-center items-center w-full">
-                            <CustomLoader />
-                            <p className="text-gray-700 text-center text-sm">Uploading, please wait</p>
+                            {
+                                !isEmpty(files) &&
+                                <>
+                                    <ProgressBar width={files[0].progress} />
+                                    <p className="text-gray-700 text-center text-sm">{(files[0].progress).toFixed(0)}% Uploaded, please wait</p>
+                                </>
+                            }
+                            {/* <CustomLoader /> */}
                         </div>
                         :
                         urls ?
