@@ -1,12 +1,15 @@
 /* eslint-disable react/jsx-key */
+import React, { useEffect, useState } from 'react'
 import axiosInstance from 'src/APIs/axiosInstance';
 import { isEmpty } from 'lodash';
-import React, { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet';
 import { Card, NewsfeedCard, Spinner } from 'src/components';
 import Swal from 'sweetalert2';
+import { useRouter } from 'next/router';
 
 const Videos = () => {
+
+    const router = useRouter();
 
     const [filterdVideos, setFilterVideos] = useState([]);
     const [Videos, setVideos] = useState([]);
@@ -38,6 +41,8 @@ const Videos = () => {
         fetchMyVideos();
     }, [])
 
+    useEffect(() => { }, [filterdVideos])
+
     let _ChangeFilter = ({ target }) => {
         const { value } = target;
         let FilteredVideos =
@@ -58,12 +63,20 @@ const Videos = () => {
                     setCatalogueCount(catalogueCount => catalogueCount + 1)
                 }
                 const originalArray = [...Videos];
+                const originalFilteredArray = [...filterdVideos]
                 let newArray = originalArray.map((item, i) => {
                     if (item.id !== videoId) return item;
                     item.catalogue = !catalogue;
                     return item;
                 })
+                let newFilteredArray = originalFilteredArray.map((item, i) => {
+                    if (item.id !== videoId) return item;
+                    item.catalogue = !catalogue;
+                    return item;
+                })
+                console.log('newFilteredArray:', newFilteredArray);
                 setVideos(newArray)
+                setFilterVideos(newFilteredArray);
             }
             catch ({ response: { data: { message } } }) {
                 console.log('error in Api: ', message);
@@ -85,7 +98,13 @@ const Videos = () => {
             const res = await axiosInstance.deleteVideo(videoId);
             setCatalogueCount(catalogueCount => catalogueCount - 1)
             const originalArray = [...Videos];
+            const originalFilteredArray = [...filterdVideos]
             originalArray.splice(index, 1)
+            let newFilteredArray = originalFilteredArray.filter((item, i) => {
+                if (item.id !== videoId) return item
+            })
+            console.log('newFilteredArray: ', newFilteredArray)
+            setFilterVideos(newFilteredArray);
             setVideos(originalArray);
         }
         catch ({ response: { data: { message } } }) {
@@ -93,10 +112,14 @@ const Videos = () => {
         }
     }
 
+    const _HandleGotoVideoDetails = (id) => {
+        router.push(`/dashboard/videos/${id}`)
+    }
+
 
 
     return (
-        <div className="flex flex-col h-screen w-full p-5 space-y-1">
+        <div className="flex flex-col min-h-screen w-full p-5 space-y-1">
             {/*SEO Support*/}
             <Helmet>
                 <title>Videos | Smart Tipz</title>
@@ -143,7 +166,7 @@ const Videos = () => {
                     )
                         :
 
-                        <div className="flex flex-col w-full sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
+                        <div className="flex flex-col w-full sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-col-3 gap-3">
                             {
                                 filterdVideos.map(({ title, url, thumbnail, mediaType, id, UserId, description, User, like, comment, share, catalogue }, index) => (
                                     <div key={index}>
@@ -160,8 +183,9 @@ const Videos = () => {
                                             description={description}
                                             title={title}
                                             isPost={true}
-                                            width={'max-w-sm'}
+                                            width={'max-w-xs'}
                                             thumbnail={thumbnail}
+                                            _HandleGotoVideoDetails={_HandleGotoVideoDetails}
                                             _HandleCatalogue={_HandleCatalogue}
                                             _HandleDeleteVideo={_HandleDeleteVideo}
                                         />

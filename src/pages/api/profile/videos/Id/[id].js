@@ -1,49 +1,34 @@
+const jwt = require('jsonwebtoken');
 const User = require('models/User');
 const Video = require('models/Video');
-const jwt = require('jsonwebtoken');
-const sequelize = require('sequelize');
 
 const handler = async (req, res) => {
     if (req.method === 'GET') {
-        const { query: { username }, headers: { authorization } }
+        const { query: { id }, headers: { authorization } }
             = req;
         try {
             if (!authorization) {
                 return res.status(401).send({ error: true, data: [], message: 'Please Login' })
             }
-            const response = jwt.verify(
+
+            const result = jwt.verify(
                 authorization.split(' ')[1],
                 process.env.SECRET_KEY
             );
 
-            const user = await User.findOne({
-                attributes: ['id'],
-                where: { username }
-            });
-
-            if (!user) {
-                return res.status(404).send({ error: true, data: [], message: 'User Not Found' })
-            }
-            const { id } = user;
-
-            const videos = await Video.findAll({
+            const video = await Video.findOne({
                 include: [
                     {
                         model: User, attributes: ['name', 'username']
                     }],
                 where: {
-                    UserId: id,
-                    isApproved: true,
-                    category: {
-                        [sequelize.Op.not]: 'catalogue'
-                    },
-                },
-                order: [["createdAt", "DESC"]]
+                    id
+                }
             });
 
             res.status(200).json({
                 message: 'success',
-                data: { videos }
+                data: { video }
             });
         } catch (err) {
             console.log("Videos Api Failed Error: ", err.message);

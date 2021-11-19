@@ -24,8 +24,8 @@ const Authenticate = () => {
 
             <div className="flex flex-col w-full lg:w-1/2">
                 <span className="hidden lg:flex relative w-48 h-11">
-                    <Image src='https://smart-tipz-data-bucket.s3.ap-southeast-1.amazonaws.com/public/ST-2.png'
-                        layout="fill" objectFit="contain" alt="brand logo" priority={true} />
+                    <Image src='https://smart-tipz-data-bucket.s3.ap-southeast-1.amazonaws.com/public/ST-2.svg'
+                        layout="fill" objectFit="cover" alt="brand logo" priority={true} />
                 </span>
             </div>
 

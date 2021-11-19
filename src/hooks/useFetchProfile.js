@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import { useS3Upload } from 'next-s3-upload';
 import Swal from 'sweetalert2';
 import swal from 'sweetalert';
+import { useRouter } from 'next/router';
 import axiosInstance from 'src/APIs/axiosInstance';
 import { RequestTestimonialFormSchema, UploadPhotoVideoSchema } from 'utils/validation_shema';
 
@@ -19,6 +20,8 @@ const initials = {
 }
 
 const UseFetchProfile = (profile) => {
+
+    const router = useRouter();
 
     const [showBusinessCard, setShowBusinessCard] = useState(false);
     const [followers, setFollowers] = useState(0);
@@ -498,6 +501,18 @@ const UseFetchProfile = (profile) => {
             console.log('Api Failed: ', message);
         }
     }
+    const _HandleGotoUserProfile = (id, username) => {
+        if (id !== parseInt(localStorage.getItem('id'))) {
+            router.push(`/dashboard/profile/${username}`);
+        }
+        else {
+            router.push(`/dashboard/profile`);
+        }
+    }
+
+    const _HandleGotoVideoDetails = (id) => {
+        router.push(`/dashboard/videos/${id}`)
+    }
 
     return {
         followed, followers, showModal, businessCard, showBusinessCard, formik, imageUrl, loading, testimonial, uploading,
@@ -506,7 +521,7 @@ const UseFetchProfile = (profile) => {
         hasMore, _OnRemoveThumbnail, onChangeThumbnail, MediaType, thumbnailRef, modalTitle, _HandleCatalogue,
         agree, thumbnailUrl, urls, setUrls, setMediaType, ChangeAgreement, _OnThumbnailClick, uploadingThumbnail,
         _CloseUploadModal, _OpenUploadModal, catalogues, setCatalogues, fetchingCatalogues, myVideos, fetchingMyVideos,
-        _HandleDeleteVideo
+        _HandleDeleteVideo, _HandleGotoVideoDetails, _HandleGotoUserProfile
     }
 }
 export default UseFetchProfile;

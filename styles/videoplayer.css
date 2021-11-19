@@ -1,3 +1,18 @@
+.video-wrapper {
+    height: 192px;
+    width: 100%;
+}
+
+.detail-page-video-wrapper {
+    height: 70vh;
+    width: 100%;
+}
+
+.suggestion-video-wrapper {
+    height: 130px;
+    width: 100%;
+}
+
 .video {
     padding-top: 0% !important;
 }
@@ -6,7 +21,7 @@
     width: 100%;
     padding-top: 0px !important;
     max-width: 100%;
-    height: 192px !important;
+    height: 100% !important;
     border-top-left-radius: 8px !important;
     border-top-right-radius: 8px !important;
 }
@@ -36,8 +51,8 @@
     position: relative !important;
     top: 0;
     left: 0;
-    width: 43rem !important;
-    height: 192px !important;
+    width: 100% !important;
+    height: 100% !important;
     border-top-left-radius: 8 px !important;
     border-top-right-radius: 8 px !important;
 }

@@ -62,6 +62,10 @@ class AxiosInstance {
         return await axios.get(USER_API_BASE_URL + "api/profile/videos", this.getAuthHeader());
     }
 
+    async getVideoById(id) {
+        return await axios.get(USER_API_BASE_URL + `api/profile/videos/Id/${id}`, this.getAuthHeader());
+    }
+
     async getSpecificVideos(username) {
         return await axios.get(USER_API_BASE_URL + `api/profile/videos/${username}`, this.getAuthHeader());
     }

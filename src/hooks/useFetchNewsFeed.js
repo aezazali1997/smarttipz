@@ -5,8 +5,11 @@ import { useS3Upload } from 'next-s3-upload';
 import { UploadVideoSchema } from 'utils/validation_shema';
 import axiosInstance from 'src/APIs/axiosInstance';
 import { isEmpty } from 'lodash';
+import { useRouter } from 'next/router';
 
 const UseFetchNewsFeed = () => {
+
+    const router = useRouter();
 
     const initials = {
         title: '',
@@ -29,6 +32,9 @@ const UseFetchNewsFeed = () => {
     const [initialValues, setInitialValues] = useState(initials);
     const [posts, setPosts] = useState([]);
     const [catalogueCount, setCatalogueCount] = useState(0);
+    const [showRatingModal, setShowRatingModal] = useState(false);
+    const [showTipModal, setShowTipModal] = useState(false);
+
     let thumbnailRef = useRef();
 
     let GetPosts = async () => {
@@ -111,11 +117,7 @@ const UseFetchNewsFeed = () => {
 
     let _DeleteImg = () => {
         let copyUrls = '';
-        // let copyFiles = [...files];
-        // copyUrls.splice(index, 1);
-        // copyFiles.splice(index, 1);
         setUrls(copyUrls)
-        // setFile(copyFiles);
     }
 
     let _HandleLanguageChange = (value) => {
@@ -127,16 +129,6 @@ const UseFetchNewsFeed = () => {
 
     const _OnSubmit = async (values, setSubmitting, resetForm) => {
         setSubmitting(true);
-        // let url = await uploadToS3(MediaType);
-        // let thumbnail = '';
-        // if (thumbnailUrl !== '') {
-        //     thumbnail = await uploadToS3(thumbnailFile);
-        //     values.thumbnail = thumbnail.url;
-        // }
-        // else {
-        //     values.thumbnail = '';
-        // }
-
         values.url = urls;
         values.agree = agree;
         values.mediaType = 'video';
@@ -216,7 +208,6 @@ const UseFetchNewsFeed = () => {
 
     }
 
-
     const _HandleCatalogue = async (videoId, catalogue) => {
         if (catalogueCount < 5 || catalogue === true) {
             console.log('here: ', catalogueCount);
@@ -269,12 +260,44 @@ const UseFetchNewsFeed = () => {
         }
     }
 
+    const _HandleGotoUserProfile = (id, username) => {
+        if (id !== parseInt(localStorage.getItem('id'))) {
+            router.push(`/dashboard/profile/${username}`);
+        }
+        else {
+            router.push(`/dashboard/profile`);
+        }
+    }
+
+    const _HandleGotoVideoDetails = (id) => {
+        router.push(`/dashboard/videos/${id}`)
+    }
+
+    const ToggleRatingModal = () => {
+        setShowRatingModal(!showRatingModal);
+    }
+
+    const _HandleChangeRating = (value) => {
+        console.log('value: ', value);
+    }
+
+    const ToggleTipModal = () => {
+        setShowTipModal(!showTipModal);
+    }
+
+    const _HandleChangeTip = (value) => {
+        console.log('value: ', value);
+    }
+
 
     return {
         formik, _HandleLanguageChange, selectedLanguage, _DeleteImg, ChangeAgreement, agree, urls,
         setUrls, showModal, _OpenUploadModal, _CloseUploadModal, loading, thumbnailRef, _OnRemoveThumbnail,
-        onChangeThumbnail, _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType,
-        uploadingThumbnail, posts, HandleLikePost, HandleCheckLike, _HandleCatalogue, _HandleDeleteVideo
+        onChangeThumbnail, _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType, _HandleGotoUserProfile,
+        uploadingThumbnail, posts, HandleLikePost, HandleCheckLike, _HandleCatalogue, _HandleDeleteVideo,
+        _HandleGotoVideoDetails, ToggleRatingModal, _HandleChangeRating, showRatingModal, ToggleTipModal,
+        _HandleChangeTip, showTipModal
+
     }
 }
 

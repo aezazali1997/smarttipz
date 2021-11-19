@@ -1,14 +1,15 @@
 import React from 'react'
 import ReactStars from 'react-rating-stars-component'
 
-const Rating = ({ value }) => {
+const Rating = ({ value, edit, isHalf, onChange, size }) => {
     return (
         <ReactStars
             count={5}
             value={value}
-            size={16}
-            edit={false}
-            isHalf={true}
+            size={size || 16}
+            edit={edit}
+            isHalf={isHalf}
+            onChange={onChange}
             emptyIcon={<i className="far fa-star"></i>}
             halfIcon={<i className="fa fa-star-half-alt"></i>}
             fullIcon={<i className="fa fa-star"></i>}

@@ -7,7 +7,6 @@ import cookie from 'js-cookie';
 import { parseCookies } from 'nookies';
 import { isEmpty } from 'lodash';
 import InfiniteScroll from 'react-infinite-scroll-component';
-// import { AddTestimonialModal, EditTestimonialModal } from 'components/Modals';
 import { UseFetchProfile } from 'src/hooks';
 import { getInputClasses } from 'helpers';
 import {
@@ -23,7 +22,7 @@ const Profile = ({ profile }) => {
     filteredTestimonial, fetchMoreData, hasMore, _OnRemoveThumbnail, onChangeThumbnail, MediaType, thumbnailRef,
     agree, thumbnailUrl, urls, setUrls, setMediaType, ChangeAgreement, _OnThumbnailClick, _CloseUploadModal,
     _OpenUploadModal, fetchingCatalogues, catalogues, myVideos, fetchingMyVideos, uploadingThumbnail,
-    _HandleCatalogue, _HandleDeleteVideo
+    _HandleCatalogue, _HandleDeleteVideo, _HandleGotoVideoDetails, _HandleGotoUserProfile
   } = UseFetchProfile(profile);
   const { name, about, rating, views, picture, phone, email, accountType, username, showUsername, showName
   } = profile;
@@ -52,7 +51,7 @@ const Profile = ({ profile }) => {
         />
       </div>
       <div className="hidden md:flex flex-row w-full h-auto">
-        <div className="flex w-1/6 px-2 py-1">
+        <div className="flex w-3/12 lg:w-2/12 px-2 py-1">
           {/* <div className="rounded-2xl w-28 h-36 relative px-2 py-1"> */}
           {picture ?
             <img src={picture} alt="profile" className="rounded-2xl w-30 h-40" layout="fill" />
@@ -64,7 +63,7 @@ const Profile = ({ profile }) => {
           }
           {/* </div> */}
         </div>
-        <div className="flex flex-col w-4/6 md:w-5/6 ">
+        <div className="flex flex-col w-9/12 lg:w-10/12 md:w-5/6 ">
           {/* section starts here */}
           <div className="flex flex-row lg:justify-between px-2 ">
             <div className="flex flex-col w-full lg:w-1/2">
@@ -80,6 +79,8 @@ const Profile = ({ profile }) => {
                 <span className="flex w-full items-center">
                   <Rating
                     value={rating}
+                    isHalf={true}
+                    edit={false}
                   />
                   &nbsp; <p className="text-xs"> Rating</p></span>
               </div>
@@ -174,6 +175,8 @@ const Profile = ({ profile }) => {
                             title={title}
                             width={'max-w-xs'}
                             thumbnail={thumbnail}
+                            _HandleGotoUserProfile={_HandleGotoUserProfile}
+                            _HandleGotoVideoDetails={_HandleGotoVideoDetails}
                             _HandleDeleteVideo={_HandleDeleteVideo}
                             _HandleCatalogue={_HandleCatalogue}
                           />
@@ -242,6 +245,8 @@ const Profile = ({ profile }) => {
                           isPost={true}
                           width={'max-w-xs'}
                           thumbnail={thumbnail}
+                          _HandleGotoUserProfile={_HandleGotoUserProfile}
+                          _HandleGotoVideoDetails={_HandleGotoVideoDetails}
                           _HandleCatalogue={_HandleCatalogue}
                           _HandleDeleteVideo={_HandleDeleteVideo}
                         />

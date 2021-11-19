@@ -1,19 +1,19 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
+import React, { useEffect } from "react";
 import { createPopper } from "@popperjs/core";
 import { useOutsideClick } from 'src/hooks';
-import axios from "axios";
-import axiosInstance from "src/APIs/axiosInstance";
-import Swal from "sweetalert2";
 
-const PostActionDropdown = ({ _HandleCatalogue, _HandleDeleteVideo, catalogue, ownerId, isPost }) => {
+const PostActionDropdown = ({ _HandleCatalogue, _HandleDeleteVideo, catalogue, ownerId, isPost,
+    ToggleRatingModal, ToggleTipModal }) => {
     // dropdown props
     const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
+    const [ID, setID] = React.useState(null);
     const btnDropdownRef = React.createRef();
     const popoverDropdownRef = React.createRef();
+
     const openDropdownPopover = () => {
         createPopper(btnDropdownRef.current, popoverDropdownRef.current, {
-            placement: "left-start",
+            placement: "bottom-end",
         });
         setDropdownPopoverShow(true);
     };
@@ -24,6 +24,12 @@ const PostActionDropdown = ({ _HandleCatalogue, _HandleDeleteVideo, catalogue, o
     useOutsideClick(popoverDropdownRef, () => {
         setDropdownPopoverShow(false);
     })
+
+    useEffect(() => {
+        if (localStorage.getItem('id') !== null) {
+            setID(localStorage.getItem('id'))
+        }
+    }, [])
 
     return (
         <>
@@ -38,9 +44,12 @@ const PostActionDropdown = ({ _HandleCatalogue, _HandleDeleteVideo, catalogue, o
             >
                 <div className="items-center flex">
                     <span className="">
-                        <svg className="w-7 h-7 text-gray-400 hover:text-purple-600 cursor-pointer rounded-full" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                        <svg className="w-5 h-5 text-gray-400 hover:text-purple-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
                         </svg>
+                        {/* <svg className="w-7 h-7 text-gray-400 hover:text-purple-600 cursor-pointer rounded-full" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                        </svg> */}
                     </span>
                 </div>
             </a>
@@ -52,26 +61,52 @@ const PostActionDropdown = ({ _HandleCatalogue, _HandleDeleteVideo, catalogue, o
                 }
             >
                 {
-                    parseInt(localStorage.getItem('id')) == ownerId &&
+
                     <>
-                        <div
-                            className={
-                                "text-sm py-2 px-4 font-normal block w-full cursor-pointer whitespace-nowrap bg-transparent text-blueGray-700 hover:bg-gray-200"
-                            }
-                            onClick={_HandleCatalogue}
-                        >
-                            {catalogue ? 'Remove from Catalogue' : 'Add to Catalogue'}
-                        </div>
                         {
-                            isPost &&
-                            <div
-                                className={
-                                    "text-sm py-2 px-4 font-normal block w-full cursor-pointer whitespace-nowrap bg-transparent text-blueGray-700 hover:bg-gray-200"
+                            ID && parseInt(ID) == ownerId &&
+                            <>
+                                <div
+                                    className={
+                                        "text-sm py-2 px-4 font-normal block w-full cursor-pointer whitespace-nowrap bg-transparent text-blueGray-700 hover:bg-gray-200"
+                                    }
+                                    onClick={_HandleCatalogue}
+                                >
+                                    {catalogue ? 'Remove from Catalogue' : 'Add to Catalogue'}
+                                </div>
+                                {
+                                    isPost &&
+                                    <div
+                                        className={
+                                            "text-sm py-2 px-4 font-normal block w-full cursor-pointer whitespace-nowrap bg-transparent text-blueGray-700 hover:bg-gray-200"
+                                        }
+                                        onClick={_HandleDeleteVideo}
+                                    >
+                                        Delete Video
+                                    </div>
                                 }
-                                onClick={_HandleDeleteVideo}
-                            >
-                                Delete Video
-                            </div>
+                            </>
+                        }
+                        {
+                            ID && parseInt(ID) !== ownerId &&
+                            <>
+                                <div
+                                    className={
+                                        "text-sm py-2 px-4 font-normal block w-full cursor-pointer whitespace-nowrap bg-transparent text-blueGray-700 hover:bg-gray-200"
+                                    }
+                                    onClick={ToggleRatingModal}
+                                >
+                                    Rate Video
+                                </div>
+                                <div
+                                    className={
+                                        "text-sm py-2 px-4 font-normal block w-full cursor-pointer whitespace-nowrap bg-transparent text-blueGray-700 hover:bg-gray-200"
+                                    }
+                                    onClick={ToggleTipModal}
+                                >
+                                    Give a Tip
+                                </div>
+                            </>
                         }
                     </>
                 }

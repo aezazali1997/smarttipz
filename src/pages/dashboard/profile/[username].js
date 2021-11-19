@@ -145,11 +145,12 @@ const UserProfile = ({ profile }) => {
             })
         }
         else {
-            router.push(`/dashboard/messages/${id}`)
+            router.push(`/dashboard/profile/messages/${id}`)
         }
     }
 
-    const { id, name, about, rating, views, picture, phone, showPhone, email, accountType, username, showName, showUsername, accessible } = personalInfo;
+    const { id, name, about, rating, views, picture, phone, showPhone, email, accountType,
+        username, showName, showUsername, accessible } = personalInfo;
     const { website } = businessCard;
 
     return (
@@ -206,6 +207,8 @@ const UserProfile = ({ profile }) => {
                                 <span className="flex w-full items-center">
                                     <Rating
                                         value={rating}
+                                        isHalf={true}
+                                        edit={false}
                                     />
                                     &nbsp; <p className="text-xs"> Rating</p></span>
                             </div>

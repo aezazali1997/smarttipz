@@ -49,6 +49,8 @@ const ProfileCard = ({ data, otherUser, handleShowBusinessCard, showBusinessCard
                     <span className="flex w-full items-center justify-center">
                         <Rating
                             value={rating}
+                            edit={false}
+                            isHalf={true}
                         />
                         {/* &nbsp; <p className="text-xs" > Rating</p> */}
                     </span>

@@ -50,14 +50,14 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                 >
                     <div className="py-5 flex items-center flex-col relative">
                         <Link href='/dashboard/news-feed'>
-                            <Image src='https://smart-tipz-data-bucket.s3.ap-southeast-1.amazonaws.com/public/ST-2-W.png' alt="brand" layout="fill" objectFit="contain" />
+                            <Image src='https://smart-tipz-data-bucket.s3.ap-southeast-1.amazonaws.com/public/logo.svg' alt="brand" layout="fill" objectFit="cover" />
                         </Link>
                     </div>
-                    <div className=' lg:flex flex-col  h-full pt-4 space-y-2 overflow-y-auto'>
+                    <div className=' lg:flex flex-col h-full pt-4 overflow-y-auto'>
                         {
                             Routes && Routes.map(({ name, path, icon, badge }, index) => (
-                                <>
-                                    <Link href={path} key={index} className='p-4 font-sans nav-link nav-link-ltr'>
+                                <div className="mb-1" key={index}>
+                                    <Link href={path} className='p-4 font-sans nav-link nav-link-ltr'>
                                         <a>
                                             <div onClick={toggle} className={`flex justify-between items-center py-2 px-3 rounded-lg w-52 font-medium sidebar-item cursor-pointer
                                                 ${Active(path)}`}>
@@ -68,7 +68,7 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                                             </div>
                                         </a>
                                     </Link>
-                                </>
+                                </div>
                             ))
                         }
                         <div ref={DropdownRef} className="inline-block relative space-y-1">

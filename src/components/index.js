@@ -9,13 +9,16 @@ export { default as Carousel } from './Carousel';
 export { default as Footer } from './Footer';
 export { default as CustomLoader } from './customLoader';
 export { default as InputField } from './InputField';
+export { default as ReadLessReadMore } from './ReadLessReadMore';
 export { default as PhoneInput } from './CodePhone';
 export { default as EmojiInput } from './EmojiInput';
 export { default as LanguageInput } from './LanguageInput';
 export { default as Searchbar } from './Searchbar';
-export { default as Card } from './Card';
+export { default as Card } from './Card';//
 export { default as ProfileCard } from './ProfileCard';
 export { default as ChatCard } from './ChatCard';
+export { default as CommentCard } from './CommentCard';
+export { default as SuggestionCard } from './SuggestionsCard';
 export { default as VideoPlayer } from './VideoPlayer';
 export { default as Modal } from './Modal';
 export { default as Dropzone } from './Dropzone';
@@ -32,4 +35,5 @@ export { default as PopupBusinessCard } from './PopupBusinessCard';
 export { default as TestimonialForm } from './TestimonialForm';
 export { default as MediaUploadForm } from './MediaUploadForm';
 export { default as NewsfeedCard } from './NewsFeedCard';
+export { default as NewsFeedFilters } from './NewsFeedFilters';
 

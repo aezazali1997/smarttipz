@@ -44,7 +44,7 @@ const Sidebar = ({ logout }) => {
                 <div className="py-5 flex items-center flex-col relative">
                     {/* <Link href='/dashboard/news-feed' > */}
                     {/* <a className="relative"> */}
-                    <Image src='https://smart-tipz-data-bucket.s3.ap-southeast-1.amazonaws.com/public/ST-2-W.png' alt="brand" objectFit="contain" layout="fill" />
+                    <Image src='https://smart-tipz-data-bucket.s3.ap-southeast-1.amazonaws.com/public/logo.svg' alt="brand" objectFit="cover" layout="fill" />
                     {/* </a>
                     </Link> */}
                 </div>

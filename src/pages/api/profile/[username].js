@@ -4,35 +4,44 @@ const jwt = require('jsonwebtoken');
 const handler = async (req, res) => {
     if (req.method === 'GET') {
 
-        const {
-
-            headers,
-            query: { username }
-        } = req;
-
+        const { headers: { authorization }, query: { username } } = req;
 
         try {
-            if (!headers.authorization) {
+            if (!authorization) {
                 return res.status(401).send({ error: true, data: [], message: 'Please Login' })
             };
-
             const result = jwt.verify(
-                req.headers.authorization.split(' ')[1],
+                authorization.split(' ')[1],
                 process.env.SECRET_KEY
             );
 
-            console.log('params: ', username);
+
             const user = await User.findOne({
-                attributes: ['id'],
-                where: { username }
+                attributes: [
+                    'id',
+                    'name',
+                    'email',
+                    'avgRating',
+                    'totalViews',
+                    'about',
+                    'picture',
+                    'phoneNumber',
+                    'showName',
+                    'showUsername',
+                    'showPhone',
+                    'accessible',
+                    'accountType',
+                    'isApproved',
+                    'tip'
+                ],
+                where: { username, isDeleted: false, isBlocked: false }
             });
-            console.log('user: ', user);
             if (!user) {
                 return res.status(404).send({ error: true, data: [], message: 'User Not Found' })
             }
 
-            const { id, name, email, avgRating, totalViews, about, picture, phoneNumber, showPhone, accessible, showName,
-                showUsername, accountType } = user;
+            const { id, name, email, avgRating, totalViews, about, picture, phoneNumber, showPhone, accessible,
+                accountType, showUsername, showName, isApproved, tip } = user;
 
             res.status(200).json({
                 error: false,
@@ -48,10 +57,13 @@ const handler = async (req, res) => {
                     picture: picture,
                     phone: phoneNumber,
                     showPhone: showPhone,
-                    showName,
-                    showUsername,
                     accessible: accessible,
-                    accountType: accountType
+                    showPhone: showPhone,
+                    showName: showName,
+                    showUsername: showUsername,
+                    accountType: accountType,
+                    isApproved,
+                    tip
                 }
             });
         } catch (err) {

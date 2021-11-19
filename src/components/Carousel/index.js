@@ -12,7 +12,13 @@ const Index = ({ children }) => {
 
     const handleResize = () => {
 
-        if (window.innerWidth > 1024 && window.innerWidth < 1920) {
+
+
+        if (window.innerWidth > 1599 && window.innerWidth < 1920) {
+            setRenderItems(4)
+            setRenderArrow(false);
+        }
+        else if (window.innerWidth > 1024 && window.innerWidth < 1600) {
             setRenderItems(3)
             setRenderArrow(false);
         }

@@ -27,7 +27,7 @@ const handler = async (req, res) => {
             const videos = await Video.findAll({
                 include: [
                     {
-                        model: User, attributes: ['name']
+                        model: User, attributes: ['name', 'username']
                     }],
                 where: {
                     UserId: id,

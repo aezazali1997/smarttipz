@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet';
 import { parseCookies } from 'nookies';
 import { useRouter } from 'next/router';
 import { isEmpty } from 'lodash';
-import { ChatCard, EmojiInput } from 'src/components';
+import { Button, ChatCard, EmojiInput } from 'src/components';
 import socket from 'utils/socket';
 import axiosInstance from 'src/APIs/axiosInstance';
 import { scrollToBottom } from 'helpers';
@@ -78,24 +78,37 @@ const UserMessage = () => {
             {/* <div className="hidden lg:flex w-full justify-between items-center h-16 px-5 shadow-md">
                 <p className="text-xl font-semibold ">Messages</p>
             </div> */}
+            <div className="px-5 py-3">
+                <Button
+                    onSubmit={_GoBack}
+                    type="button"
+                    childrens={(
+                        <>
+                            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                            <span className="pr-2">Back</span>
+                        </>
+                    )}
+                    classNames={"px-3 py-2 flex justify-center items-center text-white text-md font-semibold btn rounded-full"}
+                />
+            </div>
             <header>
-                <div className='flex items-center bg-white space-x-10 p-5 w-full py-3 shadow-md'>
-                    <span onClick={_GoBack} className="flex border rounded-full hover:shadow-md p-1 cursor-pointer">
-                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path fillRule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414zm-6 0a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
-                        </svg>
-                    </span>
-                    <div className="flex items-center w-full space-x-3 mb-2">
-                        <img className="inline object-cover w-12 h-10 rounded-full" src="https://images.pexels.com/photos/2589653/pexels-photo-2589653.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" alt="Profile image" />
+                <div className='flex bg-white items-center w-full space-x-5 py-3 px-5'>
+                    <div className="flex  w-full space-x-3 items-center">
+                        <img className="inline object-cover w-12 h-10 rounded-full"
+                            src={"https://images.pexels.com/photos/2589653/pexels-photo-2589653.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"}
+                            alt="Profile image"
+                        />
                         <div className="flex flex-col w-full ">
-                            <h1 className="text-md md:text-lg lg:text-xl text-bold font-sans">Reena Thomas</h1>
+                            <h1 className="text-md md:text-lg lg:text-xl text-bold font-sans">{'Lorem Ipsum'}</h1>
                             {/* <h1 className="text-sm text-gray-600 font-sans"><span className="inline-block w-2 h-2 mr-2 bg-green-600 rounded-full"></span>Active Now</h1> */}
                             {/* <h1 className="text-sm text-gray-600 font-sans">Just Now</h1> */}
                         </div>
                     </div>
                 </div>
             </header>
-            {/* <hr /> */}
+            <hr />
             <main className="flex-1 flex-col overflow-y-auto space-y-3 py-6 px-3 lg:px-5">
                 {
                     loading ?

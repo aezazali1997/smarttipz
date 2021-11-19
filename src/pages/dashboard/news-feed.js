@@ -4,64 +4,79 @@ import { faFileVideo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { MediaUploadForm, NewsfeedCard, VideoPlayer } from 'src/components';
+import { MediaUploadForm, NewsfeedCard, NewsFeedFilters, Rating, Searchbar, Switch, VideoPlayer } from 'src/components';
 import { PostActionDropdown } from 'src/components/Dropdown';
+import { TipModal, VideoRatingModal } from 'src/components/Modals';
 import { UseFetchNewsFeed } from 'src/hooks';
 
 const NewsFeed = () => {
 
   const { formik, _DeleteImg, ChangeAgreement, agree, urls, setUrls, showModal,
     _OpenUploadModal, _CloseUploadModal, thumbnailRef, _OnRemoveThumbnail, onChangeThumbnail,
-    _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType,
-    uploadingThumbnail, posts, HandleLikePost, HandleCheckLike, _HandleCatalogue, _HandleDeleteVideo
+    _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType, _HandleGotoUserProfile,
+    uploadingThumbnail, posts, HandleLikePost, HandleCheckLike, _HandleCatalogue, _HandleDeleteVideo,
+    _HandleGotoVideoDetails, ToggleRatingModal, _HandleChangeRating, showRatingModal, ToggleTipModal, _HandleChangeTip, showTipModal
   } = UseFetchNewsFeed();
 
   return (
 
-    <div className="flex flex-col min-h-screen w-full py-5 px-3 items-center bg-gray-50">
+    <div className="flex flex-col lg:flex-row min-h-screen w-full justify-around py-5 px-3 bg-gray-50">
       {/*SEO Support*/}
       <Helmet>
         <title>News Feed | Smart Tipz</title>
       </Helmet>
-      {/*SEO Support End */}
-      <div className="w-full mb-4">
-        <div className="mx-auto max-w-lg shadow flex flex-col justify-center 
+
+      <div className="flex flex-col w-full lg:w-4/6">
+        {/*SEO Support End */}
+        <div className="w-full mb-4">
+          <div className="mx-auto max-w-lg shadow flex flex-col justify-center 
                     rounded-lg bg-white divide-y space-y-4">
-          <div className="space-y-3" onClick={_OpenUploadModal}>
-            <div className="flex flex-col w-full justify-center items-center cursor-pointer 
+            <div className="space-y-3" onClick={_OpenUploadModal}>
+              <div className="flex flex-col w-full justify-center items-center cursor-pointer 
                         border-transparent rounded-lg hover:bg-gray-200 p-2 space-y-2">
-              <FontAwesomeIcon icon={faFileVideo} className="text-6xl text" />
-              <div>
-                <p className="text-center text-lg font-semibold">Add Video</p>
+                <FontAwesomeIcon icon={faFileVideo} className="text-6xl text" />
+                <div>
+                  <p className="text-center text-lg font-semibold">Add Video</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
+        <div className="space-y-4">
+          {
+            posts && posts.map(({ id, description, title, url, UserId, thumbnail, PostLikees, catalogue, User }, index) => (
+              <div key={index}>
+                <NewsfeedCard
+                  id={id}
+                  UserId={UserId}
+                  index={index}
+                  catalogue={catalogue}
+                  isPost={true}
+                  url={url}
+                  views={200}
+                  User={User}
+                  rating={2.5}
+                  description={description}
+                  title={title}
+                  width={'max-w-lg'}
+                  thumbnail={thumbnail}
+                  ToggleTipModal={ToggleTipModal}
+                  ToggleRatingModal={ToggleRatingModal}
+                  _HandleDeleteVideo={_HandleDeleteVideo}
+                  _HandleCatalogue={_HandleCatalogue}
+                  _HandleGotoUserProfile={_HandleGotoUserProfile}
+                  _HandleGotoVideoDetails={_HandleGotoVideoDetails}
+                />
+
+              </div>
+            ))
+          }
+        </div>
       </div>
-      <div className="space-y-4">
-        {
-          posts && posts.map(({ id, description, title, url, UserId, thumbnail, PostLikees, catalogue, User }, index) => (
-            <div key={index}>
-              <NewsfeedCard
-                id={id}
-                UserId={UserId}
-                index={index}
-                catalogue={catalogue}
-                isPost={true}
-                url={url}
-                views={200}
-                User={User}
-                rating={2.5}
-                description={description}
-                title={title}
-                width={'max-w-lg'}
-                thumbnail={thumbnail}
-                _HandleDeleteVideo={_HandleDeleteVideo}
-                _HandleCatalogue={_HandleCatalogue}
-              />
-            </div>
-          ))
-        }
+      <div className="flex relative h-full w-full lg:w-2/6 mt-4 lg:mt-0">
+        <div className="sticky top-0 mx-auto">
+          <NewsFeedFilters />
+        </div>
       </div>
 
       {
@@ -88,7 +103,28 @@ const NewsFeed = () => {
           />
         )
       }
-
+      {
+        showRatingModal && (
+          <VideoRatingModal
+            modalTitle={'Video Rating Modal'}
+            ToggleRatingModal={ToggleRatingModal}
+            _HandleChangeRating={_HandleChangeRating}
+            loading={false}
+            videoRating={2}
+          />
+        )
+      }
+      {
+        showTipModal && (
+          <TipModal
+            _HandleChangeTip={_HandleChangeTip}
+            tip={2}
+            ToggleTipModal={ToggleTipModal}
+            loading={false}
+            modalTitle={"Video Tip Modal"}
+          />
+        )
+      }
     </div>
   )
 }

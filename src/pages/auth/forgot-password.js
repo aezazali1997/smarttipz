@@ -24,8 +24,8 @@ const ForgetPassword = () => {
 
 
             <span className="hidden lg:flex lg:w-48 relative h-11">
-                <Image src='https://smart-tipz-data-bucket.s3.ap-southeast-1.amazonaws.com/public/ST-2.png'
-                    layout="fill" objectFit="contain" alt="brand logo" priority={true} />
+                <Image src='https://smart-tipz-data-bucket.s3.ap-southeast-1.amazonaws.com/public/ST-2.svg'
+                    layout="fill" objectFit="cover" alt="brand logo" priority={true} />
             </span>
 
 

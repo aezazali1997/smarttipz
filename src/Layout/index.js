@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/router';
 import cookie from 'js-cookie';
-import { Sidebar, Drawer } from 'src/components'
+import { Sidebar, Drawer, Searchbar } from 'src/components'
 import { useOutsideClick } from 'src/hooks';
 
 const CustomLayout = ({ children }) => {
@@ -78,6 +78,11 @@ const CustomLayout = ({ children }) => {
                             {/* , please contact admin for full access. */}
                         </p>
                     )}
+                <div className="px-3 py-1 sticky top-0 flex justify-end">
+                    <div className="shadow rounded-lg">
+                        <Searchbar />
+                    </div>
+                </div>
                 {children}
             </main>
         </div>
