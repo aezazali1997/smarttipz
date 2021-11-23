@@ -49,7 +49,7 @@ const UseFetchLogin = () => {
             cookie.set('username', username);
             localStorage.setItem('image', image);
             localStorage.setItem('id', id);
-            router.push('/dashboard/profile');
+            router.push('/dashboard/news-feed');
         }
         catch (e) {
             if (e.response.status === 405) {

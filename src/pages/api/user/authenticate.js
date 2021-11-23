@@ -32,7 +32,7 @@ const handler = async (req, res) => {
         return res.status(400).json({ error: true, message: 'Validation failed', data: [] });
       }
 
-      const token = jwt.sign({ username: user.username }, process.env.SECRET_KEY);
+      const token = jwt.sign({ username: user.username, id: user.id }, process.env.SECRET_KEY);
 
       const time = Math.floor((Date.now() - user.updatedAt.getTime()) / (1000 * 60));
       if (time >= 60) {

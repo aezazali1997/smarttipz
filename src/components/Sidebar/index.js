@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Badge } from 'src/components';
+import { Badge, Searchbar } from 'src/components';
 import { useOutsideClick } from 'src/hooks';
 import { DropdownRoutes, Routes } from 'routes';
 
@@ -41,14 +41,19 @@ const Sidebar = ({ logout }) => {
                 className='flex flex-col w-full h-full py-5 px-5 text-white justify-between relative navbar'
                 role='navigation'
             >
-                <div className="py-5 flex items-center flex-col relative">
+                <div className="py-7 flex items-center w-full flex-col relative">
                     {/* <Link href='/dashboard/news-feed' > */}
                     {/* <a className="relative"> */}
-                    <Image src='https://smart-tipz-data-bucket.s3.ap-southeast-1.amazonaws.com/public/logo.svg' alt="brand" objectFit="cover" layout="fill" />
+                    <Image src='https://smart-tipz-data-bucket.s3.ap-southeast-1.amazonaws.com/public/logo.svg'
+                        alt="brand" layout='fill' objectFit="cover" />
                     {/* </a>
                     </Link> */}
                 </div>
-                <div className='lg:flex h-full pt-4 flex-col space-y-2 overflow-y-auto'>
+
+                <div className="pt-2">
+                    <Searchbar />
+                </div>
+                <div className='lg:flex h-full pt-4 flex-col space-y-1 overflow-y-auto sidebar-content'>
                     {
                         Routes && Routes.map(({ path, name, icon, badge }, index) => (
                             <>

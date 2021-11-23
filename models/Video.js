@@ -40,9 +40,8 @@ const Video = sequelize.define("Video", {
   mediaType: {
     type: DataTypes.STRING,
   },
-  isApproved: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: true
+  videoType: {
+    type: DataTypes.STRING
   },
   rating: {
     type: DataTypes.INTEGER,
@@ -52,6 +51,10 @@ const Video = sequelize.define("Video", {
   },
   comment: {
     type: DataTypes.INTEGER,
+  },
+  isApproved: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
   },
   approvedBy: {
     type: DataTypes.INTEGER,

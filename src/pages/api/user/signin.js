@@ -51,7 +51,7 @@ const handler = async (req, res) => {
         return res.status(403).json({ error: true, message: 'Validation failed', data: [] });
       }
 
-      const token = jwt.sign({ username: user.username }, process.env.SECRET_KEY);
+      const token = jwt.sign({ username: user.username, id: user.id }, process.env.SECRET_KEY);
 
       res
         .status(200)

@@ -77,7 +77,7 @@ const UseFetchAuthenticate = () => {
                 cookie.set('username', username);
                 localStorage.setItem('image', image);
                 localStorage.removeItem('otpToken');
-                router.push('/dashboard/profile');
+                router.push('/dashboard/news-feed');
             }
             catch ({ response: { data: { message } } }) {
                 console.log('Error', message)

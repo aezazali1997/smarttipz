@@ -26,7 +26,7 @@ const NewsFeed = () => {
         <title>News Feed | Smart Tipz</title>
       </Helmet>
 
-      <div className="flex flex-col w-full lg:w-4/6">
+      <div className="flex flex-col w-full">
         {/*SEO Support End */}
         <div className="w-full mb-4">
           <div className="mx-auto max-w-lg shadow flex flex-col justify-center 
@@ -56,6 +56,7 @@ const NewsFeed = () => {
                   views={200}
                   User={User}
                   rating={2.5}
+                  postLikes={PostLikees}
                   description={description}
                   title={title}
                   width={'max-w-lg'}
@@ -71,11 +72,6 @@ const NewsFeed = () => {
               </div>
             ))
           }
-        </div>
-      </div>
-      <div className="flex relative h-full w-full lg:w-2/6 mt-4 lg:mt-0">
-        <div className="sticky top-0 mx-auto">
-          <NewsFeedFilters />
         </div>
       </div>
 

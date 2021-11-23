@@ -195,7 +195,7 @@ const VideoDetailScreen = () => {
                             <p className="text-white font-sm font-semibold">FREE</p>
                         </div>
                         <svg
-                            className="w-6 h-6 text-gray-400 hover:text-yellow-500 cursor-pointer"
+                            className="w-6 h-6 text-gray-500 hover:text-purple-600 cursor-pointer"
                             fill="currentColor"
                             viewBox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg">
@@ -323,7 +323,7 @@ const VideoDetailScreen = () => {
                         Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
                         when an unknown printer took a galley of type and scrambled it to make a type specimen book.
                         It has survived not only five centuries, but also the leap into electronic typesetting,
-                        remaining essentially unchanged`}
+                        remaining essentially unchanged`|| ''}
                         />
                     </p>
                 </div>

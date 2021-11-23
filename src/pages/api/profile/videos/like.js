@@ -85,22 +85,20 @@ const handler = async (req, res) => {
                 });
 
                 await like.setVideo(video);
-                res.status(201).json({
+                return res.status(201).json({
                     error: false,
                     message: 'Post liked',
                     data: {}
                 });
             }
-            else {
-                await PostLike.update({
-                    isLiked: false
-                }, { where: { reviewerId: id } });
-                res.status(200).json({
-                    error: false,
-                    message: 'Post Unliked',
-                    data: {}
-                });
-            }
+            await PostLike.update({
+                isLiked: false
+            }, { where: { reviewerId: id } });
+            res.status(200).json({
+                error: false,
+                message: 'Post Unliked',
+                data: {}
+            });
 
         } catch (err) {
             console.log("Videos Api Failed Error: ", err.message);

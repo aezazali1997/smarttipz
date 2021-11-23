@@ -44,7 +44,7 @@ const PostActionDropdown = ({ _HandleCatalogue, _HandleDeleteVideo, catalogue, o
             >
                 <div className="items-center flex">
                     <span className="">
-                        <svg className="w-5 h-5 text-gray-400 hover:text-purple-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <svg className="w-5 h-5 text-gray-500 hover:text-purple-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
                         </svg>
                         {/* <svg className="w-7 h-7 text-gray-400 hover:text-purple-600 cursor-pointer rounded-full" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">

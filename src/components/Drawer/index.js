@@ -48,12 +48,13 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                     className='flex flex-col w-auto h-full py-5 px-5 text-white justify-between relative navbar'
                     role='navigation'
                 >
-                    <div className="py-5 flex items-center flex-col relative">
+                    <div className="py-7 flex items-center flex-col relative">
                         <Link href='/dashboard/news-feed'>
-                            <Image src='https://smart-tipz-data-bucket.s3.ap-southeast-1.amazonaws.com/public/logo.svg' alt="brand" layout="fill" objectFit="cover" />
+                            <Image src='https://smart-tipz-data-bucket.s3.ap-southeast-1.amazonaws.com/public/logo.svg'
+                                alt="brand" layout="fill" objectFit="cover" />
                         </Link>
                     </div>
-                    <div className=' lg:flex flex-col h-full pt-4 overflow-y-auto'>
+                    <div className=' lg:flex flex-col h-full pt-2 overflow-y-auto'>
                         {
                             Routes && Routes.map(({ name, path, icon, badge }, index) => (
                                 <div className="mb-1" key={index}>

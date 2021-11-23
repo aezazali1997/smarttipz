@@ -16,7 +16,8 @@ const UseFetchNewsFeed = () => {
         description: '',
         category: '',
         language: '',
-        mediaType: ''
+        mediaType: '',
+        videoType: ''
     }
 
     let { uploadToS3 } = useS3Upload();
@@ -55,7 +56,6 @@ const UseFetchNewsFeed = () => {
         }
     }
 
-    console.log('catalogueCount', catalogueCount);
 
     useEffect(() => {
         GetPosts();
@@ -133,6 +133,8 @@ const UseFetchNewsFeed = () => {
         values.agree = agree;
         values.mediaType = 'video';
         values.thumbnail = thumbnailUrl;
+
+        console.log('values: ', values)
         try {
             const { data: { message } } = await axiosInstance.uploadNewsFeed(values)
             Swal.fire({
@@ -183,6 +185,8 @@ const UseFetchNewsFeed = () => {
     }
 
     const HandleCheckLike = (postLikes) => {
+        console.log('postLikes: ', postLikes);
+
         // if (postLikes) {
         //     const data = [];
         //     for (let post = 0; post < postLikes.length; post++) {
@@ -210,7 +214,7 @@ const UseFetchNewsFeed = () => {
 
     const _HandleCatalogue = async (videoId, catalogue) => {
         if (catalogueCount < 5 || catalogue === true) {
-            console.log('here: ', catalogueCount);
+            // console.log('here: ', catalogueCount);
             try {
                 const data = await axiosInstance.addToCatalogue({ videoId, catalogue });
                 if (catalogue) {
@@ -219,7 +223,7 @@ const UseFetchNewsFeed = () => {
                 else {
                     setCatalogueCount(catalogueCount => catalogueCount + 1)
                 }
-                console.log({ data });
+                // console.log({ data });
                 const originalArray = [...posts];
                 let newArray = originalArray.map((item, i) => {
                     if (item.id !== videoId) return item;

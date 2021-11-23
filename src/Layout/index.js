@@ -78,11 +78,6 @@ const CustomLayout = ({ children }) => {
                             {/* , please contact admin for full access. */}
                         </p>
                     )}
-                <div className="px-3 py-1 sticky top-0 flex justify-end">
-                    <div className="shadow rounded-lg">
-                        <Searchbar />
-                    </div>
-                </div>
                 {children}
             </main>
         </div>

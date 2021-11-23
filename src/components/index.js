@@ -36,4 +36,5 @@ export { default as TestimonialForm } from './TestimonialForm';
 export { default as MediaUploadForm } from './MediaUploadForm';
 export { default as NewsfeedCard } from './NewsFeedCard';
 export { default as NewsFeedFilters } from './NewsFeedFilters';
+export { default as GenericFilters } from './GenericFilters';
 

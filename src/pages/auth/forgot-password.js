@@ -23,7 +23,7 @@ const ForgetPassword = () => {
             {/*SEO Support End */}
 
 
-            <span className="hidden lg:flex lg:w-48 relative h-11">
+            <span className="hidden lg:flex lg:w-48 relative h-12">
                 <Image src='https://smart-tipz-data-bucket.s3.ap-southeast-1.amazonaws.com/public/ST-2.svg'
                     layout="fill" objectFit="cover" alt="brand logo" priority={true} />
             </span>

@@ -28,7 +28,7 @@ const Login = () => {
 
 
                 <div className="hidden lg:flex flex-col w-full">
-                    <span className="flex relative w-48 h-11">
+                    <span className="flex relative w-48 h-12">
                         <Image src='https://smart-tipz-data-bucket.s3.ap-southeast-1.amazonaws.com/public/ST-2.svg'
                             layout="fill" objectFit="cover" alt="brand logo" priority={true} />
                     </span>

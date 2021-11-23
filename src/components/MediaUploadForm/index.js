@@ -151,6 +151,33 @@ const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, Chan
 										{formik.touched.category && formik.errors.category &&
 											<div className="text-red-700 text-sm mb-4" >{formik.errors.category}</div>
 										}
+										<div className={`floating-input relative
+                                                ${formik.touched.videoType && formik.errors.videoType ? 'mb-1' : 'mb-4'}`}>
+											<select
+												type={'select'}
+												id={'videoType'}
+												name={'videoType'}
+												className={`${getInputClasses(
+													formik, "videoType"
+												)} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
+												value={formik.values.videoType}
+												onChange={formik.handleChange}
+												onBlur={formik.handleBlur}
+												placeholder="name@example.com"
+											>
+												<option value="">Select VideoType</option>
+												<option value="tip">Tip</option>
+												<option value="review">Review</option>
+											</select>
+											<div className="absolute inset-y-0 right-0 flex items-center px-2 cursor-pointer ">
+												<svg xmlns="http://www.w3.org/2000/svg" className="text-gray-500 pointer-events-none" width="19.524" height="19.524" viewBox="0 0 19.524 19.524">
+													<path id="Icon_ionic-ios-arrow-dropdown-circle" data-name="Icon ionic-ios-arrow-dropdown-circle" d="M3.375,13.137a9.762,9.762,0,0,0,19.524,0c0-3.656-5.248-8.658-5.248-8.658a16.252,16.252,0,0,0-4.514-1.1A9.76,9.76,0,0,0,3.375,13.137ZM16.943,11.1s.929-.352,1.281,0a.9.9,0,0,1,.263.638.91.91,0,0,1-.268.643l-4.426,4.412a.9.9,0,0,1-1.248-.028L8.054,12.287a.906.906,0,0,1,1.281-1.281l3.806,3.844Z" transform="translate(-3.375 -3.375)" fill="#6d6d6d" />
+												</svg>
+											</div>
+										</div>
+										{formik.touched.videoType && formik.errors.videoType &&
+											<div className="text-red-700 text-sm mb-4" >{formik.errors.videoType}</div>
+										}
 									</>
 								}
 								{
