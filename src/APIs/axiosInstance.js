@@ -73,6 +73,9 @@ class AxiosInstance {
     async getNewsFeedPosts() {
         return await axios.get(USER_API_BASE_URL + "api/profile/videos/all-videos", this.getAuthHeader());
     }
+    async getFilteredPosts(search, sort) {
+        return await axios.get(USER_API_BASE_URL + `api/profile/videos/filter-videos?search=${search}&&sort=${sort}`, this.getAuthHeader());
+    }
     async getBusinessCard() {
         return await axios.get(USER_API_BASE_URL + "api/profile/businesscard", this.getAuthHeader());
     }
@@ -140,8 +143,13 @@ class AxiosInstance {
     async getCatalogues() {
         return await axios.get(USER_API_BASE_URL + "api/profile/catalogue", this.getAuthHeader());
     }
+
     async getSpecificCatalogues(username) {
         return await axios.get(USER_API_BASE_URL + `api/profile/catalogue/${username}`, this.getAuthHeader());
+    }
+
+    async getFilteredUserProfiles(search, sort) {
+        return await axios.get(USER_API_BASE_URL + `api/profile/filter-profile?search=${search}&&sort=${sort}`, this.getAuthHeader());
     }
 
     async likePost(reviewerId) {

@@ -1,18 +1,22 @@
-import PostLikee from 'models/Like';
 
+const PostLikee = require('models/Like');
 const User = require('models/User');
 const Video = require('models/Video');
 const jwt = require('jsonwebtoken');
-const sequelize = require('sequelize');
+import { FilterContent } from 'utils/consts';
+
 
 const handler = async (req, res) => {
     if (req.method === 'GET') {
+
+        const { headers: { authorization }, query: { search, sort } } = req;
+
         try {
-            if (!req.headers.authorization) {
+            if (!authorization) {
                 return res.status(401).send({ error: true, data: [], message: 'Please Login' })
             }
             const { username } = jwt.verify(
-                req.headers.authorization.split(' ')[1],
+                authorization.split(' ')[1],
                 process.env.SECRET_KEY
             );
 
@@ -26,12 +30,10 @@ const handler = async (req, res) => {
                     model: PostLikee
 
                 }, {
-                    model: User, attributes: ['name', 'username']
+                    model: User, attributes: ['name', 'username', 'email']
                 }],
-                where: {
-                    isApproved: true,
-                },
-                order: [["createdAt", "DESC"]]
+                where: FilterContent(search),
+                order: [["createdAt", sort]]
             });
 
             res.status(200).json({

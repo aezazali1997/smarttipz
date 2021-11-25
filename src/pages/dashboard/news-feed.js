@@ -44,7 +44,7 @@ const NewsFeed = () => {
         </div>
         <div className="space-y-4">
           {
-            posts && posts.map(({ id, description, title, url, UserId, thumbnail, PostLikees, catalogue, User }, index) => (
+            posts && posts.map(({ id, description, title, url, UserId, thumbnail, PostLikees, catalogue, User, videoType }, index) => (
               <div key={index}>
                 <NewsfeedCard
                   id={id}
@@ -59,6 +59,7 @@ const NewsFeed = () => {
                   postLikes={PostLikees}
                   description={description}
                   title={title}
+                  videoType={videoType}
                   width={'max-w-lg'}
                   thumbnail={thumbnail}
                   ToggleTipModal={ToggleTipModal}
@@ -102,7 +103,7 @@ const NewsFeed = () => {
       {
         showRatingModal && (
           <VideoRatingModal
-            modalTitle={'Video Rating Modal'}
+            modalTitle={'Rate Video'}
             ToggleRatingModal={ToggleRatingModal}
             _HandleChangeRating={_HandleChangeRating}
             loading={false}
@@ -117,7 +118,7 @@ const NewsFeed = () => {
             tip={2}
             ToggleTipModal={ToggleTipModal}
             loading={false}
-            modalTitle={"Video Tip Modal"}
+            modalTitle={"Tip Video"}
           />
         )
       }

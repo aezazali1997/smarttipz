@@ -159,7 +159,7 @@ const Profile = ({ profile }) => {
                 <div className="w-auto mt-6 relative">
                   <Carousel>
                     {
-                      catalogues.map(({ id, UserId, title, url, mediaType, thumbnail, catalogue, description, User }, index) => (
+                      catalogues.map(({ id, UserId, title, url, mediaType, thumbnail, catalogue, description, User, videoType }, index) => (
                         <div key={index} className="my-2 px-5">
                           <NewsfeedCard
                             id={id}
@@ -171,6 +171,7 @@ const Profile = ({ profile }) => {
                             views={200}
                             rating={2.5}
                             mediaType={mediaType}
+                            videoType={videoType}
                             description={description}
                             title={title}
                             width={'max-w-xs'}
@@ -228,7 +229,7 @@ const Profile = ({ profile }) => {
               <div className="w-full mt-6 justify-center lg:justify-start" >
                 <Carousel>
                   {
-                    myVideos.map(({ title, url, mediaType, thumbnail, like, comment, share, description, id, UserId, catalogue, User }, index) => (
+                    myVideos.map(({ title, url, mediaType, thumbnail, like, comment, share, description, id, UserId, catalogue, User, videoType }, index) => (
                       <div key={index} className="my-2 px-5">
                         <NewsfeedCard
                           id={id}
@@ -240,6 +241,7 @@ const Profile = ({ profile }) => {
                           views={200}
                           rating={2.5}
                           mediaType={mediaType}
+                          videoType={videoType}
                           description={description}
                           title={title}
                           isPost={true}

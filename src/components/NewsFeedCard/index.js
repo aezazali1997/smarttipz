@@ -18,6 +18,7 @@ const NewsfeedCard = ({
     views,
     width,
     User,
+    videoType,
     // HandleLikePost,
     ToggleRatingModal,
     ToggleTipModal,
@@ -47,8 +48,11 @@ const NewsfeedCard = ({
                         </div>
                     </div>
                     <div className="flex space-x-2">
-                        <div className="flex px-2 h-6  background items-center justify-center">
-                            <p className="text-white font-sm font-semibold">FREE</p>
+                        <div className="flex px-2 h-6  background items-center justify-center rounded-lg">
+                            <p className="text-white font-sm font-semibold">{videoType === 'tip' ? 'Tip' : 'Review'}</p>
+                        </div>
+                        <div className="flex px-2 h-6  background items-center justify-center rounded-lg">
+                            <p className="text-white font-sm font-semibold">    Free</p>
                         </div>
                         <svg
                             className="w-6 h-6 text-gray-500 hover:text-purple-600 cursor-pointer"

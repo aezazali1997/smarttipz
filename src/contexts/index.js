@@ -1,21 +1,32 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import router, { useRouter } from 'next/router';
 import { createContext, useContext, useMemo, useState } from 'react';
 
-const SocketContext = createContext();
+const SearchContext = createContext();
 
 
 export function AppWrapper({ children }) {
 
-    const [socket, setSocket] = useState(null);
+    const router = useRouter();
+    const [search, setSearch] = useState('');
+    const [filterSearch, setFilterSearch] = useState('');
 
-    const data = useMemo(() => ({ socket, setSocket }), [socket, setSocket]);
+    const _HandleSearchClick = (e) => {
+        if (e.keyCode == 13 || e.key == "Enter") {
+            setFilterSearch(search);
+            router.push('/search?All');
+        }
+    }
+
+    const data = useMemo(() => ({ search, filterSearch, setSearch, _HandleSearchClick }), [search, setSearch, _HandleSearchClick])
 
     return (
-        <SocketContext.Provider value={data}>
+        <SearchContext.Provider value={data}>
             {children}
-        </SocketContext.Provider>
+        </SearchContext.Provider>
     );
 }
 
-export function useAppContext() {
-    return useContext(SocketContext);
+export const useSearchContext = () => {
+    return useContext(SearchContext);
 }
