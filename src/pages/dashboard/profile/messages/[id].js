@@ -10,11 +10,14 @@ import { Button, ChatCard, EmojiInput } from 'src/components';
 import socket from 'utils/socket';
 import axiosInstance from 'src/APIs/axiosInstance';
 import { scrollToBottom } from 'helpers';
+import { useSearchContext } from 'src/contexts';
 
 const UserMessage = () => {
 
     const router = useRouter();
     const { id } = router.query;
+    const { otherUserDetail } = useSearchContext();
+    console.log(otherUserDetail);
     const { username } = parseCookies();
     const [loading, isLoading] = useState(true);
     const [messageList, setMessageList] = useState([]);
@@ -97,11 +100,11 @@ const UserMessage = () => {
                 <div className='flex bg-white items-center w-full space-x-5 py-3 px-5'>
                     <div className="flex  w-full space-x-3 items-center">
                         <img className="inline object-cover w-12 h-10 rounded-full"
-                            src={"https://images.pexels.com/photos/2589653/pexels-photo-2589653.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"}
+                            src={otherUserDetail.picture || "https://images.pexels.com/photos/2589653/pexels-photo-2589653.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"}
                             alt="Profile image"
                         />
                         <div className="flex flex-col w-full ">
-                            <h1 className="text-md md:text-lg lg:text-xl text-bold font-sans">{'Lorem Ipsum'}</h1>
+                            <h1 className="text-md md:text-lg lg:text-xl text-bold font-sans">{otherUserDetail?.name || 'Lorem Ipsum'}</h1>
                             {/* <h1 className="text-sm text-gray-600 font-sans"><span className="inline-block w-2 h-2 mr-2 bg-green-600 rounded-full"></span>Active Now</h1> */}
                             {/* <h1 className="text-sm text-gray-600 font-sans">Just Now</h1> */}
                         </div>
@@ -125,7 +128,8 @@ const UserMessage = () => {
                                         to !== ID ?
                                             <div key={index} className="mt-auto">
                                                 <ChatCard
-                                                    name={'Reena Thomas'}
+                                                    name={otherUserDetail?.name || 'Reena Thomas'}
+                                                    image={otherUserDetail?.picture}
                                                     message={message}
                                                     time={time}
                                                     containerStyle={`max-w-lg`}

@@ -18,6 +18,7 @@ const handler = async (req, res) => {
             );
 
             const users = await User.findAll({
+                include: ['Followed', 'Follower'],
                 attributes: [
                     'id',
                     'name',
@@ -26,7 +27,8 @@ const handler = async (req, res) => {
                     'showName',
                     'username',
                     'showUsername',
-                    'accountType'
+                    'accountType',
+                    'accessible'
                 ],
                 where: FilterProfiles(search),
                 order: [["createdAt", sort]]

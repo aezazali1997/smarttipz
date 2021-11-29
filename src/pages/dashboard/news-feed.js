@@ -4,7 +4,7 @@ import { faFileVideo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { MediaUploadForm, NewsfeedCard, NewsFeedFilters, Rating, Searchbar, Switch, VideoPlayer } from 'src/components';
+import { MediaUploadForm, NewsfeedCard, NewsFeedFilters, Rating, Searchbar, Switch, VideoPlayer, VideoUploadBlock } from 'src/components';
 import { PostActionDropdown } from 'src/components/Dropdown';
 import { TipModal, VideoRatingModal } from 'src/components/Modals';
 import { UseFetchNewsFeed } from 'src/hooks';
@@ -13,7 +13,7 @@ const NewsFeed = () => {
 
   const { formik, _DeleteImg, ChangeAgreement, agree, urls, setUrls, showModal,
     _OpenUploadModal, _CloseUploadModal, thumbnailRef, _OnRemoveThumbnail, onChangeThumbnail,
-    _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType, _HandleGotoUserProfile,
+    _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType, _HandleGotoUserProfile, videoType,
     uploadingThumbnail, posts, HandleLikePost, HandleCheckLike, _HandleCatalogue, _HandleDeleteVideo,
     _HandleGotoVideoDetails, ToggleRatingModal, _HandleChangeRating, showRatingModal, ToggleTipModal, _HandleChangeTip, showTipModal
   } = UseFetchNewsFeed();
@@ -28,23 +28,22 @@ const NewsFeed = () => {
 
       <div className="flex flex-col w-full">
         {/*SEO Support End */}
-        <div className="w-full mb-4">
-          <div className="mx-auto max-w-lg shadow flex flex-col justify-center 
-                    rounded-lg bg-white divide-y space-y-4">
-            <div className="space-y-3" onClick={_OpenUploadModal}>
-              <div className="flex flex-col w-full justify-center items-center cursor-pointer 
-                        border-transparent rounded-lg hover:bg-gray-200 p-2 space-y-2">
-                <FontAwesomeIcon icon={faFileVideo} className="text-6xl text" />
-                <div>
-                  <p className="text-center text-lg font-semibold">Add Video</p>
-                </div>
-              </div>
-            </div>
+        <div className="flex w-full justify-center mb-4">
+          <div className='md:w-full lg:w-1/2 space-y-2 md:space-x-2 md:space-y-0  flex flex-col md:flex-row'>
+            <VideoUploadBlock
+              openModal={() => _OpenUploadModal('SmartTipz')}
+              title={'Click to upload SmartTipz Videos'}
+            />
+            <VideoUploadBlock
+              openModal={() => _OpenUploadModal('SmartReview')}
+              title={'Click to upload SmartReviews Videos'}
+            />
+
           </div>
         </div>
         <div className="space-y-4">
           {
-            posts && posts.map(({ id, description, title, url, UserId, thumbnail, PostLikees, catalogue, User, videoType }, index) => (
+            posts && posts.map(({ id, description, title, url, UserId, thumbnail, PostLikees, catalogue, User, videoType, videoCost }, index) => (
               <div key={index}>
                 <NewsfeedCard
                   id={id}
@@ -59,6 +58,7 @@ const NewsFeed = () => {
                   postLikes={PostLikees}
                   description={description}
                   title={title}
+                  videoCost={videoCost}
                   videoType={videoType}
                   width={'max-w-lg'}
                   thumbnail={thumbnail}

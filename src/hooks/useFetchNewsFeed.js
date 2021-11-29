@@ -35,6 +35,7 @@ const UseFetchNewsFeed = () => {
     const [catalogueCount, setCatalogueCount] = useState(0);
     const [showRatingModal, setShowRatingModal] = useState(false);
     const [showTipModal, setShowTipModal] = useState(false);
+    const [videoType, setVideoType] = useState('');
 
     let thumbnailRef = useRef();
 
@@ -83,11 +84,12 @@ const UseFetchNewsFeed = () => {
         setThumbnailUrl('');
     }
 
-    let _OpenUploadModal = () => {
+    let _OpenUploadModal = (videoType) => {
         setUrls('');
         setThumbnailUrl('');
         setThumbnailFile('')
         setAgree(false);
+        setVideoType(videoType);
         setSelectedLanguage('');
         setInitialValues(initials);
         setShowModal(true);
@@ -95,6 +97,7 @@ const UseFetchNewsFeed = () => {
 
     let _CloseUploadModal = () => {
         setUrls('');
+        setVideoType('');
         setThumbnailUrl('');
         setAgree(false);
         setSelectedLanguage('');
@@ -133,8 +136,8 @@ const UseFetchNewsFeed = () => {
         values.agree = agree;
         values.mediaType = 'video';
         values.thumbnail = thumbnailUrl;
+        values.videoType = videoType;
 
-        console.log('values: ', values)
         try {
             const { data: { message } } = await axiosInstance.uploadNewsFeed(values)
             Swal.fire({
@@ -300,7 +303,7 @@ const UseFetchNewsFeed = () => {
         onChangeThumbnail, _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType, _HandleGotoUserProfile,
         uploadingThumbnail, posts, HandleLikePost, HandleCheckLike, _HandleCatalogue, _HandleDeleteVideo,
         _HandleGotoVideoDetails, ToggleRatingModal, _HandleChangeRating, showRatingModal, ToggleTipModal,
-        _HandleChangeTip, showTipModal
+        _HandleChangeTip, showTipModal, videoType
 
     }
 }

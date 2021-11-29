@@ -168,7 +168,7 @@ const Videos = () => {
 
                         <div className="flex flex-col w-full sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-col-3 gap-3">
                             {
-                                filterdVideos.map(({ title, url, thumbnail, mediaType, id, UserId, description, User, like, comment, share, catalogue }, index) => (
+                                filterdVideos.map(({ title, url, thumbnail, mediaType, id, UserId, description, User, like, comment, share, catalogue, videoCost, videoType }, index) => (
                                     <div key={index}>
                                         <NewsfeedCard
                                             id={id}
@@ -179,6 +179,8 @@ const Videos = () => {
                                             User={User}
                                             views={200}
                                             rating={2.5}
+                                            videoCost={videoCost}
+                                            videoType={videoType}
                                             mediaType={mediaType}
                                             description={description}
                                             title={title}

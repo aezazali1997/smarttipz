@@ -9,10 +9,13 @@ import { isEmpty } from 'lodash';
 import swal from 'sweetalert';
 import axiosInstance from 'src/APIs/axiosInstance';
 import { Card, PopupBusinessCard, ProfileCard, Rating, TestimonialCard, Spinner, NewsfeedCard, Carousel } from 'src/components';
+import { useSearchContext } from 'src/contexts';
 
 
 const UserProfile = ({ profile }) => {
     let router = useRouter();
+    const { setOtherUserDetail } = useSearchContext();
+
     const [followed, setFollowed] = useState([]);
     const [followers, setFollowers] = useState([]);
     const [testimonials, setTestimonials] = useState([]);
@@ -145,6 +148,7 @@ const UserProfile = ({ profile }) => {
             })
         }
         else {
+            setOtherUserDetail({ picture, name, id, username });
             router.push(`/dashboard/profile/messages/${id}`)
         }
     }

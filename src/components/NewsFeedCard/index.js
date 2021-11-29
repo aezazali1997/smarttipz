@@ -18,6 +18,7 @@ const NewsfeedCard = ({
     views,
     width,
     User,
+    videoCost,
     videoType,
     // HandleLikePost,
     ToggleRatingModal,
@@ -35,7 +36,8 @@ const NewsfeedCard = ({
                 <div className="flex w-full py-2 px-2 justify-between space-x-2">
                     <div className="flex">
                         <img
-                            src="https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"
+                            src={User?.picture ||
+                                "https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"}
                             className="rounded-full w-16 h-10 object-cover"
                             alt="avatar"></img>
                         <div className="flex flex-col w-full">
@@ -49,10 +51,10 @@ const NewsfeedCard = ({
                     </div>
                     <div className="flex space-x-2">
                         <div className="flex px-2 h-6  background items-center justify-center rounded-lg">
-                            <p className="text-white font-sm font-semibold">{videoType === 'tip' ? 'Tip' : 'Review'}</p>
+                            <p className="text-white font-sm font-semibold">{videoType}</p>
                         </div>
                         <div className="flex px-2 h-6  background items-center justify-center rounded-lg">
-                            <p className="text-white font-sm font-semibold">    Free</p>
+                            <p className="text-white font-sm font-semibold">{videoCost}</p>
                         </div>
                         <svg
                             className="w-6 h-6 text-gray-500 hover:text-purple-600 cursor-pointer"

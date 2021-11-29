@@ -30,7 +30,7 @@ const handler = async (req, res) => {
                     model: PostLikee
 
                 }, {
-                    model: User, attributes: ['name', 'username', 'email']
+                    model: User, attributes: ['name', 'username', 'email', 'picture']
                 }],
                 where: FilterContent(search),
                 order: [["createdAt", sort]]

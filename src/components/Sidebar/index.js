@@ -37,26 +37,24 @@ const Sidebar = ({ logout }) => {
 
     return (
 
-        <div className="sidebar">
+        <div className="sidebar z-50">
             <nav
-                className='flex flex-col w-full h-full py-5 px-5 text-white justify-between relative navbar'
+                className='flex w-full h-full py-2 px-2 text-white justify-between navbar'
                 role='navigation'
             >
-                <div className="py-7 flex items-center w-full flex-col relative">
+                <div className="flex items-center w-36 flex-col relative">
                     <Image src='https://smart-tipz-data-bucket.s3.ap-southeast-1.amazonaws.com/public/logo.svg'
                         alt="brand" layout='fill' objectFit="cover" />
                 </div>
 
-                <div className="pt-2">
-                    <GlobalSearchbar />
-                </div>
-                <div className='lg:flex h-full pt-4 flex-col space-y-1 overflow-y-auto sidebar-content'>
+                <GlobalSearchbar />
+                <div className='flex h-full sidebar-content space-x-1'>
                     {
                         Routes && Routes.map(({ path, name, icon, badge }, index) => (
                             <>
                                 <Link href={path} key={index} className='p-4 font-sans nav-link nav-link-ltr' >
                                     <a>
-                                        <div className={`flex items-center justify-between py-2 px-3 rounded-lg w-52 font-medium  cursor-pointer
+                                        <div className={`flex items-center justify-between py-2 px-3 rounded-lg  font-medium  cursor-pointer
                                             ${Active(path)}`}>
                                             <div>
                                                 {icon}&nbsp;{name}
@@ -69,7 +67,7 @@ const Sidebar = ({ logout }) => {
                         ))
                     }
                     <div ref={DropdownRef} className="inline-block relative space-y-1">
-                        <button onClick={toggleDropdown} className={`flex items-center justify-between py-2 px-3 rounded-lg w-52 font-medium sidebar-item cursor-pointer
+                        <button onClick={toggleDropdown} className={`flex items-center justify-between py-2 px-3 rounded-lg  font-medium sidebar-item cursor-pointer
                            ${dropdown ? 'bg-white text' : 'text-white'}`} >
                             <div>
                                 <FontAwesomeIcon icon={faClipboardList} />&nbsp;Policies
@@ -86,7 +84,7 @@ const Sidebar = ({ logout }) => {
                         </button>
                         {
                             dropdown &&
-                            <div className="absolute flex flex-col space-y-2 bg-white p-2 w-52 rounded-lg z-40 ease-in-out">
+                            <div className="absolute flex flex-col space-y-2 bg-white p-2  rounded-lg shadow ease-in-out">
                                 {
                                     DropdownRoutes && DropdownRoutes.map(({ path, name }, index) => (
                                         <>
@@ -110,7 +108,7 @@ const Sidebar = ({ logout }) => {
                 </div>
                 <div className="flex items-center">
                     <button onClick={() => logout()}
-                        className={`flex flex-row py-2 px-3 rounded-lg w-52 font-medium text-white hover:bg-white hover:text-indigo-600 `} >
+                        className={`flex flex-row py-2 px-3 rounded-lg font-medium text-white hover:bg-white hover:text-indigo-600 `} >
                         <div>
                             <FontAwesomeIcon icon={faSignOutAlt} /> &nbsp;Logout
                         </div>

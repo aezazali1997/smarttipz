@@ -11,6 +11,8 @@ const SuggestionCard = ({
     UserId,
     isPost,
     name,
+    videoType,
+    videoCost,
     thumbnail,
     url,
     title,
@@ -31,21 +33,25 @@ const SuggestionCard = ({
                 <div className="flex w-full py-1 px-2 justify-between space-x-2">
                     <div className="flex">
                         <img
-                            src="https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"
+                            src={User?.picture ||
+                                "https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"}
                             className="rounded-full w-16 h-10 object-cover"
                             alt="avatar"></img>
                         <div className="flex flex-col w-full">
                             <p
                                 onClick={() => _HandleGotoUserProfile(UserId, User?.username)}
-                                className="text-sm font-bold font-sans hover:underline cursor-pointer">
+                                className="text-sm w-28 font-bold font-sans hover:underline whitespace-nowrap overflow-ellipsis overflow-hidden cursor-pointer">
                                 {User?.name}
                             </p>
                             <p className="text-xs text-gray-500">19h</p>
                         </div>
                     </div>
                     <div className="flex space-x-2">
-                        <div className="flex px-2 h-6  background items-center justify-center">
-                            <p className="text-white font-sm font-semibold">FREE</p>
+                        <div className="flex px-2 h-6 rounded-lg  background items-center justify-center">
+                            <p className="text-white font-sm font-semibold">{videoType}</p>
+                        </div>
+                        <div className="flex px-2 h-6 rounded-lg  background items-center justify-center">
+                            <p className="text-white font-sm font-semibold">{videoCost}</p>
                         </div>
                         <svg
                             className="w-6 h-6 text-gray-400 hover:text-yellow-500 cursor-pointer"
@@ -67,7 +73,7 @@ const SuggestionCard = ({
                 </div>
                 <p
                     onClick={() => _HandleGotoVideoDetails(id)}
-                    className="px-5 text-sm max-w-md hover:underline whitespace-nowrap overflow-ellipsis overflow-hidden cursor-pointer"
+                    className="px-5 text-sm max-w-sm hover:underline  cursor-pointer"
                 >
                     {title}
                 </p>

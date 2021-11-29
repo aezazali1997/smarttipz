@@ -155,19 +155,19 @@ const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, Chan
                                                 ${formik.touched.videoType && formik.errors.videoType ? 'mb-1' : 'mb-4'}`}>
 											<select
 												type={'select'}
-												id={'videoType'}
-												name={'videoType'}
+												id={'videoCost'}
+												name={'videoCost'}
 												className={`${getInputClasses(
-													formik, "videoType"
+													formik, "videoCost"
 												)} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
-												value={formik.values.videoType}
+												value={formik.values.videoCost}
 												onChange={formik.handleChange}
 												onBlur={formik.handleBlur}
 												placeholder="name@example.com"
 											>
-												<option value="">Select VideoType</option>
-												<option value="tip">Tip</option>
-												<option value="review">Review</option>
+												<option value="">Select Video</option>
+												<option value="Free">Free</option>
+												<option value="Paid">Paid</option>
 											</select>
 											<div className="absolute inset-y-0 right-0 flex items-center px-2 cursor-pointer ">
 												<svg xmlns="http://www.w3.org/2000/svg" className="text-gray-500 pointer-events-none" width="19.524" height="19.524" viewBox="0 0 19.524 19.524">
@@ -175,8 +175,8 @@ const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, Chan
 												</svg>
 											</div>
 										</div>
-										{formik.touched.videoType && formik.errors.videoType &&
-											<div className="text-red-700 text-sm mb-4" >{formik.errors.videoType}</div>
+										{formik.touched.videoCost && formik.errors.videoCost &&
+											<div className="text-red-700 text-sm mb-4" >{formik.errors.videoCost}</div>
 										}
 									</>
 								}

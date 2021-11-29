@@ -43,6 +43,9 @@ const Video = sequelize.define("Video", {
   videoType: {
     type: DataTypes.STRING
   },
+  videoCost: {
+    type: DataTypes.STRING
+  },
   rating: {
     type: DataTypes.INTEGER,
   },

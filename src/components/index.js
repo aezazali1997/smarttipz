@@ -40,4 +40,5 @@ export { default as NewsfeedCard } from './NewsFeedCard';
 export { default as NewsFeedFilters } from './NewsFeedFilters';
 export { default as GenericFilters } from './GenericFilters';
 export { default as SortFilter } from './SortFilter';
+export { default as VideoUploadBlock } from './UploadVideoClickBlock';
 

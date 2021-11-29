@@ -26,7 +26,7 @@ const handler = async (req, res) => {
                     model: PostLikee
 
                 }, {
-                    model: User, attributes: ['name', 'username']
+                    model: User, attributes: ['name', 'username', 'picture']
                 }],
                 where: {
                     isApproved: true,

@@ -8,7 +8,7 @@ const UseSearch = () => {
 
     const { filterSearch } = useSearchContext();
     const router = useRouter();
-    const { query: { active } } = router;
+    const { asPath } = router;
 
     const [posts, setPosts] = useState([]);
     const [userProfiles, setUserProfiles] = useState([]);
@@ -75,8 +75,10 @@ const UseSearch = () => {
         enableProfileLoading();
         try {
             const { data: { data: { users } } } = await axiosInstance.getFilteredUserProfiles(filterSearch, sort);
-            setUserProfiles(users);
-            console.log('users: ', users);
+            const deepCopyUsers = [...users];
+            const filtered = deepCopyUsers.filter(user => user?.id !== parseInt(localStorage.getItem('id')) && user)
+            setUserProfiles(filtered);
+            console.log('users: ', filtered);
             disableProfileLoading();
         }
         catch ({ response: { data: { message } } }) {
@@ -89,29 +91,22 @@ const UseSearch = () => {
     useEffect(() => {
         GetPosts();
         GetUserProfiles();
+        if (!asPath.includes('?')) {
+            router.push('/search?active=All');
+        }
+        else {
+
+            const result = asPath.split('?')[1]
+            const newResult = result.split('=');
+            const key = newResult[0];
+            const value = newResult[1];
+            setActiveGenericFilter(value);
+        }
     }, [filterSearch, sort]);
 
-    useEffect(() => {
-
-        // debugger;
-        // if (active === 'All') {
-        //     setActiveGenericFilter(activeGenericFilter);
-        //     router.replace(`/search?active=${activeGenericFilter}`);
-        // }
-        // else {
-        //     setActiveGenericFilter(active);
-        //     router.replace(`/search?active=${active}`);
-        // }
-        setTimeout(() => {
-            console.log('router', router)
-            setActiveGenericFilter(active);
-            router.replace(`/search?active=${active}`);
-        }, 2000)
-    }, []);
 
     const _HandleCatalogue = async (videoId, catalogue) => {
         if (catalogueCount < 5 || catalogue === true) {
-            // console.log('here: ', catalogueCount);
             try {
                 const data = await axiosInstance.addToCatalogue({ videoId, catalogue });
                 if (catalogue) {
@@ -120,7 +115,6 @@ const UseSearch = () => {
                 else {
                     setCatalogueCount(catalogueCount => catalogueCount + 1)
                 }
-                // console.log({ data });
                 const originalArray = [...posts];
                 let newArray = originalArray.map((item, i) => {
                     if (item.id !== videoId) return item;
@@ -190,6 +184,8 @@ const UseSearch = () => {
         console.log('value: ', value);
     }
 
+    //FILTERS//
+
     const _HandleActiveGenericFilter = (active) => {
         setActiveGenericFilter(active);
         router.replace(`/search?active=${active}`)
@@ -204,7 +200,7 @@ const UseSearch = () => {
     return {
         _HandleAccountTypeFilter, _HandleActiveGenericFilter, _HandleChangeTip, _HandleChangeRating,
         ToggleTipModal, ToggleRatingModal, _HandleGotoVideoDetails, _HandleGotoUserProfile, _HandleDeleteVideo,
-        _HandleCatalogue, GetUserProfiles, GetPosts, filterSearch, active, posts, userProfiles, showRatingModal,
+        _HandleCatalogue, GetUserProfiles, GetPosts, filterSearch, posts, userProfiles, showRatingModal,
         showTipModal, activeGenericFilter, userProfileLoading, postsLoading, sort, setSort, account,
         setAccountType, videoCategory, videoType, rating, setRating
     }

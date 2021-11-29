@@ -19,6 +19,7 @@ const handler = async (req, res) => {
         url: Joi.string().required(),
         mediaType: Joi.string().required(),
         videoType: Joi.string().required(),
+        videoCost: Joi.string().required(),
         agree: Joi.required(),
       });
       return schema.validate(data);
@@ -46,10 +47,10 @@ const handler = async (req, res) => {
 
       // const video = await Video.findOne({ where: { url: req.body.link } });
       // if (video) throw new Error('Video already exists');
-      const { url, mediaType, agree, title, language, description, thumbnail, category, videoType } = body;
+      const { url, mediaType, agree, title, language, description, thumbnail, category, videoType, videoCost } = body;
 
       const newVideo = await Video.create({
-        title, description, agree, mediaType, url, language, thumbnail, category, videoType
+        title, description, agree, mediaType, url, language, thumbnail, category, videoType, videoCost
       });
       await newVideo.setUser(user);
       res.status(201).json({ error: false, message: 'Post submitted successfully', data: [] });

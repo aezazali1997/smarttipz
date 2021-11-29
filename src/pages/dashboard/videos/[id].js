@@ -161,6 +161,8 @@ const VideoDetailScreen = () => {
     const {
         title,
         url,
+        videoType,
+        videoCost,
         thumbnail,
         mediaType,
         UserId,
@@ -178,7 +180,8 @@ const VideoDetailScreen = () => {
                 <div className="flex w-full py-2 justify-between space-x-2">
                     <div className="flex">
                         <img
-                            src="https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"
+                            src={User?.picture ||
+                                "https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"}
                             className="rounded-full w-16 h-10 object-cover"
                             alt="avatar"></img>
                         <div className="flex flex-col w-full">
@@ -191,8 +194,11 @@ const VideoDetailScreen = () => {
                         </div>
                     </div>
                     <div className="flex space-x-2">
-                        <div className="flex px-2 h-6  background items-center justify-center">
-                            <p className="text-white font-sm font-semibold">FREE</p>
+                        <div className="flex px-2 h-6 rounded-lg background items-center justify-center">
+                            <p className="text-white font-sm font-semibold">{videoType}</p>
+                        </div>
+                        <div className="flex px-2 h-6 rounded-lg background items-center justify-center">
+                            <p className="text-white font-sm font-semibold">{videoCost}</p>
                         </div>
                         <svg
                             className="w-6 h-6 text-gray-500 hover:text-purple-600 cursor-pointer"
@@ -215,8 +221,8 @@ const VideoDetailScreen = () => {
                     </div>
                 </div>
                 <p
-                    onClick={() => _HandleGotoVideoDetails(id)}
-                    className="px-3 pb-1 text-sm max-w-md hover:underline whitespace-nowrap overflow-ellipsis overflow-hidden cursor-pointer">
+                    // onClick={() => _HandleGotoVideoDetails(id)}
+                    className="px-3 pb-1 text-sm max-w-md whitespace-nowrap overflow-ellipsis overflow-hidden">
                     {title}
                 </p>
                 <div className="detail-page-video-wrapper">
@@ -354,7 +360,7 @@ const VideoDetailScreen = () => {
                     {posts &&
                         posts.map(
                             (
-                                { id, description, title, url, UserId, thumbnail, PostLikees, catalogue, User },
+                                { id, description, title, url, UserId, thumbnail, PostLikees, catalogue, User, videoType, videoCost },
                                 index
                             ) => (
                                 <div key={index}>
@@ -367,6 +373,8 @@ const VideoDetailScreen = () => {
                                         User={User}
                                         views={200}
                                         rating={2.5}
+                                        videoCost={videoCost}
+                                        videoType={videoType}
                                         mediaType={mediaType}
                                         description={description}
                                         title={title}

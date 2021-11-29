@@ -10,11 +10,10 @@ const Search = () => {
 
 	const { _HandleAccountTypeFilter, _HandleActiveGenericFilter, _HandleChangeTip, _HandleChangeRating,
 		ToggleTipModal, ToggleRatingModal, _HandleGotoVideoDetails, _HandleGotoUserProfile, _HandleDeleteVideo,
-		_HandleCatalogue, GetUserProfiles, GetPosts, filterSearch, active, posts, userProfiles, showRatingModal,
+		_HandleCatalogue, GetUserProfiles, GetPosts, filterSearch, posts, userProfiles, showRatingModal,
 		showTipModal, activeGenericFilter, userProfileLoading, postsLoading, sort, setSort, account,
 		setAccountType, videoCategory, videoType, rating, setRating
 	} = UseSearch();
-
 
 	return (
 		<div className="min-h-screen flex flex-col lg:flex-row bg-gray-100 py-4 px-3 relative">
@@ -98,13 +97,19 @@ const Search = () => {
 											:
 											<>
 												{
-													userProfiles.slice(0, 1).map(({ id, name, email, picture, showName, showUsername, username, accountType }, index) => (
+													userProfiles.slice(0, 1).map(({ id, name, email, picture, showName, showUsername, username,
+														accountType, Followed, Follower, accessible }, index) => (
 														<div key={index}>
 															<ProfileOverviewCard
 																_HandleGotoUserProfile={() => _HandleGotoUserProfile(id, username)}
 																name={accountType === 'Personal' ? showName ? name : showUsername ? username : '' : name}
 																picture={picture}
 																email={email}
+																id={id}
+																username={username}
+																accessible={accessible}
+																Followed={Followed}
+																Follower={Follower}
 															/>
 														</div>
 													))
@@ -156,13 +161,19 @@ const Search = () => {
 							activeGenericFilter === 'Profile' ?
 								<div className="space-y-4">
 									{
-										userProfiles.map(({ id, name, email, picture, showName, showUsername, username, accountType }, index) => (
+										userProfiles.map(({ id, name, email, picture, showName, showUsername,
+											username, accountType, Follower, Followed, accessible }, index) => (
 											<div key={index}>
 												<ProfileOverviewCard
 													_HandleGotoUserProfile={() => _HandleGotoUserProfile(id, username)}
 													name={accountType === 'Personal' ? showName ? name : showUsername ? username : '' : name}
 													picture={picture}
 													email={email}
+													id={id}
+													username={username}
+													accessible={accessible}
+													Followed={Followed}
+													Follower={Follower}
 												/>
 											</div>
 										))
@@ -213,5 +224,6 @@ const Search = () => {
 		</div>
 	)
 }
+
 
 export default Search;
