@@ -6,7 +6,7 @@
   background-color: #714de1;
   width: 100%;
   height: auto;
-  top:0;
+  top: 0;
   position: sticky;
 }
 
@@ -45,11 +45,22 @@
   color: #714de1 !important;
 }
 
-.sidebar-item {
+/* old */
+/* .sidebar-item {
   color: white;
 }
 
 .sidebar-item:hover {
+  color: #714de1;
+  background: white;
+} */
+
+/* new */
+.navbar-item {
+  color: white;
+}
+
+.navbar-item:hover {
   color: #714de1;
   background: white;
 }

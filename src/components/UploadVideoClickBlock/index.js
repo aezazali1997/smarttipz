@@ -3,7 +3,7 @@ import { faFileVideo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ReactTooltip from 'react-tooltip';
 
-const Index = ({ openModal, title }) => {
+const Index = ({ openModal, title, tooltip }) => {
     return (
         <div className="relative w-full shadow flex flex-col justify-center
                     rounded-lg bg-white">
@@ -12,7 +12,7 @@ const Index = ({ openModal, title }) => {
                         border-transparent rounded-lg hover:bg-gray-200 p-2 space-y-2">
                     <FontAwesomeIcon icon={faFileVideo} className="text-6xl text" />
                     <div>
-                        <p className="text-center text-lg font-semibold">{title}</p>
+                        <p className="text-center text-md">{title}</p>
                     </div>
                 </div>
             </div>
@@ -21,7 +21,7 @@ const Index = ({ openModal, title }) => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <ReactTooltip id={title} place="top" effect="solid" border={false} borderColor="white" clickable={false}>
-                    {title}
+                    {tooltip}
                 </ReactTooltip>
             </span>
         </div>

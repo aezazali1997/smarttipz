@@ -2,7 +2,7 @@
 const sequelize = require('sequelize');
 
 
-export const FilterContent = (search) => {
+export const FilterContent = (search, category) => {
     console.log("searched >>", search);
     return {
         [sequelize.Op.and]: [
@@ -11,6 +11,12 @@ export const FilterContent = (search) => {
                     [sequelize.Op.eq]: true
                 },
             },
+            {
+                category: {
+                    [sequelize.Op.iLike]: `%${category}%`,
+                }
+            },
+
         ],
         [sequelize.Op.or]: [{
             '$User.name$': {

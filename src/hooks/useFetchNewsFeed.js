@@ -36,6 +36,7 @@ const UseFetchNewsFeed = () => {
     const [showRatingModal, setShowRatingModal] = useState(false);
     const [showTipModal, setShowTipModal] = useState(false);
     const [videoType, setVideoType] = useState('');
+    const [showShareModal, setShowShareModal] = useState(false);
 
     let thumbnailRef = useRef();
 
@@ -102,6 +103,14 @@ const UseFetchNewsFeed = () => {
         setAgree(false);
         setSelectedLanguage('');
         setShowModal(false);
+    }
+
+    let _OpenShareModal = () => {
+        setShowShareModal(true);
+    }
+
+    let _CloseShareModal = () => {
+        setShowShareModal(false);
     }
 
     const enableLoading = () => {
@@ -303,8 +312,7 @@ const UseFetchNewsFeed = () => {
         onChangeThumbnail, _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType, _HandleGotoUserProfile,
         uploadingThumbnail, posts, HandleLikePost, HandleCheckLike, _HandleCatalogue, _HandleDeleteVideo,
         _HandleGotoVideoDetails, ToggleRatingModal, _HandleChangeRating, showRatingModal, ToggleTipModal,
-        _HandleChangeTip, showTipModal, videoType
-
+        _HandleChangeTip, showTipModal, videoType, _OpenShareModal, _CloseShareModal, showShareModal
     }
 }
 

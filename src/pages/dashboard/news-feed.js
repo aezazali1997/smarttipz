@@ -6,7 +6,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { MediaUploadForm, NewsfeedCard, NewsFeedFilters, Rating, Searchbar, Switch, VideoPlayer, VideoUploadBlock } from 'src/components';
 import { PostActionDropdown } from 'src/components/Dropdown';
-import { TipModal, VideoRatingModal } from 'src/components/Modals';
+import { ShareModal, TipModal, VideoRatingModal } from 'src/components/Modals';
 import { UseFetchNewsFeed } from 'src/hooks';
 
 const NewsFeed = () => {
@@ -15,7 +15,8 @@ const NewsFeed = () => {
     _OpenUploadModal, _CloseUploadModal, thumbnailRef, _OnRemoveThumbnail, onChangeThumbnail,
     _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType, _HandleGotoUserProfile, videoType,
     uploadingThumbnail, posts, HandleLikePost, HandleCheckLike, _HandleCatalogue, _HandleDeleteVideo,
-    _HandleGotoVideoDetails, ToggleRatingModal, _HandleChangeRating, showRatingModal, ToggleTipModal, _HandleChangeTip, showTipModal
+    _HandleGotoVideoDetails, ToggleRatingModal, _HandleChangeRating, showRatingModal, ToggleTipModal,
+    _HandleChangeTip, showTipModal, _OpenShareModal, _CloseShareModal, showShareModal
   } = UseFetchNewsFeed();
 
   return (
@@ -33,10 +34,12 @@ const NewsFeed = () => {
             <VideoUploadBlock
               openModal={() => _OpenUploadModal('SmartTipz')}
               title={'Click to upload SmartTipz Videos'}
+              tooltip={'SmartTIpz can be any video'}
             />
             <VideoUploadBlock
               openModal={() => _OpenUploadModal('SmartReview')}
               title={'Click to upload SmartReviews Videos'}
+              tooltip={'SmartReview is a product or service review video'}
             />
 
           </div>
@@ -63,9 +66,10 @@ const NewsFeed = () => {
                   width={'max-w-lg'}
                   thumbnail={thumbnail}
                   ToggleTipModal={ToggleTipModal}
+                  _OpenShareModal={_OpenShareModal}
+                  _HandleCatalogue={_HandleCatalogue}
                   ToggleRatingModal={ToggleRatingModal}
                   _HandleDeleteVideo={_HandleDeleteVideo}
-                  _HandleCatalogue={_HandleCatalogue}
                   _HandleGotoUserProfile={_HandleGotoUserProfile}
                   _HandleGotoVideoDetails={_HandleGotoVideoDetails}
                 />
@@ -97,6 +101,7 @@ const NewsFeed = () => {
             _CloseUploadModal={_CloseUploadModal}
             _OnRemoveThumbnail={_OnRemoveThumbnail}
             uploadingThumbnail={uploadingThumbnail}
+
           />
         )
       }
@@ -119,6 +124,16 @@ const NewsFeed = () => {
             ToggleTipModal={ToggleTipModal}
             loading={false}
             modalTitle={"Tip Video"}
+          />
+        )
+      }
+      {
+        showShareModal && (
+          <ShareModal
+            modalTitle={'Share Post'}
+            _HandleSubmit={_CloseShareModal}
+            ToggleShareModal={_CloseShareModal}
+
           />
         )
       }

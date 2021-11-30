@@ -12,7 +12,7 @@ const Search = () => {
 		ToggleTipModal, ToggleRatingModal, _HandleGotoVideoDetails, _HandleGotoUserProfile, _HandleDeleteVideo,
 		_HandleCatalogue, GetUserProfiles, GetPosts, filterSearch, posts, userProfiles, showRatingModal,
 		showTipModal, activeGenericFilter, userProfileLoading, postsLoading, sort, setSort, account,
-		setAccountType, videoCategory, videoType, rating, setRating
+		setAccountType, videoCategory, videoType, rating, setRating, category, _ChangeCategoryFilter
 	} = UseSearch();
 
 	return (
@@ -41,7 +41,7 @@ const Search = () => {
 											:
 											<>
 												{
-													posts.slice(0, 1).map(({ id, description, title, url, UserId, thumbnail, PostLikees, catalogue, User, videoType }, index) => (
+													posts.slice(0, 1).map(({ id, description, title, url, UserId, thumbnail, PostLikees, catalogue, User, videoType, videoCost }, index) => (
 														<div key={index}>
 															<NewsfeedCard
 																id={id}
@@ -56,6 +56,7 @@ const Search = () => {
 																postLikes={PostLikees}
 																description={description}
 																title={title}
+																videoCost={videoCost}
 																videoType={videoType}
 																width={'max-w-lg'}
 																thumbnail={thumbnail}
@@ -128,7 +129,7 @@ const Search = () => {
 						activeGenericFilter === 'Posts' ?
 							<div className="space-y-4">
 								{
-									posts.map(({ id, description, title, url, UserId, thumbnail, PostLikees, catalogue, User, videoType }, index) => (
+									posts.map(({ id, description, title, url, UserId, thumbnail, PostLikees, catalogue, User, videoType, videoCost }, index) => (
 										<div key={index}>
 											<NewsfeedCard
 												id={id}
@@ -143,6 +144,7 @@ const Search = () => {
 												postLikes={PostLikees}
 												description={description}
 												title={title}
+												videoCost={videoCost}
 												videoType={videoType}
 												width={'max-w-lg'}
 												thumbnail={thumbnail}
@@ -183,11 +185,13 @@ const Search = () => {
 								''
 				}
 			</div>
-			<div className="w-full lg:w-2/6">
+			<div className="w-full lg:w-2/6 relative">
 				<div className="sticky top-0 space-y-4 justify-center flex-col items-center ">
 					<GenericFilters
 						_HandleActiveGenericFilter={_HandleActiveGenericFilter}
 						activeGenericFilter={activeGenericFilter}
+						category={category}
+						_ChangeCategoryFilter={_ChangeCategoryFilter}
 					/>
 					<SortFilter
 						value={sort}

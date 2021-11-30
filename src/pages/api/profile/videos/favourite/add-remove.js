@@ -1,16 +1,12 @@
-
-const PostLikee = require('models/Like');
 const User = require('models/User');
 const Video = require('models/Video');
 const jwt = require('jsonwebtoken');
-import { FilterContent } from 'utils/consts';
-
+const sequelize = require('sequelize');
 
 const handler = async (req, res) => {
     if (req.method === 'GET') {
-
-        const { headers: { authorization }, query: { search, sort, category } } = req;
-
+        const { body: { videoId }, headers: { authorization } }
+            = req;
         try {
             if (!authorization) {
                 return res.status(401).send({ error: true, data: [], message: 'Please Login' })
@@ -20,33 +16,42 @@ const handler = async (req, res) => {
                 process.env.SECRET_KEY
             );
 
-            const { id } = await User.findOne({
+            const user = await User.findOne({
                 attributes: ['id'],
-                where: { username, isDeleted: false, isBlocked: false }
+                where: { username }
             });
 
-            const videos = await Video.findAll({
-                include: [{
-                    model: PostLikee
+            if (!user) {
+                return res.status(404).send({ error: true, data: [], message: 'User Not Found' })
+            }
+            const { id } = user;
 
-                }, {
-                    model: User, attributes: ['name', 'username', 'email', 'picture']
-                }],
-                where: FilterContent(search, category),
-                order: [["createdAt", sort]]
+            const videos = await Video.findAll({
+                include: [
+                    {
+                        model: User, attributes: ['name', 'username', 'picture']
+                    }],
+                where: {
+                    UserId: id,
+                    isApproved: true,
+                    category: {
+                        [sequelize.Op.not]: 'catalogue'
+                    },
+                },
+                order: [["createdAt", "DESC"]]
             });
 
             res.status(200).json({
-                error: false,
                 message: 'success',
                 data: { videos }
             });
-
         } catch (err) {
             console.log("Videos Api Failed Error: ", err.message);
             res.status(500).send({ error: true, data: [], message: err.message });
         }
-    } else {
+    }
+
+    else {
         res.status(404).end('Page Not Found');
     }
 };

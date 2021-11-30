@@ -1,13 +1,13 @@
-import { faCog, faComment, faNewspaper, faPlayCircle, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { faCog, faComment, faNewspaper, faPlayCircle, faStar, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const Routes = [
-    {
-        name: 'News Feed',
-        path: '/dashboard/news-feed',
-        badge: false,
-        icon: (<FontAwesomeIcon icon={faNewspaper} />)
-    },
+    // {
+    //     name: 'News Feed',
+    //     path: '/dashboard/news-feed',
+    //     badge: false,
+    //     icon: (<FontAwesomeIcon icon={faNewspaper} />)
+    // },
     {
         name: 'Profile',
         path: '/dashboard/profile',
@@ -20,6 +20,29 @@ export const Routes = [
         badge: false,
         icon: (<FontAwesomeIcon icon={faPlayCircle} />)
     },
+    // {
+    //     name: 'Messages',
+    //     path: '/dashboard/messages',
+    //     badge: false,
+    //     icon: (<FontAwesomeIcon icon={faComment} />)
+    // },
+    {
+        name: 'Settings',
+        path: '/dashboard/setting',
+        badge: false,
+        icon: (<FontAwesomeIcon icon={faCog} />)
+    }
+]
+
+
+
+export const NavbarRoutes = [
+    {
+        name: 'News Feed',
+        path: '/dashboard/news-feed',
+        badge: false,
+        icon: (<FontAwesomeIcon icon={faNewspaper} />)
+    },
     {
         name: 'Messages',
         path: '/dashboard/messages',
@@ -27,11 +50,11 @@ export const Routes = [
         icon: (<FontAwesomeIcon icon={faComment} />)
     },
     {
-        name: 'Settings',
-        path: '/dashboard/setting',
+        name: 'Favourites',
+        path: '/dashboard/favourites',
         badge: false,
-        icon: (<FontAwesomeIcon icon={faCog} />)
-    }
+        icon: (<FontAwesomeIcon icon={faStar} />)
+    },
 ]
 
 export const DropdownRoutes = [

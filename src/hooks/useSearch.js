@@ -19,6 +19,7 @@ const UseSearch = () => {
     const [userProfileLoading, setUserProfileLoading] = useState(true);
     const [postsLoading, setPostsLoading] = useState(true);
     const [sort, setSort] = useState('DESC');
+    const [category, setCategory] = useState('');
     const [rating, setRating] = useState(0);
     const [account, setAccountType] = useState({
         Personal: false,
@@ -54,7 +55,7 @@ const UseSearch = () => {
     let GetPosts = async () => {
         enablePostsLoading();
         try {
-            const { data: { data: { videos } } } = await axiosInstance.getFilteredPosts(filterSearch, sort);
+            const { data: { data: { videos } } } = await axiosInstance.getFilteredPosts(filterSearch, sort, category);
             setPosts(videos);
             var count = 0;
             for (let i = 0; i < videos.length; i++) {
@@ -102,7 +103,7 @@ const UseSearch = () => {
             const value = newResult[1];
             setActiveGenericFilter(value);
         }
-    }, [filterSearch, sort]);
+    }, [filterSearch, sort, category]);
 
 
     const _HandleCatalogue = async (videoId, catalogue) => {
@@ -197,12 +198,18 @@ const UseSearch = () => {
         console.log(`${checked}, ${name}`)
     }
 
+    let _ChangeCategoryFilter = ({ target }) => {
+        const { value } = target;
+        console.log(value);
+        setCategory(value);
+    }
+
     return {
         _HandleAccountTypeFilter, _HandleActiveGenericFilter, _HandleChangeTip, _HandleChangeRating,
         ToggleTipModal, ToggleRatingModal, _HandleGotoVideoDetails, _HandleGotoUserProfile, _HandleDeleteVideo,
         _HandleCatalogue, GetUserProfiles, GetPosts, filterSearch, posts, userProfiles, showRatingModal,
         showTipModal, activeGenericFilter, userProfileLoading, postsLoading, sort, setSort, account,
-        setAccountType, videoCategory, videoType, rating, setRating
+        setAccountType, videoCategory, videoType, rating, setRating, category, _ChangeCategoryFilter
     }
 }
 

@@ -195,10 +195,10 @@ const VideoDetailScreen = () => {
                     </div>
                     <div className="flex space-x-2">
                         <div className="flex px-2 h-6 rounded-lg background items-center justify-center">
-                            <p className="text-white font-sm font-semibold">{videoType}</p>
+                            <p className="text-white font-sm">{videoType}</p>
                         </div>
                         <div className="flex px-2 h-6 rounded-lg background items-center justify-center">
-                            <p className="text-white font-sm font-semibold">{videoCost}</p>
+                            <p className="text-white font-sm">{videoCost}</p>
                         </div>
                         <svg
                             className="w-6 h-6 text-gray-500 hover:text-purple-600 cursor-pointer"
