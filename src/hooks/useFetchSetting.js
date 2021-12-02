@@ -79,6 +79,7 @@ const UseFetchSetting = (settings) => {
         axiosInstance.uploadProfilePic(url)
             .then(({ data: { data: { img } } }) => {
                 setImageUrl(img);
+                localStorage.setItem('image', img);
             }).catch(e => {
                 console.log(e.message);
             })

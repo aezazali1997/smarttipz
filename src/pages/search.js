@@ -12,7 +12,8 @@ const Search = () => {
 		ToggleTipModal, ToggleRatingModal, _HandleGotoVideoDetails, _HandleGotoUserProfile, _HandleDeleteVideo,
 		_HandleCatalogue, GetUserProfiles, GetPosts, filterSearch, posts, userProfiles, showRatingModal,
 		showTipModal, activeGenericFilter, userProfileLoading, postsLoading, sort, setSort, account,
-		setAccountType, videoCategory, videoType, rating, setRating, category, _ChangeCategoryFilter
+		setAccountType, videoCategory, videoType, rating, setRating, category, _ChangeCategoryFilter,
+		HandleLikePost
 	} = UseSearch();
 
 	return (
@@ -41,7 +42,8 @@ const Search = () => {
 											:
 											<>
 												{
-													posts.slice(0, 1).map(({ id, description, title, url, UserId, thumbnail, PostLikees, catalogue, User, videoType, videoCost }, index) => (
+													posts.slice(0, 1).map(({ id, description, title, url, UserId, thumbnail, PostLikees,
+														catalogue, User, videoType, videoCost, likeCount, isLiked }, index) => (
 														<div key={index}>
 															<NewsfeedCard
 																id={id}
@@ -56,10 +58,13 @@ const Search = () => {
 																postLikes={PostLikees}
 																description={description}
 																title={title}
+																isLiked={isLiked}
+																likeCount={likeCount}
 																videoCost={videoCost}
 																videoType={videoType}
 																width={'max-w-lg'}
 																thumbnail={thumbnail}
+																HandleLikePost={HandleLikePost}
 																ToggleTipModal={ToggleTipModal}
 																ToggleRatingModal={ToggleRatingModal}
 																_HandleDeleteVideo={_HandleDeleteVideo}
@@ -129,7 +134,8 @@ const Search = () => {
 						activeGenericFilter === 'Posts' ?
 							<div className="space-y-4">
 								{
-									posts.map(({ id, description, title, url, UserId, thumbnail, PostLikees, catalogue, User, videoType, videoCost }, index) => (
+									posts.map(({ id, description, title, url, UserId, thumbnail, PostLikees, catalogue,
+										User, videoType, videoCost, isLiked, likeCount }, index) => (
 										<div key={index}>
 											<NewsfeedCard
 												id={id}
@@ -141,6 +147,8 @@ const Search = () => {
 												views={200}
 												User={User}
 												rating={2.5}
+												isLiked={isLiked}
+												likeCount={likeCount}
 												postLikes={PostLikees}
 												description={description}
 												title={title}
@@ -148,6 +156,7 @@ const Search = () => {
 												videoType={videoType}
 												width={'max-w-lg'}
 												thumbnail={thumbnail}
+												HandleLikePost={HandleLikePost}
 												ToggleTipModal={ToggleTipModal}
 												ToggleRatingModal={ToggleRatingModal}
 												_HandleDeleteVideo={_HandleDeleteVideo}

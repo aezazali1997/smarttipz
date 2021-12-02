@@ -37,6 +37,7 @@ const UseFetchNewsFeed = () => {
     const [showTipModal, setShowTipModal] = useState(false);
     const [videoType, setVideoType] = useState('');
     const [showShareModal, setShowShareModal] = useState(false);
+    const [shareData, setShareDate] = useState({});
 
     let thumbnailRef = useRef();
 
@@ -105,7 +106,12 @@ const UseFetchNewsFeed = () => {
         setShowModal(false);
     }
 
-    let _OpenShareModal = () => {
+    let _OpenShareModal = (id, thumbnail, url) => {
+        setShareDate({
+            videoId: id,
+            thumbnail,
+            url
+        })
         setShowShareModal(true);
     }
 
@@ -312,7 +318,7 @@ const UseFetchNewsFeed = () => {
         onChangeThumbnail, _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType, _HandleGotoUserProfile,
         uploadingThumbnail, posts, HandleLikePost, HandleCheckLike, _HandleCatalogue, _HandleDeleteVideo,
         _HandleGotoVideoDetails, ToggleRatingModal, _HandleChangeRating, showRatingModal, ToggleTipModal,
-        _HandleChangeTip, showTipModal, videoType, _OpenShareModal, _CloseShareModal, showShareModal
+        _HandleChangeTip, showTipModal, videoType, _OpenShareModal, _CloseShareModal, showShareModal, shareData
     }
 }
 

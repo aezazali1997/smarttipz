@@ -3,6 +3,7 @@ const PostLikee = require('models/Like');
 const User = require('models/User');
 const Video = require('models/Video');
 const jwt = require('jsonwebtoken');
+const sequelize = require('sequelize');
 import { FilterContent } from 'utils/consts';
 
 
@@ -26,12 +27,19 @@ const handler = async (req, res) => {
             });
 
             const videos = await Video.findAll({
-                include: [{
-                    model: PostLikee
-
-                }, {
-                    model: User, attributes: ['name', 'username', 'email', 'picture']
-                }],
+                attributes: {
+                    include: [[sequelize.fn("COUNT", sequelize.col("PostLikees.id")), 'likeCount'],
+                    [sequelize.where(sequelize.col("PostLikees.reviewerId"), id), 'isLiked']]
+                },
+                include: [
+                    {
+                        model: PostLikee, attributes: ['isLiked', 'VideoId', 'reviewerId', 'id']
+                    },
+                    {
+                        model: User, attributes: ['name', 'username', 'picture']
+                    }],
+                group: ['Video.id', 'User.id', 'User.name', 'User.picture', 'User.username',
+                    'PostLikees.id', 'PostLikees.reviewerId', 'PostLikees.isLiked'],
                 where: FilterContent(search, category),
                 order: [["createdAt", sort]]
             });

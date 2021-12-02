@@ -13,6 +13,11 @@
     width: 100%;
 }
 
+.share-modal-video-wrapper {
+    height: 250px;
+    width: 100%;
+}
+
 .video {
     padding-top: 0% !important;
 }

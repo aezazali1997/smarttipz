@@ -17,7 +17,7 @@ const Videos = () => {
     const [loading, setLoading] = useState(true);
     const [catalogueCount, setCatalogueCount] = useState(0);
     const fetchMyVideos = async () => {
-        setLoading(true);
+
         try {
             const { data: { data: { videos } } } = await axiosInstance.getVideos();
             setVideos(videos);
@@ -38,6 +38,7 @@ const Videos = () => {
     }
 
     useEffect(() => {
+        setLoading(true);
         fetchMyVideos();
     }, [])
 
@@ -116,7 +117,16 @@ const Videos = () => {
         router.push(`/dashboard/videos/${id}`)
     }
 
-
+    const HandleLikePost = async (id) => {
+        try {
+            const { data: { data, message } } = await axiosInstance.likePost({ videoId: id });
+            console.log('success: ', message);
+            fetchMyVideos();
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log('Like Post Api failed: ', message);
+        }
+    }
 
     return (
         <div className="flex flex-col min-h-screen w-full p-5 space-y-1">
@@ -168,7 +178,7 @@ const Videos = () => {
 
                         <div className="flex flex-col w-full sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-col-3 gap-3">
                             {
-                                filterdVideos.map(({ title, url, thumbnail, mediaType, id, UserId, description, User, like, comment, share, catalogue, videoCost, videoType }, index) => (
+                                filterdVideos.map(({ title, url, thumbnail, mediaType, id, UserId, description, User, like, comment, share, catalogue, videoCost, videoType, isLiked, likeCount }, index) => (
                                     <div key={index}>
                                         <NewsfeedCard
                                             id={id}
@@ -179,6 +189,8 @@ const Videos = () => {
                                             User={User}
                                             views={200}
                                             rating={2.5}
+                                            isLiked={isLiked}
+                                            likeCount={likeCount}
                                             videoCost={videoCost}
                                             videoType={videoType}
                                             mediaType={mediaType}
@@ -187,6 +199,7 @@ const Videos = () => {
                                             isPost={true}
                                             width={'max-w-xs'}
                                             thumbnail={thumbnail}
+                                            HandleLikePost={HandleLikePost}
                                             _HandleGotoVideoDetails={_HandleGotoVideoDetails}
                                             _HandleCatalogue={_HandleCatalogue}
                                             _HandleDeleteVideo={_HandleDeleteVideo}

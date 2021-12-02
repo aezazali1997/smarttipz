@@ -91,9 +91,7 @@ const handler = async (req, res) => {
                     data: {}
                 });
             }
-            await PostLike.update({
-                isLiked: false
-            }, { where: { reviewerId: id } });
+            await PostLike.destroy({ where: { reviewerId: id } });
             res.status(200).json({
                 error: false,
                 message: 'Post Unliked',

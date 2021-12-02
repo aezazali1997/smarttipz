@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
-import { Button, Rating, Modal, InputField } from 'src/components';
+import { Button, Rating, Modal, InputField, VideoPlayer } from 'src/components';
 
-const TipModal = ({ _HandleChangeCaption, text, ToggleShareModal, loading, modalTitle, _HandleSubmit }) => {
+const TipModal = ({ _HandleChangeCaption, text, ToggleShareModal, loading, modalTitle, _HandleSubmit, shareData: data }) => {
     return (
         <>
             <Modal
@@ -10,20 +10,17 @@ const TipModal = ({ _HandleChangeCaption, text, ToggleShareModal, loading, modal
                 title={modalTitle}
                 body={(
                     <>
-                        <div className="w-full justify-center flex">
-                            <div className="flex w-full whitespace-preborder bg-gray-50 rounded-md h-12 mb-4">
-                                <span className="bg-gray-50 text-md border border-r-0 rounded-md rounded-r-none font-bold border-gray-200 px-3 py-3  h-12">
-                                    $
-                                </span>
-                                <InputField
-                                    name={"tip"}
-                                    type={"number"}
-                                    // value={tip}
-                                    min={0}
-                                    // onChange={_HandleChangeTip}
-                                    inputClass={`border bg-gray-50 text-sm border-gray-200  rounded-l-none focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
-                                    label={'Tip'}
+                        <div className="w-full flex flex-col h-96 overflow-y-auto space-y-4">
+                            <div className="flex items-center border-b border-gray-500 py-2 mb-4">
+                                <input
+                                    className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                                    type="text"
+                                    placeholder="Write caption ..."
+                                    aria-label="Full name"
                                 />
+                            </div>
+                            <div className="share-modal-video-wrapper">
+                                <VideoPlayer poster={data?.thumbnail} src={data?.url} />
                             </div>
                         </div>
                     </>

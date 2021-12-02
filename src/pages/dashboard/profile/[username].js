@@ -153,6 +153,20 @@ const UserProfile = ({ profile }) => {
         }
     }
 
+
+    const HandleLikePost = async (id) => {
+        try {
+            const { data: { data, message } } = await axiosInstance.likePost({ videoId: id });
+            console.log('success: ', message);
+            const { username } = profile;
+            fetchCatalogues(username);
+            fetchMyVideos(username);
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log('Like Post Api failed: ', message);
+        }
+    }
+
     const { id, name, about, rating, views, picture, phone, showPhone, email, accountType,
         username, showName, showUsername, accessible } = personalInfo;
     const { website } = businessCard;
@@ -292,7 +306,7 @@ const UserProfile = ({ profile }) => {
                                 <div className="w-auto mt-6 relative">
                                     <Carousel>
                                         {
-                                            catalogues.map(({ id, UserId, title, url, mediaType, thumbnail, catalogue, description, User }, index) => (
+                                            catalogues.map(({ id, UserId, title, url, mediaType, thumbnail, catalogue, description, User, videoType, videoCost, isLiked, likeCount }, index) => (
                                                 <div key={index} className="my-2 px-5">
                                                     <NewsfeedCard
                                                         id={id}
@@ -303,7 +317,12 @@ const UserProfile = ({ profile }) => {
                                                         User={User}
                                                         views={200}
                                                         rating={2.5}
+                                                        videoType={videoType}
+                                                        videoCost={videoCost}
+                                                        isLiked={isLiked}
+                                                        likeCount={likeCount}
                                                         mediaType={mediaType}
+                                                        HandleLikePost={HandleLikePost}
                                                         description={description}
                                                         title={title}
                                                         width={'max-w-xs'}
@@ -357,7 +376,8 @@ const UserProfile = ({ profile }) => {
                             <div className="w-full mt-6 justify-center lg:justify-start" >
                                 <Carousel>
                                     {
-                                        myVideos.map(({ title, url, mediaType, thumbnail, like, comment, share, description, id, UserId, catalogue, User }, index) => (
+                                        myVideos.map(({ title, url, mediaType, thumbnail,
+                                            description, id, UserId, catalogue, User, isLiked, likeCount, videoType, videoCost }, index) => (
                                             <div key={index} className="my-2 px-5">
                                                 <NewsfeedCard
                                                     id={id}
@@ -368,9 +388,14 @@ const UserProfile = ({ profile }) => {
                                                     User={User}
                                                     views={200}
                                                     rating={2.5}
+                                                    videoType={videoType}
+                                                    videoCost={videoCost}
+                                                    isLiked={isLiked}
+                                                    likeCount={likeCount}
                                                     mediaType={mediaType}
                                                     description={description}
                                                     title={title}
+                                                    HandleLikePost={HandleLikePost}
                                                     isPost={true}
                                                     width={'max-w-xs'}
                                                     thumbnail={thumbnail}

@@ -514,6 +514,18 @@ const UseFetchProfile = (profile) => {
         router.push(`/dashboard/videos/${id}`)
     }
 
+    const HandleLikePost = async (id) => {
+        try {
+            const { data: { data, message } } = await axiosInstance.likePost({ videoId: id });
+            console.log('success: ', message);
+            fetchCatalogues();
+            fetchMyVideos();
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log('Like Post Api failed: ', message);
+        }
+    }
+
     return {
         followed, followers, showModal, businessCard, showBusinessCard, formik, imageUrl, loading, testimonial, uploading,
         loadingTestimonial, _AddTestimonial, handleShowBusinessCard, _EditTestimonial, _DeleteImg, handleFileChange,
@@ -521,7 +533,7 @@ const UseFetchProfile = (profile) => {
         hasMore, _OnRemoveThumbnail, onChangeThumbnail, MediaType, thumbnailRef, modalTitle, _HandleCatalogue,
         agree, thumbnailUrl, urls, setUrls, setMediaType, ChangeAgreement, _OnThumbnailClick, uploadingThumbnail,
         _CloseUploadModal, _OpenUploadModal, catalogues, setCatalogues, fetchingCatalogues, myVideos, fetchingMyVideos,
-        _HandleDeleteVideo, _HandleGotoVideoDetails, _HandleGotoUserProfile
+        _HandleDeleteVideo, _HandleGotoVideoDetails, _HandleGotoUserProfile, HandleLikePost
     }
 }
 export default UseFetchProfile;

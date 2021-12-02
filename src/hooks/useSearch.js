@@ -204,12 +204,24 @@ const UseSearch = () => {
         setCategory(value);
     }
 
+    const HandleLikePost = async (id) => {
+        try {
+            const { data: { data, message } } = await axiosInstance.likePost({ videoId: id });
+            console.log('success: ', message);
+            GetPosts();
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log('Like Post Api failed: ', message);
+        }
+    }
+
     return {
         _HandleAccountTypeFilter, _HandleActiveGenericFilter, _HandleChangeTip, _HandleChangeRating,
         ToggleTipModal, ToggleRatingModal, _HandleGotoVideoDetails, _HandleGotoUserProfile, _HandleDeleteVideo,
         _HandleCatalogue, GetUserProfiles, GetPosts, filterSearch, posts, userProfiles, showRatingModal,
         showTipModal, activeGenericFilter, userProfileLoading, postsLoading, sort, setSort, account,
-        setAccountType, videoCategory, videoType, rating, setRating, category, _ChangeCategoryFilter
+        setAccountType, videoCategory, videoType, rating, setRating, category, _ChangeCategoryFilter,
+        HandleLikePost
     }
 }
 

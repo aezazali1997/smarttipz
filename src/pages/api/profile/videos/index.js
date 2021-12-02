@@ -1,3 +1,5 @@
+import PostLikee from 'models/Like';
+
 const User = require('models/User');
 const Video = require('models/Video');
 const jwt = require('jsonwebtoken');
@@ -25,7 +27,14 @@ const handler = async (req, res) => {
             const { id } = user;
 
             const videos = await Video.findAll({
+                attributes: {
+                    include: [[sequelize.fn("COUNT", sequelize.col("PostLikees.id")), 'likeCount'],
+                    [sequelize.where(sequelize.col("PostLikees.reviewerId"), id), 'isLiked']]
+                },
                 include: [
+                    {
+                        model: PostLikee, attributes: ['isLiked', 'VideoId', 'reviewerId', 'id']
+                    },
                     {
                         model: User, attributes: ['name', 'username', 'picture']
                     }],
@@ -36,6 +45,8 @@ const handler = async (req, res) => {
                         [sequelize.Op.not]: 'catalogue'
                     },
                 },
+                group: ['Video.id', 'User.id', 'User.name', 'User.picture', 'User.username',
+                    'PostLikees.id', 'PostLikees.reviewerId', 'PostLikees.isLiked'],
                 order: [["createdAt", "DESC"]]
             });
 

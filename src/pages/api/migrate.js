@@ -1,3 +1,5 @@
+const Share = require('models/Share');
+
 const sequelize = require('models/db');
 
 const BusinessCard = require('models/BusinessCard');
@@ -17,6 +19,7 @@ const handler = async (req, res) => {
     // await Session.sync({ force: true });
     Video.sync({ alter: true });
     // Like.sync({ alter: true });
+    Share.sync({ force: true });
     // await Testimonial.sync({ force: true });
     // await Chat.sync({ force: true });
     res.status(200).send({ message: "Tables created Successfully" });

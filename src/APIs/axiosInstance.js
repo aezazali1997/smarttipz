@@ -152,8 +152,8 @@ class AxiosInstance {
         return await axios.get(USER_API_BASE_URL + `api/profile/filter-profile?search=${search}&&sort=${sort}`, this.getAuthHeader());
     }
 
-    async likePost(reviewerId) {
-        return await axios.post(USER_API_BASE_URL + "api/profile/videos/like", reviewerId, this.getAuthHeader());
+    async likePost(videoId) {
+        return await axios.post(USER_API_BASE_URL + "api/profile/videos/like", videoId, this.getAuthHeader());
     }
 
     async addToCatalogue(data) {

@@ -16,6 +16,8 @@ import {
 import { PostActionDropdown } from 'src/components/Dropdown';
 import Swal from 'sweetalert2';
 import { TipModal, VideoRatingModal } from 'src/components/Modals';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShareAlt, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 
 const VideoDetailScreen = () => {
     const router = useRouter();
@@ -158,6 +160,17 @@ const VideoDetailScreen = () => {
         console.log('value: ', value);
     };
 
+    const HandleLikePost = async (id) => {
+        try {
+            const { data: { data, message } } = await axiosInstance.likePost({ videoId: id });
+            console.log('success: ', message);
+            _GetVideoById();
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log('Like Post Api failed: ', message);
+        }
+    }
+
     const {
         title,
         url,
@@ -167,10 +180,13 @@ const VideoDetailScreen = () => {
         mediaType,
         UserId,
         description,
+        isLiked,
+        likeCount,
         User,
         like,
         comment,
         share,
+        id: videoId,
         catalogue
     } = video;
 
@@ -178,7 +194,7 @@ const VideoDetailScreen = () => {
         <div className="flex flex-col lg:flex-row min-h-screen py-5 px-3 cursor-auto bg-gray-100">
             <div className="w-full lg:w-8/12 flex flex-col">
                 <div className="flex w-full py-2 justify-between space-x-2">
-                    <div className="flex">
+                    <div className="flex space-x-2">
                         <img
                             src={User?.picture ||
                                 "https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"}
@@ -232,30 +248,20 @@ const VideoDetailScreen = () => {
                     <div className="flex flex-row justify-between space-x-3">
                         <div className="flex space-x-3">
                             <Button
-                                // onSubmit={_OpenUploadModal}
+                                onSubmit={() => HandleLikePost(videoId)}
                                 type="button"
                                 childrens={
                                     <>
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="11.825"
-                                            height="11.825"
-                                            viewBox="0 0 11.825 11.825">
-                                            <path
-                                                id="Icon_awesome-thumbs-up"
-                                                data-name="Icon awesome-thumbs-up"
-                                                d="M2.4,5.173H.554A.554.554,0,0,0,0,5.728v5.543a.554.554,0,0,0,.554.554H2.4a.554.554,0,0,0,.554-.554V5.728A.554.554,0,0,0,2.4,5.173ZM1.478,10.9a.554.554,0,1,1,.554-.554A.554.554,0,0,1,1.478,10.9Zm7.391-9.02c0,.98-.6,1.529-.769,2.184H10.45a1.38,1.38,0,0,1,1.375,1.342,1.672,1.672,0,0,1-.449,1.136l0,0a1.929,1.929,0,0,1-.215,1.835,1.826,1.826,0,0,1-.378,1.727,1.226,1.226,0,0,1-.142,1.031c-.471.677-1.64.687-2.628.687H7.945a6.63,6.63,0,0,1-2.761-.733,3.635,3.635,0,0,0-1.216-.374.277.277,0,0,1-.272-.277V5.5a.277.277,0,0,1,.082-.2C4.692,4.4,5.086,3.446,5.836,2.7a2.8,2.8,0,0,0,.586-1.36C6.525.908,6.74,0,7.206,0,7.76,0,8.869.185,8.869,1.881Z"
-                                                fill="#714de1"
-                                            />
-                                        </svg>
+                                        <FontAwesomeIcon icon={faThumbsUp} className={`w-4 h-4 ${isLiked == null ? 'text-gray-600' : 'text-purple-600'} group-hover:text-purple-600`} />
                                         <p
-                                            className={`cursor-pointer w-full text-center text-gray-600 group-hover:text-purple-600`}>
+                                            className={`cursor-pointer w-full text-xs text-center ${isLiked == null ? 'text-gray-600' : 'text-purple-600'} group-hover:text-purple-600`}>
                                             Like
                                         </p>
+
                                     </>
                                 }
                                 classNames={
-                                    'text-xs hover:shadow py-1 px-5 w-20 bg-white flex flex-col m-auto items-center rounded-md '
+                                    'text-xs hover:shadow py-1 px-5 group w-20 bg-white flex flex-col m-auto items-center rounded-md '
                                 }
                             />
                             <Button
@@ -263,31 +269,20 @@ const VideoDetailScreen = () => {
                                 type="button"
                                 childrens={
                                     <>
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="11.824"
-                                            height="11.513"
-                                            viewBox="0 0 11.824 13.513">
-                                            <path
-                                                id="Icon_awesome-share-alt"
-                                                data-name="Icon awesome-share-alt"
-                                                d="M9.29,8.446A2.523,2.523,0,0,0,7.712,9l-2.7-1.691a2.548,2.548,0,0,0,0-1.1l2.7-1.691a2.529,2.529,0,1,0-.9-1.432l-2.7,1.691a2.534,2.534,0,1,0,0,3.965l2.7,1.691A2.534,2.534,0,1,0,9.29,8.446Z"
-                                                fill="#714de1"
-                                            />
-                                        </svg>
-                                        <p className="text-xs  cursor-pointer w-full text-center text-gray-600 group-hover:text-purple-600">
+                                        <FontAwesomeIcon icon={faShareAlt} className="w-4 h-4 text-gray-600 group-hover:text-purple-600" />
+                                        <p className=" cursor-pointer text-xs w-full text-center text-gray-600 group-hover:text-purple-600">
                                             Share
                                         </p>
                                     </>
                                 }
                                 classNames={
-                                    'py-1 px-5 hover:shadow w-20 bg-white flex flex-col m-auto items-center rounded-md '
+                                    'py-1 px-5 hover:shadow w-20 bg-white group flex flex-col m-auto items-center rounded-md '
                                 }
                             />
                         </div>
                         <div className="flex divide-x divide-gray-500 items-center justify-center space-x-2">
                             <span>
-                                <p className="text-sm ">1K Likes</p>
+                                <p className="text-sm ">{likeCount} {likeCount > 1 ? 'Likes' : 'Like'}</p>
                             </span>
                             <span>
                                 <p className="text-sm ml-2">2.2K Shares</p>

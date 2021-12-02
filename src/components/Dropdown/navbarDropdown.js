@@ -50,7 +50,7 @@ const PostActionDropdown = ({ toggleDropdown, DropdownRef, logout, dropdown, set
 		<>
 			<a
 				className="text-blueGray-500 block"
-				href="#pablo"
+				href="#"
 				ref={btnDropdownRef}
 				onClick={(e) => {
 					e.preventDefault();
@@ -67,11 +67,11 @@ const PostActionDropdown = ({ toggleDropdown, DropdownRef, logout, dropdown, set
 			<div
 				ref={popoverDropdownRef}
 				className={
-					(dropdownPopoverShow ? "block " : "hidden ") +
-					"bg-white text-base mt-8 z-10 float-left list-none text-left rounded-lg shadow-lg min-w-48"
+					(dropdownPopoverShow ? "flex flex-col " : "hidden ") +
+					"bg-white text-base z-10 float-left list-none text-left rounded-lg shadow-lg min-w-48"
 				}
 			>
-				<div className='flex flex-col h-full sidebar-content '>
+				<div className='flex flex-col h-full sidebar-content space-y-1'>
 					{
 						Routes && Routes.map(({ path, name, icon, badge }, index) => (
 							<div key={index}>
@@ -109,7 +109,7 @@ const PostActionDropdown = ({ toggleDropdown, DropdownRef, logout, dropdown, set
 						</button>
 						{
 							dropdown &&
-							<div className="absolute flex flex-col space-y-2 bg-white p-2 w-52  rounded-lg shadow ease-in-out">
+							<div className=" flex flex-col space-y-2 bg-white p-2 w-52  rounded-lg ease-in-out">
 								{
 									DropdownRoutes && DropdownRoutes.map(({ path, name }, index) => (
 										<div key={index}>

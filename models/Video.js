@@ -2,6 +2,7 @@ const { DataTypes } = require("sequelize");
 // const Comment = require("./Comment");
 const sequelize = require("./db");
 const PostLike = require("./Like");
+const Share = require("./Share");
 
 const Video = sequelize.define("Video", {
   title: {
@@ -66,6 +67,9 @@ const Video = sequelize.define("Video", {
 
 Video.hasMany(PostLike);
 PostLike.belongsTo(Video);
+
+Video.hasMany(Share);
+Share.belongsTo(Video);
 
 // Video.hasMany(Comment);
 // Comment.belongsTo(Video);

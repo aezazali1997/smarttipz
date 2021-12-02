@@ -16,7 +16,7 @@ const NewsFeed = () => {
     _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType, _HandleGotoUserProfile, videoType,
     uploadingThumbnail, posts, HandleLikePost, HandleCheckLike, _HandleCatalogue, _HandleDeleteVideo,
     _HandleGotoVideoDetails, ToggleRatingModal, _HandleChangeRating, showRatingModal, ToggleTipModal,
-    _HandleChangeTip, showTipModal, _OpenShareModal, _CloseShareModal, showShareModal
+    _HandleChangeTip, showTipModal, _OpenShareModal, _CloseShareModal, showShareModal, shareData
   } = UseFetchNewsFeed();
 
   return (
@@ -46,7 +46,7 @@ const NewsFeed = () => {
         </div>
         <div className="space-y-4">
           {
-            posts && posts.map(({ id, description, title, url, UserId, thumbnail, PostLikees, catalogue, User, videoType, videoCost }, index) => (
+            posts && posts.map(({ id, description, title, url, UserId, thumbnail, PostLikees, catalogue, isLiked, likeCount, User, videoType, videoCost }, index) => (
               <div key={index}>
                 <NewsfeedCard
                   id={id}
@@ -61,12 +61,15 @@ const NewsFeed = () => {
                   postLikes={PostLikees}
                   description={description}
                   title={title}
+                  isLiked={isLiked}
+                  likeCount={likeCount}
                   videoCost={videoCost}
                   videoType={videoType}
                   width={'max-w-lg'}
                   thumbnail={thumbnail}
+                  HandleLikePost={HandleLikePost}
                   ToggleTipModal={ToggleTipModal}
-                  _OpenShareModal={_OpenShareModal}
+                  _OpenShareModal={() => _OpenShareModal(id, thumbnail, url)}
                   _HandleCatalogue={_HandleCatalogue}
                   ToggleRatingModal={ToggleRatingModal}
                   _HandleDeleteVideo={_HandleDeleteVideo}
@@ -133,6 +136,7 @@ const NewsFeed = () => {
             modalTitle={'Share Post'}
             _HandleSubmit={_CloseShareModal}
             ToggleShareModal={_CloseShareModal}
+            shareData={shareData}
 
           />
         )

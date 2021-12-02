@@ -20,9 +20,11 @@ const NewsfeedCard = ({
     views,
     width,
     User,
+    isLiked,
+    likeCount,
     videoCost,
     videoType,
-    // HandleLikePost,
+    HandleLikePost,
     ToggleTipModal,
     _OpenShareModal,
     _HandleCatalogue,
@@ -37,11 +39,11 @@ const NewsfeedCard = ({
                 className={`mx-auto ${width} shadow flex flex-col justify-center rounded-lg overflow-hidden
                 bg-white space-y-2`}>
                 <div className="flex w-full py-2 px-2 justify-between space-x-2">
-                    <div className="flex">
+                    <div className="flex space-x-2">
                         <img
                             src={User?.picture ||
                                 "https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"}
-                            className="rounded-full w-16 h-10 object-cover"
+                            className="rounded-full w-10 h-10 object-cover"
                             alt="avatar"></img>
                         <div className="flex flex-col w-full">
                             <p
@@ -170,13 +172,13 @@ const NewsfeedCard = ({
                     </div>
                     <div className="flex justify-evenly py-1 px-2 space-x-2 divide-x">
                         <div
-                            // onClick={() => HandleLikePost(id)}
+                            onClick={() => HandleLikePost(id, index)}
                             className="flex relative justify-center group items-center py-1 px-3 w-full  cursor-pointer">
                             <div className="flex flex-col items-center">
-                                <FontAwesomeIcon icon={faThumbsUp} className="w-6 h-6 text-gray-600 group-hover:text-purple-600" />
+                                <FontAwesomeIcon icon={faThumbsUp} className={`w-6 h-6 ${isLiked == null ? 'text-gray-600' : 'text-purple-600'} group-hover:text-purple-600`} />
                                 <p
-                                    className={`cursor-pointer w-full text-xs text-center text-gray-600 group-hover:text-purple-600`}>
-                                    15K
+                                    className={`cursor-pointer w-full text-xs text-center ${isLiked == null ? 'text-gray-600' : 'text-purple-600'} group-hover:text-purple-600`}>
+                                    {likeCount}
                                 </p>
                             </div>
 
