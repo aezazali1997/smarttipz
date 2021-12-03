@@ -3,7 +3,7 @@ import { faCommentAlt, faShareAlt, faThumbsUp } from '@fortawesome/free-solid-sv
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import ReactTooltip from 'react-tooltip';
-import { Rating, VideoPlayer } from '..';
+import { CommentSection, Rating, VideoPlayer } from '..';
 import { PostActionDropdown } from '../Dropdown';
 
 const NewsfeedCard = ({
@@ -25,6 +25,7 @@ const NewsfeedCard = ({
     videoCost,
     videoType,
     HandleLikePost,
+    HandleFavouritePost,
     ToggleTipModal,
     _OpenShareModal,
     _HandleCatalogue,
@@ -55,14 +56,15 @@ const NewsfeedCard = ({
                         </div>
                     </div>
                     <div className="flex space-x-2">
-
-                        <svg
-                            className="w-6 h-6 text-gray-500 hover:text-purple-600 cursor-pointer"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
+                        <span onClick={() => HandleFavouritePost(id)}>
+                            <svg
+                                className="w-6 h-6 text-gray-500 hover:text-purple-600 cursor-pointer"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                        </span>
                         <div className="flex items-start justify-start">
                             <PostActionDropdown
                                 _HandleCatalogue={() => _HandleCatalogue(id, catalogue)}
@@ -93,7 +95,7 @@ const NewsfeedCard = ({
                         <Rating value={rating} isHalf={true} edit={false} />
                         &nbsp; <p className="text-xs text-gray-500"> Rating</p>
                     </span>
-                    <span className="flex  items-center">
+                    <span className="flex items-center">
                         <svg
                             className="w-4 h-4 text"
                             fill="currentColor"
@@ -186,15 +188,13 @@ const NewsfeedCard = ({
                         <div className="flex space-x-2 justify-center relative group py-1 px-3 w-full  cursor-pointer">
                             <div className="flex flex-col items-center">
                                 <FontAwesomeIcon icon={faCommentAlt} className="w-6 h-6 text-gray-600 group-hover:text-purple-600" />
-
                                 <p className="cursor-pointer w-full text-xs text-center text-gray-600 group-hover:text-purple-600">
                                     2
                                 </p>
                             </div>
-
                         </div>
-                        <div className="flex relative group justify-center items-center py-1 px-3 w-full cursor-pointer">
-                            <div className="flex flex-col items-center" onClick={_OpenShareModal}>
+                        <div onClick={() => _OpenShareModal(id, thumbnail, url, User?.picture, User?.name, title)} className="flex relative group justify-center items-center py-1 px-3 w-full cursor-pointer">
+                            <div className="flex flex-col items-center" >
                                 <FontAwesomeIcon icon={faShareAlt} className="w-6 h-6 text-gray-600 group-hover:text-purple-600" />
                                 <p className=" cursor-pointer text-xs w-full text-center text-gray-600 group-hover:text-purple-600">
                                     10
@@ -203,6 +203,7 @@ const NewsfeedCard = ({
 
                         </div>
                     </div>
+                    <CommentSection />
                 </div>
             </div>
         </>

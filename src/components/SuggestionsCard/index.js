@@ -31,11 +31,11 @@ const SuggestionCard = ({
                 className={`${width} shadow flex flex-col justify-center rounded-lg overflow-hidden
                 bg-white space-y-1`}>
                 <div className="flex w-full py-1 px-2 justify-between space-x-2">
-                    <div className="flex">
+                    <div className="flex space-x-2">
                         <img
                             src={User?.picture ||
                                 "https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"}
-                            className="rounded-full w-16 h-10 object-cover"
+                            className="rounded-full w-10 h-10 object-cover"
                             alt="avatar"></img>
                         <div className="flex flex-col w-full">
                             <p

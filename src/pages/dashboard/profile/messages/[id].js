@@ -161,7 +161,7 @@ const UserMessage = () => {
                         )
                 }
             </main>
-            <footer>
+            <footer className="px-2">
                 <EmojiInput
                     message={message}
                     setMessage={setMessage}

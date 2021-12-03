@@ -1,3 +1,5 @@
+import Favourite from 'models/Favourite';
+
 const Share = require('models/Share');
 
 const sequelize = require('models/db');
@@ -18,8 +20,9 @@ const handler = async (req, res) => {
     // await BusinessCard.sync({ force: true });
     // await Session.sync({ force: true });
     Video.sync({ alter: true });
+    Favourite.sync({ force: true });
     // Like.sync({ alter: true });
-    Share.sync({ force: true });
+    // Share.sync({ alter: true });
     // await Testimonial.sync({ force: true });
     // await Chat.sync({ force: true });
     res.status(200).send({ message: "Tables created Successfully" });

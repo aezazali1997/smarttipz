@@ -198,7 +198,7 @@ const VideoDetailScreen = () => {
                         <img
                             src={User?.picture ||
                                 "https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"}
-                            className="rounded-full w-16 h-10 object-cover"
+                            className="rounded-full w-10 h-10 object-cover"
                             alt="avatar"></img>
                         <div className="flex flex-col w-full">
                             <p

@@ -4,12 +4,14 @@ import React from 'react'
 import { isEmpty } from 'lodash';
 // import Image from 'next/image';
 import { getInputClasses } from 'helpers';
-import { Modal, Button, InputField, Dropzone } from 'src/components';
+import { Modal, Button, InputField, Dropzone, EmojiInput, Switch } from 'src/components';
+import ReactTooltip from 'react-tooltip';
 
 
 const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, ChangeAgreement,
 	agree, setUrls, _CloseUploadModal, thumbnailRef, onChangeThumbnail, _OnRemoveThumbnail,
-	MediaType, setMediaType, accept, title, heading, uploadingThumbnail
+	MediaType, setMediaType, accept, title, heading, uploadingThumbnail, setShareCaption, shareCaption,
+	_HandleChangePostOnNewsfeed, checkPostOnFeed
 }) => {
 
 	let Type = MediaType?.type.split('/')[0];
@@ -81,7 +83,18 @@ const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, Chan
 								</div>
 							}
 							<div className="flex flex-col w-full">
-								<InputField
+								<div className={`w-full mb-5 space-y-1`}>
+									<EmojiInput
+										message={shareCaption}
+										setMessage={setShareCaption}
+									/>
+									{
+										shareCaption === '' && (
+											<div className={`text-red-700 text-sm`} >This is a required field</div>
+										)}
+
+								</div>
+								{/* <InputField
 									name={"title"}
 									type={"text"}
 									value={formik.values.title}
@@ -95,7 +108,7 @@ const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, Chan
 								/>
 								{formik.touched.title && formik.errors.title &&
 									<div className="text-red-700 text-sm mb-4" >{formik.errors.title}</div>
-								}
+								} */}
 								<div className={`floating-input relative 
 												${formik.touched.description && formik.errors.description ? 'mb-1' : 'mb-4'}`}>
 									<textarea
@@ -152,7 +165,7 @@ const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, Chan
 											<div className="text-red-700 text-sm mb-4" >{formik.errors.category}</div>
 										}
 										<div className={`floating-input relative
-                                                ${formik.touched.videoType && formik.errors.videoType ? 'mb-1' : 'mb-4'}`}>
+                                                ${formik.touched.videoCost && formik.errors.videoCost ? 'mb-1' : 'mb-4'}`}>
 											<select
 												type={'select'}
 												id={'videoCost'}
@@ -261,6 +274,19 @@ const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, Chan
 									<div className="text-red-700 text-sm mb-4" >{formik.errors.language}</div>
 								}
 
+								<div className="flex justify-between mb-4" >
+									<p className="text-sm">Post on Newsfeed</p>
+									<div data-tip data-for='post-visibility' className="flex flex-col items-center justify-center divide-y-2 space-y-2">
+										<Switch name="toggleTestimonial"
+											onChange={_HandleChangePostOnNewsfeed}
+											checked={checkPostOnFeed}
+
+										/>
+										<ReactTooltip className="max-w-md break-words" id={`post-visibility`} place="top" effect="solid" border={false} borderColor="white" clickable={false}>
+											{checkPostOnFeed ? 'Click to hide from newsfeed' : 'Click to show on newsfeed'}
+										</ReactTooltip>
+									</div>
+								</div>
 								<div className="flex mb-4" >
 									<label
 										className="flex items-center text-sm cursor-pointer text  font-semibold">
@@ -279,20 +305,20 @@ const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, Chan
 						<button
 							onClick={_CloseUploadModal}
 							type="button"
-							className="mt-3 w-full inline-flex justify-center hover:underline  px-4 py-2 text-base font-medium text-red-600 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+							className="mt-3 w-full inline-flex justify-center hover:underline  px-4 py-2 text-base font-medium text sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
 						>
 							Cancel
 						</button>
 						<Button
 							type="submit"
 							disable={
-								MediaType === 'video' ? !agree || isEmpty(thumbnailUrl) || isEmpty(urls)
+								MediaType === 'video' ? !agree || isEmpty(thumbnailUrl) || isEmpty(urls) || isEmpty(shareCaption)
 									:
 									!agree || isEmpty(urls)
 							}
 							className={`w-full inline-flex justify-center rounded-md border-none px-4 py-2 text-base font-medium 
                 				${formik.isSubmitting ? 'btn-disable pointer-events-none' :
-									agree && !isEmpty(urls) ? 'btn' : 'btn-disable pointer-events-none'}
+									agree && !isEmpty(urls) && !isEmpty(shareCaption) ? 'btn' : 'btn-disable pointer-events-none'}
 								text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm`}
 							childrens={formik.isSubmitting ? 'Uploading' : 'Upload'}
 							loading={formik.isSubmitting}

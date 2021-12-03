@@ -1,16 +1,12 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("./db");
 
-const Share = sequelize.define("Share", {
+const Favourite = sequelize.define("Favourite", {
 
     reviewerId: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    caption: {
-        type: DataTypes.STRING,
-    }
-
 });
 
-module.exports = Share;
+module.exports = Favourite;

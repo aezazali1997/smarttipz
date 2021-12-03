@@ -5,7 +5,6 @@ const Joi = require('joi');
 
 const handler = async (req, res) => {
   if (req.method === 'POST') {
-
     const { body } = req;
 
     const validateUploadVideo = (data) => {
@@ -21,6 +20,7 @@ const handler = async (req, res) => {
         videoType: Joi.string().required(),
         videoCost: Joi.string().required(),
         agree: Joi.required(),
+        isShowOnNewsfeed: Joi.optional()
       });
       return schema.validate(data);
     };
@@ -47,10 +47,32 @@ const handler = async (req, res) => {
 
       // const video = await Video.findOne({ where: { url: req.body.link } });
       // if (video) throw new Error('Video already exists');
-      const { url, mediaType, agree, title, language, description, thumbnail, category, videoType, videoCost } = body;
+      const {
+        url,
+        mediaType,
+        agree,
+        title,
+        isShowOnNewsfeed,
+        language,
+        description,
+        thumbnail,
+        category,
+        videoType,
+        videoCost
+      } = body;
 
       const newVideo = await Video.create({
-        title, description, agree, mediaType, url, language, thumbnail, category, videoType, videoCost
+        title,
+        description,
+        agree,
+        mediaType,
+        url,
+        language,
+        thumbnail,
+        category,
+        videoType,
+        videoCost,
+        isShowOnNewsfeed
       });
       await newVideo.setUser(user);
       res.status(201).json({ error: false, message: 'Post submitted successfully', data: [] });

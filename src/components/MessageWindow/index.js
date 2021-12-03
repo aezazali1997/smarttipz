@@ -132,6 +132,7 @@ const MessageWindow = ({ message, setMessage, selected, goBackToUserList }) => {
                         message={message}
                         setMessage={setMessage}
                         handleOnEnter={handleOnEnter}
+                        placeholder={'Type your message...'}
                     />
                 </div>
             </header>

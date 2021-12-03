@@ -14,9 +14,11 @@ const NewsFeed = () => {
   const { formik, _DeleteImg, ChangeAgreement, agree, urls, setUrls, showModal,
     _OpenUploadModal, _CloseUploadModal, thumbnailRef, _OnRemoveThumbnail, onChangeThumbnail,
     _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType, _HandleGotoUserProfile, videoType,
-    uploadingThumbnail, posts, HandleLikePost, HandleCheckLike, _HandleCatalogue, _HandleDeleteVideo,
+    uploadingThumbnail, posts, HandleLikePost, _HandleCatalogue, _HandleDeleteVideo,
     _HandleGotoVideoDetails, ToggleRatingModal, _HandleChangeRating, showRatingModal, ToggleTipModal,
-    _HandleChangeTip, showTipModal, _OpenShareModal, _CloseShareModal, showShareModal, shareData
+    _HandleChangeTip, showTipModal, _OpenShareModal, _CloseShareModal, showShareModal, shareData,
+    _HandleSharePost, shareCaption, setShareCaption, isSharing, HandleFavouritePost,
+    _HandleChangePostOnNewsfeed, postOnFeed
   } = UseFetchNewsFeed();
 
   return (
@@ -46,38 +48,41 @@ const NewsFeed = () => {
         </div>
         <div className="space-y-4">
           {
-            posts && posts.map(({ id, description, title, url, UserId, thumbnail, PostLikees, catalogue, isLiked, likeCount, User, videoType, videoCost }, index) => (
-              <div key={index}>
-                <NewsfeedCard
-                  id={id}
-                  UserId={UserId}
-                  index={index}
-                  catalogue={catalogue}
-                  isPost={true}
-                  url={url}
-                  views={200}
-                  User={User}
-                  rating={2.5}
-                  postLikes={PostLikees}
-                  description={description}
-                  title={title}
-                  isLiked={isLiked}
-                  likeCount={likeCount}
-                  videoCost={videoCost}
-                  videoType={videoType}
-                  width={'max-w-lg'}
-                  thumbnail={thumbnail}
-                  HandleLikePost={HandleLikePost}
-                  ToggleTipModal={ToggleTipModal}
-                  _OpenShareModal={() => _OpenShareModal(id, thumbnail, url)}
-                  _HandleCatalogue={_HandleCatalogue}
-                  ToggleRatingModal={ToggleRatingModal}
-                  _HandleDeleteVideo={_HandleDeleteVideo}
-                  _HandleGotoUserProfile={_HandleGotoUserProfile}
-                  _HandleGotoVideoDetails={_HandleGotoVideoDetails}
-                />
+            posts && posts.map(({ id, description, title, url, UserId, thumbnail, PostLikees, catalogue, isLiked, likeCount, User, videoType, videoCost, isShowOnNewsfeed }, index) => (
+              isShowOnNewsfeed && (
+                <div key={index}>
+                  <NewsfeedCard
+                    id={id}
+                    UserId={UserId}
+                    index={index}
+                    catalogue={catalogue}
+                    isPost={true}
+                    url={url}
+                    views={200}
+                    User={User}
+                    rating={2.5}
+                    postLikes={PostLikees}
+                    description={description}
+                    title={title}
+                    isLiked={isLiked}
+                    likeCount={likeCount}
+                    videoCost={videoCost}
+                    videoType={videoType}
+                    width={'max-w-lg'}
+                    thumbnail={thumbnail}
+                    HandleFavouritePost={HandleFavouritePost}
+                    HandleLikePost={HandleLikePost}
+                    ToggleTipModal={ToggleTipModal}
+                    _OpenShareModal={_OpenShareModal}
+                    _HandleCatalogue={_HandleCatalogue}
+                    ToggleRatingModal={ToggleRatingModal}
+                    _HandleDeleteVideo={_HandleDeleteVideo}
+                    _HandleGotoUserProfile={_HandleGotoUserProfile}
+                    _HandleGotoVideoDetails={_HandleGotoVideoDetails}
+                  />
 
-              </div>
+                </div>
+              )
             ))
           }
         </div>
@@ -98,12 +103,16 @@ const NewsFeed = () => {
             setUrls={setUrls}
             _DeleteImg={_DeleteImg}
             setMediaType={setMediaType}
+            _HandleChangePostOnNewsfeed={_HandleChangePostOnNewsfeed}
+            checkPostOnFeed={postOnFeed}
             ChangeAgreement={ChangeAgreement}
             onChangeThumbnail={onChangeThumbnail}
             _OnThumbnailClick={_OnThumbnailClick}
             _CloseUploadModal={_CloseUploadModal}
             _OnRemoveThumbnail={_OnRemoveThumbnail}
             uploadingThumbnail={uploadingThumbnail}
+            setShareCaption={setShareCaption}
+            shareCaption={shareCaption}
 
           />
         )
@@ -134,10 +143,12 @@ const NewsFeed = () => {
         showShareModal && (
           <ShareModal
             modalTitle={'Share Post'}
-            _HandleSubmit={_CloseShareModal}
             ToggleShareModal={_CloseShareModal}
+            setShareCaption={setShareCaption}
+            shareCaption={shareCaption}
+            _HandleSubmit={_HandleSharePost}
+            loading={isSharing}
             shareData={shareData}
-
           />
         )
       }

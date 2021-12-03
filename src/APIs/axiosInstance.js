@@ -156,6 +156,14 @@ class AxiosInstance {
         return await axios.post(USER_API_BASE_URL + "api/profile/videos/like", videoId, this.getAuthHeader());
     }
 
+    async favouritePost(videoId) {
+        return await axios.post(USER_API_BASE_URL + "api/profile/videos/favourite", videoId, this.getAuthHeader());
+    }
+
+    async sharePost(videoId) {
+        return await axios.post(USER_API_BASE_URL + "api/profile/videos/share", videoId, this.getAuthHeader());
+    }
+
     async addToCatalogue(data) {
         return await axios.post(USER_API_BASE_URL + "api/profile/catalogue", data, this.getAuthHeader());
     }

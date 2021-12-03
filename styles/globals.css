@@ -12,6 +12,7 @@
 @import './videoplayer.css';
 @import './Carousel.css';
 @import './cuponSaleIcon.css';
+@import './overflowScrollbars.css';
 @import 'react-phone-input-2/lib/style.css';
 @import '../node_modules/video-react/dist/video-react.css';
 @import "react-languages-select/css/react-languages-select.css";
@@ -107,4 +108,27 @@
   /* padding-left: 5px;
   padding-top: 2px; */
   color: rgba(156, 163, 175, 1);
+}
+
+.react-input-emoji--container {
+  color: #4b4b4b;
+  text-rendering: optimizeLegibility;
+  background-color: #fff;
+  border: 1px solid #fff;
+  border-radius: 21px;
+  margin: 5px 0px !important;
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  font-size: 15px;
+  font-family: sans-serif;
+  font-weight: 400;
+  line-height: 20px;
+  min-height: 20px;
+  min-width: 0;
+  outline: none;
+  width: inherit;
+  will-change: width;
+  vertical-align: baseline;
+  border: 1px solid #eaeaea;
+  margin-right: 0;
 }

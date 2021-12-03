@@ -12,12 +12,11 @@ const UseFetchNewsFeed = () => {
     const router = useRouter();
 
     const initials = {
-        title: '',
+        // title: '',
         description: '',
         category: '',
         language: '',
-        mediaType: '',
-        videoType: ''
+        videoCost: '',
     }
 
     let { uploadToS3 } = useS3Upload();
@@ -37,7 +36,10 @@ const UseFetchNewsFeed = () => {
     const [showTipModal, setShowTipModal] = useState(false);
     const [videoType, setVideoType] = useState('');
     const [showShareModal, setShowShareModal] = useState(false);
-    const [shareData, setShareDate] = useState({});
+    const [shareData, setShareData] = useState({});
+    const [shareCaption, setShareCaption] = useState('');
+    const [isSharing, setIsSharing] = useState(false);
+    const [postOnFeed, setPostOnFeed] = useState(true);
 
     let thumbnailRef = useRef();
 
@@ -102,21 +104,28 @@ const UseFetchNewsFeed = () => {
         setVideoType('');
         setThumbnailUrl('');
         setAgree(false);
+        setShareCaption('');
+        setPostOnFeed(true);
         setSelectedLanguage('');
         setShowModal(false);
     }
 
-    let _OpenShareModal = (id, thumbnail, url) => {
-        setShareDate({
+    console.log('checked: ', postOnFeed)
+    let _OpenShareModal = (id, thumbnail, url, picture, name, title) => {
+        setShareData({
             videoId: id,
             thumbnail,
-            url
+            url,
+            picture,
+            name,
+            title
         })
         setShowShareModal(true);
     }
 
     let _CloseShareModal = () => {
         setShowShareModal(false);
+        setShareCaption('');
     }
 
     const enableLoading = () => {
@@ -125,6 +134,14 @@ const UseFetchNewsFeed = () => {
 
     const disableLoading = () => {
         setLoading(false);
+    };
+
+    const enableShareLoading = () => {
+        setIsSharing(true);
+    };
+
+    const disableShareLoading = () => {
+        setIsSharing(false);
     };
 
 
@@ -147,11 +164,13 @@ const UseFetchNewsFeed = () => {
 
     const _OnSubmit = async (values, setSubmitting, resetForm) => {
         setSubmitting(true);
+        values.title = shareCaption;
         values.url = urls;
         values.agree = agree;
         values.mediaType = 'video';
         values.thumbnail = thumbnailUrl;
         values.videoType = videoType;
+        values.isShowOnNewsfeed = postOnFeed;
 
         try {
             const { data: { message } } = await axiosInstance.uploadNewsFeed(values)
@@ -194,6 +213,18 @@ const UseFetchNewsFeed = () => {
     const HandleLikePost = async (id) => {
         try {
             const { data: { data, message } } = await axiosInstance.likePost({ videoId: id });
+            console.log('success: ', message);
+            GetPosts();
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log('Like Post Api failed: ', message);
+        }
+    }
+
+    const HandleFavouritePost = async (id) => {
+        console.log('id: ', id)
+        try {
+            const { data: { data, message } } = await axiosInstance.favouritePost({ videoId: id });
             console.log('success: ', message);
             GetPosts();
         }
@@ -311,6 +342,38 @@ const UseFetchNewsFeed = () => {
         console.log('value: ', value);
     }
 
+    const _HandleSharePost = async () => {
+        console.log(shareCaption, shareData);
+        enableShareLoading();
+        try {
+            const { data: { data, message } } = await axiosInstance.sharePost({ caption: shareCaption, videoId: shareData?.videoId });
+            console.log('success: ', message);
+            GetPosts();
+            Swal.fire({
+                text: message,
+                icon: 'success',
+                timer: 3000,
+                showConfirmButton: false,
+                showCancelButton: false,
+            })
+            disableShareLoading();
+            _CloseShareModal();
+        }
+        catch ({ response: { data: { message } } }) {
+
+            console.log('Share Post Api failed: ', message);
+        }
+    }
+
+    const _HandleChangeCaption = ({ target }) => {
+        const { value } = target;
+        console.log(value);
+        setShareCaption(value);
+    }
+
+    const _HandleChangePostOnNewsfeed = () => {
+        setPostOnFeed(!postOnFeed);
+    }
 
     return {
         formik, _HandleLanguageChange, selectedLanguage, _DeleteImg, ChangeAgreement, agree, urls,
@@ -318,7 +381,9 @@ const UseFetchNewsFeed = () => {
         onChangeThumbnail, _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType, _HandleGotoUserProfile,
         uploadingThumbnail, posts, HandleLikePost, HandleCheckLike, _HandleCatalogue, _HandleDeleteVideo,
         _HandleGotoVideoDetails, ToggleRatingModal, _HandleChangeRating, showRatingModal, ToggleTipModal,
-        _HandleChangeTip, showTipModal, videoType, _OpenShareModal, _CloseShareModal, showShareModal, shareData
+        _HandleChangeTip, showTipModal, videoType, _OpenShareModal, _CloseShareModal, showShareModal, shareData,
+        _HandleSharePost, _HandleChangeCaption, shareCaption, setShareCaption, isSharing, HandleFavouritePost,
+        _HandleChangePostOnNewsfeed, postOnFeed
     }
 }
 

@@ -1,8 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
-import { Button, Rating, Modal, InputField, VideoPlayer } from 'src/components';
+import { Button, Rating, Modal, InputField, VideoPlayer, ReadLessReadMore, EmojiInput } from 'src/components';
 
-const TipModal = ({ _HandleChangeCaption, text, ToggleShareModal, loading, modalTitle, _HandleSubmit, shareData: data }) => {
+const ShareModal = ({ setShareCaption, ToggleShareModal, loading,
+    modalTitle, _HandleSubmit, shareData: data, shareCaption }) => {
+
+    console.log(data);
     return (
         <>
             <Modal
@@ -10,30 +13,73 @@ const TipModal = ({ _HandleChangeCaption, text, ToggleShareModal, loading, modal
                 title={modalTitle}
                 body={(
                     <>
-                        <div className="w-full flex flex-col h-96 overflow-y-auto space-y-4">
-                            <div className="flex items-center border-b border-gray-500 py-2 mb-4">
-                                <input
+                        <div className="w-full flex flex-col h-96">
+                            <div className="flex items-center py-2 mb-4">
+                                <EmojiInput
+                                    message={shareCaption}
+                                    setMessage={setShareCaption}
+                                    placeholder={'Write your thoughts here ...'}
+                                />
+                                {/* <input
                                     className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                                     type="text"
-                                    placeholder="Write caption ..."
+                                    value={shareCaption}
+                                    onChange={_HandleChangeCaption}
+                                    placeholder={`Write your thoughts here ...`}
                                     aria-label="Full name"
-                                />
+                                /> */}
                             </div>
-                            <div className="share-modal-video-wrapper">
-                                <VideoPlayer poster={data?.thumbnail} src={data?.url} />
+                            <div>
+                            </div>
+                            <div className=" overflow-y-auto rounded-lg share-modal-scrollbar px-2">
+                                <div className={` max-w-lg shadow  flex flex-col justify-center rounded-lg
+                                bg-white space-y-2`}>
+
+                                    <div className="flex w-full py-2 px-2 space-x-1">
+                                        <div className="flex space-x-2">
+                                            <img
+                                                src={data.picture ||
+                                                    "https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"}
+                                                className="rounded-full w-10 h-10 object-cover"
+                                                alt="avatar"></img>
+                                            <div className="flex flex-col w-full">
+                                                <p
+                                                    // onClick={() => _HandleGotoUserProfile(UserId, User?.username)}
+                                                    className="text-sm font-bold font-sans">
+                                                    {data.name || 'Lorem Ipsum'}
+                                                </p>
+                                                <p className="text-xs text-gray-500">19h</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p
+                                        // onClick={() => _HandleGotoVideoDetails(id)}
+                                        className="px-5 text-sm w-full break-words"
+                                    >
+                                        <ReadLessReadMore
+                                            limit={45}
+                                            text={data.title || ''}
+                                        />
+                                    </p>
+                                    <p className="text-sm break-words">
+                                    </p>
+                                    <div className="video-wrapper">
+                                        <VideoPlayer poster={data?.thumbnail} src={data?.url} />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </>
                 )}
                 footer={(
                     <>
-                        {/* <button
-                            onClick={ToggleTipModal}
+                        <button
+                            onClick={ToggleShareModal}
                             type="button"
                             className="mt-3 w-full inline-flex justify-center hover:underline  px-4 py-2 text-base font-medium text  sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                         >
                             Cancel
-                        </button> */}
+                        </button>
                         <Button
                             type="button"
                             onSubmit={_HandleSubmit}
@@ -48,4 +94,4 @@ const TipModal = ({ _HandleChangeCaption, text, ToggleShareModal, loading, modal
     )
 }
 
-export default TipModal;
+export default ShareModal;

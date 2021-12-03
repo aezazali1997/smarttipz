@@ -1,6 +1,7 @@
 const { DataTypes } = require("sequelize");
 // const Comment = require("./Comment");
 const sequelize = require("./db");
+const Favourite = require("./Favourite");
 const PostLike = require("./Like");
 const Share = require("./Share");
 
@@ -56,6 +57,10 @@ const Video = sequelize.define("Video", {
   comment: {
     type: DataTypes.INTEGER,
   },
+  isShowOnNewsfeed: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
+  },
   isApproved: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
@@ -70,6 +75,9 @@ PostLike.belongsTo(Video);
 
 Video.hasMany(Share);
 Share.belongsTo(Video);
+
+Video.hasMany(Favourite);
+Favourite.belongsTo(Video);
 
 // Video.hasMany(Comment);
 // Comment.belongsTo(Video);
