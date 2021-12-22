@@ -14,6 +14,7 @@ const UseSearch = () => {
     const [catalogueCount, setCatalogueCount] = useState(0);
     const [showRatingModal, setShowRatingModal] = useState(false);
     const [showTipModal, setShowTipModal] = useState(false);
+    const [showFilterModal, setShowFilterModal] = useState(false);
     const [activeGenericFilter, setActiveGenericFilter] = useState('All');
     const [userProfileLoading, setUserProfileLoading] = useState(true);
     const [postsLoading, setPostsLoading] = useState(true);
@@ -32,6 +33,23 @@ const UseSearch = () => {
     const [videoType, setVideoType] = useState({
         SmartReview: false,
         SmartTipz: false
+    });
+
+
+    useEffect(() => {
+
+        const hideMenu = () => {
+            if (window.innerWidth > 991 && showFilterModal) {
+                setShowFilterModal(false);
+                console.log('i resized');
+            }
+        };
+
+        window.addEventListener('resize', hideMenu);
+
+        return () => {
+            window.removeEventListener('resize', hideMenu);
+        };
     });
 
     //LOADERS START HERE//
@@ -191,6 +209,11 @@ const UseSearch = () => {
         console.log('value: ', value);
     }
 
+
+    const _HandleToggleFilterModal = () => {
+        setShowFilterModal(!showFilterModal);
+    }
+
     //FILTERS START HERE//
 
     const _HandleActiveGenericFilter = (active) => {
@@ -242,7 +265,7 @@ const UseSearch = () => {
         _HandleCatalogue, GetUserProfiles, GetPosts, filterSearch, posts, userProfiles, showRatingModal,
         showTipModal, activeGenericFilter, userProfileLoading, postsLoading, sort, setSort, account,
         setAccountType, videoCategory, videoType, rating, setRating, category, _ChangeCategoryFilter,
-        HandleLikePost, tip, _HandleVideoTypeFilter, _HandleVideoCategoryFilter
+        HandleLikePost, tip, _HandleVideoTypeFilter, _HandleVideoCategoryFilter, _HandleToggleFilterModal, showFilterModal
     }
 }
 

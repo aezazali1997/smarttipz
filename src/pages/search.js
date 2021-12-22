@@ -1,7 +1,7 @@
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { Button, GenericFilters, NewsfeedCard, NewsFeedFilters, ProfileOverviewCard, SortFilter, Spinner } from 'src/components';
-import { TipModal, VideoRatingModal } from 'src/components/Modals';
+import { FilterModal, TipModal, VideoRatingModal } from 'src/components/Modals';
 import { UseSearch } from 'src/hooks';
 
 
@@ -13,13 +13,29 @@ const Search = () => {
 		_HandleCatalogue, GetUserProfiles, GetPosts, filterSearch, posts, userProfiles, showRatingModal,
 		showTipModal, activeGenericFilter, userProfileLoading, postsLoading, sort, setSort, account,
 		setAccountType, videoCategory, videoType, rating, setRating, category, _ChangeCategoryFilter,
-		HandleLikePost, tip, _HandleVideoTypeFilter, _HandleVideoCategoryFilter
+		HandleLikePost, tip, _HandleVideoTypeFilter, _HandleVideoCategoryFilter, showFilterModal,
+		_HandleToggleFilterModal
 	} = UseSearch();
 
 	return (
 		<div className="min-h-screen flex flex-col lg:flex-row bg-gray-100 py-4 px-3 relative">
 
-			<div className="w-full lg:w-4/6 h-full">
+			<div className="w-full lg:w-4/6 h-full space-y-3 lg:space-y-0">
+				<div className='w-full'>
+					<Button
+						type="button"
+						childrens={(
+							<>
+								<svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+									<path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
+								</svg>
+								<p>Filters</p>
+							</>
+						)}
+						classNames={"px-3 py-2 space-x-1 flex lg:hidden h-auto mx-auto sm:h-12 w-full justify-center items-center text-white text-sm btn rounded-md "}
+						onSubmit={_HandleToggleFilterModal}
+					/>
+				</div>
 				{
 					activeGenericFilter === 'All' ?
 						<>
@@ -194,8 +210,8 @@ const Search = () => {
 								''
 				}
 			</div>
-			<div className="w-full lg:w-2/6 relative">
-				<div className="sticky top-0 space-y-4 justify-center flex-col items-center ">
+			<div className="hidden lg:block w-full lg:w-2/6 relative">
+				<div className="space-y-4 justify-center flex-col items-center ">
 					<GenericFilters
 						_HandleActiveGenericFilter={_HandleActiveGenericFilter}
 						activeGenericFilter={activeGenericFilter}
@@ -238,6 +254,29 @@ const Search = () => {
 						ToggleTipModal={ToggleTipModal}
 						loading={false}
 						modalTitle={"Tip Video"}
+					/>
+				)
+			}
+			{
+				showFilterModal && (
+					<FilterModal
+						ToggleFilterModal={_HandleToggleFilterModal}
+						modalTitle={'Search Filters'}
+						sort={sort}
+						rating={rating}
+						account={account}
+						category={category}
+						videoType={videoType}
+						videoCategory={videoCategory}
+						activeGenericFilter={activeGenericFilter}
+						setSort={setSort}
+						setRating={setRating}
+						_HandleChangeRating={_HandleChangeRating}
+						_ChangeCategoryFilter={_ChangeCategoryFilter}
+						_HandleVideoTypeFilter={_HandleVideoTypeFilter}
+						_HandleAccountTypeFilter={_HandleAccountTypeFilter}
+						_HandleVideoCategoryFilter={_HandleVideoCategoryFilter}
+						_HandleActiveGenericFilter={_HandleActiveGenericFilter}
 					/>
 				)
 			}

@@ -27,7 +27,7 @@ const GenericFilters = ({ _HandleActiveGenericFilter, activeGenericFilter, categ
                         key={index}
                         onClick={() => _HandleActiveGenericFilter(name)}
                         className={`flex space-x-3 px-2 py-2 w-full items-center rounded-md ${activeGenericFilter === name && 'bg-gray-100'
-                            } hover:bg-gray-100 cursor-pointer`}>
+                            } hover:bg-gray-100 cursor-pointer mb-1`}>
                         <div className=" bg-gray-300 rounded-full w-10 h-10 p-2 flex items-center justify-center">
                             <FontAwesomeIcon
                                 icon={icon}
@@ -37,14 +37,14 @@ const GenericFilters = ({ _HandleActiveGenericFilter, activeGenericFilter, categ
                         <h4 className="font-semibold ">{name}</h4>
                     </div>
                 ))}
-            <div className="flex items-center justify-center space-x-3 px-2 py-2 ">
-                <div className=" bg-gray-300 rounded-full p-2 w-10 h-10 flex items-center justify-center">
+            <div className="flex items-center justify-center space-x-3 px-2 ">
+                <div className=" bg-gray-300 rounded-full p-2 w-11 h-10 flex items-center justify-center">
                     <FontAwesomeIcon
                         icon={faLayerGroup}
                         className={`text-xl ${category && 'text'}`}
                     />
                 </div>
-                <div className={`floating-input relative z-0 w-full mt-2`}>
+                <div className={`relative z-0 w-full`}>
                     <select
                         type='select'
                         id='category'
