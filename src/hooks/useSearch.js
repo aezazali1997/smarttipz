@@ -5,7 +5,6 @@ import { useSearchContext } from 'src/contexts';
 
 const UseSearch = () => {
 
-
     const { filterSearch } = useSearchContext();
     const router = useRouter();
     const { asPath } = router;
@@ -21,6 +20,7 @@ const UseSearch = () => {
     const [sort, setSort] = useState('DESC');
     const [category, setCategory] = useState('');
     const [rating, setRating] = useState(0);
+    const [tip, setTip] = useState(0);
     const [account, setAccountType] = useState({
         Personal: false,
         Business: false
@@ -30,11 +30,11 @@ const UseSearch = () => {
         Free: false
     });
     const [videoType, setVideoType] = useState({
-        Reviews: false,
-        Tips: false
+        SmartReview: false,
+        SmartTipz: false
     });
 
-
+    //LOADERS START HERE//
 
     const enableProfileLoading = () => {
         setUserProfileLoading(true);
@@ -51,11 +51,12 @@ const UseSearch = () => {
         setPostsLoading(false);
     };
 
+    //LOADERS END HERE//
 
     let GetPosts = async () => {
         enablePostsLoading();
         try {
-            const { data: { data: { videos } } } = await axiosInstance.getFilteredPosts(filterSearch, sort, category);
+            const { data: { data: { videos } } } = await axiosInstance.getFilteredPosts(filterSearch, sort, category, videoCategory, videoType, account);
             setPosts(videos);
             var count = 0;
             for (let i = 0; i < videos.length; i++) {
@@ -75,7 +76,7 @@ const UseSearch = () => {
     let GetUserProfiles = async () => {
         enableProfileLoading();
         try {
-            const { data: { data: { users } } } = await axiosInstance.getFilteredUserProfiles(filterSearch, sort);
+            const { data: { data: { users } } } = await axiosInstance.getFilteredUserProfiles(filterSearch, sort, account);
             const deepCopyUsers = [...users];
             const filtered = deepCopyUsers.filter(user => user?.id !== parseInt(localStorage.getItem('id')) && user)
             setUserProfiles(filtered);
@@ -88,10 +89,7 @@ const UseSearch = () => {
         }
     }
 
-
-    useEffect(() => {
-        GetPosts();
-        GetUserProfiles();
+    const _CheckUrl = () => {
         if (!asPath.includes('?')) {
             router.push('/search?active=All');
         }
@@ -103,7 +101,13 @@ const UseSearch = () => {
             const value = newResult[1];
             setActiveGenericFilter(value);
         }
-    }, [filterSearch, sort, category]);
+    }
+
+    useEffect(() => {
+        GetPosts();
+        GetUserProfiles();
+        _CheckUrl()
+    }, [filterSearch, sort, category, videoCategory, videoType, account]);
 
 
     const _HandleCatalogue = async (videoId, catalogue) => {
@@ -131,7 +135,6 @@ const UseSearch = () => {
         else {
             Swal.fire({
                 text: 'You can add only 5 videos in catalogue, please delete any to proceed',
-                // timer: 4000,
                 icon: 'info',
                 showConfirmButton: true,
                 showCancelButton: false,
@@ -175,17 +178,20 @@ const UseSearch = () => {
 
     const _HandleChangeRating = (value) => {
         console.log('value: ', value);
+        setRating(value);
     }
 
     const ToggleTipModal = () => {
         setShowTipModal(!showTipModal);
     }
 
-    const _HandleChangeTip = (value) => {
+    const _HandleChangeTip = ({ target }) => {
+        const { value } = target;
+        setTip(value)
         console.log('value: ', value);
     }
 
-    //FILTERS//
+    //FILTERS START HERE//
 
     const _HandleActiveGenericFilter = (active) => {
         setActiveGenericFilter(active);
@@ -193,16 +199,31 @@ const UseSearch = () => {
         active === 'All' || active === 'Posts' ? GetPosts() : GetUserProfiles();
     }
 
-    const _HandleAccountTypeFilter = (e) => {
-        const { checked, name } = e.target;
-        console.log(`${checked}, ${name}`)
-    }
-
     let _ChangeCategoryFilter = ({ target }) => {
         const { value } = target;
         console.log(value);
         setCategory(value);
     }
+
+    const _HandleAccountTypeFilter = (e) => {
+        const { checked, name } = e.target;
+        const copyAccountType = { ...account };
+        setAccountType({ ...copyAccountType, [name]: checked });
+    }
+
+    const _HandleVideoTypeFilter = (e) => {
+        const { checked, name } = e.target;
+        const copyVideoType = { ...videoType };
+        setVideoType({ ...copyVideoType, [name]: checked });
+    }
+
+    const _HandleVideoCategoryFilter = (e) => {
+        const { checked, name } = e.target;
+        const copyVideoCategory = { ...videoCategory };
+        setVideoCategory({ ...copyVideoCategory, [name]: checked });
+    }
+
+    //FILTERS END HERE//
 
     const HandleLikePost = async (id) => {
         try {
@@ -221,7 +242,7 @@ const UseSearch = () => {
         _HandleCatalogue, GetUserProfiles, GetPosts, filterSearch, posts, userProfiles, showRatingModal,
         showTipModal, activeGenericFilter, userProfileLoading, postsLoading, sort, setSort, account,
         setAccountType, videoCategory, videoType, rating, setRating, category, _ChangeCategoryFilter,
-        HandleLikePost
+        HandleLikePost, tip, _HandleVideoTypeFilter, _HandleVideoCategoryFilter
     }
 }
 

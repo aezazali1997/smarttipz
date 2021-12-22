@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import swal from 'sweetalert';
 import axiosInstance from 'src/APIs/axiosInstance';
 import { AccountInfoValidationSchema } from 'utils/validation_shema';
-
+import { useSearchContext } from 'src/contexts';
 
 const initialValues = {
     old: '',
@@ -26,6 +26,7 @@ const UseFetchSetting = (settings) => {
     const [imageUrl, setImageUrl] = useState('');
     const [businessCard, setBusinessCard] = useState('');
     const [countryCode, setCountryCode] = useState('')
+    const { setProfilePic } = useSearchContext();
 
     let { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
 
@@ -79,7 +80,8 @@ const UseFetchSetting = (settings) => {
         axiosInstance.uploadProfilePic(url)
             .then(({ data: { data: { img } } }) => {
                 setImageUrl(img);
-                localStorage.setItem('image', img);
+                setProfilePic(url);
+                localStorage.setItem('image', url);
             }).catch(e => {
                 console.log(e.message);
             })
@@ -89,6 +91,8 @@ const UseFetchSetting = (settings) => {
         axiosInstance.removeProfilePic()
             .then(res => {
                 setUpdated(true);
+                setProfilePic('')
+                localStorage.setItem('image', '');
             }).catch(error => {
                 console.log("API error: ", error)
             })

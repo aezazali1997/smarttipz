@@ -5,9 +5,11 @@ import swal from 'sweetalert';
 import cookie from 'js-cookie';
 import axiosInstance from 'src/APIs/axiosInstance';
 import { AuthenticateSchema } from 'utils/validation_shema';
+import { useSearchContext } from 'src/contexts';
 
 const UseFetchAuthenticate = () => {
 
+    const { setProfilePic } = useSearchContext();
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [verified, setIsVerified] = useState(null);
@@ -76,6 +78,7 @@ const UseFetchAuthenticate = () => {
                 localStorage.setItem('id', id);
                 cookie.set('username', username);
                 localStorage.setItem('image', image);
+                setProfilePic(image);
                 localStorage.removeItem('otpToken');
                 router.push('/dashboard/news-feed');
             }

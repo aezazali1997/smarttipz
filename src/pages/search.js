@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
 import { isEmpty } from 'lodash';
+import React from 'react';
 import { Button, GenericFilters, NewsfeedCard, NewsFeedFilters, ProfileOverviewCard, SortFilter, Spinner } from 'src/components';
 import { TipModal, VideoRatingModal } from 'src/components/Modals';
 import { UseSearch } from 'src/hooks';
@@ -13,7 +13,7 @@ const Search = () => {
 		_HandleCatalogue, GetUserProfiles, GetPosts, filterSearch, posts, userProfiles, showRatingModal,
 		showTipModal, activeGenericFilter, userProfileLoading, postsLoading, sort, setSort, account,
 		setAccountType, videoCategory, videoType, rating, setRating, category, _ChangeCategoryFilter,
-		HandleLikePost
+		HandleLikePost, tip, _HandleVideoTypeFilter, _HandleVideoCategoryFilter
 	} = UseSearch();
 
 	return (
@@ -208,7 +208,14 @@ const Search = () => {
 					/>
 					<NewsFeedFilters
 						rating={rating}
+						account={account}
+						videoType={videoType}
+						videoCategory={videoCategory}
 						setRating={setRating}
+						_HandleChangeRating={_HandleChangeRating}
+						_HandleVideoTypeFilter={_HandleVideoTypeFilter}
+						_HandleAccountTypeFilter={_HandleAccountTypeFilter}
+						_HandleVideoCategoryFilter={_HandleVideoCategoryFilter}
 					/>
 				</div>
 			</div>
@@ -227,7 +234,7 @@ const Search = () => {
 				showTipModal && (
 					<TipModal
 						_HandleChangeTip={_HandleChangeTip}
-						tip={2}
+						tip={tip}
 						ToggleTipModal={ToggleTipModal}
 						loading={false}
 						modalTitle={"Tip Video"}

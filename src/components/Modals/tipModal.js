@@ -20,7 +20,7 @@ const TipModal = ({ _HandleChangeTip, tip, ToggleTipModal, loading, modalTitle }
                                     type={"number"}
                                     value={tip}
                                     min={0}
-                                    onChange={_HandleChangeTip}
+                                    onChange={(e) => _HandleChangeTip(e)}
                                     inputClass={`border bg-gray-50 text-sm border-gray-200  rounded-l-none focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
                                     label={'Tip'}
                                 />

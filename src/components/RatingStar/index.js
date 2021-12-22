@@ -9,7 +9,7 @@ const Rating = ({ value, edit, isHalf, onChange, size, classNames }) => {
             size={size || 16}
             edit={edit}
             isHalf={isHalf}
-            onChange={onChange}
+            onChange={(value) => onChange(value)}
             emptyIcon={<i className="far fa-star"></i>}
             halfIcon={<i className="fa fa-star-half-alt"></i>}
             fullIcon={<i className="fa fa-star"></i>}

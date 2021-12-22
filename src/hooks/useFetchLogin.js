@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import swal from 'sweetalert';
 import axiosInstance from 'src/APIs/axiosInstance';
 import { LoginSchema } from 'utils/validation_shema';
-
+import { useSearchContext } from 'src/contexts';
 
 
 const UseFetchLogin = () => {
@@ -14,6 +14,7 @@ const UseFetchLogin = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
+    const { setProfilePic } = useSearchContext();
 
     useEffect(() => {
     }, [showAlert])
@@ -48,6 +49,7 @@ const UseFetchLogin = () => {
             cookie.set('token', token);
             cookie.set('username', username);
             localStorage.setItem('image', image);
+            setProfilePic(image);
             localStorage.setItem('id', id);
             router.push('/dashboard/news-feed');
         }

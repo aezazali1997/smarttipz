@@ -40,6 +40,7 @@ const UseFetchNewsFeed = () => {
     const [shareCaption, setShareCaption] = useState('');
     const [isSharing, setIsSharing] = useState(false);
     const [postOnFeed, setPostOnFeed] = useState(true);
+    const [tip, setTip] = useState(0);
 
     let thumbnailRef = useRef();
 
@@ -338,7 +339,9 @@ const UseFetchNewsFeed = () => {
         setShowTipModal(!showTipModal);
     }
 
-    const _HandleChangeTip = (value) => {
+    const _HandleChangeTip = ({ target }) => {
+        const { value } = target;
+        setTip(value);
         console.log('value: ', value);
     }
 
@@ -383,7 +386,7 @@ const UseFetchNewsFeed = () => {
         _HandleGotoVideoDetails, ToggleRatingModal, _HandleChangeRating, showRatingModal, ToggleTipModal,
         _HandleChangeTip, showTipModal, videoType, _OpenShareModal, _CloseShareModal, showShareModal, shareData,
         _HandleSharePost, _HandleChangeCaption, shareCaption, setShareCaption, isSharing, HandleFavouritePost,
-        _HandleChangePostOnNewsfeed, postOnFeed
+        _HandleChangePostOnNewsfeed, postOnFeed, tip
     }
 }
 

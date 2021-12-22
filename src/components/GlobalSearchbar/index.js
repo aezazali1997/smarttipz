@@ -9,7 +9,8 @@ const GlobalSearchbar = () => {
         <div className="rounded-lg">
             <div className="w-full text-gray-600 rounded-lg">
                 <input className="globalSearch border-none bg-white text-black h-10 px-5 pr-10 w-full rounded-lg text-sm focus:outline-none"
-                    type="text" name="search"
+                    type="text"
+                    name="search"
                     placeholder="&#61442; Search"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}

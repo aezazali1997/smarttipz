@@ -9,6 +9,7 @@ export function AppWrapper({ children }) {
     const [search, setSearch] = useState('');
     const [filterSearch, setFilterSearch] = useState('');
     const [otherUserDetail, setOtherUserDetail] = useState({});
+    const [profilePic, setProfilePic] = useState('');
 
     const _HandleSearchClick = (e) => {
         if (e.keyCode == 13 || e.key == 'Enter') {
@@ -24,9 +25,12 @@ export function AppWrapper({ children }) {
             otherUserDetail,
             setSearch,
             setOtherUserDetail,
-            _HandleSearchClick
+            _HandleSearchClick,
+            profilePic,
+            setProfilePic
         }),
-        [search, setSearch, otherUserDetail, setOtherUserDetail, _HandleSearchClick]
+        [search, setSearch, otherUserDetail, setOtherUserDetail, _HandleSearchClick, profilePic,
+            setProfilePic]
     );
 
     return <SearchContext.Provider value={data}>{children}</SearchContext.Provider>;

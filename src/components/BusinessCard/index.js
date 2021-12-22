@@ -34,7 +34,7 @@ const BusinessCard = ({ phone, image, name, email, website }) => {
                         <div className="flex px-2 sm:px-5">
                             {
                                 image ?
-                                    <img className="inline-block h-16 w-16 sm:h-20 sm:w-20 rounded-full border ring-2 ring-indigo-600"
+                                    <img className="inline-block h-16 w-16 sm:h-20 sm:w-20 rounded-full object-cover border ring-2 ring-indigo-600"
                                         src={image}
                                         alt="cardPic"
                                     /> :

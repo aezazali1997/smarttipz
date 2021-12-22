@@ -1,8 +1,26 @@
-
 const sequelize = require('sequelize');
 
 
-export const FilterContent = (search, category) => {
+const getFilterdProfilesByAccountType = (accountType) => {
+    const { Personal, Business } = accountType;
+    return Personal === false && Business === true ? 'Business' :
+        Personal === true && Business === false ? 'Personal' : ''
+}
+
+const getFilterdProfilesByVideoCategory = (videoCategory) => {
+    const { Paid, Free } = videoCategory;
+    return Free === false && Paid === true ? 'Paid' :
+        Paid === false && Free === true ? 'Free' : ''
+}
+
+const getFilterdProfilesByVideoType = (videoType) => {
+    const { SmartReview, SmartTipz } = videoType;
+    return SmartReview === false && SmartTipz === true ? 'SmartTipz' :
+        SmartReview === true && SmartTipz === false ? 'SmartReview' : ''
+}
+
+
+export const FilterContent = (search, category, videoType, videoCategory, accountType) => {
     console.log("searched >>", search);
     return {
         [sequelize.Op.and]: [
@@ -16,7 +34,21 @@ export const FilterContent = (search, category) => {
                     [sequelize.Op.iLike]: `%${category}%`,
                 }
             },
-
+            {
+                '$User.accountType$': {
+                    [sequelize.Op.iLike]: `%${getFilterdProfilesByAccountType(accountType)}`
+                }
+            },
+            {
+                videoCost: {
+                    [sequelize.Op.iLike]: `%${getFilterdProfilesByVideoCategory(videoType)}`
+                }
+            },
+            {
+                videoType: {
+                    [sequelize.Op.iLike]: `%${getFilterdProfilesByVideoType(videoCategory)}`
+                }
+            }
         ],
         [sequelize.Op.or]: [{
             '$User.name$': {
@@ -48,8 +80,9 @@ export const FilterContent = (search, category) => {
     }
 
 }
-export const FilterProfiles = (search) => {
-    console.log("searched >>", search);
+
+export const FilterProfiles = (search, accountType) => {
+    console.log("searched >>", search, accountType);
     return {
         [sequelize.Op.and]: [
             {
@@ -86,7 +119,12 @@ export const FilterProfiles = (search) => {
                 [sequelize.Op.iLike]: `%${search}%`,
             }
         }
-        ]
-
+        ],
+        [sequelize.Op.and]: [{
+            accountType: {
+                [sequelize.Op.iLike]: `%${getFilterdProfilesByAccountType(accountType)}`
+            }
+        }]
     }
 }
+

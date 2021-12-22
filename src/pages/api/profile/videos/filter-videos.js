@@ -8,10 +8,12 @@ import { FilterContent } from 'utils/consts';
 
 
 const handler = async (req, res) => {
-    if (req.method === 'GET') {
+    if (req.method === 'POST') {
 
-        const { headers: { authorization }, query: { search, sort, category } } = req;
-
+        const {
+            body: { videoType, videoCategory, accountType },
+            headers: { authorization }, query: { search, sort, category },
+        } = req;
         try {
             if (!authorization) {
                 return res.status(401).send({ error: true, data: [], message: 'Please Login' })
@@ -40,7 +42,7 @@ const handler = async (req, res) => {
                     }],
                 group: ['Video.id', 'User.id', 'User.name', 'User.picture', 'User.username',
                     'PostLikees.id', 'PostLikees.reviewerId', 'PostLikees.isLiked'],
-                where: FilterContent(search, category),
+                where: FilterContent(search, category, videoType, videoCategory, accountType),
                 order: [["createdAt", sort]]
             });
 

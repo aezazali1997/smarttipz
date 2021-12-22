@@ -4,9 +4,9 @@ const jwt = require('jsonwebtoken');
 const { FilterProfiles } = require("utils/consts");
 
 const handler = async (req, res) => {
-    if (req.method === 'GET') {
+    if (req.method === 'POST') {
 
-        const { query: { search, sort } } = req;
+        const { query: { search, sort }, body: { accountType } } = req;
 
         try {
             if (!req.headers.authorization) {
@@ -30,7 +30,7 @@ const handler = async (req, res) => {
                     'accountType',
                     'accessible'
                 ],
-                where: FilterProfiles(search),
+                where: FilterProfiles(search, accountType),
                 order: [["createdAt", sort]]
             });
 

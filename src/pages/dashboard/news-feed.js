@@ -18,7 +18,7 @@ const NewsFeed = () => {
     _HandleGotoVideoDetails, ToggleRatingModal, _HandleChangeRating, showRatingModal, ToggleTipModal,
     _HandleChangeTip, showTipModal, _OpenShareModal, _CloseShareModal, showShareModal, shareData,
     _HandleSharePost, shareCaption, setShareCaption, isSharing, HandleFavouritePost,
-    _HandleChangePostOnNewsfeed, postOnFeed
+    _HandleChangePostOnNewsfeed, postOnFeed, tip
   } = UseFetchNewsFeed();
 
   return (
@@ -132,7 +132,7 @@ const NewsFeed = () => {
         showTipModal && (
           <TipModal
             _HandleChangeTip={_HandleChangeTip}
-            tip={2}
+            tip={tip}
             ToggleTipModal={ToggleTipModal}
             loading={false}
             modalTitle={"Tip Video"}

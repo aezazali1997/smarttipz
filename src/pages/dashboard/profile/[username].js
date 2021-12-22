@@ -126,14 +126,15 @@ const UserProfile = ({ profile }) => {
         setLoadingTestimonial(false);
     };
 
-    const _Follow = () => {
-        axiosInstance.followUser({ username: profile?.username }).then(({ data: { data: { follow } } }) => {
+    const _Follow = async () => {
+        try {
+            const { data: { data: { follow } } } = await axiosInstance.followUser({ username: profile?.username });
             setIsFollowing(follow);
             setCanMessage(canMessage => canMessage = follow);
-        })
-            .catch(err => {
-                console.log('FollowUser API Failed: ', err);
-            })
+        }
+        catch (err) {
+            console.log('FollowUser API Failed: ', err);
+        }
     }
 
     let handleShowBusinessCard = () => {
@@ -157,7 +158,6 @@ const UserProfile = ({ profile }) => {
     const HandleLikePost = async (id) => {
         try {
             const { data: { data, message } } = await axiosInstance.likePost({ videoId: id });
-            console.log('success: ', message);
             const { username } = profile;
             fetchCatalogues(username);
             fetchMyVideos(username);
@@ -166,6 +166,11 @@ const UserProfile = ({ profile }) => {
             console.log('Like Post Api failed: ', message);
         }
     }
+
+    const _HandleGotoVideoDetails = (id) => {
+        router.push(`/dashboard/videos/${id}`)
+    }
+
 
     const { id, name, about, rating, views, picture, phone, showPhone, email, accountType,
         username, showName, showUsername, accessible } = personalInfo;
@@ -327,6 +332,7 @@ const UserProfile = ({ profile }) => {
                                                         title={title}
                                                         width={'max-w-xs'}
                                                         thumbnail={thumbnail}
+                                                        _HandleGotoVideoDetails={_HandleGotoVideoDetails}
                                                     />
                                                 </div>
                                                 /* <div key={index}>

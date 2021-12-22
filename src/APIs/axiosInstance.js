@@ -73,9 +73,7 @@ class AxiosInstance {
     async getNewsFeedPosts() {
         return await axios.get(USER_API_BASE_URL + "api/profile/videos/all-videos", this.getAuthHeader());
     }
-    async getFilteredPosts(search, sort, category) {
-        return await axios.get(USER_API_BASE_URL + `api/profile/videos/filter-videos?search=${search}&&sort=${sort}&&category=${category}`, this.getAuthHeader());
-    }
+
     async getBusinessCard() {
         return await axios.get(USER_API_BASE_URL + "api/profile/businesscard", this.getAuthHeader());
     }
@@ -148,8 +146,16 @@ class AxiosInstance {
         return await axios.get(USER_API_BASE_URL + `api/profile/catalogue/${username}`, this.getAuthHeader());
     }
 
-    async getFilteredUserProfiles(search, sort) {
-        return await axios.get(USER_API_BASE_URL + `api/profile/filter-profile?search=${search}&&sort=${sort}`, this.getAuthHeader());
+    async getFilteredUserProfiles(search, sort, account) {
+        return await axios.post(USER_API_BASE_URL + `api/profile/filter-profile?search=${search}&&sort=${sort}`,
+            { accountType: account },
+            this.getAuthHeader());
+    }
+
+    async getFilteredPosts(search, sort, category, videoType, videoCategory, account) {
+        return await axios.post(USER_API_BASE_URL + `api/profile/videos/filter-videos?search=${search}&&sort=${sort}&&category=${category}`,
+            { videoType, videoCategory, accountType: account },
+            this.getAuthHeader());
     }
 
     async likePost(videoId) {
