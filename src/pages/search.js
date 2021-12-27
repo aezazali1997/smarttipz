@@ -38,7 +38,7 @@ const Search = () => {
 				</div>
 				{
 					activeGenericFilter === 'All' ?
-						<>
+						<div className="space-y-4">
 							<div className="space-y-4">
 								{
 									postsLoading ? (
@@ -145,7 +145,7 @@ const Search = () => {
 											</>
 								}
 							</div>
-						</>
+						</div>
 						:
 						activeGenericFilter === 'Posts' ?
 							<div className="space-y-4">
@@ -210,8 +210,8 @@ const Search = () => {
 								''
 				}
 			</div>
-			<div className="hidden lg:block w-full lg:w-2/6 relative">
-				<div className="space-y-4 justify-center flex-col items-center ">
+			<div className="hidden lg:block w-full lg:w-2/6 relative h-96">
+				<div className="sticky top-0 space-y-4 justify-center flex-col items-center ">
 					<GenericFilters
 						_HandleActiveGenericFilter={_HandleActiveGenericFilter}
 						activeGenericFilter={activeGenericFilter}

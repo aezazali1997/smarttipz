@@ -20,27 +20,27 @@ const UseFetchNewsFeed = () => {
     }
 
     let { uploadToS3 } = useS3Upload();
-    const [showModal, setShowModal] = useState(false);
-    const [MediaType, setMediaType] = useState(null);
+    const [tip, setTip] = useState(0);
     const [urls, setUrls] = useState('');
-    const [thumbnailFile, setThumbnailFile] = useState('');
-    const [thumbnailUrl, setThumbnailUrl] = useState('');
-    const [selectedLanguage, setSelectedLanguage] = useState("");
+    const [posts, setPosts] = useState([]);
     const [agree, setAgree] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
-    const [initialValues, setInitialValues] = useState(initials);
-    const [posts, setPosts] = useState([]);
-    const [catalogueCount, setCatalogueCount] = useState(0);
-    const [showRatingModal, setShowRatingModal] = useState(false);
-    const [showTipModal, setShowTipModal] = useState(false);
-    const [videoType, setVideoType] = useState('');
-    const [showShareModal, setShowShareModal] = useState(false);
     const [shareData, setShareData] = useState({});
-    const [shareCaption, setShareCaption] = useState('');
+    const [videoType, setVideoType] = useState('');
+    const [MediaType, setMediaType] = useState(null);
     const [isSharing, setIsSharing] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const [postOnFeed, setPostOnFeed] = useState(true);
-    const [tip, setTip] = useState(0);
+    const [shareCaption, setShareCaption] = useState('');
+    const [thumbnailUrl, setThumbnailUrl] = useState('');
+    const [thumbnailFile, setThumbnailFile] = useState('');
+    const [catalogueCount, setCatalogueCount] = useState(0);
+    const [showTipModal, setShowTipModal] = useState(false);
+    const [showShareModal, setShowShareModal] = useState(false);
+    const [selectedLanguage, setSelectedLanguage] = useState("");
+    const [initialValues, setInitialValues] = useState(initials);
+    const [showRatingModal, setShowRatingModal] = useState(false);
+    const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
 
     let thumbnailRef = useRef();
 
@@ -236,30 +236,6 @@ const UseFetchNewsFeed = () => {
 
     const HandleCheckLike = (postLikes) => {
         console.log('postLikes: ', postLikes);
-
-        // if (postLikes) {
-        //     const data = [];
-        //     for (let post = 0; post < postLikes.length; post++) {
-        //         if (postLikes[post].reviewerId == parseInt(localStorage.getItem('id'))) {
-        //             data.push(postLikes[post]);
-        //         }
-        //     }
-        //     if (!data) {
-        //         return 'text-gray-600 hover:text-purple-600';
-        //     }
-        //     else {
-        //         if (data[0].isLiked === true) {
-        //             return 'text-purple-600';
-        //         }
-        //         else {
-        //             return 'text-gray-600 hover:text-purple-600';
-        //         }
-        //     }
-        // }
-        // else {
-        //     'text-gray-600 hover:text-purple-600'
-        // }
-
     }
 
     const _HandleCatalogue = async (videoId, catalogue) => {
@@ -377,6 +353,7 @@ const UseFetchNewsFeed = () => {
     const _HandleChangePostOnNewsfeed = () => {
         setPostOnFeed(!postOnFeed);
     }
+
 
     return {
         formik, _HandleLanguageChange, selectedLanguage, _DeleteImg, ChangeAgreement, agree, urls,

@@ -1,132 +1,16 @@
 /* eslint-disable react/jsx-key */
-import React, { useEffect, useState } from 'react'
-import axiosInstance from 'src/APIs/axiosInstance';
 import { isEmpty } from 'lodash';
+import React from 'react';
 import { Helmet } from 'react-helmet';
-import { Card, NewsfeedCard, Spinner } from 'src/components';
-import Swal from 'sweetalert2';
-import { useRouter } from 'next/router';
+import { NewsfeedCard, Spinner } from 'src/components';
+import { ShareModal } from 'src/components/Modals';
+import { UseFetchVideo } from 'src/hooks';
 
 const Videos = () => {
-
-    const router = useRouter();
-
-    const [filterdVideos, setFilterVideos] = useState([]);
-    const [Videos, setVideos] = useState([]);
-    const [filter, setFilter] = useState('all');
-    const [loading, setLoading] = useState(true);
-    const [catalogueCount, setCatalogueCount] = useState(0);
-    const fetchMyVideos = async () => {
-
-        try {
-            const { data: { data: { videos } } } = await axiosInstance.getVideos();
-            setVideos(videos);
-            setFilterVideos(videos);
-            var count = 0;
-            for (let i = 0; i < videos.length; i++) {
-                if (videos[i].catalogue === true) {
-                    count = count + 1;
-                }
-            }
-            setCatalogueCount(count)
-            setLoading(false);
-        }
-        catch ({ response: { data: { message } } }) {
-            console.log('Error in videos Api: ', message);
-            setLoading(false);
-        }
-    }
-
-    useEffect(() => {
-        setLoading(true);
-        fetchMyVideos();
-    }, [])
-
-    useEffect(() => { }, [filterdVideos])
-
-    let _ChangeFilter = ({ target }) => {
-        const { value } = target;
-        let FilteredVideos =
-            value === 'all' ? Videos : Videos.filter(video => video.category === value && (video));
-        setFilter(value);
-        setFilterVideos(FilteredVideos)
-    }
-
-    const _HandleCatalogue = async (videoId, catalogue) => {
-        if (catalogueCount < 5 || catalogue === true) {
-            console.log('here: ', catalogueCount);
-            try {
-                const data = await axiosInstance.addToCatalogue({ videoId, catalogue });
-                if (catalogue) {
-                    setCatalogueCount(catalogueCount => catalogueCount - 1)
-                }
-                else {
-                    setCatalogueCount(catalogueCount => catalogueCount + 1)
-                }
-                const originalArray = [...Videos];
-                const originalFilteredArray = [...filterdVideos]
-                let newArray = originalArray.map((item, i) => {
-                    if (item.id !== videoId) return item;
-                    item.catalogue = !catalogue;
-                    return item;
-                })
-                let newFilteredArray = originalFilteredArray.map((item, i) => {
-                    if (item.id !== videoId) return item;
-                    item.catalogue = !catalogue;
-                    return item;
-                })
-                console.log('newFilteredArray:', newFilteredArray);
-                setVideos(newArray)
-                setFilterVideos(newFilteredArray);
-            }
-            catch ({ response: { data: { message } } }) {
-                console.log('error in Api: ', message);
-            }
-        }
-        else {
-            Swal.fire({
-                text: 'You can add only 5 videos in catalogue, please delete any to proceed',
-                // timer: 4000,
-                icon: 'info',
-                showConfirmButton: true,
-                showCancelButton: false
-            })
-        }
-    }
-
-    const _HandleDeleteVideo = async (index, videoId) => {
-        try {
-            const res = await axiosInstance.deleteVideo(videoId);
-            setCatalogueCount(catalogueCount => catalogueCount - 1)
-            const originalArray = [...Videos];
-            const originalFilteredArray = [...filterdVideos]
-            originalArray.splice(index, 1)
-            let newFilteredArray = originalFilteredArray.filter((item, i) => {
-                if (item.id !== videoId) return item
-            })
-            console.log('newFilteredArray: ', newFilteredArray)
-            setFilterVideos(newFilteredArray);
-            setVideos(originalArray);
-        }
-        catch ({ response: { data: { message } } }) {
-            console.log('Api Failed: ', message);
-        }
-    }
-
-    const _HandleGotoVideoDetails = (id) => {
-        router.push(`/dashboard/videos/${id}`)
-    }
-
-    const HandleLikePost = async (id) => {
-        try {
-            const { data: { data, message } } = await axiosInstance.likePost({ videoId: id });
-            console.log('success: ', message);
-            fetchMyVideos();
-        }
-        catch ({ response: { data: { message } } }) {
-            console.log('Like Post Api failed: ', message);
-        }
-    }
+    const { _HandleSharePost, _OpenShareModal, HandleLikePost, _HandleGotoVideoDetails, _HandleDeleteVideo,
+        _HandleCatalogue, _ChangeFilter, _CloseShareModal, setShareCaption, filterdVideos, filter,
+        loading, showShareModal, isSharing, shareData, shareCaption,
+    } = UseFetchVideo();
 
     return (
         <div className="flex flex-col min-h-screen w-full p-5 space-y-1">
@@ -175,10 +59,10 @@ const Videos = () => {
                         </div>
                     )
                         :
-
-                        <div className="flex flex-col w-full sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-col-3 gap-3">
+                        <div className="flex flex-col w-full sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-col-4 gap-3">
                             {
-                                filterdVideos.map(({ title, url, thumbnail, mediaType, id, UserId, description, User, like, comment, share, catalogue, videoCost, videoType, isLiked, likeCount }, index) => (
+                                filterdVideos.map(({ title, url, thumbnail, mediaType, id, UserId, description, User, catalogue, videoCost,
+                                    videoType, isLiked, likeCount, Shares }, index) => (
                                     <div key={index}>
                                         <NewsfeedCard
                                             id={id}
@@ -187,6 +71,7 @@ const Videos = () => {
                                             catalogue={catalogue}
                                             url={url}
                                             User={User}
+                                            Shares={Shares}
                                             views={200}
                                             rating={2.5}
                                             isLiked={isLiked}
@@ -199,35 +84,29 @@ const Videos = () => {
                                             isPost={true}
                                             width={'max-w-xs'}
                                             thumbnail={thumbnail}
+                                            _OpenShareModal={_OpenShareModal}
                                             HandleLikePost={HandleLikePost}
                                             _HandleGotoVideoDetails={_HandleGotoVideoDetails}
                                             _HandleCatalogue={_HandleCatalogue}
                                             _HandleDeleteVideo={_HandleDeleteVideo}
                                         />
                                     </div>
-                                    /* <Card
-                                        image={url}
-                                        thumbnail={thumbnail}
-                                        mediaType={mediaType}
-                                        title={title}
-                                        comment={4}
-                                        like={2}
-                                        share={3}
-                                        views={250}
-                                        rating={5}
-                                        disclaimer={true}
-                                        id={id}
-                                        UserId={UserId}
-                                        menu={true}
-                                        isPost={true}
-                                        index={index}
-                                        catalogue={catalogue}
-                                        _HandleCatalogue={_HandleCatalogue}
-                                        _HandleDeleteVideo={_HandleDeleteVideo}
-                                    /> */
                                 ))
                             }
                         </div>
+            }
+            {
+                showShareModal && (
+                    <ShareModal
+                        modalTitle={'Share Post'}
+                        loading={isSharing}
+                        shareData={shareData}
+                        shareCaption={shareCaption}
+                        _HandleSubmit={_HandleSharePost}
+                        setShareCaption={setShareCaption}
+                        ToggleShareModal={_CloseShareModal}
+                    />
+                )
             }
         </div>
     )

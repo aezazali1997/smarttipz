@@ -49,6 +49,11 @@ const UseFetchProfile = (profile) => {
     const [fetchingMyVideos, setFetchMyVideos] = useState(true);
     const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
     const [catalogueCount, setCatalogueCount] = useState(0);
+    const [showShareModal, setShowShareModal] = useState(false);
+    const [isSharing, setIsSharing] = useState(false);
+    const [shareData, setShareData] = useState({});
+    const [shareCaption, setShareCaption] = useState('');
+
 
     let { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
     let thumbnailRef = useRef();
@@ -255,6 +260,15 @@ const UseFetchProfile = (profile) => {
         setFetchMyVideos(false);
     };
 
+    const enableShareLoading = () => {
+        setIsSharing(true);
+    };
+
+    const disableShareLoading = () => {
+        setIsSharing(false);
+    };
+
+
 
     const _OnRequestTestimonial = (values, resetForm) => {
         const { email } = values
@@ -290,24 +304,6 @@ const UseFetchProfile = (profile) => {
 
     const _OnUploadMedia = async (values, setSubmitting, resetForm) => {
         setSubmitting(true);
-        // let url = await uploadToS3(MediaType);
-        // let Type = MediaType?.type.split('/')[0];
-
-        // if (Type === 'video') {
-        //     if (thumbnailUrl !== '') {
-        //         console.log('InVideo and also thumbnail notEmpty')
-        //         let thumbnail = await uploadToS3(thumbnailFile);
-        //         values.thumbnail = thumbnail.url;
-        //     }
-        //     else {
-        //         console.log('InVideo but thumbnail Empty')
-        //         values.thumbnail = ''
-        //     }
-        // }
-        // else {
-        //     console.log('No Video')
-        //     values.thumbnail = '';
-        // }
         values.url = urls;
         values.thumbnail = thumbnailUrl;
         values.category = 'catalogue';
@@ -351,53 +347,6 @@ const UseFetchProfile = (profile) => {
                 _OnRequestTestimonial(values, resetForm)
                 :
                 _OnUploadMedia(values, setSubmitting, resetForm)
-
-
-            // const payload = {
-            //     ownerName: res.ownerName,
-            //     designation: res.designation,
-            //     description: res.description,
-            //     picture: imageUrl
-            // };
-            // if (modalTitle === 'Add Testimonial') {
-            //     axiosInstance.addTestimonial(payload).then(() => {
-            //         let copyTestimonial = [...testimonial];
-            //         let newArray = [payload, ...copyTestimonial];
-            //         setTestimonial(newArray);
-            //         disableLoading();
-            //         resetForm(initial)
-            //         setImageUrl('');
-            //         handleShowModal();
-            //     }).catch(e => {
-            //         console.log('Error in Api Testimonial: ', e.response.data.message);
-            //         disableLoading();
-            //     })
-            // }
-            // else if (modalTitle === 'Edit Testimonial') {
-            //     payload.id = res.id;
-            //     axiosInstance.updateTestimonial(payload).then(() => {
-            //         let copyTestimonial = [...testimonial];
-            //         let newArray = copyTestimonial.map((item) => {
-            //             if (item.id !== payload?.id) return item;
-            //             else {
-            //                 const { ownerName, designation, description, picture } = payload;
-            //                 item.ownerName = ownerName;
-            //                 item.designation = designation;
-            //                 item.description = description;
-            //                 item.picture = picture;
-            //                 return item;
-            //             }
-            //         });
-            //         setTestimonial(newArray);
-            //         disableLoading();
-            //         resetForm(initial)
-            //         setImageUrl('');
-            //         handleShowModal();
-            //     }).catch(e => {
-            //         console.log('Error in Api Testimonial: ', e.response.data.message);
-            //         disableLoading();
-            //     })
-            // }
         }
     });
 
@@ -425,7 +374,6 @@ const UseFetchProfile = (profile) => {
 
     let _OpenUploadModal = () => {
         setModalTitle('Upload Photo/Video');
-        // setSelectedLanguage('');
         setInitialValues(initials);
         setShowModal(true);
     }
@@ -489,11 +437,8 @@ const UseFetchProfile = (profile) => {
             const res = await axiosInstance.deleteVideo(videoId);
             const originalArray = [...myVideos];
             const originalCatalogueArray = [...catalogues];
-            // console.log(originalCatalogueArray)
             let newArray = originalCatalogueArray.filter(item => item.id !== videoId && item)
             originalArray.splice(index, 1)
-            // console.log('newArray: ', newArray)
-            // console.log('originalArray: ', originalArray)
             setCatalogues([...newArray]);
             setMyVideos([...originalArray]);
         }
@@ -517,7 +462,6 @@ const UseFetchProfile = (profile) => {
     const HandleLikePost = async (id) => {
         try {
             const { data: { data, message } } = await axiosInstance.likePost({ videoId: id });
-            console.log('success: ', message);
             fetchCatalogues();
             fetchMyVideos();
         }
@@ -526,6 +470,51 @@ const UseFetchProfile = (profile) => {
         }
     }
 
+    let _OpenShareModal = (id, thumbnail, url, picture, name, title) => {
+        setShareData({
+            videoId: id,
+            thumbnail,
+            url,
+            picture,
+            name,
+            title
+        })
+        setShowShareModal(true);
+    }
+
+    let _CloseShareModal = () => {
+        setShowShareModal(false);
+        setShareCaption('');
+    }
+
+    const _HandleChangeCaption = ({ target }) => {
+        const { value } = target;
+        setShareCaption(value);
+    }
+
+    const _HandleSharePost = async () => {
+        enableShareLoading();
+        try {
+            const { data: { data, message } } = await axiosInstance.sharePost({ caption: shareCaption, videoId: shareData?.videoId });
+            fetchMyVideos();
+            fetchCatalogues();
+            Swal.fire({
+                text: message,
+                icon: 'success',
+                timer: 3000,
+                showConfirmButton: false,
+                showCancelButton: false,
+            })
+            disableShareLoading();
+            _CloseShareModal();
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log('Share Post Api failed: ', message);
+        }
+    }
+
+
+
     return {
         followed, followers, showModal, businessCard, showBusinessCard, formik, imageUrl, loading, testimonial, uploading,
         loadingTestimonial, _AddTestimonial, handleShowBusinessCard, _EditTestimonial, _DeleteImg, handleFileChange,
@@ -533,7 +522,9 @@ const UseFetchProfile = (profile) => {
         hasMore, _OnRemoveThumbnail, onChangeThumbnail, MediaType, thumbnailRef, modalTitle, _HandleCatalogue,
         agree, thumbnailUrl, urls, setUrls, setMediaType, ChangeAgreement, _OnThumbnailClick, uploadingThumbnail,
         _CloseUploadModal, _OpenUploadModal, catalogues, setCatalogues, fetchingCatalogues, myVideos, fetchingMyVideos,
-        _HandleDeleteVideo, _HandleGotoVideoDetails, _HandleGotoUserProfile, HandleLikePost
+        _HandleDeleteVideo, _HandleGotoVideoDetails, _HandleGotoUserProfile, HandleLikePost,
+        _OpenShareModal, _CloseShareModal, showShareModal, shareData, _HandleSharePost, _HandleChangeCaption,
+        shareCaption, setShareCaption, isSharing,
     }
 }
 export default UseFetchProfile;

@@ -7,3 +7,4 @@ export { default as UseFetchProfile } from './useFetchProfile';
 export { default as UseSearch } from './useSearch';
 export { default as UseFetchNewsFeed } from './useFetchNewsFeed';
 export { default as useOutsideClick } from './useOutsideClick';
+export { default as UseFetchVideo } from './useFetchVideo';

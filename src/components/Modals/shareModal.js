@@ -1,11 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
-import { Button, Rating, Modal, InputField, VideoPlayer, ReadLessReadMore, EmojiInput } from 'src/components';
+import { Button, EmojiInput, Modal, ReadLessReadMore, VideoPlayer } from 'src/components';
 
 const ShareModal = ({ setShareCaption, ToggleShareModal, loading,
     modalTitle, _HandleSubmit, shareData: data, shareCaption }) => {
 
-    console.log(data);
     return (
         <>
             <Modal
@@ -38,27 +37,25 @@ const ShareModal = ({ setShareCaption, ToggleShareModal, loading,
                                     <div className="flex w-full py-2 px-2 space-x-1">
                                         <div className="flex space-x-2">
                                             <img
-                                                src={data.picture ||
+                                                src={data?.picture ||
                                                     "https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"}
                                                 className="rounded-full w-10 h-10 object-cover"
                                                 alt="avatar"></img>
                                             <div className="flex flex-col w-full">
                                                 <p
-                                                    // onClick={() => _HandleGotoUserProfile(UserId, User?.username)}
                                                     className="text-sm font-bold font-sans">
-                                                    {data.name || 'Lorem Ipsum'}
+                                                    {data?.name || 'Lorem Ipsum'}
                                                 </p>
                                                 <p className="text-xs text-gray-500">19h</p>
                                             </div>
                                         </div>
                                     </div>
                                     <p
-                                        // onClick={() => _HandleGotoVideoDetails(id)}
                                         className="px-5 text-sm w-full break-words"
                                     >
                                         <ReadLessReadMore
                                             limit={45}
-                                            text={data.title || ''}
+                                            text={data?.title || ''}
                                         />
                                     </p>
                                     <p className="text-sm break-words">

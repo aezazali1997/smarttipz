@@ -1,12 +1,13 @@
-const Share = require('models/Share');
-const Video = require('models/Video');
+const Comment = require('models/Comment');
 const jwt = require('jsonwebtoken');
+const User = require('models/User');
+const Video = require('models/Video');
 const sequelize = require('sequelize');
 
 const handler = async (req, res) => {
     if (req.method === 'GET') {
 
-        const { headers: { authorization } } = req;
+        const { headers: { authorization }, query: { videoId } } = req;
 
         try {
             if (!authorization) {
@@ -17,18 +18,22 @@ const handler = async (req, res) => {
                 process.env.SECRET_KEY
             );
 
-            const sharedPosts = await Share.findAll({
+            const comments = await Comment.findAll({
                 include: [{
-                    model: Video
-                }]
+                    model: User,
+                    attributes: ['id', 'name', 'username', 'showName', 'showUsername',
+                        'accountType', 'picture', 'createdAt']
+                }],
+                where: { VideoId: videoId },
+                order: [["createdAt", "DESC"]]
             });
 
-            console.log('sharedPosts: ', sharedPosts);
+            console.log('sharedPosts: ', comments);
 
             res.status(200).json({
                 error: false,
                 message: 'success',
-                data: { sharedPosts }
+                data: { comments }
             });
 
         } catch (err) {
@@ -40,7 +45,7 @@ const handler = async (req, res) => {
     else if (req.method === 'POST') {
         const {
             body,
-            body: { videoId, caption },
+            body: { videoId, comment: message },
             headers: { authorization }
         } = req;
 
@@ -49,10 +54,15 @@ const handler = async (req, res) => {
                 return res.status(401).send({ error: true, data: [], message: 'Please Login' })
             }
 
-            const { username, id } = jwt.verify(
+            const { username } = jwt.verify(
                 authorization.split(' ')[1],
                 process.env.SECRET_KEY
             );
+
+            const user = await User.findOne({
+                attributes: ['id'],
+                where: { username, isDeleted: false, isBlocked: false }
+            });
 
             if (!body) {
                 return res.status(400).send({ error: true, data: [], message: 'No data passed to server' })
@@ -65,21 +75,22 @@ const handler = async (req, res) => {
 
             console.log('video => ', video);
 
-            const share = await Share.create({
-                reviewerId: id,
-                caption,
+            const comment = await Comment.create({
+                OwnerId: user.id,
+                message,
                 VideoId: video.id
             });
 
-            await share.setVideo(video);
+            await comment.setUser(user);
+            await comment.setVideo(video);
             return res.status(201).json({
                 error: false,
-                message: 'Video Shared',
+                message: 'Comment posted',
                 data: {}
             });
 
         } catch (err) {
-            console.log("Videos Api Failed Error: ", err.message);
+            console.log("post Comment Api Failed Error: ", err.message);
             res.status(500).send({ error: true, data: [], message: err.message });
         }
     }

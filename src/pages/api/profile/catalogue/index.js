@@ -1,6 +1,7 @@
 import PostLikee from 'models/Like';
 
 const Video = require('models/Video');
+const Share = require('models/Share');
 const sequelize = require('sequelize');
 const User = require('models/User');
 const jwt = require('jsonwebtoken');
@@ -38,13 +39,16 @@ const handler = async (req, res) => {
                     model: PostLikee, attributes: ['isLiked', 'VideoId', 'reviewerId', 'id']
                 },
                 {
+                    model: Share, attributes: ['id']
+                },
+                {
                     model: User, attributes: ['name', 'username', 'picture']
                 }],
                 where: {
                     UserId: id, catalogue: true, isApproved: true
                 },
                 group: ['Video.id', 'User.id', 'User.name', 'User.picture', 'User.username',
-                    'PostLikees.id', 'PostLikees.reviewerId', 'PostLikees.isLiked'],
+                    'PostLikees.id', 'PostLikees.reviewerId', 'PostLikees.isLiked', 'Shares.id'],
                 order: [["createdAt", "DESC"]]
             })
 

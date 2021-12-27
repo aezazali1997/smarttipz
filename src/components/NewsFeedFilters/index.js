@@ -31,14 +31,14 @@ const NewsFeedFilters = ({
 									<tr>
 										<th
 											className={
-												'px-6 align-middle  py-0 text-xs uppercase  whitespace-nowrap font-semibold text-left ' +
+												'px-3 align-middle  py-0 text-xs uppercase  whitespace-nowrap font-semibold text-left ' +
 												(color === 'light'
 													? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
 													: 'bg-blueGray-600 text-blueGray-200 border-blueGray-500')
 											}></th>
 										<th
 											className={
-												'px-6 align-middle py-0 text-xs uppercase  whitespace-nowrap font-semibold text-left ' +
+												'px-3 align-middle py-0 text-xs uppercase  whitespace-nowrap font-semibold text-left ' +
 												(color === 'light'
 													? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
 													: 'bg-blueGray-600 text-blueGray-200 border-blueGray-500')
@@ -47,7 +47,7 @@ const NewsFeedFilters = ({
 								</thead>
 								<tbody>
 									<tr>
-										<td className="border-t-0 w-max space-x-3 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-wrap  p-2 text-left flex items-center">
+										<td className="border-t-0 w-max space-x-3 px-3 align-middle border-l-0 border-r-0 text-xs whitespace-wrap  p-2 text-left flex items-center">
 											<label className="inline-flex items-center">
 												<input
 													type="checkbox"
@@ -59,7 +59,7 @@ const NewsFeedFilters = ({
 												<span className="ml-2">Personal</span>
 											</label>
 										</td>
-										<td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
+										<td className="border-t-0 px-3 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
 											<label className="inline-flex items-center">
 												<input
 													type="checkbox"
@@ -73,7 +73,7 @@ const NewsFeedFilters = ({
 										</td>
 									</tr>
 									<tr>
-										<td className="border-t-0 w-max space-x-3 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-wrap  p-2 text-left flex items-center">
+										<td className="border-t-0 w-max space-x-3 px-3 align-middle border-l-0 border-r-0 text-xs whitespace-wrap  p-2 text-left flex items-center">
 											<label className="inline-flex items-center">
 												<input
 													type="checkbox"
@@ -85,7 +85,7 @@ const NewsFeedFilters = ({
 												<span className="ml-2">Paid</span>
 											</label>
 										</td>
-										<td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
+										<td className="border-t-0 px-3 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
 											<label className="inline-flex items-center">
 												<input
 													type="checkbox"
@@ -99,7 +99,7 @@ const NewsFeedFilters = ({
 										</td>
 									</tr>
 									<tr>
-										<td className="border-t-0 w-max space-x-3 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-wrap  p-2 text-left flex items-center">
+										<td className="border-t-0 w-max space-x-3 px-3 align-middle border-l-0 border-r-0 text-xs whitespace-wrap  p-2 text-left flex items-center">
 											<label className="inline-flex items-center">
 												<input
 													type="checkbox"
@@ -111,7 +111,7 @@ const NewsFeedFilters = ({
 												<span className="ml-2">SmartReview</span>
 											</label>
 										</td>
-										<td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
+										<td className="border-t-0 px-3 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
 											<label className="inline-flex items-center">
 												<input type="checkbox"
 													className="form-radio"
@@ -125,27 +125,28 @@ const NewsFeedFilters = ({
 										</td>
 									</tr>
 									<tr>
-										<td className="border-t-0 w-max space-x-3 px-6 align-middle border-l-0 border-r-0 h-11 text-xs whitespace-wrap  p-2 text-left flex items-center">
+										<td className="border-t-0 w-max space-x-3 px-3 align-middle border-l-0 border-r-0 h-11 text-xs whitespace-wrap  p-2 text-left flex items-center">
 											<label className="inline-flex items-center">
 												<span className="">Rating</span>
 											</label>
 										</td>
-										<td className="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap">
+										<td className="border-t-0 px-3 align-middle border-l-0 border-r-0 whitespace-nowrap">
 											<Rating
 												value={rating}
 												edit={true}
 												onChange={_HandleChangeRating}
 												isHalf={false}
-												size={28}
+												size={18}
 											/>
 										</td>
-										<td className="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap">
-											<Button
-												type={'button'}
-												onSubmit={() => setRating(0)}
-												className="px-3 py-2 flex w-full justify-center items-center text-white  text-sm btn rounded-md "
-												childrens={'Clear'}
-											/>
+										<td className="border-t-0 px-3 align-middle border-l-0 border-r-0 whitespace-nowrap">
+											<button
+												onClick={() => setRating(0)}
+												type="button"
+												className="mt-3 w-full inline-flex justify-center hover:underline  px-4 py-2 text-base font-medium text  sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+											>
+												Clear
+											</button>
 										</td>
 									</tr>
 								</tbody>

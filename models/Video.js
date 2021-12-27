@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-// const Comment = require("./Comment");
+const Comment = require("./Comment");
 const sequelize = require("./db");
 const Favourite = require("./Favourite");
 const PostLike = require("./Like");
@@ -79,8 +79,8 @@ Share.belongsTo(Video);
 Video.hasMany(Favourite);
 Favourite.belongsTo(Video);
 
-// Video.hasMany(Comment);
-// Comment.belongsTo(Video);
+Video.hasMany(Comment);
+Comment.belongsTo(Video);
 
 
 module.exports = Video;

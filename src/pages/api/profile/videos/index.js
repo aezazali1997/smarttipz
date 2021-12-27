@@ -1,5 +1,6 @@
 import PostLikee from 'models/Like';
 
+const Share = require('models/Share');
 const User = require('models/User');
 const Video = require('models/Video');
 const jwt = require('jsonwebtoken');
@@ -37,7 +38,12 @@ const handler = async (req, res) => {
                     },
                     {
                         model: User, attributes: ['name', 'username', 'picture']
-                    }],
+                    },
+                    {
+                        model: Share, attributes: ['id']
+                    },
+
+                ],
                 where: {
                     UserId: id,
                     isApproved: true,
@@ -46,7 +52,7 @@ const handler = async (req, res) => {
                     },
                 },
                 group: ['Video.id', 'User.id', 'User.name', 'User.picture', 'User.username',
-                    'PostLikees.id', 'PostLikees.reviewerId', 'PostLikees.isLiked'],
+                    'PostLikees.id', 'PostLikees.reviewerId', 'PostLikees.isLiked', 'Shares.id'],
                 order: [["createdAt", "DESC"]]
             });
 

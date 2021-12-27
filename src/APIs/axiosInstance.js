@@ -178,6 +178,13 @@ class AxiosInstance {
         return await axios.delete(USER_API_BASE_URL + `api/profile/videos?id=${videoId}`, this.getAuthHeader());
     }
 
+    async postComment(payload) {
+        return await axios.post(USER_API_BASE_URL + `api/profile/videos/comment`, payload, this.getAuthHeader());
+    }
+    async getAllCommentsByVideoId(videoId) {
+        return await axios.get(USER_API_BASE_URL + `api/profile/videos/comment?videoId=${videoId}`, this.getAuthHeader());
+    }
+
 }
 
 export default new AxiosInstance;

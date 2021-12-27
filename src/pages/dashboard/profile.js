@@ -1,18 +1,19 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/jsx-key */
-import React, { useEffect } from 'react'
 import axios from 'axios';
-import { Helmet } from 'react-helmet';
 import cookie from 'js-cookie';
-import { parseCookies } from 'nookies';
 import { isEmpty } from 'lodash';
+import { parseCookies } from 'nookies';
+import React, { useEffect } from 'react';
+import { Helmet } from 'react-helmet';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { UseFetchProfile } from 'src/hooks';
 import { getInputClasses } from 'helpers';
 import {
-  Button, Card, Carousel, CustomLoader, InputField, MediaUploadForm,
+  Button, Carousel, CustomLoader, InputField, MediaUploadForm,
   NewsfeedCard, PopupBusinessCard, ProfileCard, Rating, Spinner, TestimonialCard
 } from 'src/components';
+import { ShareModal } from 'src/components/Modals';
+import { UseFetchProfile } from 'src/hooks';
 
 const Profile = ({ profile }) => {
 
@@ -22,7 +23,9 @@ const Profile = ({ profile }) => {
     filteredTestimonial, fetchMoreData, hasMore, _OnRemoveThumbnail, onChangeThumbnail, MediaType, thumbnailRef,
     agree, thumbnailUrl, urls, setUrls, setMediaType, ChangeAgreement, _OnThumbnailClick, _CloseUploadModal,
     _OpenUploadModal, fetchingCatalogues, catalogues, myVideos, fetchingMyVideos, uploadingThumbnail,
-    _HandleCatalogue, _HandleDeleteVideo, _HandleGotoVideoDetails, _HandleGotoUserProfile, HandleLikePost
+    _HandleCatalogue, _HandleDeleteVideo, _HandleGotoVideoDetails, _HandleGotoUserProfile, HandleLikePost,
+    _OpenShareModal, _CloseShareModal, showShareModal, shareData,
+    _HandleSharePost, _HandleChangeCaption, shareCaption, setShareCaption, isSharing,
   } = UseFetchProfile(profile);
   const { name, about, rating, views, picture, phone, email, accountType, username, showUsername, showName
   } = profile;
@@ -124,17 +127,7 @@ const Profile = ({ profile }) => {
       </div>
       {/* section ends here */}
       {/* section starts here */}
-      {/* { */}
-      {/* accountType === 'Business' && ( */}
       <>
-        {/* <div className="flex w-full justify-end items-center px-2 mt-8">
-         <Button
-            onSubmit={_OpenUploadModal}
-            type="button"
-            childrens={'Upload Photo/Video'}
-            classNames={"px-3 py-2 flex justify-center items-center text-white text-sm btn rounded-md "}
-          />
-        </div>  */}
         <div className="flex flex-col w-full px-2 mt-4">
           <h1 className="text-md font-medium">
             {accountType === 'Personal' ? showName ? name + "'s"
@@ -159,7 +152,7 @@ const Profile = ({ profile }) => {
                 <div className="w-auto mt-6 relative">
                   <Carousel>
                     {
-                      catalogues.map(({ id, UserId, title, url, mediaType, thumbnail, catalogue, description, User, videoType, videoCost, likeCount, isLiked }, index) => (
+                      catalogues.map(({ id, UserId, title, url, mediaType, thumbnail, catalogue, description, User, videoType, videoCost, likeCount, isLiked, Shares }, index) => (
                         <div key={index} className="my-2 px-5">
                           <NewsfeedCard
                             id={id}
@@ -168,6 +161,7 @@ const Profile = ({ profile }) => {
                             catalogue={catalogue}
                             url={url}
                             User={User}
+                            Shares={Shares}
                             views={200}
                             rating={2.5}
                             isLiked={isLiked}
@@ -180,27 +174,13 @@ const Profile = ({ profile }) => {
                             width={'max-w-xs'}
                             thumbnail={thumbnail}
                             HandleLikePost={HandleLikePost}
+                            _OpenShareModal={_OpenShareModal}
                             _HandleGotoUserProfile={_HandleGotoUserProfile}
                             _HandleGotoVideoDetails={_HandleGotoVideoDetails}
                             _HandleDeleteVideo={_HandleDeleteVideo}
                             _HandleCatalogue={_HandleCatalogue}
                           />
                         </div>
-                        /* <div key={index}>
-                          <Card
-                            image={url}
-                            title={title}
-                            views={200}
-                            mediaType={mediaType}
-                            thumbnail={thumbnail}
-                            id={id}
-                            rating={3.5}
-                            menu={true}
-                            catalogue={catalogue}
-                            UserId={UserId}
-                            _HandleCatalogue={_HandleCatalogue}
-                          />
-                        </div> */
                       ))
                     }
 
@@ -233,7 +213,7 @@ const Profile = ({ profile }) => {
               <div className="w-full mt-6 justify-center lg:justify-start" >
                 <Carousel>
                   {
-                    myVideos.map(({ title, url, mediaType, thumbnail, description, id, UserId, catalogue, User, videoType, videoCost, likeCount, isLiked }, index) => (
+                    myVideos.map(({ title, url, mediaType, thumbnail, description, id, UserId, catalogue, User, videoType, videoCost, likeCount, isLiked, Shares }, index) => (
                       <div key={index} className="my-2 px-5">
                         <NewsfeedCard
                           id={id}
@@ -242,6 +222,7 @@ const Profile = ({ profile }) => {
                           catalogue={catalogue}
                           url={url}
                           User={User}
+                          Shares={Shares}
                           views={200}
                           rating={2.5}
                           mediaType={mediaType}
@@ -255,34 +236,13 @@ const Profile = ({ profile }) => {
                           width={'max-w-xs'}
                           thumbnail={thumbnail}
                           HandleLikePost={HandleLikePost}
+                          _OpenShareModal={_OpenShareModal}
                           _HandleGotoUserProfile={_HandleGotoUserProfile}
                           _HandleGotoVideoDetails={_HandleGotoVideoDetails}
                           _HandleCatalogue={_HandleCatalogue}
                           _HandleDeleteVideo={_HandleDeleteVideo}
                         />
                       </div>
-                      /* <div key={index}>
-                        <Card
-                          image={url}
-                          title={title}
-                          thumbnail={thumbnail}
-                          mediaType={mediaType}
-                          comment={comment}
-                          like={like}
-                          share={share}
-                          views={200}
-                          rating={3.5}
-                          disclaimer={true}
-                          id={id}
-                          catalogue={catalogue}
-                          UserId={UserId}
-                          isPost={true}
-                          menu={true}
-                          index={index}
-                          _HandleCatalogue={_HandleCatalogue}
-                          _HandleDeleteVideo={_HandleDeleteVideo}
-                        />
-                      </div> */
                     ))
                   }
                 </Carousel>
@@ -383,15 +343,12 @@ const Profile = ({ profile }) => {
                             <div key={index}>
                               <TestimonialCard
                                 _Toggle={() => _EditTestimonial(id, isVisible)}
-                                // _Edit={_EditTestimonial}
-                                // _Delete={_DeleteTestimonial}
                                 image={picture}
                                 name={ownerName}
                                 designation={designation}
                                 description={description}
                                 checked={isVisible}
                                 index={index}
-                              // data={res}
                               />
                             </div>
                           ))
@@ -418,8 +375,6 @@ const Profile = ({ profile }) => {
           </div>
         )
       }
-
-
       {
         showModal && (
           <MediaUploadForm
@@ -445,40 +400,20 @@ const Profile = ({ profile }) => {
           />
         )
       }
-
-      {/* section ends here */}
-      {/* {
-        showModal && (
-          modalTitle === 'Add Testimonial' ?
-            <AddTestimonialModal
-              formik={formik}
-              loading={loading}
-              imageUrl={imageUrl}
-              uploading={uploading}
-              FileInput={FileInput}
-              _DeleteImg={_DeleteImg}
-              openFileDialog={openFileDialog}
-              handleShowModal={handleShowModal}
-              handleFileChange={handleFileChange}
-            />
-            :
-            modalTitle === 'Edit Testimonial' ?
-              <EditTestimonialModal
-                formik={formik}
-                loading={loading}
-                imageUrl={imageUrl}
-                uploading={uploading}
-                FileInput={FileInput}
-                _DeleteImg={_DeleteImg}
-                openFileDialog={openFileDialog}
-                handleShowModal={handleShowModal}
-                handleFileChange={handleFileChange}
-
-              />
-              :
-              ''
+      {
+        showShareModal && (
+          <ShareModal
+            modalTitle={'Share Post'}
+            ToggleShareModal={_CloseShareModal}
+            setShareCaption={setShareCaption}
+            shareCaption={shareCaption}
+            _HandleSubmit={_HandleSharePost}
+            loading={isSharing}
+            shareData={shareData}
+          />
         )
-      } */}
+      }
+
     </div>
   )
 }

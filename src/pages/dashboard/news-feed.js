@@ -1,11 +1,8 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable @next/next/no-img-element */
-import { faFileVideo } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { MediaUploadForm, NewsfeedCard, NewsFeedFilters, Rating, Searchbar, Switch, VideoPlayer, VideoUploadBlock } from 'src/components';
-import { PostActionDropdown } from 'src/components/Dropdown';
+import { MediaUploadForm, NewsfeedCard, VideoUploadBlock } from 'src/components';
 import { ShareModal, TipModal, VideoRatingModal } from 'src/components/Modals';
 import { UseFetchNewsFeed } from 'src/hooks';
 
@@ -43,12 +40,13 @@ const NewsFeed = () => {
               title={'Click to upload SmartReviews Videos'}
               tooltip={'SmartReview is a product or service review video'}
             />
-
           </div>
         </div>
         <div className="space-y-4">
           {
-            posts && posts.map(({ id, description, title, url, UserId, thumbnail, PostLikees, catalogue, isLiked, likeCount, User, videoType, videoCost, isShowOnNewsfeed }, index) => (
+            posts && posts.map(({ id, description, title, url, UserId, thumbnail, PostLikees,
+              catalogue, isLiked, likeCount, shareCount, User, videoType, videoCost, isShowOnNewsfeed, Shares
+            }, index) => (
               isShowOnNewsfeed && (
                 <div key={index}>
                   <NewsfeedCard
@@ -64,19 +62,21 @@ const NewsFeed = () => {
                     postLikes={PostLikees}
                     description={description}
                     title={title}
+                    Shares={Shares}
                     isLiked={isLiked}
                     likeCount={likeCount}
+                    shareCount={shareCount}
                     videoCost={videoCost}
                     videoType={videoType}
                     width={'max-w-lg'}
                     thumbnail={thumbnail}
-                    HandleFavouritePost={HandleFavouritePost}
                     HandleLikePost={HandleLikePost}
                     ToggleTipModal={ToggleTipModal}
                     _OpenShareModal={_OpenShareModal}
                     _HandleCatalogue={_HandleCatalogue}
                     ToggleRatingModal={ToggleRatingModal}
                     _HandleDeleteVideo={_HandleDeleteVideo}
+                    HandleFavouritePost={HandleFavouritePost}
                     _HandleGotoUserProfile={_HandleGotoUserProfile}
                     _HandleGotoVideoDetails={_HandleGotoVideoDetails}
                   />

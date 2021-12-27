@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import { faCommentAlt, faShareAlt, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactTooltip from 'react-tooltip';
+import axiosInstance from 'src/APIs/axiosInstance';
 import { CommentSection, Rating, VideoPlayer } from '..';
 import { PostActionDropdown } from '../Dropdown';
 
@@ -20,20 +21,69 @@ const NewsfeedCard = ({
     views,
     width,
     User,
+    Shares,
     isLiked,
     likeCount,
+    shareCount,
     videoCost,
     videoType,
     HandleLikePost,
-    HandleFavouritePost,
     ToggleTipModal,
     _OpenShareModal,
     _HandleCatalogue,
     ToggleRatingModal,
     _HandleDeleteVideo,
+    HandleFavouritePost,
     _HandleGotoUserProfile,
     _HandleGotoVideoDetails
 }) => {
+
+    const [showCommentSection, setShowCommentSection] = useState(false);
+    const [message, setMessage] = useState('');
+    const [comments, setComments] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const getAllCommentsByVideoId = async () => {
+        try {
+            setLoading(true);
+            const { data: { data: { comments } } } = await axiosInstance.getAllCommentsByVideoId(id);
+            setComments(comments);
+            setLoading(false);
+        }
+        catch (e) {
+            console.log('Get All comments by VideoId api failed: ', e);
+        }
+    }
+
+    useEffect(() => {
+        getAllCommentsByVideoId();
+    }, [])
+
+    useEffect(() => {
+        if (showCommentSection) {
+            getAllCommentsByVideoId();
+        }
+    }, [showCommentSection])
+
+
+    const _HandleCommentSection = () => {
+        setShowCommentSection(!showCommentSection);
+    }
+
+    const _HandleSubmitComment = async (text) => {
+        console.log('enter', text)
+        if (text !== '') {
+            try {
+                const res = await axiosInstance.postComment({ comment: text, videoId: id });
+                getAllCommentsByVideoId();
+            }
+            catch (e) {
+                console.log('Comment on Post API failed: ', e);
+            }
+        }
+    }
+
+
     return (
         <>
             <div
@@ -177,33 +227,51 @@ const NewsfeedCard = ({
                             onClick={() => HandleLikePost(id, index)}
                             className="flex relative justify-center group items-center py-1 px-3 w-full  cursor-pointer">
                             <div className="flex flex-col items-center">
-                                <FontAwesomeIcon icon={faThumbsUp} className={`w-6 h-6 ${isLiked == null ? 'text-gray-600' : 'text-purple-600'} group-hover:text-purple-600`} />
+                                <FontAwesomeIcon icon={faThumbsUp} className={`w-6 h-6 
+                                ${isLiked == null || isLiked === false ? 'text-gray-600' : 'text-purple-600'} group-hover:text-purple-600`}
+                                />
                                 <p
-                                    className={`cursor-pointer w-full text-xs text-center ${isLiked == null ? 'text-gray-600' : 'text-purple-600'} group-hover:text-purple-600`}>
+                                    className={`cursor-pointer w-full text-xs text-center 
+                                    ${isLiked == null || isLiked === false ? 'text-gray-600' : 'text-purple-600'} group-hover:text-purple-600`}
+                                >
                                     {likeCount}
                                 </p>
                             </div>
-
                         </div>
-                        <div className="flex space-x-2 justify-center relative group py-1 px-3 w-full  cursor-pointer">
+                        <div
+                            onClick={() => _HandleCommentSection()}
+                            className="flex space-x-2 justify-center relative group py-1 px-3 w-full  cursor-pointer">
                             <div className="flex flex-col items-center">
                                 <FontAwesomeIcon icon={faCommentAlt} className="w-6 h-6 text-gray-600 group-hover:text-purple-600" />
                                 <p className="cursor-pointer w-full text-xs text-center text-gray-600 group-hover:text-purple-600">
-                                    2
+                                    {comments?.length}
                                 </p>
                             </div>
                         </div>
-                        <div onClick={() => _OpenShareModal(id, thumbnail, url, User?.picture, User?.name, title)} className="flex relative group justify-center items-center py-1 px-3 w-full cursor-pointer">
+                        <div onClick={() => _OpenShareModal(id, thumbnail, url, User?.picture, User?.name, title)}
+                            className="flex relative group justify-center items-center py-1 px-3 w-full cursor-pointer"
+                        >
                             <div className="flex flex-col items-center" >
                                 <FontAwesomeIcon icon={faShareAlt} className="w-6 h-6 text-gray-600 group-hover:text-purple-600" />
                                 <p className=" cursor-pointer text-xs w-full text-center text-gray-600 group-hover:text-purple-600">
-                                    10
+                                    {Shares?.length}
                                 </p>
                             </div>
 
                         </div>
                     </div>
-                    <CommentSection />
+                    {
+                        showCommentSection && (
+                            <CommentSection
+                                comments={comments}
+                                message={message}
+                                loading={loading}
+                                setMessage={setMessage}
+                                _HandleSubmitComment={_HandleSubmitComment}
+                                _HandleGotoUserProfile={_HandleGotoUserProfile}
+                            />
+                        )
+                    }
                 </div>
             </div>
         </>
