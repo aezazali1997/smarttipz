@@ -185,6 +185,10 @@ class AxiosInstance {
         return await axios.get(USER_API_BASE_URL + `api/profile/videos/comment?videoId=${videoId}`, this.getAuthHeader());
     }
 
+    async getAllSharedVideos() {
+        return await axios.get(USER_API_BASE_URL + `api/profile/videos/share`, this.getAuthHeader());
+    }
+
 }
 
 export default new AxiosInstance;

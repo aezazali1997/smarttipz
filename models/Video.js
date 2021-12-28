@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const Comment = require("./Comment");
+const Comment = require("./Comments");
 const sequelize = require("./db");
 const Favourite = require("./Favourite");
 const PostLike = require("./Like");

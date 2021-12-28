@@ -9,7 +9,7 @@ const Like = require('models/Like');
 const Chat = require('models/Chat');
 const User = require('models/User');
 const Business = require('models/Business');
-const Comment = require('models/Comment');
+const Comment = require('models/Comments');
 
 const handler = async (req, res) => {
     // sequelize.sync({ force: true });

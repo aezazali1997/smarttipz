@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('./db');
 const Video = require('./Video');
 const Business = require('./Business');
-const Comment = require('./Comment');
+const Comment = require('./Comments');
 
 const User = sequelize.define('User', {
   name: {

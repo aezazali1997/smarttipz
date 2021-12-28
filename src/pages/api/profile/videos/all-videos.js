@@ -2,7 +2,7 @@
 const jwt = require('jsonwebtoken');
 const sequelize = require('sequelize');
 
-const Comment = require('models/Comment');
+const Comment = require('models/Comments');
 const PostLikee = require('models/Like');
 const Share = require('models/Share');
 const User = require('models/User');
