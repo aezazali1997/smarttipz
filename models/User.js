@@ -3,6 +3,7 @@ const sequelize = require('./db');
 const Video = require('./Video');
 const Business = require('./Business');
 const Comment = require('./Comments');
+const Share = require('./Share');
 
 const User = sequelize.define('User', {
   name: {
@@ -131,5 +132,8 @@ Video.belongsTo(User);
 
 User.hasMany(Comment);
 Comment.belongsTo(User);
+
+User.hasMany(Share);
+Share.belongsTo(User);
 
 module.exports = User;

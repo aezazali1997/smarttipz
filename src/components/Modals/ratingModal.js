@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button, Rating, Modal } from 'src/components';
 
-const VideoRatingModal = ({ _HandleChangeRating, videoRating, ToggleRatingModal, loading, modalTitle }) => {
+const VideoRatingModal = ({ _SubmitRating, _HandleChangeRating, videoRating, ToggleRatingModal, loading, modalTitle }) => {
     return (
         <>
             <Modal
@@ -32,6 +32,7 @@ const VideoRatingModal = ({ _HandleChangeRating, videoRating, ToggleRatingModal,
                         </button>
                         <Button
                             type="button"
+                            onSubmit={_SubmitRating}
                             className="w-full inline-flex justify-center rounded-md border-none px-4 py-2 btn text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm"
                             childrens={'Submit'}
                             loading={loading}

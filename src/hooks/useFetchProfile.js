@@ -108,7 +108,7 @@ const UseFetchProfile = (profile) => {
             setMyVideos(videos);
             var count = 0;
             for (let i = 0; i < videos.length; i++) {
-                if (videos[i].catalogue === true) {
+                if (videos[i].Video.catalogue === true) {
                     count = count + 1;
                 }
             }
@@ -411,7 +411,7 @@ const UseFetchProfile = (profile) => {
                 }
                 let newArray = originalVideoArray.map((item) => {
                     if (item.id !== videoId) return item;
-                    item.catalogue = !catalogue;
+                    item.Video.catalogue = !catalogue;
                     return item;
                 })
                 setMyVideos(newArray)

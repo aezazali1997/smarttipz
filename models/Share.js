@@ -1,16 +1,16 @@
 const { DataTypes } = require("sequelize");
+const AllPosts = require("./AllPost");
 const sequelize = require("./db");
 
 const Share = sequelize.define("Share", {
 
-    reviewerId: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
     caption: {
         type: DataTypes.STRING,
     }
 
 });
+
+Share.hasMany(AllPosts);
+AllPosts.belongsTo(Share);
 
 module.exports = Share;

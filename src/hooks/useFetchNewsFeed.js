@@ -1,11 +1,10 @@
-import { useFormik } from 'formik';
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
-import { useS3Upload } from 'next-s3-upload';
-import { UploadVideoSchema } from 'utils/validation_shema';
-import axiosInstance from 'src/APIs/axiosInstance';
-import { isEmpty } from 'lodash';
+import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
+import { useS3Upload } from 'next-s3-upload';
+import axiosInstance from 'src/APIs/axiosInstance';
+import { UploadVideoSchema } from 'utils/validation_shema';
 
 const UseFetchNewsFeed = () => {
 
@@ -41,24 +40,31 @@ const UseFetchNewsFeed = () => {
     const [initialValues, setInitialValues] = useState(initials);
     const [showRatingModal, setShowRatingModal] = useState(false);
     const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
+    const [isloadingFeed, setLoadingFeed] = useState(true);
+    const [ratePostId, setRatePostId] = useState('');
+    const [postRating, setSharePostRating] = useState(0);
 
     let thumbnailRef = useRef();
 
     let GetPosts = async () => {
         try {
-            const { data: { data: { videos } } } = await axiosInstance.getNewsFeedPosts();
+            setLoadingFeed(true);
+            const { data: { data: { videos } } } = await axiosInstance.getAllSharedVideos();
             setPosts(videos);
             console.log(videos)
             var count = 0;
             for (let i = 0; i < videos.length; i++) {
-                if (videos[i].catalogue === true && videos[i].UserId == parseInt(localStorage.getItem('id'))) {
+                if (videos[i].Video.catalogue === true && videos[i].isShared === false && videos[i].Video.UserId == parseInt(localStorage.getItem('id'))) {
                     count = count + 1;
                 }
             }
+            console.log('count: ', count);
             setCatalogueCount(count)
+            setLoadingFeed(false);
         }
         catch ({ response: { data: { message } } }) {
             console.log(message);
+            setLoadingFeed(false);
         }
     }
 
@@ -253,7 +259,7 @@ const UseFetchNewsFeed = () => {
                 const originalArray = [...posts];
                 let newArray = originalArray.map((item, i) => {
                     if (item.id !== videoId) return item;
-                    item.catalogue = !catalogue;
+                    item.Video.catalogue = !catalogue;
                     return item;
                 })
                 setPosts(newArray)
@@ -303,13 +309,33 @@ const UseFetchNewsFeed = () => {
         router.push(`/dashboard/videos/${id}`)
     }
 
+    const OpenRatingModal = (postId) => {
+        setRatePostId(postId);
+        console.log('postToRate: ', postId);
+        setShowRatingModal(true);
+    }
+
     const ToggleRatingModal = () => {
-        setShowRatingModal(!showRatingModal);
+        setShowRatingModal(false);
     }
 
     const _HandleChangeRating = (value) => {
         console.log('value: ', value);
+        setSharePostRating(value);
     }
+
+    const _SubmitRating = async () => {
+        console.log({ postId: ratePostId, rating: postRating })
+        try {
+            const { data: { message } } = await axiosInstance.ratePost({ postId: ratePostId, rating: postRating });
+            console.log('message: ', message);
+            ToggleRatingModal();
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log('in catch of api rating: ', message);
+        }
+    }
+
 
     const ToggleTipModal = () => {
         setShowTipModal(!showTipModal);
@@ -360,10 +386,11 @@ const UseFetchNewsFeed = () => {
         setUrls, showModal, _OpenUploadModal, _CloseUploadModal, loading, thumbnailRef, _OnRemoveThumbnail,
         onChangeThumbnail, _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType, _HandleGotoUserProfile,
         uploadingThumbnail, posts, HandleLikePost, HandleCheckLike, _HandleCatalogue, _HandleDeleteVideo,
-        _HandleGotoVideoDetails, ToggleRatingModal, _HandleChangeRating, showRatingModal, ToggleTipModal,
+        _HandleGotoVideoDetails, showRatingModal, ToggleTipModal,
         _HandleChangeTip, showTipModal, videoType, _OpenShareModal, _CloseShareModal, showShareModal, shareData,
         _HandleSharePost, _HandleChangeCaption, shareCaption, setShareCaption, isSharing, HandleFavouritePost,
-        _HandleChangePostOnNewsfeed, postOnFeed, tip
+        _HandleChangePostOnNewsfeed, postOnFeed, tip, isloadingFeed, OpenRatingModal, ToggleRatingModal,
+        _HandleChangeRating, postRating, _SubmitRating
     }
 }
 

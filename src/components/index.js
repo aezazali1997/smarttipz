@@ -19,6 +19,7 @@ export { default as Card } from './Card';//
 export { default as ProfileCard } from './ProfileCard';
 export { default as ChatCard } from './ChatCard';
 export { default as CommentCard } from './CommentCard';
+export { default as SharedCard } from './SharedCard';
 export { default as SuggestionCard } from './SuggestionsCard';
 export { default as VideoPlayer } from './VideoPlayer';
 export { default as Modal } from './Modal';

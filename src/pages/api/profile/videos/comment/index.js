@@ -1,3 +1,5 @@
+import AllPosts from 'models/AllPost';
+
 const Comment = require('models/Comments');
 const jwt = require('jsonwebtoken');
 const User = require('models/User');
@@ -24,7 +26,7 @@ const handler = async (req, res) => {
                     attributes: ['id', 'name', 'username', 'showName', 'showUsername',
                         'accountType', 'picture', 'createdAt']
                 }],
-                where: { VideoId: videoId },
+                where: { AllPostId: videoId },
                 order: [["createdAt", "DESC"]]
             });
 
@@ -68,21 +70,20 @@ const handler = async (req, res) => {
                 return res.status(400).send({ error: true, data: [], message: 'No data passed to server' })
             }
 
-            const video = await Video.findOne({
+            const allPost = await AllPosts.findOne({
                 attributes: ['id'],
-                where: { id: videoId, isApproved: true }
+                where: { id: videoId }
             });
-
-            console.log('video => ', video);
 
             const comment = await Comment.create({
                 OwnerId: user.id,
                 message,
-                VideoId: video.id
+                AllPostId: videoId
             });
 
             await comment.setUser(user);
-            await comment.setVideo(video);
+            await comment.setAllPost(allPost)
+
             return res.status(201).json({
                 error: false,
                 message: 'Comment posted',

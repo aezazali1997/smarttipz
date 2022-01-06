@@ -1,3 +1,4 @@
+import AllPosts from 'models/AllPost';
 import PostLikee from 'models/Like';
 
 const Video = require('models/Video');
@@ -25,33 +26,61 @@ const handler = async (req, res) => {
                 return res.status(404).send({ error: true, data: [], message: 'User Not Found' })
             }
 
-            console.log('user: ', user);
             const { id } = user;
 
-            const videos = await Video.findAll({
+            const videos = await AllPosts.findAll({
                 attributes: {
                     include: [
                         [sequelize.fn("COUNT", sequelize.col("PostLikees.id")), 'likeCount'],
-                        [sequelize.where(sequelize.col("PostLikees.reviewerId"), id), 'isLiked']
+                        [sequelize.where(sequelize.col("PostLikees.reviewerId"), id), 'isLiked'],
                     ]
                 },
-                include: [{
-                    model: PostLikee, attributes: ['isLiked', 'VideoId', 'reviewerId', 'id']
-                },
-                {
-                    model: Share, attributes: ['id']
-                },
-                {
-                    model: User, attributes: ['name', 'username', 'picture']
-                }],
+                include: [
+                    {
+                        model: PostLikee, attributes: ['id']
+                    },
+                    {
+                        model: Video,
+                        include: [
+                            {
+                                model: User, attributes: ['name', 'username', 'picture']
+                            },
+                        ],
+                    },
+                    {
+                        model: Share, attributes: ['id', 'caption']
+                    }
+                ],
                 where: {
-                    UserId: id, catalogue: true, isApproved: true
+                    [sequelize.Op.and]: [
+                        {
+                            '$Video.isApproved$': {
+                                [sequelize.Op.eq]: true
+                            },
+                        },
+                        {
+                            '$Video.UserId$': {
+                                [sequelize.Op.eq]: id
+                            },
+                        },
+                        {
+                            '$Video.catalogue$': {
+                                [sequelize.Op.eq]: true
+                            },
+                        },
+                        {
+                            isShared: {
+                                [sequelize.Op.eq]: false
+                            },
+                        }
+                    ]
                 },
-                group: ['Video.id', 'User.id', 'User.name', 'User.picture', 'User.username',
-                    'PostLikees.id', 'PostLikees.reviewerId', 'PostLikees.isLiked', 'Shares.id'],
+                group: ['AllPost.id', 'PostLikees.reviewerId', 'PostLikees.id',
+                    'Video.id', 'Video->User.id', 'Video->User.name', 'Video->User.username', 'Video->User.picture',
+                    'Share.id'
+                ],
                 order: [["createdAt", "DESC"]]
-            })
-
+            });
             console.log('videos: ', videos);
 
             res.status(200).json({
@@ -89,8 +118,12 @@ const handler = async (req, res) => {
 
             const { id } = user;
 
+            const { VideoId } = await AllPosts.findOne({
+                where: { id: videoId }, attributes: ['VideoId']
+            });
+
             await Video.update({ catalogue: !catalogue }, {
-                where: { id: videoId, isApproved: true },
+                where: { id: VideoId, isApproved: true },
             })
 
             res.status(200).json({

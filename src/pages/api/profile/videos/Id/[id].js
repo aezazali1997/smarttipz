@@ -1,4 +1,6 @@
+import AllPosts from 'models/AllPost';
 import PostLikee from 'models/Like';
+import Share from 'models/Share';
 
 const jwt = require('jsonwebtoken');
 const User = require('models/User');
@@ -20,23 +22,55 @@ const handler = async (req, res) => {
                 process.env.SECRET_KEY
             );
 
-            const video = await Video.findOne({
+            // const video = await AllPosts.findOne({
+            //     attributes: {
+            //         include: [[sequelize.fn("COUNT", sequelize.col("PostLikees.id")), 'likeCount'],
+            //         [sequelize.where(sequelize.col("PostLikees.reviewerId"), id), 'isLiked']]
+            //     },
+            //     include: [
+            //         {
+            //             model: PostLikee, attributes: ['isLiked', 'VideoId', 'reviewerId', 'id']
+            //         },
+            //         {
+            //             model: User, attributes: ['name', 'username', 'picture']
+            //         }],
+            //     where: {
+            //         id: videoId, isApproved: true
+            //     },
+            //     group: ['Video.id', 'User.id', 'User.name', 'User.picture', 'User.username',
+            //         'PostLikees.id', 'PostLikees.reviewerId', 'PostLikees.isLiked'],
+            // });
+            const video = await AllPosts.findOne({
                 attributes: {
-                    include: [[sequelize.fn("COUNT", sequelize.col("PostLikees.id")), 'likeCount'],
-                    [sequelize.where(sequelize.col("PostLikees.reviewerId"), id), 'isLiked']]
+                    include: [
+                        [sequelize.fn("COUNT", sequelize.col("PostLikees.id")), 'likeCount'],
+                        [sequelize.where(sequelize.col("PostLikees.reviewerId"), id), 'isLiked'],
+                    ]
                 },
                 include: [
                     {
-                        model: PostLikee, attributes: ['isLiked', 'VideoId', 'reviewerId', 'id']
+                        model: PostLikee, attributes: ['id']
                     },
                     {
-                        model: User, attributes: ['name', 'username', 'picture']
-                    }],
+                        model: Video,
+                        include: [
+                            {
+                                model: User, attributes: ['name', 'username', 'picture']
+                            },
+                        ],
+                    },
+                    {
+                        model: Share, attributes: ['id', 'caption']
+                    }
+                ],
                 where: {
-                    id: videoId, isApproved: true
+                    id: videoId
                 },
-                group: ['Video.id', 'User.id', 'User.name', 'User.picture', 'User.username',
-                    'PostLikees.id', 'PostLikees.reviewerId', 'PostLikees.isLiked'],
+                group: ['AllPost.id', 'PostLikees.reviewerId', 'PostLikees.id',
+                    'Video.id', 'Video->User.id', 'Video->User.name', 'Video->User.username', 'Video->User.picture',
+                    'Share.id'
+                ],
+                order: [["createdAt", "DESC"]]
             });
 
             res.status(200).json({

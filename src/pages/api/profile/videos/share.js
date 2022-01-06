@@ -1,3 +1,6 @@
+import AllPosts from 'models/AllPost';
+import User from 'models/User';
+
 const Share = require('models/Share');
 const Video = require('models/Video');
 const jwt = require('jsonwebtoken');
@@ -58,20 +61,32 @@ const handler = async (req, res) => {
                 return res.status(400).send({ error: true, data: [], message: 'No data passed to server' })
             }
 
+            const user = await User.findOne({
+                where: { id }
+            });
+
             const video = await Video.findOne({
                 attributes: ['id'],
                 where: { id: videoId, isApproved: true }
             });
 
-            console.log('video => ', video);
-
             const share = await Share.create({
-                reviewerId: id,
+                UserId: id,
                 caption,
                 VideoId: video.id
             });
 
+            const newPost = await AllPosts.create({
+                VideoId: video.id,
+                isShared: true,
+                ShareId: share.id
+            });
+
+            await share.setUser(user);
+            await newPost.setShare(share);
+            await newPost.setVideo(video);
             await share.setVideo(video);
+
             return res.status(201).json({
                 error: false,
                 message: 'Video Shared',

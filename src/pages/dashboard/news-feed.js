@@ -2,10 +2,10 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { MediaUploadForm, NewsfeedCard, VideoUploadBlock } from 'src/components';
+import { isEmpty } from 'lodash';
+import { MediaUploadForm, NewsfeedCard, VideoUploadBlock, Spinner, SharedCard } from 'src/components';
 import { ShareModal, TipModal, VideoRatingModal } from 'src/components/Modals';
 import { UseFetchNewsFeed } from 'src/hooks';
-
 const NewsFeed = () => {
 
   const { formik, _DeleteImg, ChangeAgreement, agree, urls, setUrls, showModal,
@@ -15,7 +15,8 @@ const NewsFeed = () => {
     _HandleGotoVideoDetails, ToggleRatingModal, _HandleChangeRating, showRatingModal, ToggleTipModal,
     _HandleChangeTip, showTipModal, _OpenShareModal, _CloseShareModal, showShareModal, shareData,
     _HandleSharePost, shareCaption, setShareCaption, isSharing, HandleFavouritePost,
-    _HandleChangePostOnNewsfeed, postOnFeed, tip
+    _HandleChangePostOnNewsfeed, postOnFeed, tip, isloadingFeed, OpenRatingModal, postRating,
+    _SubmitRating
   } = UseFetchNewsFeed();
 
   return (
@@ -42,52 +43,81 @@ const NewsFeed = () => {
             />
           </div>
         </div>
-        <div className="space-y-4">
-          {
-            posts && posts.map(({ id, description, title, url, UserId, thumbnail, PostLikees,
-              catalogue, isLiked, likeCount, shareCount, User, videoType, videoCost, isShowOnNewsfeed, Shares
-            }, index) => (
-              isShowOnNewsfeed && (
-                <div key={index}>
-                  <NewsfeedCard
-                    id={id}
-                    UserId={UserId}
-                    index={index}
-                    catalogue={catalogue}
-                    isPost={true}
-                    url={url}
-                    views={200}
-                    User={User}
-                    rating={2.5}
-                    postLikes={PostLikees}
-                    description={description}
-                    title={title}
-                    Shares={Shares}
-                    isLiked={isLiked}
-                    likeCount={likeCount}
-                    shareCount={shareCount}
-                    videoCost={videoCost}
-                    videoType={videoType}
-                    width={'max-w-lg'}
-                    thumbnail={thumbnail}
-                    HandleLikePost={HandleLikePost}
-                    ToggleTipModal={ToggleTipModal}
-                    _OpenShareModal={_OpenShareModal}
-                    _HandleCatalogue={_HandleCatalogue}
-                    ToggleRatingModal={ToggleRatingModal}
-                    _HandleDeleteVideo={_HandleDeleteVideo}
-                    HandleFavouritePost={HandleFavouritePost}
-                    _HandleGotoUserProfile={_HandleGotoUserProfile}
-                    _HandleGotoVideoDetails={_HandleGotoVideoDetails}
-                  />
+        {
+          isloadingFeed ?
+            <div className="flex justify-center items-center">
+              <Spinner />
+            </div>
+            :
+            isEmpty(posts) ?
+              <div className="flex w-full justify-center items-center">
+                <p className="text-gray-500"> No Feed Yet</p>
+              </div>
+              :
+              <div className="space-y-4">
+                {
+                  posts.map(({ id: postId, Video, Video: { id, description, title, url, UserId, thumbnail, PostLikees,
+                    catalogue, User, videoType, videoCost, isShowOnNewsfeed, Shares
+                  }, isShared, Share, isLiked, likeCount, shareCount,
+                  }, index) => (
+                    isShared ?
+                      <SharedCard
+                        id={postId}
+                        videoId={id}
+                        index={index}
+                        Video={Video}
+                        Share={Share}
+                        isLiked={isLiked}
+                        width={'max-w-lg'}
+                        likeCount={likeCount}
+                        shareCount={shareCount}
+                        HandleLikePost={HandleLikePost}
+                        _OpenShareModal={_OpenShareModal}
+                        _HandleGotoUserProfile={_HandleGotoUserProfile}
+                        _HandleGotoVideoDetails={_HandleGotoVideoDetails}
+                      /> :
 
-                </div>
-              )
-            ))
-          }
-        </div>
+                      isShowOnNewsfeed && (
+                        <div key={index}>
+                          <NewsfeedCard
+                            id={postId}
+                            videoId={id}
+                            UserId={UserId}
+                            index={index}
+                            catalogue={catalogue}
+                            isPost={true}
+                            url={url}
+                            views={200}
+                            User={User}
+                            rating={2.5}
+                            postLikes={PostLikees}
+                            description={description}
+                            title={title}
+                            Shares={Shares}
+                            isLiked={isLiked}
+                            likeCount={likeCount}
+                            shareCount={shareCount}
+                            videoCost={videoCost}
+                            videoType={videoType}
+                            width={'max-w-lg'}
+                            thumbnail={thumbnail}
+                            HandleLikePost={HandleLikePost}
+                            ToggleTipModal={ToggleTipModal}
+                            _OpenShareModal={_OpenShareModal}
+                            _HandleCatalogue={_HandleCatalogue}
+                            ToggleRatingModal={() => OpenRatingModal(postId)}
+                            _HandleDeleteVideo={_HandleDeleteVideo}
+                            HandleFavouritePost={HandleFavouritePost}
+                            _HandleGotoUserProfile={_HandleGotoUserProfile}
+                            _HandleGotoVideoDetails={_HandleGotoVideoDetails}
+                          />
+                        </div>
+                      )
+                  ))
+                }
+              </div>
+        }
       </div>
-
       {
         showModal && (
           <MediaUploadForm
@@ -120,11 +150,12 @@ const NewsFeed = () => {
       {
         showRatingModal && (
           <VideoRatingModal
+            loading={false}
+            videoRating={postRating}
             modalTitle={'Rate Video'}
+            _SubmitRating={_SubmitRating}
             ToggleRatingModal={ToggleRatingModal}
             _HandleChangeRating={_HandleChangeRating}
-            loading={false}
-            videoRating={2}
           />
         )
       }

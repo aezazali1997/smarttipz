@@ -1,3 +1,6 @@
+import AllPosts from 'models/AllPost';
+import Rating from 'models/Rating';
+
 const sequelize = require('models/db');
 
 const Share = require('models/Share');
@@ -13,14 +16,17 @@ const Comment = require('models/Comments');
 
 const handler = async (req, res) => {
     // sequelize.sync({ force: true });
-    User.sync({ alter: true });
-    Comment.sync({ alter: true });
+    AllPosts.sync({ alter: true });
+    Rating.sync({ force: true });
+    // User.sync({ alter: true });
     // await Business.sync({ force: true });
     // await BusinessCard.sync({ force: true });
     // await Session.sync({ force: true });
-    // Video.sync({ alter: true });
+    // Comment.sync({ force: true });
+    // Share.sync({ alter: true });
+    // Video.sync({ force: true });
+    // Like.sync({ force: true });
     // Favourite.sync({ force: true });
-    // Like.sync({ alter: true });
     // Share.sync({ alter: true });
     // await Testimonial.sync({ force: true });
     // await Chat.sync({ force: true });

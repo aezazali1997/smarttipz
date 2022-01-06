@@ -1,3 +1,5 @@
+import AllPosts from 'models/AllPost';
+
 const PostLike = require('models/Like');
 
 const User = require('models/User');
@@ -65,15 +67,15 @@ const handler = async (req, res) => {
 
             console.log('id => ', id);
 
-            const video = await Video.findOne({
+            const allPost = await AllPosts.findOne({
                 attributes: ['id'],
-                where: { id: videoId, isApproved: true }
+                where: { id: videoId }
             });
 
-            console.log('video => ', video);
+            console.log('video => ', videoId);
 
 
-            const post = await PostLike.findOne({ where: { VideoId: video.id, reviewerId: id } });
+            const post = await PostLike.findOne({ where: { AllPostId: videoId, reviewerId: id } });
 
             console.log('post => ', post);
 
@@ -84,7 +86,7 @@ const handler = async (req, res) => {
                     isLiked: true
                 });
 
-                await like.setVideo(video);
+                await like.setAllPost(allPost);
                 return res.status(201).json({
                     error: false,
                     message: 'Post liked',

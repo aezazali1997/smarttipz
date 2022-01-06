@@ -181,12 +181,19 @@ class AxiosInstance {
     async postComment(payload) {
         return await axios.post(USER_API_BASE_URL + `api/profile/videos/comment`, payload, this.getAuthHeader());
     }
+    async deleteCommentById(commentId) {
+        return await axios.delete(USER_API_BASE_URL + `api/profile/videos/comment/${commentId}`, this.getAuthHeader());
+    }
     async getAllCommentsByVideoId(videoId) {
         return await axios.get(USER_API_BASE_URL + `api/profile/videos/comment?videoId=${videoId}`, this.getAuthHeader());
     }
 
     async getAllSharedVideos() {
-        return await axios.get(USER_API_BASE_URL + `api/profile/videos/share`, this.getAuthHeader());
+        return await axios.get(USER_API_BASE_URL + `api/newsfeed`, this.getAuthHeader());
+    }
+
+    async ratePost(payload) {
+        return await axios.post(USER_API_BASE_URL + `api/profile/videos/rate`, payload, this.getAuthHeader());
     }
 
 }

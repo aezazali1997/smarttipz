@@ -1,7 +1,15 @@
-import React from 'react'
+import React from 'react';
 import { CommentCard, EmojiInput } from 'src/components';
 
-const CommentSection = ({ message, setMessage, _HandleSubmitComment, comments, _HandleGotoUserProfile, loading }) => {
+const CommentSection = ({
+    message,
+    setMessage,
+    comments,
+    loading,
+    _HandleSubmitComment,
+    _HandleDeleteComments,
+    _HandleGotoUserProfile,
+}) => {
     return (
         <div className="flex flex-col w-full space-x-2 px-4">
             <div className="py-1">
@@ -15,11 +23,12 @@ const CommentSection = ({ message, setMessage, _HandleSubmitComment, comments, _
                 <CommentCard
                     data={comments}
                     loading={loading}
+                    _HandleDeleteComments={_HandleDeleteComments}
                     _HandleGotoUserProfile={_HandleGotoUserProfile}
                 />
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default CommentSection;

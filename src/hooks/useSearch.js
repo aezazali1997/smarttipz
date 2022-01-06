@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 import axiosInstance from 'src/APIs/axiosInstance';
 import { useSearchContext } from 'src/contexts';
+import Swal from 'sweetalert2';
 
 const UseSearch = () => {
 
@@ -22,6 +23,11 @@ const UseSearch = () => {
     const [category, setCategory] = useState('');
     const [rating, setRating] = useState(0);
     const [tip, setTip] = useState(0);
+    const [showShareModal, setShowShareModal] = useState(false);
+    const [shareCaption, setShareCaption] = useState('');
+    const [isSharing, setIsSharing] = useState(false);
+    const [shareData, setShareData] = useState({});
+    const [ratePostId, setRatePostId] = useState('');
     const [account, setAccountType] = useState({
         Personal: false,
         Business: false
@@ -68,6 +74,15 @@ const UseSearch = () => {
     const disablePostsLoading = () => {
         setPostsLoading(false);
     };
+    const enableShareLoading = () => {
+        setIsSharing(true);
+    };
+
+    const disableShareLoading = () => {
+        setIsSharing(false);
+    };
+
+
 
     //LOADERS END HERE//
 
@@ -78,7 +93,7 @@ const UseSearch = () => {
             setPosts(videos);
             var count = 0;
             for (let i = 0; i < videos.length; i++) {
-                if (videos[i].catalogue === true && videos[i].UserId == parseInt(localStorage.getItem('id'))) {
+                if (videos[i].Video.catalogue === true && videos[i].isShared === false && videos[i].Video.UserId == parseInt(localStorage.getItem('id'))) {
                     count = count + 1;
                 }
             }
@@ -141,7 +156,7 @@ const UseSearch = () => {
                 const originalArray = [...posts];
                 let newArray = originalArray.map((item, i) => {
                     if (item.id !== videoId) return item;
-                    item.catalogue = !catalogue;
+                    item.Video.catalogue = !catalogue;
                     return item;
                 })
                 setPosts(newArray)
@@ -190,14 +205,33 @@ const UseSearch = () => {
         router.push(`/dashboard/videos/${id}`)
     }
 
+    const OpenRatingModal = (postId) => {
+        setRatePostId(postId);
+        console.log('postToRate: ', postId);
+        setShowRatingModal(true);
+    }
+
     const ToggleRatingModal = () => {
-        setShowRatingModal(!showRatingModal);
+        setShowRatingModal(false);
     }
 
     const _HandleChangeRating = (value) => {
         console.log('value: ', value);
         setRating(value);
     }
+
+    const _SubmitRating = async () => {
+        console.log({ postId: ratePostId, rating: rating })
+        try {
+            const { data: { message } } = await axiosInstance.ratePost({ postId: ratePostId, rating: rating });
+            console.log('message: ', message);
+            ToggleRatingModal();
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log('in catch of api rating: ', message);
+        }
+    }
+
 
     const ToggleTipModal = () => {
         setShowTipModal(!showTipModal);
@@ -259,13 +293,60 @@ const UseSearch = () => {
         }
     }
 
+    let _OpenShareModal = (id, thumbnail, url, picture, name, title) => {
+        setShareData({
+            videoId: id,
+            thumbnail,
+            url,
+            picture,
+            name,
+            title
+        })
+        setShowShareModal(true);
+    }
+
+    let _CloseShareModal = () => {
+        setShowShareModal(false);
+        setShareCaption('');
+    }
+
+    const _HandleSharePost = async () => {
+        console.log(shareCaption, shareData);
+        enableShareLoading();
+        try {
+            const { data: { data, message } } = await axiosInstance.sharePost({ caption: shareCaption, videoId: shareData?.videoId });
+            console.log('success: ', message);
+            GetPosts();
+            Swal.fire({
+                text: message,
+                icon: 'success',
+                timer: 3000,
+                showConfirmButton: false,
+                showCancelButton: false,
+            })
+            disableShareLoading();
+            _CloseShareModal();
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log('Share Post Api failed: ', message);
+        }
+    }
+
+    const _HandleChangeCaption = ({ target }) => {
+        const { value } = target;
+        console.log(value);
+        setShareCaption(value);
+    }
+
     return {
         _HandleAccountTypeFilter, _HandleActiveGenericFilter, _HandleChangeTip, _HandleChangeRating,
         ToggleTipModal, ToggleRatingModal, _HandleGotoVideoDetails, _HandleGotoUserProfile, _HandleDeleteVideo,
         _HandleCatalogue, GetUserProfiles, GetPosts, filterSearch, posts, userProfiles, showRatingModal,
         showTipModal, activeGenericFilter, userProfileLoading, postsLoading, sort, setSort, account,
         setAccountType, videoCategory, videoType, rating, setRating, category, _ChangeCategoryFilter,
-        HandleLikePost, tip, _HandleVideoTypeFilter, _HandleVideoCategoryFilter, _HandleToggleFilterModal, showFilterModal
+        HandleLikePost, tip, _HandleVideoTypeFilter, _HandleVideoCategoryFilter, _HandleToggleFilterModal, showFilterModal,
+        _OpenShareModal, _HandleChangeCaption, _HandleSharePost, shareCaption, shareData, isSharing, showShareModal,
+        _CloseShareModal, setShareCaption, OpenRatingModal, _SubmitRating
     }
 }
 

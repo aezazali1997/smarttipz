@@ -1,3 +1,5 @@
+const AllPosts = require('models/AllPost');
+
 const jwt = require('jsonwebtoken');
 const User = require('models/User');
 const Video = require('models/Video');
@@ -74,6 +76,13 @@ const handler = async (req, res) => {
         videoCost,
         isShowOnNewsfeed
       });
+
+      const newPost = await AllPosts.create({
+        VideoId: newVideo.id,
+        isShared: false
+      });
+
+      await newPost.setVideo(newVideo);
       await newVideo.setUser(user);
       res.status(201).json({ error: false, message: 'Post submitted successfully', data: [] });
     } catch (err) {

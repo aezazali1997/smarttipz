@@ -1,3 +1,4 @@
+import AllPosts from 'models/AllPost';
 import PostLikee from 'models/Like';
 
 const Share = require('models/Share');
@@ -27,32 +28,57 @@ const handler = async (req, res) => {
             }
             const { id } = user;
 
-            const videos = await Video.findAll({
+            const videos = await AllPosts.findAll({
                 attributes: {
-                    include: [[sequelize.fn("COUNT", sequelize.col("PostLikees.id")), 'likeCount'],
-                    [sequelize.where(sequelize.col("PostLikees.reviewerId"), id), 'isLiked']]
+                    include: [
+                        [sequelize.fn("COUNT", sequelize.col("PostLikees.id")), 'likeCount'],
+                        [sequelize.where(sequelize.col("PostLikees.reviewerId"), id), 'isLiked'],
+                    ]
                 },
                 include: [
                     {
-                        model: PostLikee, attributes: ['isLiked', 'VideoId', 'reviewerId', 'id']
+                        model: PostLikee, attributes: ['id']
                     },
                     {
-                        model: User, attributes: ['name', 'username', 'picture']
+                        model: Video,
+                        include: [
+                            {
+                                model: User, attributes: ['name', 'username', 'picture']
+                            },
+                        ],
                     },
                     {
-                        model: Share, attributes: ['id']
-                    },
-
+                        model: Share, attributes: ['id', 'caption']
+                    }
                 ],
                 where: {
-                    UserId: id,
-                    isApproved: true,
-                    category: {
-                        [sequelize.Op.not]: 'catalogue'
-                    },
+                    [sequelize.Op.and]: [
+                        {
+                            '$Video.isApproved$': {
+                                [sequelize.Op.eq]: true
+                            },
+                        },
+                        {
+                            '$Video.UserId$': {
+                                [sequelize.Op.eq]: id
+                            },
+                        },
+                        {
+                            '$Video.category$': {
+                                [sequelize.Op.not]: 'catalogue'
+                            }
+                        },
+                        {
+                            isShared: {
+                                [sequelize.Op.eq]: false
+                            },
+                        }
+                    ]
                 },
-                group: ['Video.id', 'User.id', 'User.name', 'User.picture', 'User.username',
-                    'PostLikees.id', 'PostLikees.reviewerId', 'PostLikees.isLiked', 'Shares.id'],
+                group: ['AllPost.id', 'PostLikees.reviewerId', 'PostLikees.id',
+                    'Video.id', 'Video->User.id', 'Video->User.name', 'Video->User.username', 'Video->User.picture',
+                    'Share.id'
+                ],
                 order: [["createdAt", "DESC"]]
             });
 

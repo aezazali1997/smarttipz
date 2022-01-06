@@ -10,6 +10,7 @@ import { PostActionDropdown } from '../Dropdown';
 const NewsfeedCard = ({
     index,
     id,
+    videoId,
     catalogue,
     UserId,
     isPost,
@@ -83,57 +84,71 @@ const NewsfeedCard = ({
         }
     }
 
+    const _HandleDeleteComments = async (index, commentId) => {
+        console.log('Comment id to be deleted: ', commentId);
+        const deepCopyComments = [...comments];
+        deepCopyComments.splice(index, 1);
+        setComments(deepCopyComments);
+        try {
+            const { data: { message } } = await axiosInstance.deleteCommentById(commentId);
+            console.log(message);
+        } catch ({ response: { data: { message } } }) { console.log(message); }
+
+    }
+
 
     return (
         <>
             <div
                 className={`mx-auto ${width} shadow flex flex-col justify-center rounded-lg overflow-hidden
                 bg-white space-y-2`}>
-                <div className="flex w-full py-2 px-2 justify-between space-x-2">
-                    <div className="flex space-x-2">
-                        <img
-                            src={User?.picture ||
-                                "https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"}
-                            className="rounded-full w-10 h-10 object-cover"
-                            alt="avatar"></img>
-                        <div className="flex flex-col w-full">
-                            <p
-                                onClick={() => _HandleGotoUserProfile(UserId, User?.username)}
-                                className="text-sm font-bold font-sans hover:underline cursor-pointer">
-                                {User?.name}
-                            </p>
-                            <p className="text-xs text-gray-500">19h</p>
+                <div className='flex flex-col'>
+                    <div className="flex w-full py-2 px-2 justify-between space-x-2">
+                        <div className="flex space-x-2">
+                            <img
+                                src={User?.picture ||
+                                    "https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"}
+                                className="rounded-full w-10 h-10 object-cover"
+                                alt="avatar"></img>
+                            <div className="flex flex-col w-full">
+                                <p
+                                    onClick={() => _HandleGotoUserProfile(UserId, User?.username)}
+                                    className="text-sm font-bold font-sans hover:underline cursor-pointer">
+                                    {User?.name}
+                                </p>
+                                <p className="text-xs text-gray-500">19h</p>
+                            </div>
+                        </div>
+                        <div className="flex space-x-2">
+                            <span onClick={() => HandleFavouritePost(id)}>
+                                <svg
+                                    className="w-6 h-6 text-gray-500 hover:text-purple-600 cursor-pointer"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                            </span>
+                            <div className="flex items-start justify-start">
+                                <PostActionDropdown
+                                    _HandleCatalogue={() => _HandleCatalogue(id, catalogue)}
+                                    _HandleDeleteVideo={() => _HandleDeleteVideo(index, id)}
+                                    ToggleRatingModal={ToggleRatingModal}
+                                    ToggleTipModal={ToggleTipModal}
+                                    catalogue={catalogue}
+                                    ownerId={UserId}
+                                    isPost={isPost}
+                                />
+                            </div>
                         </div>
                     </div>
-                    <div className="flex space-x-2">
-                        <span onClick={() => HandleFavouritePost(id)}>
-                            <svg
-                                className="w-6 h-6 text-gray-500 hover:text-purple-600 cursor-pointer"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                        </span>
-                        <div className="flex items-start justify-start">
-                            <PostActionDropdown
-                                _HandleCatalogue={() => _HandleCatalogue(id, catalogue)}
-                                _HandleDeleteVideo={() => _HandleDeleteVideo(index, id)}
-                                ToggleRatingModal={ToggleRatingModal}
-                                ToggleTipModal={ToggleTipModal}
-                                catalogue={catalogue}
-                                ownerId={UserId}
-                                isPost={isPost}
-                            />
-                        </div>
-                    </div>
+                    <p
+                        onClick={() => _HandleGotoVideoDetails(id)}
+                        className="px-5 text-sm max-w-md hover:underline whitespace-nowrap overflow-ellipsis overflow-hidden cursor-pointer"
+                    >
+                        {title}
+                    </p>
                 </div>
-                <p
-                    onClick={() => _HandleGotoVideoDetails(id)}
-                    className="px-5 text-sm max-w-md hover:underline whitespace-nowrap overflow-ellipsis overflow-hidden cursor-pointer"
-                >
-                    {title}
-                </p>
                 <div className="video-wrapper">
                     <VideoPlayer poster={thumbnail} src={url} />
                 </div>
@@ -228,11 +243,11 @@ const NewsfeedCard = ({
                             className="flex relative justify-center group items-center py-1 px-3 w-full  cursor-pointer">
                             <div className="flex flex-col items-center">
                                 <FontAwesomeIcon icon={faThumbsUp} className={`w-6 h-6 
-                                ${isLiked == null || isLiked === false ? 'text-gray-600' : 'text-purple-600'} group-hover:text-purple-600`}
+                                ${isLiked == null || isLiked == false ? 'text-gray-600' : 'text-purple-600'} group-hover:text-purple-600`}
                                 />
                                 <p
                                     className={`cursor-pointer w-full text-xs text-center 
-                                    ${isLiked == null || isLiked === false ? 'text-gray-600' : 'text-purple-600'} group-hover:text-purple-600`}
+                                    ${isLiked == null || isLiked == false ? 'text-gray-600' : 'text-purple-600'} group-hover:text-purple-600`}
                                 >
                                     {likeCount}
                                 </p>
@@ -248,7 +263,7 @@ const NewsfeedCard = ({
                                 </p>
                             </div>
                         </div>
-                        <div onClick={() => _OpenShareModal(id, thumbnail, url, User?.picture, User?.name, title)}
+                        <div onClick={() => _OpenShareModal(videoId, thumbnail, url, User?.picture, User?.name, title)}
                             className="flex relative group justify-center items-center py-1 px-3 w-full cursor-pointer"
                         >
                             <div className="flex flex-col items-center" >
@@ -268,6 +283,7 @@ const NewsfeedCard = ({
                                 loading={loading}
                                 setMessage={setMessage}
                                 _HandleSubmitComment={_HandleSubmitComment}
+                                _HandleDeleteComments={_HandleDeleteComments}
                                 _HandleGotoUserProfile={_HandleGotoUserProfile}
                             />
                         )
