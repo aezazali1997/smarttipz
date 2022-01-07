@@ -28,11 +28,6 @@ export const FilterContent = (search, category, videoType, videoCategory, accoun
     return {
         [sequelize.Op.and]: [
             {
-                '$Video.isApproved$': {
-                    [sequelize.Op.eq]: true
-                }
-            },
-            {
                 '$Video.category$': {
                     [sequelize.Op.iLike]: `%${category}%`
                 }

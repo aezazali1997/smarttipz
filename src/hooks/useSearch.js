@@ -93,7 +93,10 @@ const UseSearch = () => {
             setPosts(videos);
             var count = 0;
             for (let i = 0; i < videos.length; i++) {
-                if (videos[i].Video.catalogue === true && videos[i].isShared === false && videos[i].Video.UserId == parseInt(localStorage.getItem('id'))) {
+                if (videos[i].Video.catalogue === true &&
+                    videos[i].Video.isApproved === true &&
+                    videos[i].isShared === false &&
+                    videos[i].Video.UserId == parseInt(localStorage.getItem('id'))) {
                     count = count + 1;
                 }
             }
@@ -184,8 +187,13 @@ const UseSearch = () => {
             const res = await axiosInstance.deleteVideo(videoId);
             setCatalogueCount(catalogueCount => catalogueCount - 1)
             const originalArray = [...posts];
-            originalArray.splice(index, 1)
-            setPosts(originalArray);
+            let newArray = originalArray.map((item, i) => {
+                if (item.Video.id !== videoId) return item;
+                item.Video.isApproved = false;
+                return item;
+            })
+            // originalArray.splice(index, 1)
+            setPosts(newArray);
         }
         catch ({ response: { data: { message } } }) {
             console.log('Api Failed: ', message);

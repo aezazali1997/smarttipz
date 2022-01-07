@@ -41,6 +41,7 @@ const NewsFeed = () => {
               title={'Click to upload SmartReviews Videos'}
               tooltip={'SmartReview is a product or service review video'}
             />
+
           </div>
         </div>
         {
@@ -56,9 +57,10 @@ const NewsFeed = () => {
               :
               <div className="space-y-4">
                 {
-                  posts.map(({ id: postId, Video, Video: { id, description, title, url, UserId, thumbnail, PostLikees,
-                    catalogue, User, videoType, videoCost, isShowOnNewsfeed, Shares
-                  }, isShared, Share, isLiked, likeCount, shareCount,
+                  posts.map(({ id: postId, Video, isShared, Share, isLiked, shareCount, PostLikees,
+                    Video: { id, description, title, url, UserId, thumbnail,
+                      catalogue, User, videoType, videoCost, isShowOnNewsfeed, Shares, isApproved
+                    },
                   }, index) => (
                     isShared ?
                       <SharedCard
@@ -69,15 +71,15 @@ const NewsFeed = () => {
                         Share={Share}
                         isLiked={isLiked}
                         width={'max-w-lg'}
-                        likeCount={likeCount}
+                        likeCount={PostLikees}
                         shareCount={shareCount}
                         HandleLikePost={HandleLikePost}
                         _OpenShareModal={_OpenShareModal}
                         _HandleGotoUserProfile={_HandleGotoUserProfile}
                         _HandleGotoVideoDetails={_HandleGotoVideoDetails}
-                      /> :
-
-                      isShowOnNewsfeed && (
+                      />
+                      :
+                      isApproved && isShowOnNewsfeed && (
                         <div key={index}>
                           <NewsfeedCard
                             id={postId}
@@ -90,25 +92,25 @@ const NewsFeed = () => {
                             views={200}
                             User={User}
                             rating={2.5}
-                            postLikes={PostLikees}
                             description={description}
                             title={title}
                             Shares={Shares}
                             isLiked={isLiked}
-                            likeCount={likeCount}
+                            likeCount={PostLikees}
                             shareCount={shareCount}
                             videoCost={videoCost}
                             videoType={videoType}
                             width={'max-w-lg'}
                             thumbnail={thumbnail}
+                            restrictPaidVideo={true}
                             HandleLikePost={HandleLikePost}
                             ToggleTipModal={ToggleTipModal}
                             _OpenShareModal={_OpenShareModal}
                             _HandleCatalogue={_HandleCatalogue}
-                            ToggleRatingModal={() => OpenRatingModal(postId)}
                             _HandleDeleteVideo={_HandleDeleteVideo}
                             HandleFavouritePost={HandleFavouritePost}
                             _HandleGotoUserProfile={_HandleGotoUserProfile}
+                            ToggleRatingModal={() => OpenRatingModal(postId)}
                             _HandleGotoVideoDetails={_HandleGotoVideoDetails}
                           />
                         </div>

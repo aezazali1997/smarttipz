@@ -125,7 +125,8 @@ const Search = () => {
 														catalogue,
 														User,
 														videoType,
-														videoCost
+														videoCost,
+														isApproved
 													}
 												},
 												index
@@ -145,38 +146,39 @@ const Search = () => {
 														_HandleGotoUserProfile={_HandleGotoUserProfile}
 														_HandleGotoVideoDetails={_HandleGotoVideoDetails}
 													/>
-												) : (
-													<div key={index}>
-														<NewsfeedCard
-															id={postId}
-															videoId={id}
-															UserId={UserId}
-															index={index}
-															catalogue={catalogue}
-															isPost={true}
-															url={url}
-															views={200}
-															User={User}
-															rating={2.5}
-															postLikes={PostLikees}
-															description={description}
-															title={title}
-															isLiked={isLiked}
-															likeCount={likeCount}
-															videoCost={videoCost}
-															videoType={videoType}
-															width={'max-w-lg'}
-															thumbnail={thumbnail}
-															HandleLikePost={HandleLikePost}
-															ToggleTipModal={ToggleTipModal}
-															ToggleRatingModal={() => OpenRatingModal(postId)}
-															_HandleDeleteVideo={_HandleDeleteVideo}
-															_HandleCatalogue={_HandleCatalogue}
-															_HandleGotoUserProfile={_HandleGotoUserProfile}
-															_HandleGotoVideoDetails={_HandleGotoVideoDetails}
-														/>
-													</div>
-												)
+												) :
+													(
+														<div key={index}>
+															<NewsfeedCard
+																id={postId}
+																videoId={id}
+																UserId={UserId}
+																index={index}
+																catalogue={catalogue}
+																isPost={true}
+																url={url}
+																views={200}
+																User={User}
+																rating={2.5}
+																postLikes={PostLikees}
+																description={description}
+																title={title}
+																isLiked={isLiked}
+																likeCount={likeCount}
+																videoCost={videoCost}
+																videoType={videoType}
+																width={'max-w-lg'}
+																thumbnail={thumbnail}
+																HandleLikePost={HandleLikePost}
+																ToggleTipModal={ToggleTipModal}
+																ToggleRatingModal={() => OpenRatingModal(postId)}
+																_HandleDeleteVideo={_HandleDeleteVideo}
+																_HandleCatalogue={_HandleCatalogue}
+																_HandleGotoUserProfile={_HandleGotoUserProfile}
+																_HandleGotoVideoDetails={_HandleGotoVideoDetails}
+															/>
+														</div>
+													)
 										)}
 									<Button
 										type="button"
@@ -271,7 +273,8 @@ const Search = () => {
 										catalogue,
 										User,
 										videoType,
-										videoCost
+										videoCost,
+										isApproved
 									}
 								},
 								index
@@ -291,38 +294,39 @@ const Search = () => {
 										_HandleGotoUserProfile={_HandleGotoUserProfile}
 										_HandleGotoVideoDetails={_HandleGotoVideoDetails}
 									/>
-								) : (
-									<div key={index}>
-										<NewsfeedCard
-											id={postId}
-											videoId={id}
-											UserId={UserId}
-											index={index}
-											catalogue={catalogue}
-											isPost={true}
-											url={url}
-											views={200}
-											User={User}
-											rating={2.5}
-											isLiked={isLiked}
-											likeCount={likeCount}
-											postLikes={PostLikees}
-											description={description}
-											title={title}
-											videoCost={videoCost}
-											videoType={videoType}
-											width={'max-w-lg'}
-											thumbnail={thumbnail}
-											HandleLikePost={HandleLikePost}
-											ToggleTipModal={ToggleTipModal}
-											ToggleRatingModal={() => OpenRatingModal(postId)}
-											_HandleDeleteVideo={_HandleDeleteVideo}
-											_HandleCatalogue={_HandleCatalogue}
-											_HandleGotoUserProfile={_HandleGotoUserProfile}
-											_HandleGotoVideoDetails={_HandleGotoVideoDetails}
-										/>
-									</div>
-								)
+								) :
+									isApproved && (
+										<div key={index}>
+											<NewsfeedCard
+												id={postId}
+												videoId={id}
+												UserId={UserId}
+												index={index}
+												catalogue={catalogue}
+												isPost={true}
+												url={url}
+												views={200}
+												User={User}
+												rating={2.5}
+												isLiked={isLiked}
+												likeCount={likeCount}
+												postLikes={PostLikees}
+												description={description}
+												title={title}
+												videoCost={videoCost}
+												videoType={videoType}
+												width={'max-w-lg'}
+												thumbnail={thumbnail}
+												HandleLikePost={HandleLikePost}
+												ToggleTipModal={ToggleTipModal}
+												ToggleRatingModal={() => OpenRatingModal(postId)}
+												_HandleDeleteVideo={_HandleDeleteVideo}
+												_HandleCatalogue={_HandleCatalogue}
+												_HandleGotoUserProfile={_HandleGotoUserProfile}
+												_HandleGotoVideoDetails={_HandleGotoVideoDetails}
+											/>
+										</div>
+									)
 						)}
 					</div>
 				) : activeGenericFilter === 'Profile' ? (
@@ -364,13 +368,13 @@ const Search = () => {
 					''
 				)}
 			</div>
-			<div className="hidden lg:block w-full lg:w-2/6 relative h-96">
+			<div className="hidden lg:block w-full lg:w-2/6 relative h-full">
 				<div className="sticky top-0 space-y-4 justify-center flex-col items-center ">
 					<GenericFilters
-						_HandleActiveGenericFilter={_HandleActiveGenericFilter}
-						activeGenericFilter={activeGenericFilter}
 						category={category}
+						activeGenericFilter={activeGenericFilter}
 						_ChangeCategoryFilter={_ChangeCategoryFilter}
+						_HandleActiveGenericFilter={_HandleActiveGenericFilter}
 					/>
 					<SortFilter value={sort} setSort={setSort} />
 					<NewsFeedFilters
@@ -418,7 +422,6 @@ const Search = () => {
 			)}
 			{showFilterModal && (
 				<FilterModal
-					ToggleFilterModal={_HandleToggleFilterModal}
 					modalTitle={'Search Filters'}
 					sort={sort}
 					rating={rating}
@@ -430,6 +433,7 @@ const Search = () => {
 					setSort={setSort}
 					setRating={setRating}
 					_HandleChangeRating={_HandleChangeRating}
+					ToggleFilterModal={_HandleToggleFilterModal}
 					_ChangeCategoryFilter={_ChangeCategoryFilter}
 					_HandleVideoTypeFilter={_HandleVideoTypeFilter}
 					_HandleAccountTypeFilter={_HandleAccountTypeFilter}

@@ -293,7 +293,7 @@ const VideoDetailScreen = () => {
 						</div>
 						<div className="flex divide-x divide-gray-500 items-center justify-center space-x-2">
 							<span>
-								<p className="text-sm ">{video?.likeCount} {video?.likeCount > 1 ? 'Likes' : 'Like'}</p>
+								<p className="text-sm ">{video?.PostLikees?.length} {video?.PostLikees?.length > 1 ? 'Likes' : 'Like'}</p>
 							</span>
 							<span>
 								<p className="text-sm ml-2">2.2K Shares</p>

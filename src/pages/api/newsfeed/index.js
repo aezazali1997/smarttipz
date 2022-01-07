@@ -67,11 +67,15 @@ const handler = async (req, res) => {
 				where: {
 					[sequelize.Op.and]: [
 						{
-							'$Video.isApproved$': {
-								[sequelize.Op.eq]: true
+							'$Video->User.isDeleted$': {
+								[sequelize.Op.eq]: false
 							}
-						}
-					]
+						},
+						{
+							'$Video->User.isBlocked$': {
+								[sequelize.Op.eq]: false
+							}
+						}],
 				},
 				group: [
 					'AllPost.id',

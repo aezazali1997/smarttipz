@@ -9,7 +9,7 @@ const VideoPlayer = ({ poster, src, className, ...props }) => {
             poster={poster}
             src={src}
         >
-            <BigPlayButton position="center " />
+            <BigPlayButton position="center "  />
         </Player>
     )
 }

@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect } from 'react';
 import axiosInstance from 'src/APIs/axiosInstance';
-import { CommentSection } from '..';
+import { CommentSection, PostDeletedAlert } from '..';
 import CaptionSection from './captionSection';
 import ContentSection from './contentSection';
 import FooterSection from './footerSection';
@@ -89,24 +89,33 @@ const SharedCard = ({
 				<CaptionSection Share={Share} />
 			</div>
 			<div className="px-3">
-				<ContentSection
-					SharedPost={Video}
-					_HandleGotoUserProfile={_HandleGotoUserProfile}
-					_HandleGotoVideoDetails={_HandleGotoVideoDetails}
-				/>
+				{
+					Video && Video?.isApproved ?
+						<ContentSection
+							SharedPost={Video}
+							_HandleGotoUserProfile={_HandleGotoUserProfile}
+							_HandleGotoVideoDetails={_HandleGotoVideoDetails}
+						/> :
+						<div className='mb-2'>
+							<PostDeletedAlert />
+						</div>
+				}
 			</div>
-			<FooterSection
-				id={id}
-				index={index}
-				Video={Video}
-				isLiked={isLiked}
-				videoId={videoId}
-				comments={comments}
-				likeCount={likeCount}
-				HandleLikePost={HandleLikePost}
-				_OpenShareModal={_OpenShareModal}
-				_HandleCommentSection={_HandleCommentSection}
-			/>
+			{
+				Video && Video?.isApproved &&
+				<FooterSection
+					id={id}
+					index={index}
+					Video={Video}
+					isLiked={isLiked}
+					videoId={videoId}
+					comments={comments}
+					likeCount={likeCount}
+					HandleLikePost={HandleLikePost}
+					_OpenShareModal={_OpenShareModal}
+					_HandleCommentSection={_HandleCommentSection}
+				/>
+			}
 			{showCommentSection && (
 				<CommentSection
 					comments={comments}

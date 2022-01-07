@@ -85,6 +85,7 @@ const Videos = () => {
                 id: postId,
                 isLiked,
                 likeCount,
+                PostLikees,
                 Video: {
                   title,
                   url,
@@ -115,7 +116,7 @@ const Videos = () => {
                   views={200}
                   rating={2.5}
                   isLiked={isLiked}
-                  likeCount={likeCount}
+                  likeCount={PostLikees}
                   videoCost={videoCost}
                   videoType={videoType}
                   mediaType={mediaType}

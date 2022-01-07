@@ -28,6 +28,7 @@ const NewsfeedCard = ({
     shareCount,
     videoCost,
     videoType,
+    restrictPaidVideo,
     HandleLikePost,
     ToggleTipModal,
     _OpenShareModal,
@@ -36,13 +37,14 @@ const NewsfeedCard = ({
     _HandleDeleteVideo,
     HandleFavouritePost,
     _HandleGotoUserProfile,
-    _HandleGotoVideoDetails
+    _HandleGotoVideoDetails,
 }) => {
 
     const [showCommentSection, setShowCommentSection] = useState(false);
     const [message, setMessage] = useState('');
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [stopVideo, setStopVideo] = useState(false);
 
     const getAllCommentsByVideoId = async () => {
         try {
@@ -93,8 +95,21 @@ const NewsfeedCard = ({
             const { data: { message } } = await axiosInstance.deleteCommentById(commentId);
             console.log(message);
         } catch ({ response: { data: { message } } }) { console.log(message); }
-
     }
+
+    const _HandlePaidVideos = async () => {
+        console.log('Here');
+        setTimeout(() => {
+            setStopVideo(true);
+            ToggleTipModal();
+        }, 30000);
+    }
+
+    const PaidVideoThumbnail = (
+        <>
+
+        </>
+    )
 
 
     return (
@@ -132,7 +147,7 @@ const NewsfeedCard = ({
                             <div className="flex items-start justify-start">
                                 <PostActionDropdown
                                     _HandleCatalogue={() => _HandleCatalogue(id, catalogue)}
-                                    _HandleDeleteVideo={() => _HandleDeleteVideo(index, id)}
+                                    _HandleDeleteVideo={() => _HandleDeleteVideo(index, videoId)}
                                     ToggleRatingModal={ToggleRatingModal}
                                     ToggleTipModal={ToggleTipModal}
                                     catalogue={catalogue}
@@ -149,9 +164,21 @@ const NewsfeedCard = ({
                         {title}
                     </p>
                 </div>
-                <div className="video-wrapper">
-                    <VideoPlayer poster={thumbnail} src={url} />
-                </div>
+                {
+                    videoCost === 'Paid' && restrictPaidVideo ?
+                        !stopVideo ?
+                            <div className="video-wrapper" onClick={_HandlePaidVideos}>
+                                <VideoPlayer poster={thumbnail} src={url} />
+                            </div>
+                            :
+                            <div className="video-wrapper flex justify-center items-center">
+                                <p className="text-md text-gray-500 text-center">To continue watching video,<br /> Pay Now!</p>
+                            </div>
+                        :
+                        <div className="video-wrapper">
+                            <VideoPlayer poster={thumbnail} src={url} />
+                        </div>
+                }
                 {/* <img src="https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"
                 className="w-full h-auto" alt="avatar"></img> */}
 
@@ -249,7 +276,7 @@ const NewsfeedCard = ({
                                     className={`cursor-pointer w-full text-xs text-center 
                                     ${isLiked == null || isLiked == false ? 'text-gray-600' : 'text-purple-600'} group-hover:text-purple-600`}
                                 >
-                                    {likeCount}
+                                    {likeCount?.length}
                                 </p>
                             </div>
                         </div>

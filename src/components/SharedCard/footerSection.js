@@ -35,7 +35,7 @@ const FooterSection = ({
                                 ? 'text-gray-600'
                                 : 'text-purple-600'
                             } group-hover:text-purple-600`}>
-                        {likeCount}
+                        {likeCount?.length}
                     </p>
                 </div>
             </div>

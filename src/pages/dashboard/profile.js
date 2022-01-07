@@ -244,6 +244,7 @@ const Profile = ({ profile }) => {
                   (
                     {
                       id: postId,
+                      PostLikees,
                       Video: {
                         id,
                         UserId,
@@ -275,7 +276,7 @@ const Profile = ({ profile }) => {
                         views={200}
                         rating={2.5}
                         isLiked={isLiked}
-                        likeCount={likeCount}
+                        likeCount={PostLikees}
                         mediaType={mediaType}
                         videoType={videoType}
                         videoCost={videoCost}
@@ -322,7 +323,7 @@ const Profile = ({ profile }) => {
                   {
                     id: postId,
                     isLiked,
-                    likeCount,
+                    PostLikees,
                     shareCount,
                     Video: {
                       title,
@@ -357,7 +358,7 @@ const Profile = ({ profile }) => {
                       videoCost={videoCost}
                       videoType={videoType}
                       description={description}
-                      likeCount={likeCount}
+                      likeCount={PostLikees}
                       isLiked={isLiked}
                       title={title}
                       isPost={true}

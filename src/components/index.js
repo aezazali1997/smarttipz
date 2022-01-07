@@ -43,4 +43,5 @@ export { default as GenericFilters } from './GenericFilters';
 export { default as SortFilter } from './SortFilter';
 export { default as VideoUploadBlock } from './UploadVideoClickBlock';
 export { default as CommentSection } from './CommentSection';
+export { default as PostDeletedAlert } from './PostDeletedAlert';
 
