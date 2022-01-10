@@ -55,6 +55,18 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                         </Link>
                     </div>
                     <div className=' lg:flex flex-col h-full pt-2 overflow-y-auto'>
+                        <div className="mb-1 block lg:hidden">
+                            <Link href="/dashboard/news-feed" className='p-4 font-sans nav-link nav-link-ltr'>
+                                <a>
+                                    <div onClick={toggle} className={`flex justify-between items-center py-2 px-3 rounded-lg w-52 font-medium sidebar-item cursor-pointer
+                                                ${Active("/dashboard/news-feed")}`}>
+                                        <div>
+                                            <FontAwesomeIcon icon={faNewspaper} /> &nbsp;News Feed
+                                        </div>
+                                    </div>
+                                </a>
+                            </Link>
+                        </div>
                         {
                             Routes && Routes.map(({ name, path, icon, badge }, index) => (
                                 <div className="mb-1" key={index}>

@@ -47,12 +47,6 @@ const SuggestionCard = ({
                         </div>
                     </div>
                     <div className="flex space-x-2">
-                        <div className="flex px-2 h-6 rounded-lg  background items-center justify-center">
-                            <p className="text-white font-sm ">{videoType}</p>
-                        </div>
-                        <div className="flex px-2 h-6 rounded-lg  background items-center justify-center">
-                            <p className="text-white font-sm ">{videoCost}</p>
-                        </div>
                         <svg
                             className="w-6 h-6 text-gray-400 hover:text-yellow-500 cursor-pointer"
                             fill="currentColor"
@@ -103,6 +97,14 @@ const SuggestionCard = ({
                         </svg>
                         &nbsp;<p className="text-xs">{views} Views</p>
                     </span>
+                </div>
+                <div className="px-3 flex space-x-2 pb-2">
+                    <div className="flex px-2 h-6 rounded-lg  background items-center justify-center">
+                        <p className="text-white font-sm ">{videoType}</p>
+                    </div>
+                    <div className="flex px-2 h-6 rounded-lg  background items-center justify-center">
+                        <p className="text-white font-sm ">{videoCost}</p>
+                    </div>
                 </div>
             </div>
         </>

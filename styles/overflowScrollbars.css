@@ -5,7 +5,7 @@
     -moz-border-radius: 10px;
     -ms-border-radius: 10px;
     -o-border-radius: 10px;
-    background-color: darkgrey;
+    background-color: #d1d3d4;
 
 }
 
@@ -15,6 +15,6 @@
 }
 
 .share-modal-scrollbar::-webkit-scrollbar-thumb {
-    background-color: #d1d3d4;
+    background-color: darkgrey;
     border-radius: 10px;
 }
