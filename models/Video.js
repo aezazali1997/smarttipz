@@ -47,6 +47,13 @@ const Video = sequelize.define("Video", {
   videoCost: {
     type: DataTypes.STRING
   },
+  productLink: {
+    type: DataTypes.STRING
+  },
+  watchLimit: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
   rating: {
     type: DataTypes.INTEGER,
   },

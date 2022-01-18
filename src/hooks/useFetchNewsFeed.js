@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
 import { useS3Upload } from 'next-s3-upload';
 import axiosInstance from 'src/APIs/axiosInstance';
-import { UploadVideoSchema } from 'utils/validation_shema';
+import { UploadSmartReviewVideoSchema, UploadSmartTipzVideoSchema, UploadVideoSchema } from 'utils/validation_shema';
 
 const UseFetchNewsFeed = () => {
 
@@ -16,6 +16,9 @@ const UseFetchNewsFeed = () => {
         category: '',
         language: '',
         videoCost: '',
+        productLink: '',
+        minute: 0,
+        second: 0
     }
 
     let { uploadToS3 } = useS3Upload();
@@ -51,7 +54,6 @@ const UseFetchNewsFeed = () => {
             setLoadingFeed(true);
             const { data: { data: { videos } } } = await axiosInstance.getAllSharedVideos();
             setPosts(videos);
-            console.log(videos)
             var count = 0;
             for (let i = 0; i < videos.length; i++) {
                 if (videos[i].Video.catalogue === true &&
@@ -61,7 +63,6 @@ const UseFetchNewsFeed = () => {
                     count = count + 1;
                 }
             }
-            console.log('count: ', count);
             setCatalogueCount(count)
             setLoadingFeed(false);
         }
@@ -182,6 +183,17 @@ const UseFetchNewsFeed = () => {
         values.videoType = videoType;
         values.isShowOnNewsfeed = postOnFeed;
 
+        if (values.minute === 0 && values.second === 0) {
+            values.watchLimit = 0
+            delete values.minute;
+            delete values.second;
+        }
+        else {
+            values.watchLimit = ((values.minute * 60) + (values.second)) * 1000
+            delete values.minute;
+            delete values.second;
+        }
+
         try {
             const { data: { message } } = await axiosInstance.uploadNewsFeed(values)
             Swal.fire({
@@ -207,13 +219,12 @@ const UseFetchNewsFeed = () => {
             })
             setSubmitting(false);
         }
-
     }
 
     const formik = useFormik({
         enableReinitialize: true,
         initialValues,
-        validationSchema: UploadVideoSchema,
+        validationSchema: (videoType === 'SmartTipz' ? UploadSmartTipzVideoSchema : UploadSmartReviewVideoSchema),
         validateOnBlur: true,
         onSubmit: (values, { setSubmitting, setStatus, resetForm }) => {
             _OnSubmit(values, setSubmitting, resetForm);

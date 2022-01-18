@@ -40,10 +40,13 @@ const CommentCard = ({ data, _HandleGotoUserProfile, loading, _HandleDeleteComme
 								<p className="text-xs text-gray-500">{moment(createdAt).format('h:mm a')}</p>
 								<p className="text-xs pt-2 md:text-sm break-words">{message}</p>
 							</div>
-							<div className="absolute top-2 right-2">
-								<CommentActionDropdown
-									_HandleDeleteComments={() => _HandleDeleteComments(index, commentId)} />
-							</div>
+							{
+								localStorage.getItem('id') == id && (
+									<div className="absolute top-2 right-2">
+										<CommentActionDropdown
+											_HandleDeleteComments={() => _HandleDeleteComments(index, commentId)} />
+									</div>
+								)}
 						</div>
 					)
 				)

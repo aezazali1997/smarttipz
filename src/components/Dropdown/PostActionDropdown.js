@@ -90,14 +90,14 @@ const PostActionDropdown = ({ _HandleCatalogue, _HandleDeleteVideo, catalogue, o
                         {
                             ID && parseInt(ID) !== ownerId &&
                             <>
-                                <div
+                                {/* <div
                                     className={
                                         "text-sm py-2 px-4 font-normal block w-full rounded cursor-pointer whitespace-nowrap bg-transparent text-blueGray-700 hover:bg-gray-200"
                                     }
                                     onClick={ToggleRatingModal}
                                 >
                                     Rate Video
-                                </div>
+                                </div> */}
                                 <div
                                     className={
                                         "text-sm py-2 px-4 font-normal block w-full rounded cursor-pointer whitespace-nowrap bg-transparent text-blueGray-700 hover:bg-gray-200"

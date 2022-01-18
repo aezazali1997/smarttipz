@@ -98,7 +98,8 @@ const Videos = () => {
                   catalogue,
                   videoCost,
                   videoType,
-                  Shares
+                  Shares,
+                  productLink
                 }
               },
               index
@@ -125,6 +126,7 @@ const Videos = () => {
                   isPost={true}
                   width={'max-w-xs'}
                   thumbnail={thumbnail}
+                  productLink={productLink}
                   HandleLikePost={HandleLikePost}
                   _OpenShareModal={_OpenShareModal}
                   _HandleCatalogue={_HandleCatalogue}

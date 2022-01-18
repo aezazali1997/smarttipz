@@ -69,6 +69,16 @@ export const FilterContent = (search, category, videoType, videoCategory, accoun
                 }
             },
             {
+                '$Video.title$': {
+                    [sequelize.Op.iLike]: `%${search}%`
+                }
+            },
+            {
+                '$Share.caption$': {
+                    [sequelize.Op.iLike]: `%${search}%`
+                }
+            },
+            {
                 '$Video->User.username$': {
                     [sequelize.Op.iLike]: `%${search}%`
                 }
@@ -94,12 +104,11 @@ export const FilterContent = (search, category, videoType, videoCategory, accoun
                     [sequelize.Op.iLike]: `%${search}%`
                 }
             },
-
             {
                 '$Share->User.phoneNumber$': {
                     [sequelize.Op.iLike]: `%${search}%`
                 }
-            }
+            },
         ],
     };
 };

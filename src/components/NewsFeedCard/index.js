@@ -1,217 +1,213 @@
 /* eslint-disable @next/next/no-img-element */
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { faCommentAlt, faShareAlt, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useEffect, useState } from 'react';
 import ReactTooltip from 'react-tooltip';
 import axiosInstance from 'src/APIs/axiosInstance';
 import { CommentSection, Rating, VideoPlayer } from '..';
 import { PostActionDropdown } from '../Dropdown';
 
 const NewsfeedCard = ({
-    index,
-    id,
-    videoId,
-    catalogue,
-    UserId,
-    isPost,
-    name,
-    thumbnail,
-    url,
-    title,
-    rating,
-    views,
-    width,
-    User,
-    Shares,
-    isLiked,
-    likeCount,
-    shareCount,
-    videoCost,
-    videoType,
-    restrictPaidVideo,
-    HandleLikePost,
-    ToggleTipModal,
-    _OpenShareModal,
-    _HandleCatalogue,
-    ToggleRatingModal,
-    _HandleDeleteVideo,
-    HandleFavouritePost,
-    _HandleGotoUserProfile,
-    _HandleGotoVideoDetails,
+	index,
+	id,
+	videoId,
+	catalogue,
+	UserId,
+	isPost,
+	name,
+	thumbnail,
+	url,
+	title,
+	rating,
+	views,
+	width,
+	User,
+	Shares,
+	isLiked,
+	likeCount,
+	shareCount,
+	videoCost,
+	videoType,
+	productLink,
+	watchLimit,
+	restrictPaidVideo,
+	HandleLikePost,
+	ToggleTipModal,
+	_OpenShareModal,
+	_HandleCatalogue,
+	ToggleRatingModal,
+	_HandleDeleteVideo,
+	HandleFavouritePost,
+	_HandleGotoUserProfile,
+	_HandleGotoVideoDetails,
 }) => {
 
-    const [showCommentSection, setShowCommentSection] = useState(false);
-    const [message, setMessage] = useState('');
-    const [comments, setComments] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [stopVideo, setStopVideo] = useState(false);
+	const [showCommentSection, setShowCommentSection] = useState(false);
+	const [message, setMessage] = useState('');
+	const [comments, setComments] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [stopVideo, setStopVideo] = useState(false);
 
-    const getAllCommentsByVideoId = async () => {
-        try {
-            setLoading(true);
-            const { data: { data: { comments } } } = await axiosInstance.getAllCommentsByVideoId(id);
-            setComments(comments);
-            setLoading(false);
-        }
-        catch (e) {
-            console.log('Get All comments by VideoId api failed: ', e);
-        }
-    }
+	const getAllCommentsByVideoId = async () => {
+		try {
+			setLoading(true);
+			const { data: { data: { comments } } } = await axiosInstance.getAllCommentsByVideoId(id);
+			setComments(comments);
+			setLoading(false);
+		}
+		catch (e) {
+			console.log('Get All comments by VideoId api failed: ', e);
+		}
+	}
 
-    useEffect(() => {
-        getAllCommentsByVideoId();
-    }, [])
+	useEffect(() => {
+		getAllCommentsByVideoId();
+	}, [])
 
-    useEffect(() => {
-        if (showCommentSection) {
-            getAllCommentsByVideoId();
-        }
-    }, [showCommentSection])
-
-
-    const _HandleCommentSection = () => {
-        setShowCommentSection(!showCommentSection);
-    }
-
-    const _HandleSubmitComment = async (text) => {
-        console.log('enter', text)
-        if (text !== '') {
-            try {
-                const res = await axiosInstance.postComment({ comment: text, videoId: id });
-                getAllCommentsByVideoId();
-            }
-            catch (e) {
-                console.log('Comment on Post API failed: ', e);
-            }
-        }
-    }
-
-    const _HandleDeleteComments = async (index, commentId) => {
-        console.log('Comment id to be deleted: ', commentId);
-        const deepCopyComments = [...comments];
-        deepCopyComments.splice(index, 1);
-        setComments(deepCopyComments);
-        try {
-            const { data: { message } } = await axiosInstance.deleteCommentById(commentId);
-            console.log(message);
-        } catch ({ response: { data: { message } } }) { console.log(message); }
-    }
-
-    const _HandlePaidVideos = async () => {
-        console.log('Here');
-        setTimeout(() => {
-            setStopVideo(true);
-            ToggleTipModal();
-        }, 30000);
-    }
-
-    const PaidVideoThumbnail = (
-        <>
-
-        </>
-    )
+	useEffect(() => {
+		if (showCommentSection) {
+			getAllCommentsByVideoId();
+		}
+	}, [showCommentSection])
 
 
-    return (
-        <>
-            <div
-                className={`mx-auto ${width} shadow flex flex-col justify-center rounded-lg overflow-hidden
+	const _HandleCommentSection = () => {
+		setShowCommentSection(!showCommentSection);
+	}
+
+	const _HandleSubmitComment = async (text) => {
+		console.log('enter', text)
+		if (text !== '') {
+			try {
+				const res = await axiosInstance.postComment({ comment: text, videoId: id });
+				getAllCommentsByVideoId();
+			}
+			catch (e) {
+				console.log('Comment on Post API failed: ', e);
+			}
+		}
+	}
+
+	const _HandleDeleteComments = async (index, commentId) => {
+		console.log('Comment id to be deleted: ', commentId);
+		const deepCopyComments = [...comments];
+		deepCopyComments.splice(index, 1);
+		setComments(deepCopyComments);
+		try {
+			const { data: { message } } = await axiosInstance.deleteCommentById(commentId);
+			console.log(message);
+		} catch ({ response: { data: { message } } }) { console.log(message); }
+	}
+
+	const _HandlePaidVideos = async () => {
+		console.log('Here');
+		setTimeout(() => {
+			setStopVideo(true);
+			ToggleTipModal();
+		}, watchLimit);
+	}
+
+	return (
+		<>
+			<div
+				className={`mx-auto ${width} shadow flex flex-col justify-center rounded-lg overflow-hidden
                 bg-white space-y-2`}>
-                <div className='flex flex-col'>
-                    <div className="flex w-full py-2 px-2 justify-between space-x-2">
-                        <div className="flex space-x-2">
-                            <img
-                                src={User?.picture ||
-                                    "https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"}
-                                className="rounded-full w-10 h-10 object-cover"
-                                alt="avatar"></img>
-                            <div className="flex flex-col w-full">
-                                <p
-                                    onClick={() => _HandleGotoUserProfile(UserId, User?.username)}
-                                    className="text-sm font-bold font-sans hover:underline cursor-pointer">
-                                    {User?.name}
-                                </p>
-                                <p className="text-xs text-gray-500">19h</p>
-                            </div>
-                        </div>
-                        <div className="flex space-x-2">
-                            <span onClick={() => HandleFavouritePost(id)}>
-                                <svg
-                                    className="w-6 h-6 text-gray-500 hover:text-purple-600 cursor-pointer"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                            </span>
-                            <div className="flex items-start justify-start">
-                                <PostActionDropdown
-                                    _HandleCatalogue={() => _HandleCatalogue(id, catalogue)}
-                                    _HandleDeleteVideo={() => _HandleDeleteVideo(index, videoId)}
-                                    ToggleRatingModal={ToggleRatingModal}
-                                    ToggleTipModal={ToggleTipModal}
-                                    catalogue={catalogue}
-                                    ownerId={UserId}
-                                    isPost={isPost}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <p
-                        onClick={() => _HandleGotoVideoDetails(id)}
-                        className="px-5 text-sm max-w-md hover:underline whitespace-nowrap overflow-ellipsis overflow-hidden cursor-pointer"
-                    >
-                        {title}
-                    </p>
-                </div>
-                {
-                    videoCost === 'Paid' && restrictPaidVideo ?
-                        !stopVideo ?
-                            <div className="video-wrapper" onClick={_HandlePaidVideos}>
-                                <VideoPlayer poster={thumbnail} src={url} />
-                            </div>
-                            :
-                            <div className="video-wrapper flex justify-center items-center">
-                                <p className="text-md text-gray-500 text-center">To continue watching video,<br /> Pay Now!</p>
-                            </div>
-                        :
-                        <div className="video-wrapper">
-                            <VideoPlayer poster={thumbnail} src={url} />
-                        </div>
-                }
-                {/* <img src="https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"
+				<div className='flex flex-col'>
+					<div className="flex w-full py-2 px-2 justify-between space-x-2">
+						<div className="flex space-x-2">
+							<img
+								src={User?.picture ||
+									"https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"}
+								className="rounded-full w-10 h-10 object-cover"
+								alt="avatar"></img>
+							<div className="flex flex-col w-full">
+								<p
+									onClick={() => _HandleGotoUserProfile(UserId, User?.username)}
+									className="text-sm font-bold font-sans hover:underline cursor-pointer">
+									{User?.name}
+								</p>
+								<p className="text-xs text-gray-500">19h</p>
+							</div>
+						</div>
+						<div className="flex space-x-2">
+							<span onClick={() => HandleFavouritePost(id)}>
+								<svg
+									className="w-6 h-6 text-gray-500 hover:text-purple-600 cursor-pointer"
+									fill="currentColor"
+									viewBox="0 0 20 20"
+									xmlns="http://www.w3.org/2000/svg">
+									<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+								</svg>
+							</span>
+							<div className="flex items-start justify-start">
+								<PostActionDropdown
+									_HandleCatalogue={() => _HandleCatalogue(id, catalogue)}
+									_HandleDeleteVideo={() => _HandleDeleteVideo(index, videoId)}
+									// ToggleRatingModal={ToggleRatingModal}
+									ToggleTipModal={ToggleTipModal}
+									catalogue={catalogue}
+									ownerId={UserId}
+									isPost={isPost}
+								/>
+							</div>
+						</div>
+					</div>
+					<p
+						onClick={() => _HandleGotoVideoDetails(id)}
+						className="px-5 text-sm max-w-md hover:underline whitespace-nowrap overflow-ellipsis overflow-hidden cursor-pointer"
+					>
+						{title}
+					</p>
+				</div>
+				{
+					videoCost === 'Paid' && restrictPaidVideo ?
+						!stopVideo ?
+							<div className="video-wrapper" onClick={_HandlePaidVideos}>
+								<VideoPlayer poster={thumbnail} src={url} />
+							</div>
+							:
+							<div className="video-wrapper flex justify-center items-center">
+								<p className="text-md text-gray-500 text-center">To continue watching video,<br /> Pay Now!</p>
+							</div>
+						:
+						<div className="video-wrapper">
+							<VideoPlayer poster={thumbnail} src={url} />
+						</div>
+				}
+				{/* <img src="https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"
                 className="w-full h-auto" alt="avatar"></img> */}
 
-                <div className="flex justify-between w-full px-3">
-                    <span className="flex items-center z-0">
-                        <Rating value={rating} isHalf={true} edit={false} />
-                        &nbsp; <p className="text-xs text-gray-500"> Rating</p>
-                    </span>
-                    <span className="flex items-center">
-                        <svg
-                            className="w-4 h-4 text"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                            <path
-                                fillRule="evenodd"
-                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-                                clipRule="evenodd"
-                            />
-                        </svg>
-                        &nbsp;<p className="text-xs text-gray-500">{views} Views</p>
-                    </span>
-                </div>
+				<div className="flex justify-between w-full px-3">
+					<span onClick={ToggleRatingModal} className="flex items-center z-0">
+						<Rating value={rating} isHalf={true} edit={false} />
+						&nbsp; <p className="text-xs text-gray-500"> Rating</p>
+					</span>
+					<span className="flex items-center">
+						<svg
+							className="w-4 h-4 text"
+							fill="currentColor"
+							viewBox="0 0 20 20"
+							xmlns="http://www.w3.org/2000/svg">
+							<path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+							<path
+								fillRule="evenodd"
+								d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+								clipRule="evenodd"
+							/>
+						</svg>
+						&nbsp;<p className="text-xs text-gray-500">{views} Views</p>
+					</span>
+				</div>
 
-                {/* {disclaimer && */}
-                {/* <div className="flex justify-end px-3">
+				{/* {disclaimer && */}
+				{/* <div className="flex justify-end px-3">
                    
                 </div> */}
-                {/* } */}
-                <div className="flex flex-col w-full divide-y">
-                    <div className="flex justify-between w-full px-3 py-2 rounded-b-lg">
-                        {/* <div className="space-x-2 flex">
+				{/* } */}
+				<div className="flex flex-col w-full divide-y">
+					<div className="flex justify-between w-full px-3 py-2 rounded-b-lg">
+						{/* <div className="space-x-2 flex">
                             <div className="flex space-x-1 items-center hover:underline cursor-pointer">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="11.825" height="11.825" viewBox="0 0 11.825 11.825">
                                     <path id="Icon_awesome-thumbs-up" data-name="Icon awesome-thumbs-up" d="M2.4,5.173H.554A.554.554,0,0,0,0,5.728v5.543a.554.554,0,0,0,.554.554H2.4a.554.554,0,0,0,.554-.554V5.728A.554.554,0,0,0,2.4,5.173ZM1.478,10.9a.554.554,0,1,1,.554-.554A.554.554,0,0,1,1.478,10.9Zm7.391-9.02c0,.98-.6,1.529-.769,2.184H10.45a1.38,1.38,0,0,1,1.375,1.342,1.672,1.672,0,0,1-.449,1.136l0,0a1.929,1.929,0,0,1-.215,1.835,1.826,1.826,0,0,1-.378,1.727,1.226,1.226,0,0,1-.142,1.031c-.471.677-1.64.687-2.628.687H7.945a6.63,6.63,0,0,1-2.761-.733,3.635,3.635,0,0,0-1.216-.374.277.277,0,0,1-.272-.277V5.5a.277.277,0,0,1,.082-.2C4.692,4.4,5.086,3.446,5.836,2.7a2.8,2.8,0,0,0,.586-1.36C6.525.908,6.74,0,7.206,0,7.76,0,8.869.185,8.869,1.881Z" fill="#65676b" />
@@ -231,94 +227,105 @@ const NewsfeedCard = ({
                                 <p className="text-sm text-gray-500 ">15</p>
                             </div>
                         </div> */}
-                        <div className="space-x-2 flex">
-                            <div className="flex px-2 h-6  background items-center justify-center rounded-lg">
-                                <p className="text-white font-sm">{videoType}</p>
-                            </div>
-                            <div className="flex px-2 h-6  background items-center justify-center rounded-lg">
-                                <p className="text-white font-sm">{videoCost}</p>
-                            </div>
-                        </div>
-                        <div>
-                            <p
-                                data-tip
-                                data-for={`disclaimer${title}`}
-                                className="text flex justify-end font-sans hover:underline cursor-pointer">
-                                {' '}
-                                Disclaimer
-                            </p>
-                            <ReactTooltip
-                                className="md:max-w-sm mx-w-md break-words z-50"
-                                id={`disclaimer${title}`}
-                                place="top"
-                                effect="solid"
-                                border={false}
-                                borderColor="white"
-                                clickable={false}>
-                                Although the information contained in these videos has been produced and processed
-                                from sources believed to be reliable, no warranty, expressed or implied, is made
-                                regarding accuracy, adequacy, completeness, legality, reliability or usefulness of
-                                the information. Any reliance you place on such information is therefore strictly at
-                                your own risk
-                            </ReactTooltip>
-                        </div>
-                        {/* </div> */}
-                    </div>
-                    <div className="flex justify-evenly py-1 px-2 space-x-2 divide-x">
-                        <div
-                            onClick={() => HandleLikePost(id, index)}
-                            className="flex relative justify-center group items-center py-1 px-3 w-full  cursor-pointer">
-                            <div className="flex flex-col items-center">
-                                <FontAwesomeIcon icon={faThumbsUp} className={`w-6 h-6 
+						<div className="space-x-2 flex">
+							<div className="flex px-2 h-6  background items-center justify-center rounded-lg">
+								<p className="text-white font-sm">{videoType}</p>
+							</div>
+							{
+								videoCost ? (
+									<div className="flex px-2 h-6 max-w-sm background items-center justify-center rounded-lg">
+										<p className="text-white font-sm">{videoCost}</p>
+									</div>
+								)
+									:
+									productLink && (
+										<Link href={productLink}>
+											<span className="text font-sm hover:underline cursor-pointer">
+												Product Link
+											</span>
+										</Link>)
+							}
+						</div>
+						<div>
+							<p
+								data-tip
+								data-for={`disclaimer${title}`}
+								className="text flex justify-end font-sans hover:underline cursor-pointer">
+								{' '}
+								Disclaimer
+							</p>
+							<ReactTooltip
+								className="md:max-w-sm mx-w-md break-words z-50"
+								id={`disclaimer${title}`}
+								place="top"
+								effect="solid"
+								border={false}
+								borderColor="white"
+								clickable={false}>
+								Although the information contained in these videos has been produced and processed
+								from sources believed to be reliable, no warranty, expressed or implied, is made
+								regarding accuracy, adequacy, completeness, legality, reliability or usefulness of
+								the information. Any reliance you place on such information is therefore strictly at
+								your own risk
+							</ReactTooltip>
+						</div>
+						{/* </div> */}
+					</div>
+					<div className="flex justify-evenly py-1 px-2 space-x-2 divide-x">
+						<div
+							onClick={() => HandleLikePost(id, index)}
+							className="flex relative justify-center group items-center py-1 px-3 w-full  cursor-pointer">
+							<div className="flex flex-col items-center">
+								<FontAwesomeIcon icon={faThumbsUp} className={`w-6 h-6 
                                 ${isLiked == null || isLiked == false ? 'text-gray-600' : 'text-purple-600'} group-hover:text-purple-600`}
-                                />
-                                <p
-                                    className={`cursor-pointer w-full text-xs text-center 
+								/>
+								<p
+									className={`cursor-pointer w-full text-xs text-center 
                                     ${isLiked == null || isLiked == false ? 'text-gray-600' : 'text-purple-600'} group-hover:text-purple-600`}
-                                >
-                                    {likeCount?.length}
-                                </p>
-                            </div>
-                        </div>
-                        <div
-                            onClick={() => _HandleCommentSection()}
-                            className="flex space-x-2 justify-center relative group py-1 px-3 w-full  cursor-pointer">
-                            <div className="flex flex-col items-center">
-                                <FontAwesomeIcon icon={faCommentAlt} className="w-6 h-6 text-gray-600 group-hover:text-purple-600" />
-                                <p className="cursor-pointer w-full text-xs text-center text-gray-600 group-hover:text-purple-600">
-                                    {comments?.length}
-                                </p>
-                            </div>
-                        </div>
-                        <div onClick={() => _OpenShareModal(videoId, thumbnail, url, User?.picture, User?.name, title)}
-                            className="flex relative group justify-center items-center py-1 px-3 w-full cursor-pointer"
-                        >
-                            <div className="flex flex-col items-center" >
-                                <FontAwesomeIcon icon={faShareAlt} className="w-6 h-6 text-gray-600 group-hover:text-purple-600" />
-                                <p className=" cursor-pointer text-xs w-full text-center text-gray-600 group-hover:text-purple-600">
-                                    {Shares?.length}
-                                </p>
-                            </div>
+								>
+									{likeCount?.length}
+								</p>
+							</div>
+						</div>
+						<div
+							onClick={() => _HandleCommentSection()}
+							className="flex space-x-2 justify-center relative group py-1 px-3 w-full  cursor-pointer">
+							<div className="flex flex-col items-center">
+								<FontAwesomeIcon icon={faCommentAlt} className="w-6 h-6 text-gray-600 group-hover:text-purple-600" />
+								<p className="cursor-pointer w-full text-xs text-center text-gray-600 group-hover:text-purple-600">
+									{comments?.length}
+								</p>
+							</div>
+						</div>
+						<div onClick={() => _OpenShareModal(videoId, thumbnail, url, User?.picture, User?.name, title)}
+							className="flex relative group justify-center items-center py-1 px-3 w-full cursor-pointer"
+						>
+							<div className="flex flex-col items-center" >
+								<FontAwesomeIcon icon={faShareAlt} className="w-6 h-6 text-gray-600 group-hover:text-purple-600" />
+								<p className=" cursor-pointer text-xs w-full text-center text-gray-600 group-hover:text-purple-600">
+									{Shares?.length}
+								</p>
+							</div>
 
-                        </div>
-                    </div>
-                    {
-                        showCommentSection && (
-                            <CommentSection
-                                comments={comments}
-                                message={message}
-                                loading={loading}
-                                setMessage={setMessage}
-                                _HandleSubmitComment={_HandleSubmitComment}
-                                _HandleDeleteComments={_HandleDeleteComments}
-                                _HandleGotoUserProfile={_HandleGotoUserProfile}
-                            />
-                        )
-                    }
-                </div>
-            </div>
-        </>
-    );
+						</div>
+					</div>
+					{
+						showCommentSection && (
+							<CommentSection
+								comments={comments}
+								message={message}
+								loading={loading}
+								setMessage={setMessage}
+								_HandleSubmitComment={_HandleSubmitComment}
+								_HandleDeleteComments={_HandleDeleteComments}
+								_HandleGotoUserProfile={_HandleGotoUserProfile}
+							/>
+						)
+					}
+				</div>
+			</div>
+		</>
+	);
 };
 
 export default NewsfeedCard;

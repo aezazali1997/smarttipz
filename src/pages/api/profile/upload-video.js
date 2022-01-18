@@ -20,14 +20,14 @@ const handler = async (req, res) => {
         url: Joi.string().required(),
         mediaType: Joi.string().required(),
         videoType: Joi.string().required(),
-        videoCost: Joi.string().required(),
+        videoCost: Joi.string().optional().allow(''),
         agree: Joi.required(),
-        isShowOnNewsfeed: Joi.optional()
+        isShowOnNewsfeed: Joi.optional(),
+        productLink: Joi.string().uri().optional().allow(''),
+        watchLimit: Joi.optional(),
       });
       return schema.validate(data);
     };
-
-    console.log(body);
 
     const { error } = validateUploadVideo(req.body);
 
@@ -60,21 +60,25 @@ const handler = async (req, res) => {
         thumbnail,
         category,
         videoType,
-        videoCost
+        videoCost,
+        productLink,
+        watchLimit,
       } = body;
 
       const newVideo = await Video.create({
-        title,
-        description,
-        agree,
-        mediaType,
         url,
+        agree,
+        title,
+        mediaType,
         language,
         thumbnail,
         category,
         videoType,
         videoCost,
-        isShowOnNewsfeed
+        productLink,
+        description,
+        isShowOnNewsfeed,
+        watchLimit
       });
 
       const newPost = await AllPosts.create({

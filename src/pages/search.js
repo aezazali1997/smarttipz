@@ -109,11 +109,12 @@ const Search = () => {
 											(
 												{
 													id: postId,
-													likeCount,
-													isLiked,
 													Video,
-													Share,
 													isShared,
+													Share,
+													isLiked,
+													shareCount,
+													PostLikees,
 													Video: {
 														id,
 														description,
@@ -121,12 +122,15 @@ const Search = () => {
 														url,
 														UserId,
 														thumbnail,
-														PostLikees,
 														catalogue,
 														User,
+														Shares,
 														videoType,
 														videoCost,
+														productLink,
+														watchLimit,
 														isApproved
+
 													}
 												},
 												index
@@ -139,45 +143,55 @@ const Search = () => {
 														Video={Video}
 														Share={Share}
 														isLiked={isLiked}
+														likeCount={PostLikees}
+														shareCount={shareCount}
 														width={'max-w-lg'}
-														likeCount={likeCount}
+														restrictPaidVideo={true}
 														HandleLikePost={HandleLikePost}
+														ToggleTipModal={ToggleTipModal}
 														_OpenShareModal={_OpenShareModal}
 														_HandleGotoUserProfile={_HandleGotoUserProfile}
 														_HandleGotoVideoDetails={_HandleGotoVideoDetails}
 													/>
 												) :
 													(
-														<div key={index}>
-															<NewsfeedCard
-																id={postId}
-																videoId={id}
-																UserId={UserId}
-																index={index}
-																catalogue={catalogue}
-																isPost={true}
-																url={url}
-																views={200}
-																User={User}
-																rating={2.5}
-																postLikes={PostLikees}
-																description={description}
-																title={title}
-																isLiked={isLiked}
-																likeCount={likeCount}
-																videoCost={videoCost}
-																videoType={videoType}
-																width={'max-w-lg'}
-																thumbnail={thumbnail}
-																HandleLikePost={HandleLikePost}
-																ToggleTipModal={ToggleTipModal}
-																ToggleRatingModal={() => OpenRatingModal(postId)}
-																_HandleDeleteVideo={_HandleDeleteVideo}
-																_HandleCatalogue={_HandleCatalogue}
-																_HandleGotoUserProfile={_HandleGotoUserProfile}
-																_HandleGotoVideoDetails={_HandleGotoVideoDetails}
-															/>
-														</div>
+														isApproved && (
+															<div key={index}>
+																<NewsfeedCard
+																	id={postId}
+																	videoId={id}
+																	UserId={UserId}
+																	index={index}
+																	catalogue={catalogue}
+																	isPost={true}
+																	url={url}
+																	views={200}
+																	User={User}
+																	rating={2.5}
+																	Shares={Shares}
+																	postLikes={PostLikees}
+																	description={description}
+																	title={title}
+																	isLiked={isLiked}
+																	likeCount={PostLikees}
+																	videoCost={videoCost}
+																	videoType={videoType}
+																	watchLimit={watchLimit}
+																	productLink={productLink}
+																	width={'max-w-lg'}
+																	thumbnail={thumbnail}
+																	restrictPaidVideo={true}
+																	_OpenShareModal={_OpenShareModal}
+																	HandleLikePost={HandleLikePost}
+																	ToggleTipModal={ToggleTipModal}
+																	ToggleRatingModal={() => OpenRatingModal(postId)}
+																	_HandleDeleteVideo={_HandleDeleteVideo}
+																	_HandleCatalogue={_HandleCatalogue}
+																	_HandleGotoUserProfile={_HandleGotoUserProfile}
+																	_HandleGotoVideoDetails={_HandleGotoVideoDetails}
+																/>
+															</div>
+														)
 													)
 										)}
 									<Button
@@ -257,11 +271,12 @@ const Search = () => {
 							(
 								{
 									id: postId,
-									likeCount,
-									isLiked,
-									isShared,
 									Video,
+									isShared,
 									Share,
+									isLiked,
+									shareCount,
+									PostLikees,
 									Video: {
 										id,
 										description,
@@ -269,11 +284,13 @@ const Search = () => {
 										url,
 										UserId,
 										thumbnail,
-										PostLikees,
 										catalogue,
 										User,
+										Shares,
 										videoType,
 										videoCost,
+										productLink,
+										watchLimit,
 										isApproved
 									}
 								},
@@ -287,9 +304,12 @@ const Search = () => {
 										Video={Video}
 										Share={Share}
 										isLiked={isLiked}
+										likeCount={PostLikees}
+										shareCount={shareCount}
 										width={'max-w-lg'}
-										likeCount={likeCount}
+										restrictPaidVideo={true}
 										HandleLikePost={HandleLikePost}
+										ToggleTipModal={ToggleTipModal}
 										_OpenShareModal={_OpenShareModal}
 										_HandleGotoUserProfile={_HandleGotoUserProfile}
 										_HandleGotoVideoDetails={_HandleGotoVideoDetails}
@@ -308,15 +328,20 @@ const Search = () => {
 												views={200}
 												User={User}
 												rating={2.5}
-												isLiked={isLiked}
-												likeCount={likeCount}
+												Shares={Shares}
 												postLikes={PostLikees}
 												description={description}
 												title={title}
+												isLiked={isLiked}
+												likeCount={PostLikees}
 												videoCost={videoCost}
 												videoType={videoType}
+												watchLimit={watchLimit}
+												productLink={productLink}
 												width={'max-w-lg'}
 												thumbnail={thumbnail}
+												restrictPaidVideo={true}
+												_OpenShareModal={_OpenShareModal}
 												HandleLikePost={HandleLikePost}
 												ToggleTipModal={ToggleTipModal}
 												ToggleRatingModal={() => OpenRatingModal(postId)}

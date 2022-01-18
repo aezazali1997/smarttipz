@@ -258,6 +258,7 @@ const Profile = ({ profile }) => {
                         videoType,
                         videoCost,
                         Shares,
+                        productLink
                       },
                       isLiked, likeCount, shareCount,
                     },
@@ -282,6 +283,7 @@ const Profile = ({ profile }) => {
                         videoCost={videoCost}
                         description={description}
                         title={title}
+                        productLink={productLink}
                         width={'max-w-xs'}
                         thumbnail={thumbnail}
                         HandleLikePost={HandleLikePost}
@@ -337,7 +339,8 @@ const Profile = ({ profile }) => {
                       User,
                       videoType,
                       videoCost,
-                      Shares
+                      Shares,
+                      productLink
                     }
                   },
                   index
@@ -363,6 +366,7 @@ const Profile = ({ profile }) => {
                       title={title}
                       isPost={true}
                       width={'max-w-xs'}
+                      productLink={productLink}
                       thumbnail={thumbnail}
                       HandleLikePost={HandleLikePost}
                       _OpenShareModal={_OpenShareModal}

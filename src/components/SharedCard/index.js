@@ -17,8 +17,10 @@ const SharedCard = ({
 	isLiked,
 	likeCount,
 	shareCount,
+	ToggleTipModal,
 	HandleLikePost,
 	_OpenShareModal,
+	restrictPaidVideo,
 	_HandleGotoVideoDetails,
 	_HandleGotoUserProfile,
 }) => {
@@ -26,6 +28,7 @@ const SharedCard = ({
 	const [message, setMessage] = useState('');
 	const [comments, setComments] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const [stopVideo, setStopVideo] = useState(false);
 
 	const getAllCommentsByVideoId = async () => {
 		try {
@@ -80,6 +83,14 @@ const SharedCard = ({
 
 	}
 
+	const _HandlePaidVideos = async () => {
+		console.log('Here: ', Video.watchLimit);
+		setTimeout(() => {
+			setStopVideo(true);
+			ToggleTipModal();
+		}, Video.watchLimit);
+	}
+
 	return (
 		<div
 			className={`mx-auto ${width} shadow flex flex-col justify-center rounded-lg overflow-hidden
@@ -93,6 +104,9 @@ const SharedCard = ({
 					Video && Video?.isApproved ?
 						<ContentSection
 							SharedPost={Video}
+							stopVideo={stopVideo}
+							restrict={restrictPaidVideo}
+							_HandlePaidVideos={_HandlePaidVideos}
 							_HandleGotoUserProfile={_HandleGotoUserProfile}
 							_HandleGotoVideoDetails={_HandleGotoVideoDetails}
 						/> :

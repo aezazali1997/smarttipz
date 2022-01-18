@@ -9,7 +9,7 @@ const EmojiInput = ({ message, setMessage, handleOnEnter, placeholder, className
             className={className}
             cleanOnEnter
             onEnter={handleOnEnter}
-            placeholder={placeholder}
+            placeholder={placeholder || 'Type a message'}
         />
     )
 }

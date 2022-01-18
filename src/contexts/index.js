@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { createContext, useContext, useMemo, useState } from 'react';
 
 const SearchContext = createContext();
