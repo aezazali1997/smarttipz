@@ -55,6 +55,16 @@ const handler = async (req, res) => {
 
       console.log('varifyCode:', varificationCode);
 
+      const { success, message } = await sendEmail(
+        email,
+        'Account Authentication',
+        `Your account validation code is: ${varificationCode}`,
+        'd-2ade08cf167948cf8cc9b478d81afc7d'
+      );
+
+      if (!success) return res.status(400).json({ error: true, message: message, data: [] });
+
+
       const newUser = await User.create({
         name,
         username,
@@ -77,13 +87,6 @@ const handler = async (req, res) => {
         username: newUser.username,
         connected: false
       });
-
-      await sendEmail(
-        email,
-        'Account Authentication',
-        `Your account validation code is: ${varificationCode}`,
-        'd-2ade08cf167948cf8cc9b478d81afc7d'
-      );
 
       const token = jwt.sign({ email: newUser.email }, process.env.SECRET_KEY);
 
