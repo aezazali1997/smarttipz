@@ -170,7 +170,9 @@ const UserProfile = ({ profile }) => {
 			})
 		}
 		else {
-			setOtherUserDetail({ picture, name, id, username });
+			const details = { picture, name, id, username };
+			localStorage.setItem('profile', JSON.stringify(details));
+			setOtherUserDetail(details);
 			router.push(`/dashboard/profile/messages/${id}`)
 		}
 	}

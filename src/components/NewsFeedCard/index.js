@@ -167,8 +167,14 @@ const NewsfeedCard = ({
 								<VideoPlayer poster={thumbnail} src={url} />
 							</div>
 							:
-							<div className="video-wrapper flex justify-center items-center">
-								<p className="text-md text-gray-500 text-center">To continue watching video,<br /> Pay Now!</p>
+							<div className="video-wrapper flex flex-col justify-center items-center">
+								<p className="text-md text-gray-500 text-center">To continue watching video</p>
+								<button
+									type="button"
+									className="mt-3 w-full inline-flex justify-center hover:underline  px-4 py-2 text-base font-medium text  sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+								>
+									PAY NOW
+								</button>
 							</div>
 						:
 						<div className="video-wrapper">
@@ -239,10 +245,12 @@ const NewsfeedCard = ({
 								)
 									:
 									productLink && (
-										<Link href={productLink}>
-											<span className="text font-sm hover:underline cursor-pointer">
-												Product Link
-											</span>
+										<Link href={productLink} passHref>
+											<a target='_blank'>
+												<span className="text font-sm hover:underline cursor-pointer">
+													Product Link
+												</span>
+											</a>
 										</Link>)
 							}
 						</div>

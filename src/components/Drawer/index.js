@@ -10,6 +10,7 @@ import { faNewspaper, faUserCircle, faCog, faPlayCircle, faSignOutAlt, faComment
 import { Badge } from 'src/components';
 import { useOutsideClick } from 'src/hooks';
 import { Routes, DropdownRoutes } from 'routes';
+import GlobalSearchbar from '../GlobalSearchbar';
 
 const Drawer = ({ isOpen, toggle, logout }) => {
 
@@ -53,6 +54,9 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                             <Image src='https://smart-tipz-data-bucket.s3.ap-southeast-1.amazonaws.com/public/logo.svg'
                                 alt="brand" layout="fill" objectFit="cover" />
                         </Link>
+                    </div>
+                    <div className='my-4 w-52'>
+                        <GlobalSearchbar />
                     </div>
                     <div className=' lg:flex flex-col h-full pt-2 overflow-y-auto'>
                         <div className="mb-1 block lg:hidden">
@@ -106,18 +110,16 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                                 <div className="flex flex-col absolute space-y-2 bg-white p-2 w-52 rounded-lg transition delay-100 duration-300 ease-in-out">
                                     {
                                         DropdownRoutes && DropdownRoutes.map(({ path, name }, index) => (
-                                            <>
-                                                <Link href={path} key={index} className='p-4 font-sans nav-link nav-link-ltr' >
-                                                    <a>
-                                                        <div onClick={() => handleClose()} className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
+                                            <Link href={path} key={index} className='p-4 font-sans nav-link nav-link-ltr' >
+                                                <a>
+                                                    <div onClick={() => handleClose()} className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
                                                                 ${ActiveDropdown(path)}`}>
-                                                            <div>
-                                                                {name}
-                                                            </div>
+                                                        <div>
+                                                            {name}
                                                         </div>
-                                                    </a>
-                                                </Link>
-                                            </>
+                                                    </div>
+                                                </a>
+                                            </Link>
                                         ))
                                     }
 

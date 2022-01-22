@@ -25,6 +25,7 @@ const handler = async (req, res) => {
         isShowOnNewsfeed: Joi.optional(),
         productLink: Joi.string().uri().optional().allow(''),
         watchLimit: Joi.optional(),
+        cost: Joi.optional(),
       });
       return schema.validate(data);
     };
@@ -63,6 +64,7 @@ const handler = async (req, res) => {
         videoCost,
         productLink,
         watchLimit,
+        cost
       } = body;
 
       const newVideo = await Video.create({
@@ -78,7 +80,8 @@ const handler = async (req, res) => {
         productLink,
         description,
         isShowOnNewsfeed,
-        watchLimit
+        watchLimit,
+        cost
       });
 
       const newPost = await AllPosts.create({

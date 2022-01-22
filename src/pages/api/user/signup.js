@@ -37,7 +37,9 @@ const handler = async (req, res) => {
     let user = null;
 
     try {
-      user = await User.findOne({ where: { username } });
+      const trimedUsername = username.replace(/\s+/g, '').trim()
+
+      user = await User.findOne({ where: { username: trimedUsername } });
       if (user) {
         throw new Error('Username already exists');
       }
@@ -67,7 +69,7 @@ const handler = async (req, res) => {
 
       const newUser = await User.create({
         name,
-        username,
+        username: trimedUsername,
         email,
         phoneNumber: phone,
         password: encPassword,

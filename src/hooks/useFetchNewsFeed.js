@@ -18,7 +18,8 @@ const UseFetchNewsFeed = () => {
         videoCost: '',
         productLink: '',
         minute: 0,
-        second: 0
+        second: 0,
+        cost: 0
     }
 
     let { uploadToS3 } = useS3Upload();
@@ -193,6 +194,8 @@ const UseFetchNewsFeed = () => {
             delete values.minute;
             delete values.second;
         }
+
+        // console.log('values: ', values);
 
         try {
             const { data: { message } } = await axiosInstance.uploadNewsFeed(values)

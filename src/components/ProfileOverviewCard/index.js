@@ -65,6 +65,7 @@ const ProfileOverviewCard = ({
         username,
         picture
       };
+      localStorage.setItem('profile', JSON.stringify(details));
       setOtherUserDetail(details);
       router.push(`/dashboard/profile/messages/${id}`);
     }

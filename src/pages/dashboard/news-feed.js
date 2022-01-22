@@ -6,6 +6,8 @@ import { isEmpty } from 'lodash';
 import { MediaUploadForm, NewsfeedCard, VideoUploadBlock, Spinner, SharedCard } from 'src/components';
 import { ShareModal, TipModal, VideoRatingModal } from 'src/components/Modals';
 import { UseFetchNewsFeed } from 'src/hooks';
+
+
 const NewsFeed = () => {
 
   const { formik, _DeleteImg, ChangeAgreement, agree, urls, setUrls, showModal,
@@ -192,6 +194,7 @@ const NewsFeed = () => {
           loading={false}
           modalTitle={'Tip Video'}
         />
+
       )}
       {showShareModal && (
         <ShareModal

@@ -60,6 +60,9 @@ const Video = sequelize.define("Video", {
   tip: {
     type: DataTypes.INTEGER,
   },
+  cost: {
+    type: DataTypes.INTEGER,
+  },
   comment: {
     type: DataTypes.INTEGER,
   },

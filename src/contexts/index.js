@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { createContext, useContext, useMemo, useState } from 'react';
 
 const SearchContext = createContext();
@@ -17,6 +18,13 @@ export function AppWrapper({ children }) {
             router.push('/search?active=All');
         }
     };
+
+    useEffect(() => {
+        const otherUserDetails = JSON.parse(localStorage.getItem('profile'));
+        if (otherUserDetails) {
+            setOtherUserDetail(otherUserDetails);
+        }
+    }, [otherUserDetail]);
 
     const data = useMemo(
         () => ({

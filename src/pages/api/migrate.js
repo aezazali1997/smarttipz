@@ -15,7 +15,7 @@ const Business = require('models/Business');
 const Comment = require('models/Comments');
 
 const handler = async (req, res) => {
-    sequelize.sync({ force: true });
+    // sequelize.sync({ force: true });
     // AllPosts.sync({ alter: true });
     // Rating.sync({ force: true });
     // User.sync({ alter: true });
@@ -24,7 +24,7 @@ const handler = async (req, res) => {
     // await Session.sync({ force: true });
     // Comment.sync({ force: true });
     // Share.sync({ alter: true });
-    // Video.sync({ alter: true });
+    Video.sync({ alter: true });
     // Like.sync({ force: true });
     // Favourite.sync({ force: true });
     // Share.sync({ alter: true });

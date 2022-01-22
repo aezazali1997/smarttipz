@@ -193,49 +193,74 @@ const Index = ({ formik, thumbnailUrl, _OnThumbnailClick, urls, _DeleteImg, Chan
                           }
                           {
                             formik.values.videoCost === 'Paid' && (
-                              <div className="flex justify-between mb-4 items-center" >
-                                <p className="text-sm">Video watch limit</p>
-                                <div className='flex space-x-2'>
-                                  <>
-                                    <InputField
-                                      name={"minute"}
-                                      type={"number"}
-                                      min={'0'}
-                                      max={'60'}
-                                      value={formik.values.minute}
-                                      onChange={formik.handleChange}
-                                      onBlur={formik.handleBlur}
-                                      error={formik.touched.minute && formik.errors.minute}
-                                      inputClass={`${getInputClasses(
-                                        formik, "minute"
-                                      )} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
-                                      label={'Minute'}
-                                    />
-                                    {formik.touched.minute && formik.errors.minute &&
-                                      <div className="text-red-700 text-sm mb-4" >{formik.errors.minute}</div>
-                                    }
-                                  </>
-                                  <>
-                                    <InputField
-                                      name={"second"}
-                                      type={"number"}
-                                      min={'0'}
-                                      max={'59'}
-                                      value={formik.values.second}
-                                      onChange={formik.handleChange}
-                                      onBlur={formik.handleBlur}
-                                      error={formik.touched.second && formik.errors.second}
-                                      inputClass={`${getInputClasses(
-                                        formik, "second"
-                                      )} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
-                                      label={'Second'}
-                                    />
-                                    {formik.touched.second && formik.errors.second &&
-                                      <div className="text-red-700 text-sm mb-4" >{formik.errors.second}</div>
-                                    }
-                                  </>
+                              <>
+                                <div className="flex justify-between  items-center" >
+                                  <p className="text-sm">Video watch limit</p>
+                                  <div className='flex space-x-2'>
+                                    <>
+                                      <InputField
+                                        name={"minute"}
+                                        type={"number"}
+                                        min={'0'}
+                                        max={'60'}
+                                        value={formik.values.minute}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        error={formik.touched.minute && formik.errors.minute}
+                                        inputClass={`${getInputClasses(
+                                          formik, "minute"
+                                        )} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
+                                        label={'Minute'}
+                                      />
+                                      {formik.touched.minute && formik.errors.minute &&
+                                        <div className="text-red-700 text-sm mb-4" >{formik.errors.minute}</div>
+                                      }
+                                    </>
+                                    <>
+                                      <InputField
+                                        name={"second"}
+                                        type={"number"}
+                                        min={'0'}
+                                        max={'59'}
+                                        value={formik.values.second}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        error={formik.touched.second && formik.errors.second}
+                                        inputClass={`${getInputClasses(
+                                          formik, "second"
+                                        )} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
+                                        label={'Second'}
+                                      />
+                                      {formik.touched.second && formik.errors.second &&
+                                        <div className="text-red-700 text-sm mb-4" >{formik.errors.second}</div>
+                                      }
+                                    </>
+                                  </div>
                                 </div>
-                              </div>
+                                <div className="w-full justify-center flex">
+                                  <div className="flex w-full whitespace-preborder bg-gray-50 rounded-md h-12 mb-4">
+                                    <span className="bg-gray-50 text-md border border-r-0 rounded-md rounded-r-none font-bold border-gray-200 px-3 py-3  h-12">
+                                      $
+                                    </span>
+                                    <InputField
+                                      name={"cost"}
+                                      type={"number"}
+                                      min={'0'}
+                                      value={formik.values.cost}
+                                      onChange={formik.handleChange}
+                                      onBlur={formik.handleBlur}
+                                      error={formik.touched.cost && formik.errors.cost}
+                                      inputClass={`${getInputClasses(
+                                        formik, "cost"
+                                      )} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
+                                      label={'Cost'}
+                                    />
+                                    {formik.touched.cost && formik.errors.cost &&
+                                      <div className="text-red-700 text-sm mb-4" >{formik.errors.cost}</div>
+                                    }
+                                  </div>
+                                </div>
+                              </>
                             )}
                         </>
                       )
