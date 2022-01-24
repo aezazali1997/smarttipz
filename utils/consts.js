@@ -1,5 +1,22 @@
 const sequelize = require('sequelize');
 
+
+export const getPagination = (page, size) => {
+    const limit = size ? +size : 10;
+    const offset = page ? page * limit : 0;
+
+    return { limit, offset };
+};
+
+export const getPagingData = (data, page, limit, name) => {
+    const { count: totalVideos, rows: videos } = data;
+    const currentPage = page ? + page : 0;
+    const totalPages = Math.ceil(totalVideos / limit);
+
+    return { totalVideos, videos, totalPages, currentPage };
+};
+
+
 const getFilterdProfilesByAccountType = (accountType) => {
     const { Personal, Business } = accountType;
     return Personal === false && Business === true
