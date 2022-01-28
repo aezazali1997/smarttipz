@@ -17,10 +17,12 @@ const SharedCard = ({
 	isLiked,
 	likeCount,
 	shareCount,
-	ToggleTipModal,
+	commentCount,
 	HandleLikePost,
 	_OpenShareModal,
+	_HandleCommentCounts,
 	restrictPaidVideo,
+	TogglePaymentModal,
 	_HandleGotoVideoDetails,
 	_HandleGotoUserProfile,
 }) => {
@@ -46,10 +48,6 @@ const SharedCard = ({
 	};
 
 	useEffect(() => {
-		getAllCommentsByVideoId();
-	}, []);
-
-	useEffect(() => {
 		if (showCommentSection) {
 			getAllCommentsByVideoId();
 		}
@@ -62,6 +60,7 @@ const SharedCard = ({
 	const _HandleSubmitComment = async (text) => {
 		console.log('enter', text);
 		if (text !== '') {
+			_HandleCommentCounts(id, '+')
 			try {
 				const res = await axiosInstance.postComment({ comment: text, videoId: id });
 				getAllCommentsByVideoId();
@@ -73,6 +72,7 @@ const SharedCard = ({
 
 	const _HandleDeleteComments = async (index, commentId) => {
 		console.log('Comment id to be deleted: ', commentId);
+		_HandleCommentCounts(id, '-')
 		const deepCopyComments = [...comments];
 		deepCopyComments.splice(index, 1);
 		setComments(deepCopyComments);
@@ -80,15 +80,15 @@ const SharedCard = ({
 			const { data: { message } } = await axiosInstance.deleteCommentById(commentId);
 			console.log(message);
 		} catch ({ response: { data: { message } } }) { console.log(message); }
-
 	}
 
+
 	const _HandlePaidVideos = async () => {
-		console.log('Here: ', Video.watchLimit);
+		console.log('Here: ', Video?.watchLimit);
 		setTimeout(() => {
 			setStopVideo(true);
-			ToggleTipModal();
-		}, Video.watchLimit);
+			TogglePaymentModal();
+		}, Video?.watchLimit);
 	}
 
 	return (
@@ -106,6 +106,8 @@ const SharedCard = ({
 							SharedPost={Video}
 							stopVideo={stopVideo}
 							restrict={restrictPaidVideo}
+							shareCount={shareCount}
+							TogglePaymentModal={TogglePaymentModal}
 							_HandlePaidVideos={_HandlePaidVideos}
 							_HandleGotoUserProfile={_HandleGotoUserProfile}
 							_HandleGotoVideoDetails={_HandleGotoVideoDetails}
@@ -123,8 +125,8 @@ const SharedCard = ({
 					Video={Video}
 					isLiked={isLiked}
 					videoId={videoId}
-					comments={comments}
 					likeCount={likeCount}
+					commentCount={commentCount}
 					HandleLikePost={HandleLikePost}
 					_OpenShareModal={_OpenShareModal}
 					_HandleCommentSection={_HandleCommentSection}

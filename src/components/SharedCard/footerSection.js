@@ -9,8 +9,7 @@ const FooterSection = ({
     Video,
     isLiked,
     likeCount,
-    comments,
-    Shares,
+    commentCount,
     HandleLikePost,
     _OpenShareModal,
     _HandleCommentSection
@@ -21,21 +20,21 @@ const FooterSection = ({
     return (
         <div className="flex justify-evenly py-1 px-2 space-x-2 divide-x border-t border-b">
             <div
-                onClick={() => HandleLikePost(id, index)}
+                onClick={HandleLikePost}
                 className="flex relative justify-center group items-center py-1 px-3 w-full  cursor-pointer">
                 <div className="flex flex-col items-center">
                     <FontAwesomeIcon
                         icon={faThumbsUp}
-                        className={`w-6 h-6 ${isLiked == null || isLiked === false ? 'text-gray-600'
+                        className={`w-6 h-6 ${isLiked === false ? 'text-gray-600'
                             : 'text-purple-600'} group-hover:text-purple-600`}
                     />
                     <p
                         className={`cursor-pointer w-full text-xs text-center 
-                                    ${isLiked == null || isLiked === false
+                                    ${isLiked === false
                                 ? 'text-gray-600'
                                 : 'text-purple-600'
                             } group-hover:text-purple-600`}>
-                        {likeCount?.length}
+                        {likeCount}
                     </p>
                 </div>
             </div>
@@ -48,7 +47,7 @@ const FooterSection = ({
                         className="w-6 h-6 text-gray-600 group-hover:text-purple-600"
                     />
                     <p className="cursor-pointer w-full text-xs text-center text-gray-600 group-hover:text-purple-600">
-                        {comments?.length}
+                        {commentCount || 0}
                     </p>
                 </div>
             </div>
@@ -60,9 +59,6 @@ const FooterSection = ({
                         icon={faShareAlt}
                         className="w-6 h-6 text-gray-600 group-hover:text-purple-600"
                     />
-                    <p className=" cursor-pointer text-xs w-full text-center text-gray-600 group-hover:text-purple-600">
-                        {Shares?.length}
-                    </p>
                 </div>
             </div>
         </div>

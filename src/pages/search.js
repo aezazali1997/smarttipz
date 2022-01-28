@@ -1,3 +1,4 @@
+import { AnimatePresence } from 'framer-motion';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import {
@@ -10,7 +11,7 @@ import {
 	SortFilter,
 	Spinner
 } from 'src/components';
-import { FilterModal, ShareModal, TipModal, VideoRatingModal } from 'src/components/Modals';
+import { FilterModal, PaymentModal, ShareModal, TipModal, VideoRatingModal } from 'src/components/Modals';
 import { UseSearch } from 'src/hooks';
 
 const Search = () => {
@@ -25,9 +26,6 @@ const Search = () => {
 		_HandleGotoUserProfile,
 		_HandleDeleteVideo,
 		_HandleCatalogue,
-		GetUserProfiles,
-		GetPosts,
-		filterSearch,
 		posts,
 		userProfiles,
 		showRatingModal,
@@ -38,7 +36,6 @@ const Search = () => {
 		sort,
 		setSort,
 		account,
-		setAccountType,
 		videoCategory,
 		videoType,
 		rating,
@@ -52,7 +49,6 @@ const Search = () => {
 		showFilterModal,
 		_HandleToggleFilterModal,
 		_OpenShareModal,
-		_HandleChangeCaption,
 		_HandleSharePost,
 		shareCaption,
 		shareData,
@@ -60,7 +56,12 @@ const Search = () => {
 		showShareModal,
 		_CloseShareModal,
 		setShareCaption,
-		OpenRatingModal, _SubmitRating
+		OpenRatingModal,
+		_SubmitRating,
+		_TogglePaymentModal,
+		_HandleCommentCounts,
+		showAmountModal,
+		videoPayment
 	} = UseSearch();
 
 	return (
@@ -105,95 +106,98 @@ const Search = () => {
 								<>
 									{posts
 										.slice(0, 1)
-										.map(
-											(
-												{
-													id: postId,
-													Video,
-													isShared,
-													Share,
-													isLiked,
-													shareCount,
-													PostLikees,
-													Video: {
-														id,
-														description,
-														title,
-														url,
-														UserId,
-														thumbnail,
-														catalogue,
-														User,
-														Shares,
-														videoType,
-														videoCost,
-														productLink,
-														watchLimit,
-														isApproved
-
-													}
-												},
-												index
-											) =>
-												isShared ? (
-													<SharedCard
+										.map(({
+											id: postId,
+											Video,
+											isShared,
+											Share,
+											isLiked,
+											shareCount,
+											likeCount,
+											commentCount,
+											Video: {
+												id,
+												description,
+												title,
+												url,
+												UserId,
+												thumbnail,
+												catalogue,
+												User,
+												Shares,
+												videoType,
+												videoCost,
+												productLink,
+												watchLimit,
+												isApproved,
+												cost
+											}
+										}
+											, index) => (
+											isShared ? (
+												<SharedCard
+													key={index}
+													id={postId}
+													videoId={id}
+													index={index}
+													Video={Video}
+													Share={Share}
+													isLiked={isLiked}
+													likeCount={likeCount}
+													commentCount={commentCount}
+													shareCount={shareCount}
+													width={'max-w-lg'}
+													restrictPaidVideo={true}
+													ToggleTipModal={ToggleTipModal}
+													_OpenShareModal={_OpenShareModal}
+													_HandleCommentCounts={_HandleCommentCounts}
+													HandleLikePost={() => HandleLikePost(postId, isLiked)}
+													_HandleGotoUserProfile={_HandleGotoUserProfile}
+													_HandleGotoVideoDetails={_HandleGotoVideoDetails}
+													TogglePaymentModal={() => _TogglePaymentModal(cost)}
+												/>
+											) :
+												isApproved && (
+													<NewsfeedCard
+														key={index}
 														id={postId}
 														videoId={id}
+														UserId={UserId}
 														index={index}
-														Video={Video}
-														Share={Share}
+														catalogue={catalogue}
+														isPost={true}
+														url={url}
+														views={200}
+														User={User}
+														rating={2.5}
+														Shares={Shares}
+														description={description}
+														title={title}
 														isLiked={isLiked}
-														likeCount={PostLikees}
+														likeCount={likeCount}
+														commentCount={commentCount}
 														shareCount={shareCount}
+														videoCost={videoCost}
+														videoType={videoType}
+														watchLimit={watchLimit}
+														productLink={productLink}
 														width={'max-w-lg'}
+														thumbnail={thumbnail}
 														restrictPaidVideo={true}
-														HandleLikePost={HandleLikePost}
-														ToggleTipModal={ToggleTipModal}
 														_OpenShareModal={_OpenShareModal}
+														_HandleCommentCounts={_HandleCommentCounts}
+														_HandleDeleteVideo={_HandleDeleteVideo}
+														_HandleCatalogue={_HandleCatalogue}
 														_HandleGotoUserProfile={_HandleGotoUserProfile}
 														_HandleGotoVideoDetails={_HandleGotoVideoDetails}
+														ToggleRatingModal={() => OpenRatingModal(postId)}
+														ToggleTipModal={() => ToggleTipModal(User?.tip)}
+														HandleLikePost={() => HandleLikePost(postId, isLiked)}
+														TogglePaymentModal={() => _TogglePaymentModal(cost)}
 													/>
-												) :
-													(
-														isApproved && (
-															<div key={index}>
-																<NewsfeedCard
-																	id={postId}
-																	videoId={id}
-																	UserId={UserId}
-																	index={index}
-																	catalogue={catalogue}
-																	isPost={true}
-																	url={url}
-																	views={200}
-																	User={User}
-																	rating={2.5}
-																	Shares={Shares}
-																	postLikes={PostLikees}
-																	description={description}
-																	title={title}
-																	isLiked={isLiked}
-																	likeCount={PostLikees}
-																	videoCost={videoCost}
-																	videoType={videoType}
-																	watchLimit={watchLimit}
-																	productLink={productLink}
-																	width={'max-w-lg'}
-																	thumbnail={thumbnail}
-																	restrictPaidVideo={true}
-																	_OpenShareModal={_OpenShareModal}
-																	HandleLikePost={HandleLikePost}
-																	ToggleTipModal={ToggleTipModal}
-																	ToggleRatingModal={() => OpenRatingModal(postId)}
-																	_HandleDeleteVideo={_HandleDeleteVideo}
-																	_HandleCatalogue={_HandleCatalogue}
-																	_HandleGotoUserProfile={_HandleGotoUserProfile}
-																	_HandleGotoVideoDetails={_HandleGotoVideoDetails}
-																/>
-															</div>
-														)
-													)
-										)}
+												)
+
+										))}
 									<Button
 										type="button"
 										childrens={'See All'}
@@ -238,19 +242,18 @@ const Search = () => {
 												},
 												index
 											) => (
-												<div key={index}>
-													<ProfileOverviewCard
-														_HandleGotoUserProfile={() => _HandleGotoUserProfile(id, username)}
-														name={accountType === 'Personal' ? (showName ? name : showUsername ? username : '') : name}
-														picture={picture}
-														email={email}
-														id={id}
-														username={username}
-														accessible={accessible}
-														Followed={Followed}
-														Follower={Follower}
-													/>
-												</div>
+												<ProfileOverviewCard
+													key={index}
+													_HandleGotoUserProfile={() => _HandleGotoUserProfile(id, username)}
+													name={accountType === 'Personal' ? (showName ? name : showUsername ? username : '') : name}
+													picture={picture}
+													email={email}
+													id={id}
+													username={username}
+													accessible={accessible}
+													Followed={Followed}
+													Follower={Follower}
+												/>
 											)
 										)}
 									<Button
@@ -267,92 +270,111 @@ const Search = () => {
 					</div>
 				) : activeGenericFilter === 'Posts' ? (
 					<div className="space-y-4">
-						{posts.map(
-							(
-								{
-									id: postId,
-									Video,
-									isShared,
-									Share,
-									isLiked,
-									shareCount,
-									PostLikees,
-									Video: {
-										id,
-										description,
-										title,
-										url,
-										UserId,
-										thumbnail,
-										catalogue,
-										User,
-										Shares,
-										videoType,
-										videoCost,
-										productLink,
-										watchLimit,
-										isApproved
-									}
-								},
-								index
-							) =>
-								isShared ? (
-									<SharedCard
-										id={postId}
-										videoId={id}
-										index={index}
-										Video={Video}
-										Share={Share}
-										isLiked={isLiked}
-										likeCount={PostLikees}
-										shareCount={shareCount}
-										width={'max-w-lg'}
-										restrictPaidVideo={true}
-										HandleLikePost={HandleLikePost}
-										ToggleTipModal={ToggleTipModal}
-										_OpenShareModal={_OpenShareModal}
-										_HandleGotoUserProfile={_HandleGotoUserProfile}
-										_HandleGotoVideoDetails={_HandleGotoVideoDetails}
-									/>
-								) :
-									isApproved && (
-										<div key={index}>
-											<NewsfeedCard
+						{
+							postsLoading ? (
+								<div className="flex w-full justify-center">
+									<span className="flex flex-col items-center">
+										<Spinner />
+										<p className="text-sm text-gray-400"> Loading Posts</p>
+									</span>
+								</div>
+							) : isEmpty(posts) ? (
+								<div className="flex w-full justify-center items-center">
+									<p className="text-gray-500"> No Posts Found</p>
+								</div>
+							) :
+								posts.map(
+									(
+										{
+											id: postId,
+											Video,
+											isShared,
+											Share,
+											isLiked,
+											shareCount,
+											likeCount, commentCount,
+											Video: {
+												id,
+												description,
+												title,
+												url,
+												UserId,
+												thumbnail,
+												catalogue,
+												User,
+												Shares,
+												videoType,
+												videoCost,
+												productLink,
+												watchLimit,
+												isApproved,
+												cost
+											}
+										},
+										index
+									) =>
+										isShared ? (
+											<SharedCard
+												key={index}
 												id={postId}
 												videoId={id}
-												UserId={UserId}
 												index={index}
-												catalogue={catalogue}
-												isPost={true}
-												url={url}
-												views={200}
-												User={User}
-												rating={2.5}
-												Shares={Shares}
-												postLikes={PostLikees}
-												description={description}
-												title={title}
+												Video={Video}
+												Share={Share}
 												isLiked={isLiked}
-												likeCount={PostLikees}
-												videoCost={videoCost}
-												videoType={videoType}
-												watchLimit={watchLimit}
-												productLink={productLink}
+												likeCount={likeCount}
+												commentCount={commentCount}
+												shareCount={shareCount}
 												width={'max-w-lg'}
-												thumbnail={thumbnail}
 												restrictPaidVideo={true}
-												_OpenShareModal={_OpenShareModal}
-												HandleLikePost={HandleLikePost}
+												_HandleCommentCounts={_HandleCommentCounts}
 												ToggleTipModal={ToggleTipModal}
-												ToggleRatingModal={() => OpenRatingModal(postId)}
-												_HandleDeleteVideo={_HandleDeleteVideo}
-												_HandleCatalogue={_HandleCatalogue}
+												_OpenShareModal={_OpenShareModal}
 												_HandleGotoUserProfile={_HandleGotoUserProfile}
 												_HandleGotoVideoDetails={_HandleGotoVideoDetails}
-											/>
-										</div>
-									)
-						)}
+												TogglePaymentModal={() => _TogglePaymentModal(cost)}
+												HandleLikePost={() => HandleLikePost(postId, isLiked)} />
+										) :
+											isApproved && (
+												<NewsfeedCard
+													key={index}
+													id={postId}
+													videoId={id}
+													UserId={UserId}
+													index={index}
+													catalogue={catalogue}
+													isPost={true}
+													url={url}
+													views={200}
+													User={User}
+													rating={2.5}
+													Shares={Shares}
+													likeCount={likeCount}
+													commentCount={commentCount}
+													shareCount={shareCount}
+													description={description}
+													title={title}
+													isLiked={isLiked}
+													videoCost={videoCost}
+													videoType={videoType}
+													watchLimit={watchLimit}
+													productLink={productLink}
+													width={'max-w-lg'}
+													thumbnail={thumbnail}
+													restrictPaidVideo={true}
+													_OpenShareModal={_OpenShareModal}
+													_HandleCommentCounts={_HandleCommentCounts}
+													HandleLikePost={() => HandleLikePost(postId, isLiked)}
+													ToggleTipModal={() => ToggleTipModal(User?.tip)}
+													ToggleRatingModal={() => OpenRatingModal(postId)}
+													_HandleDeleteVideo={_HandleDeleteVideo}
+													_HandleCatalogue={_HandleCatalogue}
+													_HandleGotoUserProfile={_HandleGotoUserProfile}
+													_HandleGotoVideoDetails={_HandleGotoVideoDetails}
+													TogglePaymentModal={() => _TogglePaymentModal(cost)}
+												/>
+											)
+								)}
 					</div>
 				) : activeGenericFilter === 'Profile' ? (
 					<div className="space-y-4">
@@ -373,19 +395,18 @@ const Search = () => {
 								},
 								index
 							) => (
-								<div key={index}>
-									<ProfileOverviewCard
-										_HandleGotoUserProfile={() => _HandleGotoUserProfile(id, username)}
-										name={accountType === 'Personal' ? (showName ? name : showUsername ? username : '') : name}
-										picture={picture}
-										email={email}
-										id={id}
-										username={username}
-										accessible={accessible}
-										Followed={Followed}
-										Follower={Follower}
-									/>
-								</div>
+								<ProfileOverviewCard
+									key={index}
+									_HandleGotoUserProfile={() => _HandleGotoUserProfile(id, username)}
+									name={accountType === 'Personal' ? (showName ? name : showUsername ? username : '') : name}
+									picture={picture}
+									email={email}
+									id={id}
+									username={username}
+									accessible={accessible}
+									Followed={Followed}
+									Follower={Follower}
+								/>
 							)
 						)}
 					</div>
@@ -415,57 +436,66 @@ const Search = () => {
 					/>
 				</div>
 			</div>
-			{showRatingModal && (
-				<VideoRatingModal
-					modalTitle={'Rate Video'}
-					loading={false}
-					videoRating={rating}
-					_SubmitRating={_SubmitRating}
-					ToggleRatingModal={ToggleRatingModal}
-					_HandleChangeRating={_HandleChangeRating}
-				/>
-			)}
-			{showTipModal && (
-				<TipModal
-					tip={tip}
-					loading={false}
-					modalTitle={'Tip Video'}
-					ToggleTipModal={ToggleTipModal}
-					_HandleChangeTip={_HandleChangeTip}
-				/>
-			)}
-			{showShareModal && (
-				<ShareModal
-					modalTitle={'Share Post'}
-					loading={isSharing}
-					shareData={shareData}
-					shareCaption={shareCaption}
-					_HandleSubmit={_HandleSharePost}
-					setShareCaption={setShareCaption}
-					ToggleShareModal={_CloseShareModal}
-				/>
-			)}
-			{showFilterModal && (
-				<FilterModal
-					modalTitle={'Search Filters'}
-					sort={sort}
-					rating={rating}
-					account={account}
-					category={category}
-					videoType={videoType}
-					videoCategory={videoCategory}
-					activeGenericFilter={activeGenericFilter}
-					setSort={setSort}
-					setRating={setRating}
-					_HandleChangeRating={_HandleChangeRating}
-					ToggleFilterModal={_HandleToggleFilterModal}
-					_ChangeCategoryFilter={_ChangeCategoryFilter}
-					_HandleVideoTypeFilter={_HandleVideoTypeFilter}
-					_HandleAccountTypeFilter={_HandleAccountTypeFilter}
-					_HandleVideoCategoryFilter={_HandleVideoCategoryFilter}
-					_HandleActiveGenericFilter={_HandleActiveGenericFilter}
-				/>
-			)}
+			<AnimatePresence>
+				{showRatingModal && (
+					<VideoRatingModal
+						modalTitle={'Rate Video'}
+						loading={false}
+						videoRating={rating}
+						_SubmitRating={_SubmitRating}
+						ToggleRatingModal={ToggleRatingModal}
+						_HandleChangeRating={_HandleChangeRating}
+					/>
+				)}
+				{showTipModal && (
+					<TipModal
+						tip={tip}
+						loading={false}
+						modalTitle={'Tip Video'}
+						ToggleTipModal={ToggleTipModal}
+						_HandleChangeTip={_HandleChangeTip}
+					/>
+				)}
+				{showShareModal && (
+					<ShareModal
+						modalTitle={'Share Post'}
+						loading={isSharing}
+						shareData={shareData}
+						shareCaption={shareCaption}
+						_HandleSubmit={_HandleSharePost}
+						setShareCaption={setShareCaption}
+						ToggleShareModal={_CloseShareModal}
+					/>
+				)}
+				{showFilterModal && (
+					<FilterModal
+						modalTitle={'Search Filters'}
+						sort={sort}
+						rating={rating}
+						account={account}
+						category={category}
+						videoType={videoType}
+						videoCategory={videoCategory}
+						activeGenericFilter={activeGenericFilter}
+						setSort={setSort}
+						setRating={setRating}
+						_HandleChangeRating={_HandleChangeRating}
+						ToggleFilterModal={_HandleToggleFilterModal}
+						_ChangeCategoryFilter={_ChangeCategoryFilter}
+						_HandleVideoTypeFilter={_HandleVideoTypeFilter}
+						_HandleAccountTypeFilter={_HandleAccountTypeFilter}
+						_HandleVideoCategoryFilter={_HandleVideoCategoryFilter}
+						_HandleActiveGenericFilter={_HandleActiveGenericFilter}
+					/>
+				)}
+				{showAmountModal && (
+					<PaymentModal
+						ToggleAmountModal={_TogglePaymentModal}
+						loading={isSharing}
+						amount={videoPayment}
+					/>
+				)}
+			</AnimatePresence>
 		</div>
 	);
 };

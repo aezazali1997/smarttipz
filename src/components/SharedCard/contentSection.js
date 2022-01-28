@@ -1,13 +1,17 @@
 /* eslint-disable @next/next/no-img-element */
+import { faShareAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { VideoPlayer } from '..';
 
 const ContentSection = ({
 	stopVideo,
 	SharedPost,
+	shareCount,
 	_HandlePaidVideos,
 	_HandleGotoUserProfile,
 	_HandleGotoVideoDetails,
+	TogglePaymentModal,
 	restrict
 }) => {
 	const {
@@ -50,11 +54,17 @@ const ContentSection = ({
 						<VideoPlayer poster={thumbnail} src={url} />
 					</div>
 				) : (
-					<div className="video-wrapper flex justify-center items-center">
+					<div className="video-wrapper flex flex-col justify-center items-center">
 						<p className="text-md text-gray-500 text-center">
-							To continue watching video,
-							<br /> Pay Now!
+							To continue watching video
 						</p>
+						<button
+							onClick={TogglePaymentModal}
+							type="button"
+							className="mt-3 w-full inline-flex justify-center hover:underline  px-4 py-2 text-base font-medium text  sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+						>
+							PAY NOW
+						</button>
 					</div>
 				)
 			) : (
@@ -62,6 +72,20 @@ const ContentSection = ({
 					<VideoPlayer poster={thumbnail} src={url} />
 				</div>
 			)}
+			<div className="flex justify-end w-full px-5">
+				<div className="flex flex-row space-x-2 items-center">
+					<span className="flex space-x-2 items-center">
+						<FontAwesomeIcon
+							icon={faShareAlt}
+							className="w-6 h-6 text"
+						/>
+						<p className="">Shares:</p>
+					</span>
+					<p className=" cursor-pointer  w-full text-center text-gray-600 group-hover:text-purple-600">
+						{shareCount || 0}
+					</p>
+				</div>
+			</div>
 		</div>
 	);
 };

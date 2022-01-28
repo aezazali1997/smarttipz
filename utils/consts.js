@@ -40,7 +40,7 @@ const getFilterdProfilesByVideoType = (videoType) => {
             : '';
 };
 
-export const FilterContent = (search, category, videoType, videoCategory, accountType) => {
+export const FilterContent = (search, category, videoType, videoCategory, accountType, ArrayOfFollowedPeopleId) => {
     console.log('searched >>', search);
     return {
         [sequelize.Op.and]: [
@@ -59,6 +59,20 @@ export const FilterContent = (search, category, videoType, videoCategory, accoun
                     {
                         '$Share->User.accountType$': {
                             [sequelize.Op.iLike]: `%${getFilterdProfilesByAccountType(accountType)}%`
+                        }
+                    },
+                ]
+            },
+            {
+                [sequelize.Op.or]: [
+                    {
+                        '$Video.UserId$': {
+                            [sequelize.Op.in]: ArrayOfFollowedPeopleId
+                        }
+                    },
+                    {
+                        '$Share.UserId$': {
+                            [sequelize.Op.in]: ArrayOfFollowedPeopleId
                         }
                     },
                 ]

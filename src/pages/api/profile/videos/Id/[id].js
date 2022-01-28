@@ -1,11 +1,11 @@
 import AllPosts from 'models/AllPost';
+import Comments from 'models/Comments';
 import PostLikee from 'models/Like';
-import Share from 'models/Share';
+import Shares from 'models/Share';
 
 const jwt = require('jsonwebtoken');
-const User = require('models/User');
-const Video = require('models/Video');
-const sequelize = require('sequelize');
+const Users = require('models/User');
+const Videos = require('models/Video');
 
 
 const handler = async (req, res) => {
@@ -17,68 +17,44 @@ const handler = async (req, res) => {
                 return res.status(401).send({ error: true, data: [], message: 'Please Login' })
             }
 
-            const { id } = jwt.verify(
+            const { id: userId } = jwt.verify(
                 authorization.split(' ')[1],
                 process.env.SECRET_KEY
             );
 
-            // const video = await AllPosts.findOne({
-            //     attributes: {
-            //         include: [[sequelize.fn("COUNT", sequelize.col("PostLikees.id")), 'likeCount'],
-            //         [sequelize.where(sequelize.col("PostLikees.reviewerId"), id), 'isLiked']]
-            //     },
-            //     include: [
-            //         {
-            //             model: PostLikee, attributes: ['isLiked', 'VideoId', 'reviewerId', 'id']
-            //         },
-            //         {
-            //             model: User, attributes: ['name', 'username', 'picture']
-            //         }],
-            //     where: {
-            //         id: videoId, isApproved: true
-            //     },
-            //     group: ['Video.id', 'User.id', 'User.name', 'User.picture', 'User.username',
-            //         'PostLikees.id', 'PostLikees.reviewerId', 'PostLikees.isLiked'],
-            // });
-            const video = await AllPosts.findOne({
-                attributes: {
-                    include: [
-                        [sequelize.fn("COUNT", sequelize.col("PostLikees.id")), 'likeCount'],
-                        [sequelize.where(sequelize.col("PostLikees.reviewerId"), id), 'isLiked'],
-                    ]
-                },
+
+            let video = await AllPosts.findOne({
                 include: [
                     {
-                        model: PostLikee, attributes: ['id']
-                    },
-                    {
-                        model: Video,
+                        model: Videos,
                         include: [
                             {
-                                model: User, attributes: ['name', 'username', 'picture']
+                                model: Users, attributes: ['name', 'username', 'picture', 'tip']
                             },
                         ],
                     },
                     {
-                        model: Share, attributes: ['id', 'caption']
+                        model: Shares, attributes: ['id', 'caption']
                     }
                 ],
                 where: {
                     id: videoId
                 },
-                group: ['AllPost.id', 'PostLikees.reviewerId', 'PostLikees.id',
-                    'Video.id', 'Video->User.id', 'Video->User.name', 'Video->User.username', 'Video->User.picture',
-                    'Share.id'
+                group: ['AllPost.id', 'Video.id', 'Video->User.id', 'Video->User.name',
+                    'Video->User.username', 'Video->User.picture', 'Share.id'
                 ],
-                order: [["createdAt", "DESC"]]
             });
 
-            res.status(200).json({
+            const result = await getStats(video, userId);
+
+            res.status(200).send({
                 message: 'success',
-                data: { video }
+                data: { video: result }
             });
+
+
         } catch (err) {
-            console.log("Videos Api Failed Error: ", err.message);
+            console.log("Video Detail Api Failed: ", err.message);
             res.status(500).send({ error: true, data: [], message: err.message });
         }
     }
@@ -89,3 +65,42 @@ const handler = async (req, res) => {
 };
 
 export default handler;
+
+
+const getStats = async (video, userId) => {
+    let tempData = JSON.parse(JSON.stringify(video));
+    const { id, VideoId } = tempData;
+    const likeCount = await PostLikee.count({
+        where: {
+            AllPostId: id
+        }
+    });
+    const isLiked = await PostLikee.find({
+        where: {
+            AllPostId: id,
+            reviewerId: userId
+        }
+    });
+    const commentCount = await Comments.count({
+        where: {
+            AllPostId: id,
+        }
+    });
+    const shareCount = await Shares.count({
+        where: {
+            VideoId
+        }
+    });
+    const ratings = await db.query(`select avg(r."rating") as "avgRating", count(r."AllPostId") as "totalRaters" from "AllPosts" p
+						left join "Ratings" as r on p.id=r."AllPostId"
+						where (p.id=${id} and r."AllPostId"=${id})
+						group by p.id`)
+
+
+    const avgRating = isEmpty(ratings[0]) ? 0 : ratings[0][0].avgRating;
+    const totalRaters = isEmpty(ratings[0]) ? 0 : ratings[0][0].totalRaters;
+
+    const data = { ...tempData, avgRating, totalRaters, likeCount, commentCount, shareCount, isLiked: isLiked ? true : false }
+    return data;
+
+}

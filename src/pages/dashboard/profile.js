@@ -79,6 +79,7 @@ const Profile = ({ profile }) => {
     shareData,
     _HandleSharePost,
     _HandleChangeCaption,
+    _HandleCommentCounts,
     shareCaption,
     setShareCaption,
     isSharing
@@ -240,30 +241,30 @@ const Profile = ({ profile }) => {
           ) : (
             <div className="w-auto mt-6 relative">
               <Carousel>
-                {catalogues.map(
-                  (
-                    {
-                      id: postId,
-                      PostLikees,
-                      Video: {
-                        id,
-                        UserId,
-                        title,
-                        url,
-                        mediaType,
-                        thumbnail,
-                        catalogue,
-                        description,
-                        User,
-                        videoType,
-                        videoCost,
-                        Shares,
-                        productLink
-                      },
-                      isLiked, likeCount, shareCount,
+                {catalogues.map((item, index) => {
+                  const {
+                    id: postId,
+                    isLiked,
+                    likeCount,
+                    shareCount,
+                    commentCount,
+                    Video: {
+                      id,
+                      UserId,
+                      title,
+                      url,
+                      mediaType,
+                      thumbnail,
+                      catalogue,
+                      description,
+                      User,
+                      videoType,
+                      videoCost,
+                      Shares,
+                      productLink
                     },
-                    index
-                  ) => (
+                  } = item;
+                  return (
                     <div key={index} className="my-2 px-5">
                       <NewsfeedCard
                         id={postId}
@@ -276,8 +277,11 @@ const Profile = ({ profile }) => {
                         Shares={Shares}
                         views={200}
                         rating={2.5}
+                        posts={catalogues}
                         isLiked={isLiked}
-                        likeCount={PostLikees}
+                        likeCount={likeCount}
+                        shareCount={shareCount}
+                        commentCount={commentCount}
                         mediaType={mediaType}
                         videoType={videoType}
                         videoCost={videoCost}
@@ -286,7 +290,8 @@ const Profile = ({ profile }) => {
                         productLink={productLink}
                         width={'max-w-xs'}
                         thumbnail={thumbnail}
-                        HandleLikePost={HandleLikePost}
+                        HandleLikePost={() => HandleLikePost(postId, isLiked)}
+                        _HandleCommentCounts={_HandleCommentCounts}
                         _OpenShareModal={_OpenShareModal}
                         _HandleGotoUserProfile={_HandleGotoUserProfile}
                         _HandleGotoVideoDetails={_HandleGotoVideoDetails}
@@ -295,7 +300,7 @@ const Profile = ({ profile }) => {
                       />
                     </div>
                   )
-                )}
+                })}
               </Carousel>
             </div>
           )}
@@ -320,31 +325,30 @@ const Profile = ({ profile }) => {
         ) : (
           <div className="w-full mt-6 justify-center lg:justify-start">
             <Carousel>
-              {myVideos.map(
-                (
-                  {
-                    id: postId,
-                    isLiked,
-                    PostLikees,
-                    shareCount,
-                    Video: {
-                      title,
-                      url,
-                      mediaType,
-                      thumbnail,
-                      description,
-                      id,
-                      UserId,
-                      catalogue,
-                      User,
-                      videoType,
-                      videoCost,
-                      Shares,
-                      productLink
-                    }
+              {myVideos.map((item, index) => {
+                const {
+                  id: postId,
+                  isLiked,
+                  likeCount,
+                  shareCount,
+                  commentCount,
+                  Video: {
+                    id,
+                    UserId,
+                    title,
+                    url,
+                    mediaType,
+                    thumbnail,
+                    catalogue,
+                    description,
+                    User,
+                    videoType,
+                    videoCost,
+                    Shares,
+                    productLink
                   },
-                  index
-                ) => (
+                } = item;
+                return (
                   <div key={index} className="my-2 px-5">
                     <NewsfeedCard
                       id={postId}
@@ -361,14 +365,17 @@ const Profile = ({ profile }) => {
                       videoCost={videoCost}
                       videoType={videoType}
                       description={description}
-                      likeCount={PostLikees}
                       isLiked={isLiked}
+                      likeCount={likeCount}
+                      commentCount={commentCount}
+                      shareCount={shareCount}
                       title={title}
                       isPost={true}
                       width={'max-w-xs'}
                       productLink={productLink}
                       thumbnail={thumbnail}
-                      HandleLikePost={HandleLikePost}
+                      HandleLikePost={() => HandleLikePost(postId, isLiked)}
+                      _HandleCommentCounts={_HandleCommentCounts}
                       _OpenShareModal={_OpenShareModal}
                       _HandleGotoUserProfile={_HandleGotoUserProfile}
                       _HandleGotoVideoDetails={_HandleGotoVideoDetails}
@@ -377,7 +384,7 @@ const Profile = ({ profile }) => {
                     />
                   </div>
                 )
-              )}
+              })}
             </Carousel>
           </div>
         )}

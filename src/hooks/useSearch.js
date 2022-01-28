@@ -1,8 +1,9 @@
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react'
+import Swal from 'sweetalert2';
 import axiosInstance from 'src/APIs/axiosInstance';
 import { useSearchContext } from 'src/contexts';
-import Swal from 'sweetalert2';
+import { checkCountById, checkLikeCount } from 'helpers';
 
 const UseSearch = () => {
 
@@ -28,6 +29,9 @@ const UseSearch = () => {
     const [isSharing, setIsSharing] = useState(false);
     const [shareData, setShareData] = useState({});
     const [ratePostId, setRatePostId] = useState('');
+    const [showAmountModal, setShowAmountModal] = useState(false);
+    const [videoPayment, setVideoPayment] = useState(0);
+
     const [account, setAccountType] = useState({
         Personal: false,
         Business: false
@@ -82,8 +86,6 @@ const UseSearch = () => {
         setIsSharing(false);
     };
 
-
-
     //LOADERS END HERE//
 
     let GetPosts = async () => {
@@ -116,7 +118,6 @@ const UseSearch = () => {
             const deepCopyUsers = [...users];
             const filtered = deepCopyUsers.filter(user => user?.id !== parseInt(localStorage.getItem('id')) && user)
             setUserProfiles(filtered);
-            console.log('users: ', filtered);
             disableProfileLoading();
         }
         catch ({ response: { data: { message } } }) {
@@ -130,7 +131,6 @@ const UseSearch = () => {
             router.push('/search?active=All');
         }
         else {
-
             const result = asPath.split('?')[1]
             const newResult = result.split('=');
             const key = newResult[0];
@@ -213,6 +213,11 @@ const UseSearch = () => {
         router.push(`/dashboard/videos/${id}`)
     }
 
+    let _TogglePaymentModal = (cost) => {
+        setVideoPayment(cost);
+        setShowAmountModal(!showAmountModal);
+    }
+
     const OpenRatingModal = (postId) => {
         setRatePostId(postId);
         console.log('postToRate: ', postId);
@@ -241,7 +246,8 @@ const UseSearch = () => {
     }
 
 
-    const ToggleTipModal = () => {
+    const ToggleTipModal = (tip) => {
+        setTip(tip);
         setShowTipModal(!showTipModal);
     }
 
@@ -290,15 +296,20 @@ const UseSearch = () => {
 
     //FILTERS END HERE//
 
-    const HandleLikePost = async (id) => {
+    const HandleLikePost = async (id, isLiked) => {
+        const updatedPosts = await checkLikeCount(posts, id, isLiked);
+        setPosts(updatedPosts);
         try {
-            const { data: { data, message } } = await axiosInstance.likePost({ videoId: id });
-            console.log('success: ', message);
-            GetPosts();
+            await axiosInstance.likePost({ postId: id });
         }
         catch ({ response: { data: { message } } }) {
             console.log('Like Post Api failed: ', message);
         }
+    }
+
+    const _HandleCommentCounts = async (postId, operator) => {
+        const updatedPost = await checkCountById(posts, 'commentCount', postId, operator);
+        setPosts(updatedPost);
     }
 
     let _OpenShareModal = (id, thumbnail, url, picture, name, title) => {
@@ -354,7 +365,8 @@ const UseSearch = () => {
         setAccountType, videoCategory, videoType, rating, setRating, category, _ChangeCategoryFilter,
         HandleLikePost, tip, _HandleVideoTypeFilter, _HandleVideoCategoryFilter, _HandleToggleFilterModal, showFilterModal,
         _OpenShareModal, _HandleChangeCaption, _HandleSharePost, shareCaption, shareData, isSharing, showShareModal,
-        _CloseShareModal, setShareCaption, OpenRatingModal, _SubmitRating
+        _CloseShareModal, setShareCaption, OpenRatingModal, _SubmitRating, _TogglePaymentModal, showAmountModal,
+        videoPayment, _HandleCommentCounts
     }
 }
 

@@ -42,7 +42,7 @@ const handler = async (req, res) => {
     else if (req.method === 'POST') {
         const {
             body,
-            body: { videoId },
+            body: { postId },
             headers: { authorization }
         } = req;
 
@@ -69,13 +69,13 @@ const handler = async (req, res) => {
 
             const allPost = await AllPosts.findOne({
                 attributes: ['id'],
-                where: { id: videoId }
+                where: { id: postId }
             });
 
-            console.log('video => ', videoId);
+            console.log('video => ', postId);
 
 
-            const post = await PostLike.findOne({ where: { AllPostId: videoId, reviewerId: id } });
+            const post = await PostLike.findOne({ where: { AllPostId: postId, reviewerId: id } });
 
             console.log('post => ', post);
 

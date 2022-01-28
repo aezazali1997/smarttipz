@@ -82,6 +82,11 @@
   color: #34D399
 }
 
+.tip-hand:hover {
+  animation: bounce 1s infinite;
+  -webkit-animation: bounce 1s infinite;
+}
+
 .flag-select {
   position: relative;
   display: flex;

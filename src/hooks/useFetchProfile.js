@@ -6,6 +6,7 @@ import swal from 'sweetalert';
 import { useRouter } from 'next/router';
 import axiosInstance from 'src/APIs/axiosInstance';
 import { RequestTestimonialFormSchema, UploadPhotoVideoSchema } from 'utils/validation_shema';
+import { checkCountById, checkLikeCount } from 'helpers';
 
 const initial = {
     email: ''
@@ -459,15 +460,24 @@ const UseFetchProfile = (profile) => {
         router.push(`/dashboard/videos/${id}`)
     }
 
-    const HandleLikePost = async (id) => {
+    const HandleLikePost = async (id, isLiked) => {
+        const updatedCatPosts = await checkLikeCount(catalogues, id, isLiked);
+        const updatedVideoPosts = await checkLikeCount(myVideos, id, isLiked);
+        setCatalogues(updatedCatPosts);
+        setMyVideos(updatedVideoPosts);
         try {
-            const { data: { data, message } } = await axiosInstance.likePost({ videoId: id });
-            fetchCatalogues();
-            fetchMyVideos();
+            await axiosInstance.likePost({ postId: id });
         }
         catch ({ response: { data: { message } } }) {
             console.log('Like Post Api failed: ', message);
         }
+    }
+
+    const _HandleCommentCounts = async (postId, operator) => {
+        const updatedCatPost = await checkCountById(catalogues, 'commentCount', postId, operator);
+        const updatedVideoPost = await checkCountById(myVideos, 'commentCount', postId, operator);
+        setCatalogues(updatedCatPost);
+        setMyVideos(updatedVideoPost);
     }
 
     let _OpenShareModal = (id, thumbnail, url, picture, name, title) => {
@@ -495,9 +505,7 @@ const UseFetchProfile = (profile) => {
     const _HandleSharePost = async () => {
         enableShareLoading();
         try {
-            const { data: { data, message } } = await axiosInstance.sharePost({ caption: shareCaption, videoId: shareData?.videoId });
-            fetchMyVideos();
-            fetchCatalogues();
+            const { data: { message } } = await axiosInstance.sharePost({ caption: shareCaption, videoId: shareData?.videoId });
             Swal.fire({
                 text: message,
                 icon: 'success',
@@ -524,7 +532,7 @@ const UseFetchProfile = (profile) => {
         _CloseUploadModal, _OpenUploadModal, catalogues, setCatalogues, fetchingCatalogues, myVideos, fetchingMyVideos,
         _HandleDeleteVideo, _HandleGotoVideoDetails, _HandleGotoUserProfile, HandleLikePost,
         _OpenShareModal, _CloseShareModal, showShareModal, shareData, _HandleSharePost, _HandleChangeCaption,
-        shareCaption, setShareCaption, isSharing,
+        shareCaption, setShareCaption, isSharing, _HandleCommentCounts
     }
 }
 export default UseFetchProfile;

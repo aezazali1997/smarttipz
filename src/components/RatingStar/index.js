@@ -1,7 +1,13 @@
 import React from 'react'
+import { useEffect } from 'react';
 import ReactStars from 'react-rating-stars-component'
 
-const Rating = ({ value, edit, isHalf, onChange, size, classNames }) => {
+const RatingComponent = ({ value, edit, isHalf, onChange, size, classNames }) => {
+    console.log('star value: ', value);
+
+    useEffect(() => { }, [value])
+
+
     return (
         <ReactStars
             count={5}
@@ -20,4 +26,4 @@ const Rating = ({ value, edit, isHalf, onChange, size, classNames }) => {
     )
 }
 
-export default Rating
+export default RatingComponent

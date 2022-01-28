@@ -1,9 +1,17 @@
+import { motion } from 'framer-motion';
 import React from 'react'
 
 const Modal = ({ _Toggle, body, title, footer }) => {
     return (
         //  < !--This example requires Tailwind CSS v2.0 + -->
-        <div className="fixed z-50 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <motion.div
+            initial={{ opacity: 0, }}
+            animate={{ opacity: 1, }}
+            transition={{
+                stiffness: 100, damping: 20
+            }}
+            exit={{ opacity: 0, }}
+            className="fixed z-50 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
             <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                 {/* <!--
                 Background overlay, show/hide based on modal state.
@@ -44,7 +52,7 @@ const Modal = ({ _Toggle, body, title, footer }) => {
                     </div>
                 </div>
             </div>
-        </div>
+        </motion.div>
     )
 }
 

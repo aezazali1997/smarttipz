@@ -5,6 +5,7 @@ export { default as ProgressBar } from './ProgessBar';
 export { default as Switch } from './Switch';
 export { default as Spinner } from './Spinner';
 export { default as Rating } from './RatingStar';
+export { default as Celebration } from './Celebration';
 export { default as Carousel } from './Carousel';
 export { default as Footer } from './Footer';
 export { default as CustomLoader } from './customLoader';

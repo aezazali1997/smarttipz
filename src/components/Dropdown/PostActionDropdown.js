@@ -3,8 +3,7 @@ import React, { useEffect } from "react";
 import { createPopper } from "@popperjs/core";
 import { useOutsideClick } from 'src/hooks';
 
-const PostActionDropdown = ({ _HandleCatalogue, _HandleDeleteVideo, catalogue, ownerId, isPost,
-    ToggleRatingModal, ToggleTipModal }) => {
+const PostActionDropdown = ({ _HandleCatalogue, _HandleDeleteVideo, catalogue, ownerId, isPost }) => {
     // dropdown props
     const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
     const [ID, setID] = React.useState(null);
@@ -87,17 +86,17 @@ const PostActionDropdown = ({ _HandleCatalogue, _HandleDeleteVideo, catalogue, o
                                 }
                             </>
                         }
-                        {
+                        {/* {
                             ID && parseInt(ID) !== ownerId &&
                             <>
-                                {/* <div
+                                <div
                                     className={
                                         "text-sm py-2 px-4 font-normal block w-full rounded cursor-pointer whitespace-nowrap bg-transparent text-blueGray-700 hover:bg-gray-200"
                                     }
                                     onClick={ToggleRatingModal}
                                 >
                                     Rate Video
-                                </div> */}
+                                </div>
                                 <div
                                     className={
                                         "text-sm py-2 px-4 font-normal block w-full rounded cursor-pointer whitespace-nowrap bg-transparent text-blueGray-700 hover:bg-gray-200"
@@ -107,7 +106,7 @@ const PostActionDropdown = ({ _HandleCatalogue, _HandleDeleteVideo, catalogue, o
                                     Give a Tip
                                 </div>
                             </>
-                        }
+                        } */}
                     </>
                 }
             </div>

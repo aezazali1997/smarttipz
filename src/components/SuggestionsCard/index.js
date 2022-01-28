@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
-import ReactTooltip from 'react-tooltip';
+import Link from 'next/link';
 import { Rating, VideoPlayer } from '..';
 import { PostActionDropdown } from '../Dropdown';
+
 
 const SuggestionCard = ({
     index,
@@ -20,6 +21,7 @@ const SuggestionCard = ({
     views,
     width,
     User,
+    productLink,
     _HandleCatalogue,
     _HandleDeleteVideo,
     _HandleGotoUserProfile,
@@ -56,7 +58,7 @@ const SuggestionCard = ({
                         </svg>
                         <div className="flex items-start justify-start">
                             <PostActionDropdown
-                                _HandleCatalogue={() => _HandleCatalogue(id, catalogue)}
+                                _HandleCatalogue={_HandleCatalogue}
                                 _HandleDeleteVideo={() => _HandleDeleteVideo(index, id)}
                                 catalogue={catalogue}
                                 ownerId={UserId}
@@ -102,9 +104,22 @@ const SuggestionCard = ({
                     <div className="flex px-2 h-6 rounded-lg  background items-center justify-center">
                         <p className="text-white font-sm ">{videoType}</p>
                     </div>
-                    <div className="flex px-2 h-6 rounded-lg  background items-center justify-center">
-                        <p className="text-white font-sm ">{videoCost}</p>
-                    </div>
+                    {
+                        videoCost ? (
+                            <div className="flex px-2 h-6 max-w-sm background items-center justify-center rounded-lg">
+                                <p className="text-white font-sm">{videoCost}</p>
+                            </div>
+                        )
+                            :
+                            productLink && (
+                                <Link href={productLink} passHref>
+                                    <a target='_blank'>
+                                        <span className="text font-sm hover:underline cursor-pointer">
+                                            Product Link
+                                        </span>
+                                    </a>
+                                </Link>)
+                    }
                 </div>
             </div>
         </>

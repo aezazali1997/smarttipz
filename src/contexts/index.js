@@ -14,15 +14,22 @@ export function AppWrapper({ children }) {
 
     const _HandleSearchClick = (e) => {
         if (e.keyCode == 13 || e.key == 'Enter') {
+            localStorage.setItem('searchText', search);
+            setSearch(search);
             setFilterSearch(search);
-            router.push('/search?active=All');
+            router.push('/search?active=All', { shallow: true });
         }
     };
 
     useEffect(() => {
+        const searchText = localStorage.getItem('searchText');
         const otherUserDetails = JSON.parse(localStorage.getItem('profile'));
         if (otherUserDetails) {
             setOtherUserDetail(otherUserDetails);
+        }
+        if (searchText) {
+            setSearch(searchText);
+            setFilterSearch(searchText);
         }
     }, [otherUserDetail]);
 
@@ -35,10 +42,12 @@ export function AppWrapper({ children }) {
             setOtherUserDetail,
             _HandleSearchClick,
             profilePic,
+            setFilterSearch,
             setProfilePic
         }),
+
         [search, setSearch, otherUserDetail, setOtherUserDetail, _HandleSearchClick, profilePic,
-            setProfilePic]
+            filterSearch, setProfilePic, setFilterSearch]
     );
 
     return <SearchContext.Provider value={data}>{children}</SearchContext.Provider>;

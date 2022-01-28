@@ -11,7 +11,11 @@ import {
 	Button, CommentCard, Rating, ReadLessReadMore, SuggestionCard, VideoPlayer
 } from 'src/components';
 import { PostActionDropdown } from 'src/components/Dropdown';
-import { TipModal, VideoRatingModal } from 'src/components/Modals';
+import { PaymentModal, ShareModal, TipModal, VideoRatingModal } from 'src/components/Modals';
+import HandIcon from 'public/purple-hand.svg';
+import Image from 'next/image';
+import Link from 'next/link';
+import ReactTooltip from 'react-tooltip';
 
 const VideoDetailScreen = () => {
 	const router = useRouter();
@@ -20,9 +24,17 @@ const VideoDetailScreen = () => {
 	const [posts, setPosts] = useState([]);
 	const [catalogueCount, setCatalogueCount] = useState(0);
 	const [showRatingModal, setShowRatingModal] = useState(false);
+	const [postRating, setSharePostRating] = useState(0);
 	const [showTipModal, setShowTipModal] = useState(false);
 	const [comments, setComments] = useState([]);
+	const [shareData, setShareData] = useState({});
+	const [isSharing, setIsSharing] = useState(false);
+	const [shareCaption, setShareCaption] = useState('');
+	const [showShareModal, setShowShareModal] = useState(false);
 	const [commentMessage, setCommentMessage] = useState('');
+	const [stopVideo, setStopVideo] = useState(false);
+	const [showAmountModal, setShowAmountModal] = useState(false);
+	const [videoPayment, setVideoPayment] = useState(0);
 
 	const _GetVideoById = async () => {
 		try {
@@ -54,7 +66,6 @@ const VideoDetailScreen = () => {
 					count = count + 1;
 				}
 			}
-			console.log('count: ', count)
 			setCatalogueCount(count);
 		} catch ({
 			response: {
@@ -64,6 +75,30 @@ const VideoDetailScreen = () => {
 			console.log(message);
 		}
 	};
+
+	const {
+		id: postId = "",
+		likeCount = 0,
+		shareCount = 0,
+		commentCount = 0,
+		isLiked = false,
+		Video: {
+			id: videoId = "",
+			description = '',
+			title = '',
+			url = '',
+			UserId = '',
+			thumbnail = '',
+			catalogue = '',
+			User = {},
+			videoType = '',
+			videoCost = '',
+			productLink,
+			watchLimit = '',
+			cost = ''
+		} = {}
+	} = video;
+
 
 	const getAllCommentsByVideoId = async () => {
 		try {
@@ -81,24 +116,32 @@ const VideoDetailScreen = () => {
 		getAllCommentsByVideoId();
 	}, []);
 
+	useEffect(() => { }, [video, posts])
+
 	const _HandleCatalogue = async (videoId, catalogue) => {
 		if (catalogueCount < 5 || catalogue === true) {
-			console.log('here: ', catalogueCount);
 			try {
+				const originalArray = [...posts];
+				const updatedVideo = { ...video };
+
+				updatedVideo.Video.catalogue = !catalogue;
+				console.log('updatedVideo: ', updatedVideo)
+				setVideo(updatedVideo);
+
+				let newArray = originalArray.map((item, i) => {
+					if (item.id !== videoId) return item;
+					item.Video.catalogue = !catalogue;
+					return item;
+				});
+				setPosts(newArray);
+
 				const data = await axiosInstance.addToCatalogue({ videoId, catalogue });
 				if (catalogue) {
 					setCatalogueCount((catalogueCount) => catalogueCount - 1);
 				} else {
 					setCatalogueCount((catalogueCount) => catalogueCount + 1);
 				}
-				console.log({ data });
-				const originalArray = [...posts];
-				let newArray = originalArray.map((item, i) => {
-					if (item.Video.id !== videoId) return item;
-					item.Video.catalogue = !catalogue;
-					return item;
-				});
-				setPosts(newArray);
+
 			} catch ({
 				response: {
 					data: { message }
@@ -152,12 +195,21 @@ const VideoDetailScreen = () => {
 
 	const ToggleRatingModal = () => {
 		setShowRatingModal(!showRatingModal);
-	};
+	}
 
 	const _HandleChangeRating = (value) => {
-		console.log('value: ', value);
-	};
+		setSharePostRating(value);
+	}
 
+	const _SubmitRating = async () => {
+		try {
+			await axiosInstance.ratePost({ postId: postId, rating: postRating });
+			ToggleRatingModal();
+		}
+		catch ({ response: { data: { message } } }) {
+			console.log('in catch of api rating: ', message);
+		}
+	}
 	const ToggleTipModal = () => {
 		setShowTipModal(!showTipModal);
 	};
@@ -166,19 +218,31 @@ const VideoDetailScreen = () => {
 		console.log('value: ', value);
 	};
 
-	const HandleLikePost = async (id) => {
+
+	const HandleLikePost = async () => {
+		const deepCopyVideo = { ...video };
+		deepCopyVideo.isLiked = !isLiked;
+		deepCopyVideo.likeCount = isLiked ? (deepCopyVideo.likeCount - 1) : (deepCopyVideo.likeCount + 1)
+		setVideo(deepCopyVideo);
 		try {
-			const { data: { data, message } } = await axiosInstance.likePost({ videoId: id });
-			console.log('success: ', message);
-			_GetVideoById();
+			await axiosInstance.likePost({ postId: id });
 		}
 		catch ({ response: { data: { message } } }) {
 			console.log('Like Post Api failed: ', message);
 		}
 	}
 
+	const _HandleCommentCounts = async (operator) => {
+		const updatedVideo = { ...video };
+		operator === '+' ?
+			updatedVideo.commentCount = (updatedVideo.commentCount + 1) :
+			updatedVideo.commentCount = (updatedVideo.commentCount - 1);
+		setVideo(updatedVideo);
+	}
+
+
 	const _HandleSubmitComment = async () => {
-		console.log('commentMessage: ', commentMessage);
+		_HandleCommentCounts('+')
 		if (commentMessage !== '') {
 			try {
 				const res = await axiosInstance.postComment({ comment: commentMessage, videoId: id });
@@ -192,6 +256,7 @@ const VideoDetailScreen = () => {
 	}
 
 	const _HandleDeleteComments = async (index, commentId) => {
+		_HandleCommentCounts('-')
 		const deepCopyComments = [...comments];
 		deepCopyComments.splice(index, 1);
 		setComments(deepCopyComments);
@@ -201,16 +266,118 @@ const VideoDetailScreen = () => {
 		} catch ({ response: { data: { message } } }) { console.log(message); }
 	}
 
+
+	const enableShareLoading = () => {
+		setIsSharing(true);
+	};
+
+	const disableShareLoading = () => {
+		setIsSharing(false);
+	};
+
+	let _OpenShareModal = () => {
+		setShareData({
+			videoId: videoId,
+			thumbnail,
+			url,
+			picture: User?.picture,
+			name: User?.name,
+			title
+		})
+		setShowShareModal(true);
+	}
+
+
+	let _CloseShareModal = () => {
+		setShowShareModal(false);
+		setShareCaption('');
+	}
+
+	const _HandleSharePost = async () => {
+		const { videoId = '' } = shareData;
+		const updatedVideo = { ...video };
+		updatedVideo.shareCount = shareCount + 1
+		setVideo(updatedVideo);
+		enableShareLoading();
+		try {
+			const { data: { message } } = await axiosInstance.sharePost({ caption: shareCaption, videoId: videoId });
+			GetPosts();
+			Swal.fire({
+				text: message,
+				icon: 'success',
+				timer: 2000,
+				showConfirmButton: false,
+				showCancelButton: false,
+			})
+			disableShareLoading();
+			_CloseShareModal();
+		}
+		catch ({ response: { data: { message } } }) {
+
+			console.log('Share Post Api failed: ', message);
+		}
+	}
+
+	const _HandlePaidVideos = async () => {
+		console.log('Here');
+		setTimeout(() => {
+			setStopVideo(true);
+			_TogglePaymentModal();
+		}, watchLimit);
+	}
+
+	let _TogglePaymentModal = () => {
+		setVideoPayment(cost);
+		setShowAmountModal(!showAmountModal);
+	}
+
+
 	return (
 		<div className="flex flex-col lg:flex-row min-h-screen py-5 px-3 cursor-auto bg-gray-100">
 			<div className="w-full lg:w-8/12 flex flex-col">
 				<div className="flex flex-col w-full py-2 justify-between space-x-2 sm:hidden space-y-2">
 					<div className="flex space-x-2 w-full justify-end">
 						<div className="flex px-2 h-6 rounded-lg background items-center justify-center">
-							<p className="text-white font-sm">{video?.Video?.videoType}</p>
+							<p className="text-white font-sm">{videoType}</p>
 						</div>
-						<div className="flex px-2 h-6 rounded-lg background items-center justify-center">
-							<p className="text-white font-sm">{video?.Video?.videoCost}</p>
+						{
+							videoCost ? (
+								<div className="flex px-2 h-6 max-w-sm background items-center justify-center rounded-lg">
+									<p className="text-white font-sm">{videoCost}</p>
+								</div>
+							)
+								:
+								productLink && (
+									<Link href={productLink} passHref>
+										<a target='_blank'>
+											<span className="text font-sm hover:underline cursor-pointer">
+												Product Link
+											</span>
+										</a>
+									</Link>)
+						}
+						<div className="flex space-x-2">
+							{videoCost === "Paid" && localStorage.getItem('id') !== UserId &&
+								<>
+									<span
+										onClick={ToggleTipModal}
+										data-tip
+										data-for={`tip${title}`}
+										className="inline-flex h-8 w-14 cursor-pointer tip-hand">
+										<Image src={HandIcon} alt="banner" objectFit='contain' />
+									</span>
+									<ReactTooltip
+										className="md:max-w-sm mx-w-md break-words z-50"
+										id={`tip${title}`}
+										place="top"
+										effect="solid"
+										border={false}
+										borderColor="white"
+										clickable={false}>
+										Give a Tip
+									</ReactTooltip>
+								</>
+							}
 						</div>
 						<svg
 							className="w-6 h-6 text-gray-500 hover:text-purple-600 cursor-pointer"
@@ -221,27 +388,25 @@ const VideoDetailScreen = () => {
 						</svg>
 						<div className="flex items-start justify-start">
 							<PostActionDropdown
-								_HandleCatalogue={() => _HandleCatalogue(id, video?.Video?.catalogue)}
-								_HandleDeleteVideo={() => _HandleDeleteVideo(id)}
-								ToggleRatingModal={ToggleRatingModal}
-								ToggleTipModal={ToggleTipModal}
-								catalogue={video?.Video?.catalogue}
-								ownerId={video?.Video?.UserId}
+								_HandleCatalogue={() => _HandleCatalogue(postId, catalogue)}
+								_HandleDeleteVideo={() => _HandleDeleteVideo(postId)}
+								catalogue={catalogue}
+								ownerId={UserId}
 								isPost={true}
 							/>
 						</div>
 					</div>
 					<div className="flex space-x-2">
 						<img
-							src={video?.Video?.User?.picture ||
+							src={User?.picture ||
 								"https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"}
 							className="rounded-full w-10 h-10 object-cover"
 							alt="avatar"></img>
 						<div className="flex flex-col w-full">
 							<p
-								onClick={() => _HandleGotoUserProfile(video?.Video?.UserId, video?.Video?.User?.username)}
+								onClick={() => _HandleGotoUserProfile(UserId, User?.username)}
 								className="text-sm font-bold font-sans hover:underline cursor-pointer">
-								{video?.Video?.User?.name}
+								{User?.name}
 							</p>
 							<p className="text-xs text-gray-500">19h</p>
 						</div>
@@ -251,25 +416,61 @@ const VideoDetailScreen = () => {
 				<div className="sm:flex w-full py-2 justify-between space-x-2 hidden">
 					<div className="flex space-x-2">
 						<img
-							src={video?.Video?.User?.picture ||
+							src={User?.picture ||
 								"https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"}
 							className="rounded-full w-10 h-10 object-cover"
 							alt="avatar"></img>
 						<div className="flex flex-col w-full">
 							<p
-								onClick={() => _HandleGotoUserProfile(video?.Video?.UserId, video?.Video?.User?.username)}
+								onClick={() => _HandleGotoUserProfile(UserId, User?.username)}
 								className="text-sm font-bold font-sans hover:underline cursor-pointer">
-								{video?.Video?.User?.name}
+								{User?.name}
 							</p>
 							<p className="text-xs text-gray-500">19h</p>
 						</div>
 					</div>
 					<div className="flex space-x-2">
 						<div className="flex px-2 h-6 rounded-lg background items-center justify-center">
-							<p className="text-white font-sm">{video?.Video?.videoType}</p>
+							<p className="text-white font-sm">{videoType}</p>
 						</div>
-						<div className="flex px-2 h-6 rounded-lg background items-center justify-center">
-							<p className="text-white font-sm">{video?.Video?.videoCost}</p>
+						{
+							videoCost ? (
+								<div className="flex px-2 h-6 max-w-sm background items-center justify-center rounded-lg">
+									<p className="text-white font-sm">{videoCost}</p>
+								</div>
+							)
+								:
+								productLink && (
+									<Link href={productLink} passHref>
+										<a target='_blank'>
+											<span className="text font-sm hover:underline cursor-pointer">
+												Product Link
+											</span>
+										</a>
+									</Link>)
+						}
+						<div className="flex space-x-2">
+							{videoCost === "Paid" && localStorage.getItem('id') !== UserId &&
+								<>
+									<span
+										onClick={ToggleTipModal}
+										data-tip
+										data-for={`tip${title}`}
+										className="inline-flex h-8 w-14 cursor-pointer tip-hand">
+										<Image src={HandIcon} alt="banner" objectFit='contain' />
+									</span>
+									<ReactTooltip
+										className="md:max-w-sm mx-w-md break-words z-50"
+										id={`tip${title}`}
+										place="top"
+										effect="solid"
+										border={false}
+										borderColor="white"
+										clickable={false}>
+										Give a Tip
+									</ReactTooltip>
+								</>
+							}
 						</div>
 						<svg
 							className="w-6 h-6 text-gray-500 hover:text-purple-600 cursor-pointer"
@@ -280,12 +481,10 @@ const VideoDetailScreen = () => {
 						</svg>
 						<div className="flex items-start justify-start">
 							<PostActionDropdown
-								_HandleCatalogue={() => _HandleCatalogue(id, video?.Video?.catalogue)}
+								_HandleCatalogue={() => _HandleCatalogue(id, catalogue)}
 								_HandleDeleteVideo={() => _HandleDeleteVideo(id)}
-								ToggleRatingModal={ToggleRatingModal}
-								ToggleTipModal={ToggleTipModal}
-								catalogue={video?.Video?.catalogue}
-								ownerId={video?.Video?.UserId}
+								catalogue={catalogue}
+								ownerId={UserId}
 								isPost={true}
 							/>
 						</div>
@@ -294,22 +493,41 @@ const VideoDetailScreen = () => {
 				<p
 					// onClick={() => _HandleGotoVideoDetails(id)}
 					className="px-3 pb-1 text-sm max-w-md whitespace-nowrap overflow-ellipsis overflow-hidden">
-					{video?.Video?.title}
+					{title}
 				</p>
-				<div className="detail-page-video-wrapper">
-					<VideoPlayer src={video?.Video?.url} poster={video?.Video?.thumbnail} />
-				</div>
+				{
+					videoCost === 'Paid' ?
+						!stopVideo ?
+							<div className="detail-page-video-wrapper" onClick={_HandlePaidVideos}>
+								<VideoPlayer poster={thumbnail} src={url} />
+							</div>
+							:
+							<div className="detail-page-video-wrapper flex flex-col justify-center items-center">
+								<p className="text-lg text-gray-500 text-center">To continue watching video</p>
+								<button
+									onClick={_TogglePaymentModal}
+									type="button"
+									className="mt-3 text-lg w-full inline-flex justify-center hover:underline  px-4 py-2 text-base font-medium text  sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+								>
+									PAY NOW
+								</button>
+							</div>
+						:
+						<div className="detail-page-video-wrapper">
+							<VideoPlayer poster={thumbnail} src={url} />
+						</div>
+				}
 				<div className="w-full flex flex-col md:flex-row justify-center md:justify-between py-2">
 					<div className="flex flex-row justify-between space-x-3">
 						<div className="flex space-x-3">
 							<Button
-								onSubmit={() => HandleLikePost(video?.Video?.videoId)}
+								onSubmit={HandleLikePost}
 								type="button"
 								childrens={
 									<>
-										<FontAwesomeIcon icon={faThumbsUp} className={`w-4 h-4 ${video?.isLiked == null ? 'text-gray-600' : 'text-purple-600'} group-hover:text-purple-600`} />
+										<FontAwesomeIcon icon={faThumbsUp} className={`w-4 h-4 ${isLiked === false ? 'text-gray-600' : 'text-purple-600'} group-hover:text-purple-600`} />
 										<p
-											className={`cursor-pointer w-full text-xs text-center ${video?.Video?.isLiked == null ? 'text-gray-600' : 'text-purple-600'} group-hover:text-purple-600`}>
+											className={`cursor-pointer w-full text-xs text-center ${isLiked === false ? 'text-gray-600' : 'text-purple-600'} group-hover:text-purple-600`}>
 											Like
 										</p>
 
@@ -320,7 +538,7 @@ const VideoDetailScreen = () => {
 								}
 							/>
 							<Button
-								// onSubmit={_OpenUploadModal}
+								onSubmit={_OpenShareModal}
 								type="button"
 								childrens={
 									<>
@@ -337,16 +555,16 @@ const VideoDetailScreen = () => {
 						</div>
 						<div className="flex divide-x divide-gray-500 items-center justify-center space-x-2">
 							<span>
-								<p className="text-sm ">{video?.PostLikees?.length} {video?.PostLikees?.length > 1 ? 'Likes' : 'Like'}</p>
+								<p className="text-sm ">{likeCount} {likeCount > 1 ? 'Likes' : 'Like'}</p>
 							</span>
 							<span>
-								<p className="text-sm ml-2">2.2K Shares</p>
+								<p className="text-sm ml-2">{shareCount} Shares</p>
 							</span>
 						</div>
 					</div>
 					<div className="flex space-x-3 divide-x divide-gray-500 justify-end md:justify-center items-center">
 						<div>
-							<span className="flex items-center">
+							<span onClick={ToggleRatingModal} className="flex items-center cursor-pointer">
 								<Rating value={4} isHalf={true} edit={false} />
 								&nbsp; <p className="text-xs"> Rating</p>
 							</span>
@@ -375,18 +593,14 @@ const VideoDetailScreen = () => {
 					<p className="text-sm break-words">
 						<ReadLessReadMore
 							limit={250}
-							text={`Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                        when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                        It has survived not only five centuries, but also the leap into electronic typesetting,
-                        remaining essentially unchanged`|| ''}
+							text={description || ''}
 						/>
 					</p>
 				</div>
 				<div className="flex flex-col w-full mt-3">
 					<div className="flex justify-between">
 						<p className="font-bold text-md">Comments</p>
-						<p className="text-sm">{comments?.length} Comment{comments?.length > 1 ? 's' : ''}</p>
+						<p className="text-sm">{commentCount} Comment{commentCount > 1 ? 's' : ''}</p>
 					</div>
 					<div className="flex items-center border-b border-gray-500 py-2 mb-4">
 						<input
@@ -419,7 +633,7 @@ const VideoDetailScreen = () => {
 						posts.map(({
 							id: postId, Video: {
 								description, title, url, UserId, thumbnail, catalogue, User, videoType,
-								videoCost, mediaType
+								videoCost, mediaType, productLink, tip
 							},
 						}, index) => (
 							<div key={index}>
@@ -432,6 +646,7 @@ const VideoDetailScreen = () => {
 									User={User}
 									views={200}
 									rating={2.5}
+									productLink={productLink}
 									videoCost={videoCost}
 									videoType={videoType}
 									mediaType={mediaType}
@@ -440,7 +655,7 @@ const VideoDetailScreen = () => {
 									isPost={true}
 									width={'max-w-lg'}
 									thumbnail={thumbnail}
-									_HandleCatalogue={_HandleCatalogue}
+									_HandleCatalogue={() => _HandleCatalogue(postId, catalogue)}
 									_HandleDeleteVideo={_HandleDeleteVideo}
 									_HandleGotoUserProfile={_HandleGotoUserProfile}
 									_HandleGotoVideoDetails={_HandleGotoVideoDetails}
@@ -452,11 +667,23 @@ const VideoDetailScreen = () => {
 			</div>
 			{showRatingModal && (
 				<VideoRatingModal
-					modalTitle={'Video Rating Modal'}
+					loading={false}
+					videoRating={postRating}
+					modalTitle={'Rate Video'}
+					_SubmitRating={_SubmitRating}
 					ToggleRatingModal={ToggleRatingModal}
 					_HandleChangeRating={_HandleChangeRating}
-					loading={false}
-					videoRating={2}
+				/>
+			)}
+			{showShareModal && (
+				<ShareModal
+					modalTitle={'Share Post'}
+					ToggleShareModal={_CloseShareModal}
+					setShareCaption={setShareCaption}
+					shareCaption={shareCaption}
+					_HandleSubmit={_HandleSharePost}
+					loading={isSharing}
+					shareData={shareData}
 				/>
 			)}
 			{showTipModal && (
@@ -466,6 +693,13 @@ const VideoDetailScreen = () => {
 					ToggleTipModal={ToggleTipModal}
 					loading={false}
 					modalTitle={'Video Tip Modal'}
+				/>
+			)}
+			{showAmountModal && (
+				<PaymentModal
+					ToggleAmountModal={_TogglePaymentModal}
+					loading={isSharing}
+					amount={videoPayment}
 				/>
 			)}
 		</div>

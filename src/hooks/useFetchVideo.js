@@ -1,7 +1,8 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import axiosInstance from 'src/APIs/axiosInstance';
 import Swal from 'sweetalert2';
+import axiosInstance from 'src/APIs/axiosInstance';
+import { checkCountById, checkLikeCount } from 'helpers';
 
 const UseFetchVideo = () => {
   const router = useRouter();
@@ -134,13 +135,11 @@ const UseFetchVideo = () => {
     router.push(`/dashboard/videos/${id}`);
   };
 
-  const HandleLikePost = async (id) => {
+  const HandleLikePost = async (id, isLiked) => {
+    const updatedFilterdPosts = await checkLikeCount(filterdVideos, id, isLiked);
+    setFilterVideos(updatedFilterdPosts);
     try {
-      const {
-        data: { data, message }
-      } = await axiosInstance.likePost({ videoId: id });
-      console.log('success: ', message);
-      fetchMyVideos();
+      await axiosInstance.likePost({ postId: id });
     } catch ({
       response: {
         data: { message }
@@ -149,6 +148,11 @@ const UseFetchVideo = () => {
       console.log('Like Post Api failed: ', message);
     }
   };
+
+  const _HandleCommentCounts = async (postId, operator) => {
+    const updatedFilteredPosts = await checkCountById(filterdVideos, 'commentCount', postId, operator);
+    setFilterVideos(updatedFilteredPosts);
+  }
 
   let _OpenShareModal = (id, thumbnail, url, picture, name, title) => {
     setShareData({
@@ -207,6 +211,8 @@ const UseFetchVideo = () => {
     _HandleCatalogue,
     _ChangeFilter,
     _CloseShareModal,
+    setShareCaption,
+    _HandleCommentCounts,
     filterdVideos,
     Videos,
     filter,
@@ -216,7 +222,6 @@ const UseFetchVideo = () => {
     isSharing,
     shareData,
     shareCaption,
-    setShareCaption
   };
 };
 

@@ -17,6 +17,7 @@ const Videos = () => {
     _ChangeFilter,
     _CloseShareModal,
     setShareCaption,
+    _HandleCommentCounts,
     filterdVideos,
     filter,
     loading,
@@ -78,32 +79,30 @@ const Videos = () => {
           <p className="text-gray-500"> No Videos</p>
         </div>
       ) : (
-        <div className="flex flex-col w-full sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-col-4 gap-3">
-          {filterdVideos.map(
-            (
-              {
-                id: postId,
-                isLiked,
-                likeCount,
-                PostLikees,
-                Video: {
-                  title,
-                  url,
-                  thumbnail,
-                  mediaType,
-                  id,
-                  UserId,
-                  description,
-                  User,
-                  catalogue,
-                  videoCost,
-                  videoType,
-                  Shares,
-                  productLink
-                }
-              },
-              index
-            ) => (
+        <div className="flex flex-col w-full sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          {filterdVideos.map((item, index) => {
+            const {
+              id: postId,
+              isLiked,
+              likeCount,
+              commentCount,
+              shareCount,
+              Video: {
+                id,
+                title,
+                url,
+                thumbnail,
+                mediaType,
+                UserId,
+                description,
+                User,
+                catalogue,
+                videoCost,
+                videoType,
+                Shares,
+                productLink
+              } } = item;
+            return (
               <div key={index}>
                 <NewsfeedCard
                   id={postId}
@@ -117,7 +116,9 @@ const Videos = () => {
                   views={200}
                   rating={2.5}
                   isLiked={isLiked}
-                  likeCount={PostLikees}
+                  likeCount={likeCount}
+                  commentCount={commentCount}
+                  shareCount={shareCount}
                   videoCost={videoCost}
                   videoType={videoType}
                   mediaType={mediaType}
@@ -127,7 +128,8 @@ const Videos = () => {
                   width={'max-w-xs'}
                   thumbnail={thumbnail}
                   productLink={productLink}
-                  HandleLikePost={HandleLikePost}
+                  HandleLikePost={() => HandleLikePost(postId, isLiked)}
+                  _HandleCommentCounts={_HandleCommentCounts}
                   _OpenShareModal={_OpenShareModal}
                   _HandleCatalogue={_HandleCatalogue}
                   _HandleDeleteVideo={_HandleDeleteVideo}
@@ -135,7 +137,7 @@ const Videos = () => {
                 />
               </div>
             )
-          )}
+          })}
         </div>
       )}
       {showShareModal && (

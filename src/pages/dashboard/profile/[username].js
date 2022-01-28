@@ -12,6 +12,8 @@ import { Card, PopupBusinessCard, ProfileCard, Rating, TestimonialCard, Spinner,
 import { useSearchContext } from 'src/contexts';
 import { ShareModal, TipModal, VideoRatingModal } from 'src/components/Modals';
 import Swal from 'sweetalert2';
+import { checkLikeCount } from 'helpers';
+import { AnimatePresence } from 'framer-motion';
 
 
 const UserProfile = ({ profile }) => {
@@ -178,16 +180,24 @@ const UserProfile = ({ profile }) => {
 	}
 
 
-	const HandleLikePost = async (id) => {
+	const HandleLikePost = async (id, isLiked) => {
+		const updatedCatPosts = await checkLikeCount(catalogues, id, isLiked);
+		const updatedVideoPosts = await checkLikeCount(myVideos, id, isLiked);
+		setCatalogues(updatedCatPosts);
+		setMyVideos(updatedVideoPosts);
 		try {
-			const { data: { data, message } } = await axiosInstance.likePost({ videoId: id });
-			const { username } = profile;
-			fetchCatalogues(username);
-			fetchMyVideos(username);
+			await axiosInstance.likePost({ postId: id });
 		}
 		catch ({ response: { data: { message } } }) {
 			console.log('Like Post Api failed: ', message);
 		}
+	}
+
+	const _HandleCommentCounts = async (postId, operator) => {
+		const updatedCatPost = await checkCountById(catalogues, 'commentCount', postId, operator);
+		const updatedVideoPost = await checkCountById(myVideos, 'commentCount', postId, operator);
+		setCatalogues(updatedCatPost);
+		setMyVideos(updatedVideoPost);
 	}
 
 	const _HandleGotoVideoDetails = (id) => {
@@ -411,14 +421,15 @@ const UserProfile = ({ profile }) => {
 											id: postId,
 											isLiked,
 											shareCount,
-											PostLikees,
+											likeCount,
+											commentCount,
 											Video: {
+												id,
 												title,
 												url,
 												mediaType,
 												thumbnail,
 												description,
-												id,
 												UserId,
 												catalogue,
 												User,
@@ -426,7 +437,8 @@ const UserProfile = ({ profile }) => {
 												videoCost,
 												Shares,
 												productLink,
-												watchLimit
+												watchLimit,
+												cost
 											}
 										},
 										index
@@ -447,7 +459,8 @@ const UserProfile = ({ profile }) => {
 												videoCost={videoCost}
 												Shares={Shares}
 												isLiked={isLiked}
-												likeCount={PostLikees}
+												likeCount={likeCount}
+												commentCount={commentCount}
 												shareCount={shareCount}
 												description={description}
 												title={title}
@@ -455,11 +468,13 @@ const UserProfile = ({ profile }) => {
 												watchLimit={watchLimit}
 												width={'max-w-xs'}
 												thumbnail={thumbnail}
-												HandleLikePost={HandleLikePost}
 												ToggleTipModal={ToggleTipModal}
 												_OpenShareModal={_OpenShareModal}
-												ToggleRatingModal={() => OpenRatingModal(postId)}
+												_HandleCommentCounts={_HandleCommentCounts}
 												_HandleGotoVideoDetails={_HandleGotoVideoDetails}
+												ToggleRatingModal={() => OpenRatingModal(postId)}
+												TogglePaymentModal={() => _TogglePaymentModal(cost)}
+												HandleLikePost={() => HandleLikePost(postId, isLiked)}
 											/>
 										</div>
 									)
@@ -494,8 +509,8 @@ const UserProfile = ({ profile }) => {
 										id: postId,
 										isLiked,
 										shareCount,
-										isShared,
-										PostLikees,
+										likeCount,
+										commentCount,
 										Video: {
 											id,
 											description,
@@ -509,7 +524,8 @@ const UserProfile = ({ profile }) => {
 											videoCost,
 											Shares,
 											productLink,
-											watchLimit
+											watchLimit,
+											cost
 										}
 									},
 									index
@@ -529,7 +545,8 @@ const UserProfile = ({ profile }) => {
 											videoCost={videoCost}
 											Shares={Shares}
 											isLiked={isLiked}
-											likeCount={PostLikees}
+											likeCount={likeCount}
+											commentCount={commentCount}
 											shareCount={shareCount}
 											description={description}
 											title={title}
@@ -539,11 +556,13 @@ const UserProfile = ({ profile }) => {
 											watchLimit={watchLimit}
 											thumbnail={thumbnail}
 											restrictPaidVideo={true}
-											HandleLikePost={HandleLikePost}
 											ToggleTipModal={ToggleTipModal}
 											_OpenShareModal={_OpenShareModal}
-											ToggleRatingModal={() => OpenRatingModal(postId)}
+											_HandleCommentCounts={_HandleCommentCounts}
 											_HandleGotoVideoDetails={_HandleGotoVideoDetails}
+											ToggleRatingModal={() => OpenRatingModal(postId)}
+											TogglePaymentModal={() => _TogglePaymentModal(cost)}
+											HandleLikePost={() => HandleLikePost(postId, isLiked)}
 										/>
 									</div>
 								)
@@ -589,53 +608,55 @@ const UserProfile = ({ profile }) => {
 					</div>
 				</div>
 			)}
-			{showBusinessCard && (
-				<PopupBusinessCard
-					_ShowCard={handleShowBusinessCard}
-					name={name}
-					image={picture}
-					website={website || ''}
-					email={email}
-					phone={phone}
-				/>
-			)
-			},
-			{
-				showRatingModal && (
-					<VideoRatingModal
-						loading={false}
-						videoRating={postRating}
-						modalTitle={'Rate Video'}
-						_SubmitRating={_SubmitRating}
-						ToggleRatingModal={ToggleRatingModal}
-						_HandleChangeRating={_HandleChangeRating}
+			<AnimatePresence>
+				{showBusinessCard && (
+					<PopupBusinessCard
+						_ShowCard={handleShowBusinessCard}
+						name={name}
+						image={picture}
+						website={website || ''}
+						email={email}
+						phone={phone}
 					/>
 				)
-			}
-			{
-				showTipModal && (
-					<TipModal
-						_HandleChangeTip={_HandleChangeTip}
-						tip={tip}
-						ToggleTipModal={ToggleTipModal}
-						loading={false}
-						modalTitle={"Tip Video"}
-					/>
-				)
-			}
-			{
-				showShareModal && (
-					<ShareModal
-						modalTitle={'Share Post'}
-						ToggleShareModal={_CloseShareModal}
-						setShareCaption={setShareCaption}
-						shareCaption={shareCaption}
-						_HandleSubmit={_HandleSharePost}
-						loading={isSharing}
-						shareData={shareData}
-					/>
-				)
-			}
+				},
+				{
+					showRatingModal && (
+						<VideoRatingModal
+							loading={false}
+							videoRating={postRating}
+							modalTitle={'Rate Video'}
+							_SubmitRating={_SubmitRating}
+							ToggleRatingModal={ToggleRatingModal}
+							_HandleChangeRating={_HandleChangeRating}
+						/>
+					)
+				}
+				{
+					showTipModal && (
+						<TipModal
+							_HandleChangeTip={_HandleChangeTip}
+							tip={tip}
+							ToggleTipModal={ToggleTipModal}
+							loading={false}
+							modalTitle={"Tip Video"}
+						/>
+					)
+				}
+				{
+					showShareModal && (
+						<ShareModal
+							modalTitle={'Share Post'}
+							ToggleShareModal={_CloseShareModal}
+							setShareCaption={setShareCaption}
+							shareCaption={shareCaption}
+							_HandleSubmit={_HandleSharePost}
+							loading={isSharing}
+							shareData={shareData}
+						/>
+					)
+				}
+			</AnimatePresence>
 			{/* section ends here */}
 		</div>
 	);

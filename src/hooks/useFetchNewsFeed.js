@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { useS3Upload } from 'next-s3-upload';
 import axiosInstance from 'src/APIs/axiosInstance';
 import { UploadSmartReviewVideoSchema, UploadSmartTipzVideoSchema, UploadVideoSchema } from 'utils/validation_shema';
+import { calculateAvgRating, checkCount, checkCountById, checkLikeCount } from 'helpers';
 
 const UseFetchNewsFeed = () => {
 
@@ -20,6 +21,13 @@ const UseFetchNewsFeed = () => {
         minute: 0,
         second: 0,
         cost: 0
+    }
+
+    const initialRatingData = {
+        postId: '',
+        oldAvgRating: '',
+        newRating: '',
+        totalRaters: ''
     }
 
     let { uploadToS3 } = useS3Upload();
@@ -47,6 +55,10 @@ const UseFetchNewsFeed = () => {
     const [isloadingFeed, setLoadingFeed] = useState(true);
     const [ratePostId, setRatePostId] = useState('');
     const [postRating, setSharePostRating] = useState(0);
+    const [showAmountModal, setShowAmountModal] = useState(false);
+    const [videoPayment, setVideoPayment] = useState(0);
+    const [ratingData, setRatingData] = useState({ ...initialRatingData });
+
 
     let thumbnailRef = useRef();
 
@@ -77,6 +89,10 @@ const UseFetchNewsFeed = () => {
     useEffect(() => {
         GetPosts();
     }, [])
+
+    useEffect(() => {
+        console.log('posts updated', posts)
+    }, [posts])
 
 
     let onChangeThumbnail = async ({ target }) => {
@@ -123,8 +139,9 @@ const UseFetchNewsFeed = () => {
     }
 
     console.log('checked: ', postOnFeed)
-    let _OpenShareModal = (id, thumbnail, url, picture, name, title) => {
+    let _OpenShareModal = (id, index, thumbnail, url, picture, name, title) => {
         setShareData({
+            index,
             videoId: id,
             thumbnail,
             url,
@@ -133,6 +150,13 @@ const UseFetchNewsFeed = () => {
             title
         })
         setShowShareModal(true);
+    }
+
+
+
+    let _TogglePaymentModal = (cost) => {
+        setVideoPayment(cost);
+        setShowAmountModal(!showAmountModal);
     }
 
     let _CloseShareModal = () => {
@@ -234,11 +258,13 @@ const UseFetchNewsFeed = () => {
         }
     });
 
-    const HandleLikePost = async (id) => {
+    const HandleLikePost = async (id, isLiked) => {
+        console.log(`postId: ${id}, isliked:${isLiked}`);
+        const updatedPosts = await checkLikeCount(posts, id, isLiked);
+        console.log('updatedPosts: ', updatedPosts)
+        setPosts(updatedPosts);
         try {
-            const { data: { data, message } } = await axiosInstance.likePost({ videoId: id });
-            console.log('success: ', message);
-            GetPosts();
+            await axiosInstance.likePost({ postId: id });
         }
         catch ({ response: { data: { message } } }) {
             console.log('Like Post Api failed: ', message);
@@ -249,7 +275,6 @@ const UseFetchNewsFeed = () => {
         console.log('id: ', id)
         try {
             const { data: { data, message } } = await axiosInstance.favouritePost({ videoId: id });
-            console.log('success: ', message);
             GetPosts();
         }
         catch ({ response: { data: { message } } }) {
@@ -272,7 +297,6 @@ const UseFetchNewsFeed = () => {
                 else {
                     setCatalogueCount(catalogueCount => catalogueCount + 1)
                 }
-                // console.log({ data });
                 const originalArray = [...posts];
                 let newArray = originalArray.map((item, i) => {
                     if (item.id !== videoId) return item;
@@ -331,54 +355,81 @@ const UseFetchNewsFeed = () => {
         router.push(`/dashboard/videos/${id}`)
     }
 
-    const OpenRatingModal = (postId) => {
-        setRatePostId(postId);
-        console.log('postToRate: ', postId);
+    const OpenRatingModal = ({ postId, avgRating, totalRaters }) => {
+        const data = {
+            postId: postId,
+            oldAvgRating: avgRating,
+            totalRaters: totalRaters,
+            newRating: ''
+        }
+        console.log('data: ', data);
+        setRatingData(data);
         setShowRatingModal(true);
     }
 
     const ToggleRatingModal = () => {
+        setRatingData({ ...initialRatingData });
         setShowRatingModal(false);
     }
 
     const _HandleChangeRating = (value) => {
-        console.log('value: ', value);
         setSharePostRating(value);
+        const copyRatingData = { ...ratingData };
+        copyRatingData.newRating = value;
+        setRatingData(copyRatingData);
     }
 
     const _SubmitRating = async () => {
-        console.log({ postId: ratePostId, rating: postRating })
-        try {
-            const { data: { message } } = await axiosInstance.ratePost({ postId: ratePostId, rating: postRating });
-            console.log('message: ', message);
-            ToggleRatingModal();
-        }
-        catch ({ response: { data: { message } } }) {
-            console.log('in catch of api rating: ', message);
-        }
+        const { oldAvgRating = 0, totalRaters = 0, newRating = 0, postId = 1 } = ratingData;
+        console.log(`postId: ${postId}, totalRaters: ${totalRaters} oldRating: ${oldAvgRating}, newRating: ${newRating}`)
+        const updatedPosts = await calculateAvgRating(posts, postId, parseInt(totalRaters), parseFloat(oldAvgRating), parseFloat(newRating));
+        console.log('updated: ', updatedPosts)
+        setPosts((prevState) => prevState = [...updatedPosts]);
+        ToggleRatingModal();
+        // try {
+        //     await axiosInstance.ratePost({ postId: postId, rating: newRating });
+        // }
+        // catch ({ response: { data: { message } } }) {
+        //     console.log('in catch of api rating: ', message);
+        // }
     }
 
-    const ToggleTipModal = () => {
+    const ToggleTipModal = (tip) => {
+        setTip(tip);
         setShowTipModal(!showTipModal);
     }
 
     const _HandleChangeTip = ({ target }) => {
         const { value } = target;
         setTip(value);
-        console.log('value: ', value);
     }
+
+
+    const _HandleCommentCounts = async (postId, operator) => {
+        const updatedPost = await checkCountById(posts, 'commentCount', postId, operator);
+        setPosts(updatedPost);
+    }
+
 
     const _HandleSharePost = async () => {
         console.log(shareCaption, shareData);
+        const { videoId = '' } = shareData;
+        const DeepCopyPosts = [...posts];
+        const updatedPosts = DeepCopyPosts.map(item, i => {
+            if (item.VideoId !== videoId) return item;
+            else {
+                item.shareCount = shareCount + 1
+                return item;
+            }
+        })
         enableShareLoading();
         try {
-            const { data: { data, message } } = await axiosInstance.sharePost({ caption: shareCaption, videoId: shareData?.videoId });
-            console.log('success: ', message);
+            const { data: { data, message } } = await axiosInstance.sharePost({ caption: shareCaption, videoId: videoId });
             GetPosts();
             Swal.fire({
                 text: message,
                 icon: 'success',
-                timer: 3000,
+                timer: 2000,
                 showConfirmButton: false,
                 showCancelButton: false,
             })
@@ -410,7 +461,8 @@ const UseFetchNewsFeed = () => {
         _HandleChangeTip, showTipModal, videoType, _OpenShareModal, _CloseShareModal, showShareModal, shareData,
         _HandleSharePost, _HandleChangeCaption, shareCaption, setShareCaption, isSharing, HandleFavouritePost,
         _HandleChangePostOnNewsfeed, postOnFeed, tip, isloadingFeed, OpenRatingModal, ToggleRatingModal,
-        _HandleChangeRating, postRating, _SubmitRating
+        _HandleChangeRating, postRating, _SubmitRating, _TogglePaymentModal, showAmountModal, videoPayment,
+        _HandleCommentCounts, ratingData
     }
 }
 
