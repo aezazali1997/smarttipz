@@ -2,11 +2,11 @@ import AllPosts from 'models/AllPost';
 import Comments from 'models/Comments';
 import PostLikee from 'models/Like';
 import Shares from 'models/Share';
-
+import db from 'models/db';
 const jwt = require('jsonwebtoken');
 const Users = require('models/User');
 const Videos = require('models/Video');
-
+import { isEmpty } from 'lodash';
 
 const handler = async (req, res) => {
     if (req.method === 'GET') {

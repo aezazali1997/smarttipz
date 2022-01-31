@@ -152,9 +152,9 @@ class AxiosInstance {
             this.getAuthHeader());
     }
 
-    async getFilteredPosts(search, sort, category, videoType, videoCategory, account) {
-        return await axios.post(USER_API_BASE_URL + `api/profile/videos/filter-videos?search=${search}&&sort=${sort}&&category=${category}`,
-            { videoType, videoCategory, accountType: account },
+    async getFilteredPosts(search, sort, category, videoType, videoCategory, account, rating) {
+        return await axios.post(USER_API_BASE_URL + `api/profile/videos/filter-videos?search=${search}&&sort=${sort}&&category=${category}&&rating=${rating}`,
+            { videoType, videoCategory, accountType: account, rating },
             this.getAuthHeader());
     }
 
@@ -188,8 +188,11 @@ class AxiosInstance {
         return await axios.get(USER_API_BASE_URL + `api/profile/videos/comment?videoId=${videoId}`, this.getAuthHeader());
     }
 
-    async getAllSharedVideos() {
-        return await axios.get(USER_API_BASE_URL + `api/newsfeed`, this.getAuthHeader());
+    async getAllSharedVideos(currentPage) {
+        return await axios.get(USER_API_BASE_URL + `api/newsfeed?page=${currentPage}`, this.getAuthHeader());
+    }
+    async getRelatedVideos() {
+        return await axios.get(USER_API_BASE_URL + `api/related-videos`, this.getAuthHeader());
     }
 
     async ratePost(payload) {

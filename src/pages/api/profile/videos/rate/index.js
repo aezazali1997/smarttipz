@@ -1,8 +1,10 @@
+import { isEmpty } from 'lodash';
+const jwt = require('jsonwebtoken');
 import AllPosts from 'models/AllPost';
 import Rating from 'models/Rating';
 import User from 'models/User';
-
-const jwt = require('jsonwebtoken');
+import db from 'models/db';
+import Video from 'models/Video';
 
 const handler = async (req, res) => {
 
@@ -33,7 +35,7 @@ const handler = async (req, res) => {
             });
 
             const newPost = await AllPosts.findOne({
-                where: { id: postId }, attributes: ['id']
+                where: { id: postId }, attributes: ['id', 'VideoId']
             });
 
             const newRating = await Rating.create({
@@ -43,6 +45,20 @@ const handler = async (req, res) => {
             })
 
             await newRating.setAllPost(newPost);
+
+            const ratings = await db.query(`select avg(r."rating") as "avgRating", count(r."AllPostId") as "totalRaters" from "AllPosts" p
+						left join "Ratings" as r on p.id=r."AllPostId"
+						where (p.id=${postId} and r."AllPostId"=${postId})
+						group by p.id`)
+
+
+            const avgRating = isEmpty(ratings[0]) ? 0 : ratings[0][0].avgRating;
+
+            const video = await Video.findOne({ where: { id: newPost.VideoId } })
+
+            await video.update({
+                rating: parseInt(avgRating)
+            })
 
             return res.status(201).json({
                 error: false,

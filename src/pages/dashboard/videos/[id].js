@@ -55,7 +55,7 @@ const VideoDetailScreen = () => {
 				data: {
 					data: { videos }
 				}
-			} = await axiosInstance.getAllSharedVideos();
+			} = await axiosInstance.getRelatedVideos();
 			setPosts(videos);
 			var count = 0;
 			for (let i = 0; i < videos.length; i++) {

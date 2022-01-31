@@ -53,30 +53,33 @@ const UseFetchNewsFeed = () => {
     const [showRatingModal, setShowRatingModal] = useState(false);
     const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
     const [isloadingFeed, setLoadingFeed] = useState(true);
-    const [ratePostId, setRatePostId] = useState('');
     const [postRating, setSharePostRating] = useState(0);
     const [showAmountModal, setShowAmountModal] = useState(false);
     const [videoPayment, setVideoPayment] = useState(0);
     const [ratingData, setRatingData] = useState({ ...initialRatingData });
-
+    const [current, setCurrentPage] = useState(0);
+    const [hasMore, setHasMore] = useState(true);
 
     let thumbnailRef = useRef();
 
-    let GetPosts = async () => {
+    let GetPosts = async (currentPage) => {
         try {
             setLoadingFeed(true);
-            const { data: { data: { videos } } } = await axiosInstance.getAllSharedVideos();
+            const { data: { data: { videos, totalVideos, catalogCount } } } = await axiosInstance.getAllSharedVideos(currentPage);
             setPosts(videos);
-            var count = 0;
-            for (let i = 0; i < videos.length; i++) {
-                if (videos[i].Video.catalogue === true &&
-                    videos[i].isShared === false &&
-                    videos[i].Video.isApproved === true &&
-                    videos[i].Video.UserId == parseInt(localStorage.getItem('id'))) {
-                    count = count + 1;
-                }
-            }
-            setCatalogueCount(count)
+            setCurrentPage(prev => prev = currentPage);
+            videos.length >= totalVideos ? setHasMore(false) : setHasMore(true);
+            // var count = 0;
+            // for (let i = 0; i < videos.length; i++) {
+            //     if (videos[i].Video.catalogue === true &&
+            //         videos[i].isShared === false &&
+            //         videos[i].Video.isApproved === true &&
+            //         videos[i].Video.UserId == parseInt(localStorage.getItem('id'))) {
+            //         count = count + 1;
+            //     }
+            // }
+            console.log(catalogCount);
+            setCatalogueCount(catalogCount)
             setLoadingFeed(false);
         }
         catch ({ response: { data: { message } } }) {
@@ -87,13 +90,29 @@ const UseFetchNewsFeed = () => {
 
 
     useEffect(() => {
-        GetPosts();
-    }, [])
+
+        GetPosts(current);
+    }, []);
+
 
     useEffect(() => {
         console.log('posts updated', posts)
     }, [posts])
 
+    const _FetchMoreData = async () => {
+        try {
+            const { data: { data: { videos: moreVideos, totalVideos, catalogCount } } } = await axiosInstance.getAllSharedVideos(current + 1);
+            localStorage.setItem('currentPageCount', current + 1);
+            setCurrentPage(current + 1);
+            setCatalogueCount(catalogCount)
+            const updatedPostArray = [...posts, ...moreVideos];
+            updatedPostArray.length >= totalVideos ? setHasMore(false) : setHasMore(true);
+            setPosts([...updatedPostArray]);
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log(message);
+        }
+    }
 
     let onChangeThumbnail = async ({ target }) => {
         const { files } = target;
@@ -230,7 +249,8 @@ const UseFetchNewsFeed = () => {
                 showCancelButton: false,
                 showConfirmButton: false
             })
-            GetPosts();
+            setCurrentPage(0)
+            GetPosts(0);
             resetForm(initials);
             setSubmitting(false);
             _CloseUploadModal();
@@ -324,9 +344,9 @@ const UseFetchNewsFeed = () => {
         }
     }
 
-    const _HandleDeleteVideo = async (index, videoId) => {
+    const _HandleDeleteVideo = async (videoId) => {
         try {
-            const res = await axiosInstance.deleteVideo(videoId);
+            await axiosInstance.deleteVideo(videoId);
             setCatalogueCount(catalogueCount => catalogueCount - 1)
             const originalArray = [...posts];
             let newArray = originalArray.map((item, i) => {
@@ -334,7 +354,6 @@ const UseFetchNewsFeed = () => {
                 item.Video.isApproved = false;
                 return item;
             })
-            // originalArray.splice(index, 1)
             setPosts(newArray);
         }
         catch ({ response: { data: { message } } }) {
@@ -362,7 +381,6 @@ const UseFetchNewsFeed = () => {
             totalRaters: totalRaters,
             newRating: ''
         }
-        console.log('data: ', data);
         setRatingData(data);
         setShowRatingModal(true);
     }
@@ -381,17 +399,15 @@ const UseFetchNewsFeed = () => {
 
     const _SubmitRating = async () => {
         const { oldAvgRating = 0, totalRaters = 0, newRating = 0, postId = 1 } = ratingData;
-        console.log(`postId: ${postId}, totalRaters: ${totalRaters} oldRating: ${oldAvgRating}, newRating: ${newRating}`)
         const updatedPosts = await calculateAvgRating(posts, postId, parseInt(totalRaters), parseFloat(oldAvgRating), parseFloat(newRating));
-        console.log('updated: ', updatedPosts)
         setPosts((prevState) => prevState = [...updatedPosts]);
         ToggleRatingModal();
-        // try {
-        //     await axiosInstance.ratePost({ postId: postId, rating: newRating });
-        // }
-        // catch ({ response: { data: { message } } }) {
-        //     console.log('in catch of api rating: ', message);
-        // }
+        try {
+            await axiosInstance.ratePost({ postId: postId, rating: newRating });
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log('in catch of api rating: ', message);
+        }
     }
 
     const ToggleTipModal = (tip) => {
@@ -414,18 +430,10 @@ const UseFetchNewsFeed = () => {
     const _HandleSharePost = async () => {
         console.log(shareCaption, shareData);
         const { videoId = '' } = shareData;
-        const DeepCopyPosts = [...posts];
-        const updatedPosts = DeepCopyPosts.map(item, i => {
-            if (item.VideoId !== videoId) return item;
-            else {
-                item.shareCount = shareCount + 1
-                return item;
-            }
-        })
         enableShareLoading();
         try {
             const { data: { data, message } } = await axiosInstance.sharePost({ caption: shareCaption, videoId: videoId });
-            GetPosts();
+            GetPosts(0);
             Swal.fire({
                 text: message,
                 icon: 'success',
@@ -462,7 +470,7 @@ const UseFetchNewsFeed = () => {
         _HandleSharePost, _HandleChangeCaption, shareCaption, setShareCaption, isSharing, HandleFavouritePost,
         _HandleChangePostOnNewsfeed, postOnFeed, tip, isloadingFeed, OpenRatingModal, ToggleRatingModal,
         _HandleChangeRating, postRating, _SubmitRating, _TogglePaymentModal, showAmountModal, videoPayment,
-        _HandleCommentCounts, ratingData
+        _HandleCommentCounts, ratingData, hasMore, _FetchMoreData
     }
 }
 

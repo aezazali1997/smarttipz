@@ -3,10 +3,11 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { isEmpty } from 'lodash';
-import { MediaUploadForm, NewsfeedCard, VideoUploadBlock, Spinner, SharedCard } from 'src/components';
+import { MediaUploadForm, NewsfeedCard, VideoUploadBlock, Spinner, SharedCard, CustomLoader } from 'src/components';
 import { PaymentModal, ShareModal, TipModal, VideoRatingModal } from 'src/components/Modals';
 import { UseFetchNewsFeed } from 'src/hooks';
 import { AnimatePresence } from 'framer-motion';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 
 const NewsFeed = () => {
@@ -19,7 +20,8 @@ const NewsFeed = () => {
     _HandleChangeTip, showTipModal, _OpenShareModal, _CloseShareModal, showShareModal, shareData,
     _HandleSharePost, shareCaption, setShareCaption, isSharing, HandleFavouritePost,
     _HandleChangePostOnNewsfeed, postOnFeed, tip, isloadingFeed, OpenRatingModal, postRating,
-    _SubmitRating, showAmountModal, _TogglePaymentModal, videoPayment, _HandleCommentCounts
+    _SubmitRating, showAmountModal, _TogglePaymentModal, videoPayment, _HandleCommentCounts, _FetchMoreData,
+    hasMore
   } = UseFetchNewsFeed();
 
   console.log('posts fetched', posts)
@@ -55,42 +57,55 @@ const NewsFeed = () => {
             <p className="text-gray-500"> No Feed Yet</p>
           </div>
         ) : (
-          <div className="space-y-4">
-            {posts.map((item, index) => {
-              const {
-                id: postId,
-                Video,
-                isShared,
-                Share,
-                likeCount,
-                shareCount,
-                commentCount,
-                avgRating,
-                totalRaters,
-                isLiked,
-                Video: {
-                  id,
-                  description,
-                  title,
-                  url,
-                  UserId,
-                  thumbnail,
-                  catalogue,
-                  User,
-                  videoType,
-                  videoCost,
-                  isShowOnNewsfeed,
-                  Shares,
-                  isApproved,
-                  productLink,
-                  watchLimit,
-                  cost
-                }
-              } = item;
-              return (
-                isShared ? (
-                  <div key={index}>
+          <InfiniteScroll
+            dataLength={posts.length} //This is important field to render the next data
+            next={_FetchMoreData}
+            hasMore={hasMore}
+            loader={<div className="flex justify-center items-center w-full">
+              <CustomLoader />
+            </div>}
+            endMessage={
+              <p style={{ textAlign: 'center', padding: '2px 0' }}>
+                <b>Yay! You have seen it all</b>
+              </p>
+            }
+          >
+            <div className="space-y-4">
+              {posts.map((item, index) => {
+                const {
+                  id: postId,
+                  Video,
+                  isShared,
+                  Share,
+                  likeCount,
+                  shareCount,
+                  commentCount,
+                  avgRating,
+                  totalRaters,
+                  isLiked,
+                  Video: {
+                    id,
+                    description,
+                    title,
+                    url,
+                    UserId,
+                    thumbnail,
+                    catalogue,
+                    User,
+                    videoType,
+                    videoCost,
+                    isShowOnNewsfeed,
+                    Shares,
+                    isApproved,
+                    productLink,
+                    watchLimit,
+                    cost
+                  }
+                } = item;
+                return (
+                  isShared ? (
                     <SharedCard
+                      key={index}
                       id={postId}
                       videoId={id}
                       index={index}
@@ -111,12 +126,11 @@ const NewsFeed = () => {
                       _HandleGotoVideoDetails={_HandleGotoVideoDetails}
                       TogglePaymentModal={() => _TogglePaymentModal(cost)}
                     />
-                  </div>
-                ) : (
-                  isApproved &&
-                  isShowOnNewsfeed && (
-                    <div key={index}>
+                  ) : (
+                    isApproved &&
+                    isShowOnNewsfeed && (
                       <NewsfeedCard
+                        key={index}
                         id={postId}
                         videoId={id}
                         UserId={UserId}
@@ -154,13 +168,12 @@ const NewsFeed = () => {
                         ToggleRatingModal={() => OpenRatingModal({ postId, avgRating, totalRaters })}
                         _HandleGotoVideoDetails={_HandleGotoVideoDetails}
                       />
-                    </div>
+                    )
                   )
                 )
-              )
-            })}
-
-          </div>
+              })}
+            </div>
+          </InfiniteScroll>
         )}
       </div>
       <AnimatePresence>
@@ -179,7 +192,6 @@ const NewsFeed = () => {
             setUrls={setUrls}
             _DeleteImg={_DeleteImg}
             setMediaType={setMediaType}
-            _HandleChangePostOnNewsfeed={_HandleChangePostOnNewsfeed}
             checkPostOnFeed={postOnFeed}
             ChangeAgreement={ChangeAgreement}
             onChangeThumbnail={onChangeThumbnail}
@@ -189,6 +201,7 @@ const NewsFeed = () => {
             uploadingThumbnail={uploadingThumbnail}
             setShareCaption={setShareCaption}
             shareCaption={shareCaption}
+            _HandleChangePostOnNewsfeed={_HandleChangePostOnNewsfeed}
           />
         )}
         {showRatingModal && (

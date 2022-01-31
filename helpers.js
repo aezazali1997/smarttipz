@@ -52,8 +52,7 @@ export const checkLikeCount = (originalArray, id, isLiked) => {
 }
 
 export const checkCountById = (originalArray, name, postId, operator) => {
-    const deepCopy = [...originalArray];
-    let updatedPosts = deepCopy.map((post, i) => {
+    let updatedPosts = [...originalArray].map((post, i) => {
         if (post.id !== postId) return post;
         switch (operator) {
             case '+':
@@ -79,7 +78,6 @@ export const calculateAvgRating = (originalArray, postId, totalRaters, oldRating
         else {
             const newAdded = (oldRating + newRating);
             const newVal = (newAdded / (totalRaters + 1))
-            console.log('newVal: ', newVal);
             post.avgRating = newVal.toString();
             post.totalRaters = (totalRaters + 1).toString();
             upadtedPosts.push(post);

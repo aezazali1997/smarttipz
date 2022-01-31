@@ -1,11 +1,13 @@
+import jwt from 'jsonwebtoken';
+import { isEmpty } from 'lodash';
+import db from 'models/db';
 import AllPosts from 'models/AllPost';
 import Comments from 'models/Comments';
 import PostLikee from 'models/Like';
 import Share from 'models/Share';
+import User from 'models/User';
+import Video from 'models/Video';
 
-const User = require('models/User');
-const Video = require('models/Video');
-const jwt = require('jsonwebtoken');
 const sequelize = require('sequelize');
 
 const handler = async (req, res) => {

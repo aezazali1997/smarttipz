@@ -3,7 +3,16 @@ import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 import axiosInstance from 'src/APIs/axiosInstance';
 import { useSearchContext } from 'src/contexts';
-import { checkCountById, checkLikeCount } from 'helpers';
+import { calculateAvgRating, checkCountById, checkLikeCount } from 'helpers';
+
+
+const initialRatingData = {
+    postId: '',
+    oldAvgRating: '',
+    newRating: '',
+    totalRaters: ''
+}
+
 
 const UseSearch = () => {
 
@@ -28,10 +37,11 @@ const UseSearch = () => {
     const [shareCaption, setShareCaption] = useState('');
     const [isSharing, setIsSharing] = useState(false);
     const [shareData, setShareData] = useState({});
-    const [ratePostId, setRatePostId] = useState('');
     const [showAmountModal, setShowAmountModal] = useState(false);
     const [videoPayment, setVideoPayment] = useState(0);
+    const [ratingData, setRatingData] = useState({ ...initialRatingData });
 
+    const [rateFilter, setRateFilter] = useState(0);
     const [account, setAccountType] = useState({
         Personal: false,
         Business: false
@@ -91,7 +101,7 @@ const UseSearch = () => {
     let GetPosts = async () => {
         enablePostsLoading();
         try {
-            const { data: { data: { videos } } } = await axiosInstance.getFilteredPosts(filterSearch, sort, category, videoCategory, videoType, account);
+            const { data: { data: { videos } } } = await axiosInstance.getFilteredPosts(filterSearch, sort, category, videoCategory, videoType, account, rateFilter);
             setPosts(videos);
             var count = 0;
             for (let i = 0; i < videos.length; i++) {
@@ -140,10 +150,10 @@ const UseSearch = () => {
     }
 
     useEffect(() => {
+        _CheckUrl()
         GetPosts();
         GetUserProfiles();
-        _CheckUrl()
-    }, [filterSearch, sort, category, videoCategory, videoType, account]);
+    }, [filterSearch, sort, category, videoCategory, videoType, account, rateFilter]);
 
 
     const _HandleCatalogue = async (videoId, catalogue) => {
@@ -192,7 +202,6 @@ const UseSearch = () => {
                 item.Video.isApproved = false;
                 return item;
             })
-            // originalArray.splice(index, 1)
             setPosts(newArray);
         }
         catch ({ response: { data: { message } } }) {
@@ -218,33 +227,42 @@ const UseSearch = () => {
         setShowAmountModal(!showAmountModal);
     }
 
-    const OpenRatingModal = (postId) => {
-        setRatePostId(postId);
-        console.log('postToRate: ', postId);
+    const OpenRatingModal = ({ postId, avgRating, totalRaters }) => {
+        const data = {
+            postId: postId,
+            oldAvgRating: avgRating,
+            totalRaters: totalRaters,
+            newRating: ''
+        }
+        setRatingData(data);
         setShowRatingModal(true);
     }
 
     const ToggleRatingModal = () => {
+        setRatingData({ ...initialRatingData });
+        setRating(0);
         setShowRatingModal(false);
     }
 
     const _HandleChangeRating = (value) => {
-        console.log('value: ', value);
-        setRating(value);
+        setRating(value)
+        const copyRatingData = { ...ratingData };
+        copyRatingData.newRating = value;
+        setRatingData(copyRatingData);
     }
 
     const _SubmitRating = async () => {
-        console.log({ postId: ratePostId, rating: rating })
+        const { oldAvgRating = 0, totalRaters = 0, newRating = 0, postId = 1 } = ratingData;
+        const updatedPosts = await calculateAvgRating(posts, postId, parseInt(totalRaters), parseFloat(oldAvgRating), parseFloat(newRating));
+        setPosts((prevState) => prevState = [...updatedPosts]);
+        ToggleRatingModal();
         try {
-            const { data: { message } } = await axiosInstance.ratePost({ postId: ratePostId, rating: rating });
-            console.log('message: ', message);
-            ToggleRatingModal();
+            await axiosInstance.ratePost({ postId: postId, rating: newRating });
         }
         catch ({ response: { data: { message } } }) {
             console.log('in catch of api rating: ', message);
         }
     }
-
 
     const ToggleTipModal = (tip) => {
         setTip(tip);
@@ -272,26 +290,22 @@ const UseSearch = () => {
 
     let _ChangeCategoryFilter = ({ target }) => {
         const { value } = target;
-        console.log(value);
         setCategory(value);
     }
 
     const _HandleAccountTypeFilter = (e) => {
         const { checked, name } = e.target;
-        const copyAccountType = { ...account };
-        setAccountType({ ...copyAccountType, [name]: checked });
+        setAccountType({ ...account, [name]: checked });
     }
 
     const _HandleVideoTypeFilter = (e) => {
         const { checked, name } = e.target;
-        const copyVideoType = { ...videoType };
-        setVideoType({ ...copyVideoType, [name]: checked });
+        setVideoType({ ...videoType, [name]: checked });
     }
 
     const _HandleVideoCategoryFilter = (e) => {
         const { checked, name } = e.target;
-        const copyVideoCategory = { ...videoCategory };
-        setVideoCategory({ ...copyVideoCategory, [name]: checked });
+        setVideoCategory({ ...videoCategory, [name]: checked });
     }
 
     //FILTERS END HERE//
@@ -330,11 +344,9 @@ const UseSearch = () => {
     }
 
     const _HandleSharePost = async () => {
-        console.log(shareCaption, shareData);
         enableShareLoading();
         try {
             const { data: { data, message } } = await axiosInstance.sharePost({ caption: shareCaption, videoId: shareData?.videoId });
-            console.log('success: ', message);
             GetPosts();
             Swal.fire({
                 text: message,
@@ -353,8 +365,18 @@ const UseSearch = () => {
 
     const _HandleChangeCaption = ({ target }) => {
         const { value } = target;
-        console.log(value);
         setShareCaption(value);
+    }
+
+    const _HandleRateFilter = (value) => {
+        console.log("type of Value: ", typeof value)
+        console.log('In Change Rate Filter Method: ', value);
+        setRateFilter(value);
+    }
+
+    const _HandleClearRating = () => {
+        console.log('..................clicked..................');
+        setRateFilter(0);
     }
 
     return {
@@ -366,7 +388,7 @@ const UseSearch = () => {
         HandleLikePost, tip, _HandleVideoTypeFilter, _HandleVideoCategoryFilter, _HandleToggleFilterModal, showFilterModal,
         _OpenShareModal, _HandleChangeCaption, _HandleSharePost, shareCaption, shareData, isSharing, showShareModal,
         _CloseShareModal, setShareCaption, OpenRatingModal, _SubmitRating, _TogglePaymentModal, showAmountModal,
-        videoPayment, _HandleCommentCounts
+        videoPayment, _HandleCommentCounts, rateFilter, _HandleRateFilter, _HandleClearRating
     }
 }
 

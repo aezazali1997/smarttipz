@@ -17,7 +17,9 @@ export function AppWrapper({ children }) {
             localStorage.setItem('searchText', search);
             setSearch(search);
             setFilterSearch(search);
-            router.push('/search?active=All', { shallow: true });
+            if (!router.asPath.includes('?')) {
+                router.push('/search?active=All', undefined, { shallow: true });
+            }
         }
     };
 

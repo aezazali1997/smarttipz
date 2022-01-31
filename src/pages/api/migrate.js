@@ -24,7 +24,7 @@ const handler = async (req, res) => {
     // await Session.sync({ force: true });
     // Comment.sync({ force: true });
     // Share.sync({ alter: true });
-    Video.sync({ alter: true });
+    // Video.sync({ alter: true });
     // Like.sync({ force: true });
     // Favourite.sync({ force: true });
     // Share.sync({ alter: true });

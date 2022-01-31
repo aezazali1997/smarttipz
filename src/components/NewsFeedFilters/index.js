@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
-import { Button, Rating } from 'src/components';
+import React from 'react';
+import { Rating } from 'src/components';
 
 const NewsFeedFilters = ({
 	rating,
 	account,
 	videoType,
-	setRating,
+	_HandleClear,
 	videoCategory,
 	_HandleChangeRating,
 	_HandleAccountTypeFilter,
@@ -141,7 +141,7 @@ const NewsFeedFilters = ({
 										</td>
 										<td className="border-t-0 px-3 align-middle border-l-0 border-r-0 whitespace-nowrap">
 											<button
-												onClick={() => setRating(0)}
+												onClick={_HandleClear}
 												type="button"
 												className="mt-3 w-full inline-flex justify-center hover:underline  px-4 py-2 text-base font-medium text  sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
 											>

@@ -8,12 +8,12 @@ export const getPagination = (page, size) => {
     return { limit, offset };
 };
 
-export const getPagingData = (data, page, limit, name) => {
-    const { count: totalVideos, rows: videos } = data;
+export const getPagingData = (data, page, limit, videosCount) => {
+    // console.log('data: ', data, page, limit);
+    // const { count: totalVideos, rows: videos } = data;
     const currentPage = page ? + page : 0;
-    const totalPages = Math.ceil(totalVideos / limit);
-
-    return { totalVideos, videos, totalPages, currentPage };
+    const totalPages = Math.ceil(videosCount / limit);
+    return { totalVideos: videosCount, totalPages, currentPage };
 };
 
 
@@ -40,7 +40,19 @@ const getFilterdProfilesByVideoType = (videoType) => {
             : '';
 };
 
-export const FilterContent = (search, category, videoType, videoCategory, accountType, ArrayOfFollowedPeopleId) => {
+
+const getVideoByRating = (rating) => {
+    console.log('rating: ', rating);
+    return rating === 0 ? {
+        [sequelize.Op.gt]: 0
+    }
+        : {
+            [sequelize.Op.eq]: rating
+        }
+}
+
+
+export const FilterContent = (search, category, videoType, videoCategory, accountType, ArrayOfFollowedPeopleId, rating) => {
     console.log('searched >>', search);
     return {
         [sequelize.Op.and]: [
@@ -48,20 +60,6 @@ export const FilterContent = (search, category, videoType, videoCategory, accoun
                 '$Video.category$': {
                     [sequelize.Op.iLike]: `%${category}%`
                 }
-            },
-            {
-                [sequelize.Op.or]: [
-                    {
-                        '$Video->User.accountType$': {
-                            [sequelize.Op.iLike]: `%${getFilterdProfilesByAccountType(accountType)}%`
-                        }
-                    },
-                    {
-                        '$Share->User.accountType$': {
-                            [sequelize.Op.iLike]: `%${getFilterdProfilesByAccountType(accountType)}%`
-                        }
-                    },
-                ]
             },
             {
                 [sequelize.Op.or]: [
@@ -78,6 +76,20 @@ export const FilterContent = (search, category, videoType, videoCategory, accoun
                 ]
             },
             {
+                [sequelize.Op.or]: [
+                    {
+                        '$Video->User.accountType$': {
+                            [sequelize.Op.iLike]: `%${getFilterdProfilesByAccountType(accountType)}%`
+                        }
+                    },
+                    {
+                        '$Share->User.accountType$': {
+                            [sequelize.Op.iLike]: `%${getFilterdProfilesByAccountType(accountType)}%`
+                        }
+                    },
+                ]
+            },
+            {
                 '$Video.videoCost$': {
                     [sequelize.Op.iLike]: `%${getFilterdProfilesByVideoCategory(videoType)}`
                 }
@@ -86,7 +98,10 @@ export const FilterContent = (search, category, videoType, videoCategory, accoun
                 '$Video.videoType$': {
                     [sequelize.Op.iLike]: `%${getFilterdProfilesByVideoType(videoCategory)}`
                 }
-            }
+            },
+            {
+                '$Video.rating$': getVideoByRating(rating)
+            },
         ],
         [sequelize.Op.or]: [
             {

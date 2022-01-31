@@ -16,6 +16,9 @@ const handler = async (req, res) => {
 		const {
 			headers: { authorization }, query: { page }
 		} = req;
+
+		console.log('page: ', page);
+
 		try {
 			const ArrayOfFollowedPeopleId = [];
 
@@ -28,6 +31,7 @@ const handler = async (req, res) => {
 				attributes: ['id'],
 				where: { username, isDeleted: false, isBlocked: false }
 			});
+
 			const { limit, offset } = getPagination(page, 5);
 
 			ArrayOfFollowedPeopleId.push(userId);
@@ -38,32 +42,26 @@ const handler = async (req, res) => {
 
 			followers && followers[0].map(({ followers }) => ArrayOfFollowedPeopleId.push(followers));
 
-			console.log('ArrayOfFollowedPeopleId', ArrayOfFollowedPeopleId);
-
-
-			let videos = await AllPosts.findAll({
+			const videosCount = await AllPosts.count({
+				// where: { VideoId: 1},
 				include: [
 					{
 						model: Video,
 						include: [
 							{
 								model: User,
-								attributes: ['name', 'username', 'picture', 'tip']
 							}
 						]
 					},
 					{
 						model: Share,
-						attributes: ['id', 'caption'],
 						include: [
 							{
 								model: User,
-								attributes: ['id', 'username', 'picture', 'accountType', 'name', 'showName', 'showUsername']
 							}
 						]
 					}
 				],
-
 				where: {
 					[sequelize.Op.and]: [
 						{
@@ -92,6 +90,92 @@ const handler = async (req, res) => {
 						}
 					]
 				},
+			})
+			const catalogCount = await Video.count({
+				include: [
+					{
+						model: User,
+					},
+				],
+				where: {
+					[sequelize.Op.and]: [
+						{
+							'$User.isDeleted$': {
+								[sequelize.Op.eq]: false
+							}
+						},
+						{
+							'$User.id$': {
+								[sequelize.Op.eq]: userId
+							}
+						},
+						{
+							'$catalogue$': {
+								[sequelize.Op.eq]: true
+							}
+						},
+
+						{
+							'$User.isBlocked$': {
+								[sequelize.Op.eq]: false
+							}
+						}
+					]
+				},
+			})
+
+			const videos = await AllPosts.findAll({
+				include: [
+					{
+						model: Video,
+						include: [
+							{
+								model: User,
+								attributes: ['name', 'username', 'picture', 'tip']
+							}
+						]
+					},
+					{
+						model: Share,
+						attributes: ['id', 'caption'],
+						include: [
+							{
+								model: User,
+								attributes: ['id', 'username', 'picture', 'accountType', 'name', 'showName', 'showUsername']
+							}
+						]
+					}
+				],
+				where: {
+					[sequelize.Op.and]: [
+						{
+							'$Video->User.isDeleted$': {
+								[sequelize.Op.eq]: false
+							}
+						},
+						{
+							[sequelize.Op.or]: [
+								{
+									'$Video.UserId$': {
+										[sequelize.Op.in]: ArrayOfFollowedPeopleId
+									}
+								},
+								{
+									'$Share.UserId$': {
+										[sequelize.Op.in]: ArrayOfFollowedPeopleId
+									}
+								},
+							]
+						},
+						{
+							'$Video->User.isBlocked$': {
+								[sequelize.Op.eq]: false
+							}
+						}
+					]
+				},
+				limit: limit,
+				offset: offset,
 				group: [
 					'AllPost.id',
 					'Video.id',
@@ -109,7 +193,7 @@ const handler = async (req, res) => {
 					'Share->User.showUsername',
 				],
 
-				order: [['createdAt', 'DESC']]
+				order: [['createdAt', 'DESC']],
 			});
 
 
@@ -144,16 +228,23 @@ const handler = async (req, res) => {
 						group by p.id`)
 
 
+
 				const avgRating = isEmpty(ratings[0]) ? 0 : ratings[0][0].avgRating;
 				const totalRaters = isEmpty(ratings[0]) ? 0 : ratings[0][0].totalRaters;
 
-				videos[i] = { id, avgRating: avgRating, totalRaters, VideoId, isShared, Video, Share: Shares, likeCount, shareCount, commentCount, isLiked: isLiked ? true : false }
+				videos[i] = {
+					id, avgRating: avgRating, totalRaters, VideoId,
+					isShared, Video, Share: Shares, likeCount,
+					shareCount, commentCount, isLiked: isLiked ? true : false
+				}
 			};
+
+			const response = getPagingData(videos, page, limit, videosCount);
 
 			res.status(200).send({
 				error: false,
 				message: 'success',
-				data: { videos }
+				data: { videos, ...response, catalogCount }
 			});
 		} catch (err) {
 			console.log('Videos Api Failed Error: ', err.message);

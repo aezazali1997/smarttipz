@@ -1,12 +1,14 @@
 import AllPosts from 'models/AllPost';
 import Comments from 'models/Comments';
 import PostLikee from 'models/Like';
-
+import db from 'models/db';
 const Video = require('models/Video');
 const Share = require('models/Share');
 const sequelize = require('sequelize');
 const User = require('models/User');
 const jwt = require('jsonwebtoken');
+import { isEmpty } from 'lodash';
+
 
 const handler = async (req, res) => {
     if (req.method === 'GET') {

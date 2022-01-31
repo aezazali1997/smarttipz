@@ -1,17 +1,12 @@
 import React from 'react'
-import { useEffect } from 'react';
 import ReactStars from 'react-rating-stars-component'
 
 const RatingComponent = ({ value, edit, isHalf, onChange, size, classNames }) => {
-    console.log('star value: ', value);
-
-    useEffect(() => { }, [value])
-
 
     return (
         <ReactStars
             count={5}
-            value={value}
+            value={value || 0}
             size={size || 16}
             edit={edit}
             isHalf={isHalf}

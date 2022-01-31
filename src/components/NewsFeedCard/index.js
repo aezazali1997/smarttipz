@@ -1,16 +1,16 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { faCommentAlt, faShareAlt, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Image from 'next/image';
+import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
+import ReactStars from 'react-rating-stars-component';
 import ReactTooltip from 'react-tooltip';
 import axiosInstance from 'src/APIs/axiosInstance';
-import { CommentSection, Rating, VideoPlayer } from '..';
-import { PostActionDropdown } from '../Dropdown';
+import { CommentSection, VideoPlayer } from '..';
 import HandIcon from 'public/purple-hand.svg';
-import Image from 'next/image';
-import ReactStars from 'react-rating-stars-component';
+import { PostActionDropdown } from '../Dropdown';
 
 
 const NewsfeedCard = ({
@@ -136,23 +136,25 @@ const NewsfeedCard = ({
 	)
 
 	const displayRatingStars = () => {
-		const hasDecimal = avgRating.split('.');
-		console.log('splittedValue: ', hasDecimal);
-		const firstSplittedValue = parseInt(hasDecimal[0]);
-		const secondSplittedValue = hasDecimal[1];
-		const emptyStars = parseInt(secondSplittedValue) > 0 ?
-			(5 - (firstSplittedValue + 1)) :
-			(5 - (firstSplittedValue + 0))
-		if (!_.isEmpty(secondSplittedValue)) emptyStars - 1;
-		return (
-			<>
-				{[...Array(firstSplittedValue)].map(() => <FilledStar />)}
-				{!_.isEmpty(secondSplittedValue) && (parseInt(secondSplittedValue) > 0) && (<HalfStar />)}
-				{[...Array(emptyStars)].map(() => (
-					<EmptyStar />
-				))}
-			</>
-		)
+		if (avgRating) {
+			const hasDecimal = avgRating.split('.');
+			console.log('splittedValue: ', hasDecimal);
+			const firstSplittedValue = parseInt(hasDecimal[0]);
+			const secondSplittedValue = hasDecimal[1];
+			const emptyStars = parseInt(secondSplittedValue) > 0 ?
+				(5 - (firstSplittedValue + 1)) :
+				(5 - (firstSplittedValue + 0))
+			if (!_.isEmpty(secondSplittedValue)) emptyStars - 1;
+			return (
+				<>
+					{[...Array(firstSplittedValue)].map(() => <FilledStar />)}
+					{!_.isEmpty(secondSplittedValue) && (parseInt(secondSplittedValue) > 0) && (<HalfStar />)}
+					{[...Array(emptyStars)].map(() => (
+						<EmptyStar />
+					))}
+				</>
+			)
+		}
 	}
 
 

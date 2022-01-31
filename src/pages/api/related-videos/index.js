@@ -1,23 +1,27 @@
-const PostLikee = require('models/Like');
-const User = require('models/User');
-const Video = require('models/Video');
-const jwt = require('jsonwebtoken');
-const sequelize = require('sequelize');
-const db = require('models/db');
 import { isEmpty } from 'lodash';
-import AllPosts from 'models/AllPost';
-import Comments from 'models/Comments';
-import Share from 'models/Share';
-import { FilterContent } from 'utils/consts';
+import PostLikee from 'models/Like';
+import User from 'models/User';
+import sequelize from 'sequelize';
+import { getPagination, getPagingData } from 'utils/consts';
+const Share = require('models/Share');
+const Video = require('models/Video');
+const AllPosts = require('models/AllPost');
+const Comments = require('models/Comments');
+const Rating = require('models/Rating');
+const jwt = require('jsonwebtoken');
+const db = require('models/db');
 
 const handler = async (req, res) => {
-    if (req.method === 'POST') {
+    if (req.method === 'GET') {
         const {
-            body: { videoType, videoCategory, accountType },
-            headers: { authorization },
-            query: { search, sort, category, rating }
+            headers: { authorization }, query: { page }
         } = req;
+
+        console.log('page: ', page);
+
         try {
+            const ArrayOfFollowedPeopleId = [];
+
             if (!authorization) {
                 return res.status(401).send({ error: true, data: [], message: 'Please Login' });
             }
@@ -28,7 +32,7 @@ const handler = async (req, res) => {
                 where: { username, isDeleted: false, isBlocked: false }
             });
 
-            const ArrayOfFollowedPeopleId = [];
+
             ArrayOfFollowedPeopleId.push(userId);
 
             const followers = await db.query(
@@ -36,8 +40,6 @@ const handler = async (req, res) => {
             );
 
             followers && followers[0].map(({ followers }) => ArrayOfFollowedPeopleId.push(followers));
-
-            console.log('ArrayOfFollowedPeopleId', ArrayOfFollowedPeopleId);
 
             const videos = await AllPosts.findAll({
                 include: [
@@ -56,20 +58,40 @@ const handler = async (req, res) => {
                         include: [
                             {
                                 model: User,
-                                attributes: [
-                                    'id',
-                                    'username',
-                                    'picture',
-                                    'accountType',
-                                    'name',
-                                    'showName',
-                                    'showUsername'
-                                ]
+                                attributes: ['id', 'username', 'picture', 'accountType', 'name', 'showName', 'showUsername']
                             }
                         ]
                     }
                 ],
-                where: FilterContent(search, category, videoType, videoCategory, accountType, ArrayOfFollowedPeopleId, rating),
+                where: {
+                    [sequelize.Op.and]: [
+                        {
+                            '$Video->User.isDeleted$': {
+                                [sequelize.Op.eq]: false
+                            }
+                        },
+                        {
+                            [sequelize.Op.or]: [
+                                {
+                                    '$Video.UserId$': {
+                                        [sequelize.Op.in]: ArrayOfFollowedPeopleId
+                                    }
+                                },
+                                {
+                                    '$Share.UserId$': {
+                                        [sequelize.Op.in]: ArrayOfFollowedPeopleId
+                                    }
+                                },
+                            ]
+                        },
+                        {
+                            '$Video->User.isBlocked$': {
+                                [sequelize.Op.eq]: false
+                            }
+                        }
+                    ]
+                },
+
                 group: [
                     'AllPost.id',
                     'Video.id',
@@ -84,14 +106,16 @@ const handler = async (req, res) => {
                     'Share->User.accountType',
                     'Share->User.name',
                     'Share->User.showName',
-                    'Share->User.showUsername'
+                    'Share->User.showUsername',
                 ],
-                order: [['createdAt', sort]]
+
+                order: [['createdAt', 'DESC']],
             });
 
+
             for (let i = 0; i < videos.length; i++) {
-                const item = videos[i];
-                const { id, VideoId, Video, Share: Shares, isShared, } = item;
+                const item = JSON.parse(JSON.stringify(videos[i]));
+                const { id, VideoId, Video, Share: Shares, isShared } = item;
                 const likeCount = await PostLikee.count({
                     where: {
                         AllPostId: id
@@ -113,19 +137,26 @@ const handler = async (req, res) => {
                         VideoId
                     }
                 });
+
                 const ratings = await db.query(`select avg(r."rating") as "avgRating", count(r."AllPostId") as "totalRaters" from "AllPosts" p
 						left join "Ratings" as r on p.id=r."AllPostId"
 						where (p.id=${id} and r."AllPostId"=${id})
 						group by p.id`)
 
 
+
                 const avgRating = isEmpty(ratings[0]) ? 0 : ratings[0][0].avgRating;
                 const totalRaters = isEmpty(ratings[0]) ? 0 : ratings[0][0].totalRaters;
 
-                videos[i] = { id, VideoId, totalRaters, avgRating, isShared, Video, Share: Shares, likeCount, shareCount, commentCount, isLiked: isLiked ? true : false }
+                videos[i] = {
+                    id, avgRating: avgRating, totalRaters, VideoId,
+                    isShared, Video, Share: Shares, likeCount,
+                    shareCount, commentCount, isLiked: isLiked ? true : false
+                }
             };
 
-            res.status(200).json({
+
+            res.status(200).send({
                 error: false,
                 message: 'success',
                 data: { videos }

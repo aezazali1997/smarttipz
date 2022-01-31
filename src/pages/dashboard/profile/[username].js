@@ -10,10 +10,18 @@ import swal from 'sweetalert';
 import axiosInstance from 'src/APIs/axiosInstance';
 import { Card, PopupBusinessCard, ProfileCard, Rating, TestimonialCard, Spinner, NewsfeedCard, Carousel } from 'src/components';
 import { useSearchContext } from 'src/contexts';
-import { ShareModal, TipModal, VideoRatingModal } from 'src/components/Modals';
+import { PaymentModal, ShareModal, TipModal, VideoRatingModal } from 'src/components/Modals';
 import Swal from 'sweetalert2';
-import { checkLikeCount } from 'helpers';
+import { calculateAvgRating, checkLikeCount } from 'helpers';
 import { AnimatePresence } from 'framer-motion';
+
+
+const initialRatingData = {
+	postId: '',
+	oldAvgRating: '',
+	newRating: '',
+	totalRaters: ''
+}
 
 
 const UserProfile = ({ profile }) => {
@@ -39,9 +47,11 @@ const UserProfile = ({ profile }) => {
 	const [showTipModal, setShowTipModal] = useState(false);
 	const [showShareModal, setShowShareModal] = useState(false);
 	const [showRatingModal, setShowRatingModal] = useState(false);
-	const [ratePostId, setRatePostId] = useState('');
 	const [postRating, setSharePostRating] = useState(0);
 	const [tip, setTip] = useState(0);
+	const [showAmountModal, setShowAmountModal] = useState(false);
+	const [videoPayment, setVideoPayment] = useState(0);
+	const [ratingData, setRatingData] = useState({ ...initialRatingData });
 
 
 	useEffect(() => {
@@ -221,41 +231,54 @@ const UserProfile = ({ profile }) => {
 		setShareCaption('');
 	}
 
-	const OpenRatingModal = (postId) => {
-		setRatePostId(postId);
-		console.log('postToRate: ', postId);
+
+	const OpenRatingModal = ({ postId, avgRating, totalRaters }) => {
+		const data = {
+			postId: postId,
+			oldAvgRating: avgRating,
+			totalRaters: totalRaters,
+			newRating: ''
+		}
+		setRatingData(data);
 		setShowRatingModal(true);
 	}
 
 	const ToggleRatingModal = () => {
+		setRatingData({ ...initialRatingData });
 		setShowRatingModal(false);
 	}
 
 	const _HandleChangeRating = (value) => {
-		console.log('value: ', value);
 		setSharePostRating(value);
+		const copyRatingData = { ...ratingData };
+		copyRatingData.newRating = value;
+		setRatingData(copyRatingData);
 	}
 
 	const _SubmitRating = async () => {
-		console.log({ postId: ratePostId, rating: postRating })
+		const { oldAvgRating = 0, totalRaters = 0, newRating = 0, postId = 1 } = ratingData;
+		const updatedCatPosts = await calculateAvgRating(catalogues, postId, parseInt(totalRaters), parseFloat(oldAvgRating), parseFloat(newRating));
+		const updatedVideoPosts = await calculateAvgRating(myVideos, postId, parseInt(totalRaters), parseFloat(oldAvgRating), parseFloat(newRating));
+		setCatalogues((prevState) => prevState = [...updatedCatPosts]);
+		setMyVideos((prevState) => prevState = [...updatedVideoPosts]);
+		ToggleRatingModal();
 		try {
-			const { data: { message } } = await axiosInstance.ratePost({ postId: ratePostId, rating: postRating });
-			console.log('message: ', message);
-			ToggleRatingModal();
+			await axiosInstance.ratePost({ postId: postId, rating: newRating });
 		}
 		catch ({ response: { data: { message } } }) {
 			console.log('in catch of api rating: ', message);
 		}
 	}
 
-	const ToggleTipModal = () => {
+
+	const ToggleTipModal = (tip) => {
+		setTip(tip);
 		setShowTipModal(!showTipModal);
 	}
 
 	const _HandleChangeTip = ({ target }) => {
 		const { value } = target;
 		setTip(value);
-		console.log('value: ', value);
 	}
 
 	const _HandleSharePost = async () => {
@@ -280,6 +303,12 @@ const UserProfile = ({ profile }) => {
 
 			console.log('Share Post Api failed: ', message);
 		}
+	}
+
+
+	let _TogglePaymentModal = (cost) => {
+		setVideoPayment(cost);
+		setShowAmountModal(!showAmountModal);
 	}
 
 
@@ -423,6 +452,8 @@ const UserProfile = ({ profile }) => {
 											shareCount,
 											likeCount,
 											commentCount,
+											avgRating,
+											totalRaters,
 											Video: {
 												id,
 												title,
@@ -438,7 +469,7 @@ const UserProfile = ({ profile }) => {
 												Shares,
 												productLink,
 												watchLimit,
-												cost
+												cost,
 											}
 										},
 										index
@@ -464,17 +495,19 @@ const UserProfile = ({ profile }) => {
 												shareCount={shareCount}
 												description={description}
 												title={title}
+												avgRating={avgRating}
 												productLink={productLink}
-												watchLimit={watchLimit}
 												width={'max-w-xs'}
+												watchLimit={watchLimit}
 												thumbnail={thumbnail}
-												ToggleTipModal={ToggleTipModal}
+												restrictPaidVideo={true}
+												ToggleTipModal={() => ToggleTipModal(User?.tip)}
 												_OpenShareModal={_OpenShareModal}
 												_HandleCommentCounts={_HandleCommentCounts}
 												_HandleGotoVideoDetails={_HandleGotoVideoDetails}
-												ToggleRatingModal={() => OpenRatingModal(postId)}
 												TogglePaymentModal={() => _TogglePaymentModal(cost)}
 												HandleLikePost={() => HandleLikePost(postId, isLiked)}
+												ToggleRatingModal={() => OpenRatingModal({ postId, avgRating, totalRaters })}
 											/>
 										</div>
 									)
@@ -511,6 +544,8 @@ const UserProfile = ({ profile }) => {
 										shareCount,
 										likeCount,
 										commentCount,
+										avgRating,
+										totalRaters,
 										Video: {
 											id,
 											description,
@@ -553,16 +588,18 @@ const UserProfile = ({ profile }) => {
 											isPost={true}
 											width={'max-w-xs'}
 											productLink={productLink}
+											avgRating={avgRating}
 											watchLimit={watchLimit}
 											thumbnail={thumbnail}
 											restrictPaidVideo={true}
-											ToggleTipModal={ToggleTipModal}
+											ToggleTipModal={() => ToggleTipModal(User?.tip)}
 											_OpenShareModal={_OpenShareModal}
 											_HandleCommentCounts={_HandleCommentCounts}
 											_HandleGotoVideoDetails={_HandleGotoVideoDetails}
-											ToggleRatingModal={() => OpenRatingModal(postId)}
 											TogglePaymentModal={() => _TogglePaymentModal(cost)}
 											HandleLikePost={() => HandleLikePost(postId, isLiked)}
+											ToggleRatingModal={() => OpenRatingModal({ postId, avgRating, totalRaters })}
+
 										/>
 									</div>
 								)
@@ -656,6 +693,13 @@ const UserProfile = ({ profile }) => {
 						/>
 					)
 				}
+				{showAmountModal && (
+					<PaymentModal
+						ToggleAmountModal={_TogglePaymentModal}
+						loading={isSharing}
+						amount={videoPayment}
+					/>
+				)}
 			</AnimatePresence>
 			{/* section ends here */}
 		</div>

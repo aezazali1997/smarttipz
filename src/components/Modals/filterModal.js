@@ -12,7 +12,7 @@ const FilterModal = ({
     account,
     setSort,
     category,
-    setRating,
+    _HandleClear,
     videoType,
     modalTitle,
     videoCategory,
@@ -45,7 +45,7 @@ const FilterModal = ({
                                 account={account}
                                 videoType={videoType}
                                 videoCategory={videoCategory}
-                                setRating={setRating}
+                                _HandleClear={_HandleClear}
                                 _HandleChangeRating={_HandleChangeRating}
                                 _HandleVideoTypeFilter={_HandleVideoTypeFilter}
                                 _HandleAccountTypeFilter={_HandleAccountTypeFilter}

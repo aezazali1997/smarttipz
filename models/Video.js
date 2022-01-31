@@ -56,6 +56,7 @@ const Video = sequelize.define("Video", {
   },
   rating: {
     type: DataTypes.INTEGER,
+    defaultValue: 0
   },
   tip: {
     type: DataTypes.INTEGER,

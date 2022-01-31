@@ -26,6 +26,9 @@ const Search = () => {
 		_HandleGotoUserProfile,
 		_HandleDeleteVideo,
 		_HandleCatalogue,
+		_HandleRateFilter,
+		setRateFilter,
+		rateFilter,
 		posts,
 		userProfiles,
 		showRatingModal,
@@ -60,6 +63,7 @@ const Search = () => {
 		_SubmitRating,
 		_TogglePaymentModal,
 		_HandleCommentCounts,
+		_HandleClearRating,
 		showAmountModal,
 		videoPayment
 	} = UseSearch();
@@ -115,6 +119,8 @@ const Search = () => {
 											shareCount,
 											likeCount,
 											commentCount,
+											avgRating,
+											totalRaters,
 											Video: {
 												id,
 												description,
@@ -181,6 +187,7 @@ const Search = () => {
 														videoType={videoType}
 														watchLimit={watchLimit}
 														productLink={productLink}
+														avgRating={avgRating}
 														width={'max-w-lg'}
 														thumbnail={thumbnail}
 														restrictPaidVideo={true}
@@ -190,10 +197,10 @@ const Search = () => {
 														_HandleCatalogue={_HandleCatalogue}
 														_HandleGotoUserProfile={_HandleGotoUserProfile}
 														_HandleGotoVideoDetails={_HandleGotoVideoDetails}
-														ToggleRatingModal={() => OpenRatingModal(postId)}
 														ToggleTipModal={() => ToggleTipModal(User?.tip)}
-														HandleLikePost={() => HandleLikePost(postId, isLiked)}
 														TogglePaymentModal={() => _TogglePaymentModal(cost)}
+														HandleLikePost={() => HandleLikePost(postId, isLiked)}
+														ToggleRatingModal={() => OpenRatingModal({ postId, avgRating, totalRaters })}
 													/>
 												)
 
@@ -292,7 +299,10 @@ const Search = () => {
 											Share,
 											isLiked,
 											shareCount,
-											likeCount, commentCount,
+											likeCount,
+											commentCount,
+											avgRating,
+											totalRaters,
 											Video: {
 												id,
 												description,
@@ -327,9 +337,9 @@ const Search = () => {
 												shareCount={shareCount}
 												width={'max-w-lg'}
 												restrictPaidVideo={true}
-												_HandleCommentCounts={_HandleCommentCounts}
 												ToggleTipModal={ToggleTipModal}
 												_OpenShareModal={_OpenShareModal}
+												_HandleCommentCounts={_HandleCommentCounts}
 												_HandleGotoUserProfile={_HandleGotoUserProfile}
 												_HandleGotoVideoDetails={_HandleGotoVideoDetails}
 												TogglePaymentModal={() => _TogglePaymentModal(cost)}
@@ -355,6 +365,7 @@ const Search = () => {
 													description={description}
 													title={title}
 													isLiked={isLiked}
+													avgRating={avgRating}
 													videoCost={videoCost}
 													videoType={videoType}
 													watchLimit={watchLimit}
@@ -363,15 +374,15 @@ const Search = () => {
 													thumbnail={thumbnail}
 													restrictPaidVideo={true}
 													_OpenShareModal={_OpenShareModal}
-													_HandleCommentCounts={_HandleCommentCounts}
-													HandleLikePost={() => HandleLikePost(postId, isLiked)}
-													ToggleTipModal={() => ToggleTipModal(User?.tip)}
-													ToggleRatingModal={() => OpenRatingModal(postId)}
-													_HandleDeleteVideo={_HandleDeleteVideo}
 													_HandleCatalogue={_HandleCatalogue}
+													_HandleDeleteVideo={_HandleDeleteVideo}
+													_HandleCommentCounts={_HandleCommentCounts}
 													_HandleGotoUserProfile={_HandleGotoUserProfile}
+													ToggleTipModal={() => ToggleTipModal(User?.tip)}
 													_HandleGotoVideoDetails={_HandleGotoVideoDetails}
 													TogglePaymentModal={() => _TogglePaymentModal(cost)}
+													HandleLikePost={() => HandleLikePost(postId, isLiked)}
+													ToggleRatingModal={() => OpenRatingModal({ postId, avgRating, totalRaters })}
 												/>
 											)
 								)}
@@ -424,12 +435,12 @@ const Search = () => {
 					/>
 					<SortFilter value={sort} setSort={setSort} />
 					<NewsFeedFilters
-						rating={rating}
+						rating={rateFilter}
 						account={account}
 						videoType={videoType}
+						_HandleClear={_HandleClearRating}
 						videoCategory={videoCategory}
-						setRating={setRating}
-						_HandleChangeRating={_HandleChangeRating}
+						_HandleChangeRating={_HandleRateFilter}
 						_HandleVideoTypeFilter={_HandleVideoTypeFilter}
 						_HandleAccountTypeFilter={_HandleAccountTypeFilter}
 						_HandleVideoCategoryFilter={_HandleVideoCategoryFilter}
@@ -471,15 +482,15 @@ const Search = () => {
 					<FilterModal
 						modalTitle={'Search Filters'}
 						sort={sort}
-						rating={rating}
+						rating={rateFilter}
 						account={account}
 						category={category}
 						videoType={videoType}
 						videoCategory={videoCategory}
 						activeGenericFilter={activeGenericFilter}
 						setSort={setSort}
-						setRating={setRating}
-						_HandleChangeRating={_HandleChangeRating}
+						_HandleClear={_HandleClearRating}
+						_HandleChangeRating={_HandleRateFilter}
 						ToggleFilterModal={_HandleToggleFilterModal}
 						_ChangeCategoryFilter={_ChangeCategoryFilter}
 						_HandleVideoTypeFilter={_HandleVideoTypeFilter}
