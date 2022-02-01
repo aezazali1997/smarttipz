@@ -78,7 +78,6 @@ const UseFetchNewsFeed = () => {
             //         count = count + 1;
             //     }
             // }
-            console.log(catalogCount);
             setCatalogueCount(catalogCount)
             setLoadingFeed(false);
         }
@@ -90,14 +89,14 @@ const UseFetchNewsFeed = () => {
 
 
     useEffect(() => {
-
         GetPosts(current);
     }, []);
 
 
     useEffect(() => {
-        console.log('posts updated', posts)
+        console.log('posts updated')
     }, [posts])
+
 
     const _FetchMoreData = async () => {
         try {
@@ -157,10 +156,8 @@ const UseFetchNewsFeed = () => {
         setShowModal(false);
     }
 
-    console.log('checked: ', postOnFeed)
-    let _OpenShareModal = (id, index, thumbnail, url, picture, name, title) => {
+    let _OpenShareModal = (id, thumbnail, url, picture, name, title) => {
         setShareData({
-            index,
             videoId: id,
             thumbnail,
             url,
@@ -279,9 +276,7 @@ const UseFetchNewsFeed = () => {
     });
 
     const HandleLikePost = async (id, isLiked) => {
-        console.log(`postId: ${id}, isliked:${isLiked}`);
         const updatedPosts = await checkLikeCount(posts, id, isLiked);
-        console.log('updatedPosts: ', updatedPosts)
         setPosts(updatedPosts);
         try {
             await axiosInstance.likePost({ postId: id });
@@ -292,7 +287,6 @@ const UseFetchNewsFeed = () => {
     }
 
     const HandleFavouritePost = async (id) => {
-        console.log('id: ', id)
         try {
             const { data: { data, message } } = await axiosInstance.favouritePost({ videoId: id });
             GetPosts();
@@ -303,27 +297,25 @@ const UseFetchNewsFeed = () => {
     }
 
     const HandleCheckLike = (postLikes) => {
-        console.log('postLikes: ', postLikes);
     }
 
     const _HandleCatalogue = async (videoId, catalogue) => {
         if (catalogueCount < 5 || catalogue === true) {
-            // console.log('here: ', catalogueCount);
+            if (catalogue) {
+                setCatalogueCount(catalogueCount => catalogueCount - 1)
+            }
+            else {
+                setCatalogueCount(catalogueCount => catalogueCount + 1)
+            }
+            const originalArray = [...posts];
+            let newArray = originalArray.map((item, i) => {
+                if (item.id !== videoId) return item;
+                item.Video.catalogue = !catalogue;
+                return item;
+            })
+            setPosts(newArray)
             try {
-                const data = await axiosInstance.addToCatalogue({ videoId, catalogue });
-                if (catalogue) {
-                    setCatalogueCount(catalogueCount => catalogueCount - 1)
-                }
-                else {
-                    setCatalogueCount(catalogueCount => catalogueCount + 1)
-                }
-                const originalArray = [...posts];
-                let newArray = originalArray.map((item, i) => {
-                    if (item.id !== videoId) return item;
-                    item.Video.catalogue = !catalogue;
-                    return item;
-                })
-                setPosts(newArray)
+                await axiosInstance.addToCatalogue({ videoId, catalogue });
             }
             catch ({ response: { data: { message } } }) {
                 console.log('error in Api: ', message);
@@ -428,11 +420,10 @@ const UseFetchNewsFeed = () => {
 
 
     const _HandleSharePost = async () => {
-        console.log(shareCaption, shareData);
         const { videoId = '' } = shareData;
         enableShareLoading();
         try {
-            const { data: { data, message } } = await axiosInstance.sharePost({ caption: shareCaption, videoId: videoId });
+            const { data: { message } } = await axiosInstance.sharePost({ caption: shareCaption, videoId: videoId });
             GetPosts(0);
             Swal.fire({
                 text: message,
@@ -445,7 +436,6 @@ const UseFetchNewsFeed = () => {
             _CloseShareModal();
         }
         catch ({ response: { data: { message } } }) {
-
             console.log('Share Post Api failed: ', message);
         }
     }

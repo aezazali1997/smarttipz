@@ -5,7 +5,7 @@ import 'tailwindcss/tailwind.css';
 import { parseCookies } from 'nookies';
 import CustomLayout from 'src/Layout';
 import { AppWrapper } from 'src/contexts';
-
+import Head from 'next/head';
 
 const MyApp = ({ Component, pageProps }) => {
   const [authorized, setAuthorized] = useState(null)
@@ -20,6 +20,11 @@ const MyApp = ({ Component, pageProps }) => {
     return (
       <AppWrapper>
         <CustomLayout>
+          {/* Add the favicon */}
+          <Head>
+            <link rel="shortcut icon" href="/favicon.ico" />
+          </Head>
+          {/* Add the favicon */}
           <Component {...pageProps} />
         </CustomLayout>
       </AppWrapper>
@@ -27,6 +32,11 @@ const MyApp = ({ Component, pageProps }) => {
   }
   return (
     <AppWrapper>
+      {/* Add the favicon */}
+      <Head>
+        <link rel="shortcut icon" href="/favicon.ico" />
+      </Head>
+      {/* Add the favicon */}
       <Component {...pageProps} />
     </AppWrapper>
   )

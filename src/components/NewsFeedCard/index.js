@@ -138,7 +138,6 @@ const NewsfeedCard = ({
 	const displayRatingStars = () => {
 		if (avgRating) {
 			const hasDecimal = avgRating.split('.');
-			console.log('splittedValue: ', hasDecimal);
 			const firstSplittedValue = parseInt(hasDecimal[0]);
 			const secondSplittedValue = hasDecimal[1];
 			const emptyStars = parseInt(secondSplittedValue) > 0 ?

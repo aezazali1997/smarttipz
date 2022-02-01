@@ -100,26 +100,20 @@ const handler = async (req, res) => {
 				where: {
 					[sequelize.Op.and]: [
 						{
-							'$User.isDeleted$': {
-								[sequelize.Op.eq]: false
-							}
-						},
-						{
 							'$User.id$': {
 								[sequelize.Op.eq]: userId
 							}
 						},
 						{
-							'$catalogue$': {
+							'catalogue': {
 								[sequelize.Op.eq]: true
 							}
 						},
-
 						{
-							'$User.isBlocked$': {
-								[sequelize.Op.eq]: false
+							'isApproved': {
+								[sequelize.Op.eq]: true
 							}
-						}
+						},
 					]
 				},
 			})

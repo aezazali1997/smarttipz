@@ -1,3 +1,5 @@
+import { isEmpty } from 'lodash';
+import db from 'models/db';
 const User = require('models/User');
 const jwt = require('jsonwebtoken');
 
@@ -40,7 +42,16 @@ const handler = async (req, res) => {
                 return res.status(404).send({ error: true, data: [], message: 'User Not Found' })
             }
 
-            const { id, name, email, avgRating, totalViews, about, picture, phoneNumber, showPhone, accessible,
+            const rating = await db.query(`select avg(r.rating) as"avgRating" from "Users" u 
+                    left join "Videos" v ON u.id=v."UserId"
+                    left join "AllPosts" p on v.id = p."VideoId"
+                    left join "Ratings" r on p.id = r."AllPostId" 
+                    where (u.id=${user.id})
+                    group by u.id`)
+
+            const avgRating = isEmpty(rating[0]) ? 0 : rating[0][0].avgRating;
+
+            const { id, name, email, totalViews, about, picture, phoneNumber, showPhone, accessible,
                 accountType, showUsername, showName, isApproved, tip } = user;
 
             res.status(200).json({

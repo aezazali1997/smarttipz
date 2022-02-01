@@ -24,7 +24,6 @@ const NewsFeed = () => {
     hasMore
   } = UseFetchNewsFeed();
 
-  console.log('posts fetched', posts)
   return (
     <div className="flex flex-col lg:flex-row min-h-screen w-full justify-around py-5 px-3 bg-gray-50">
       {/*SEO Support*/}

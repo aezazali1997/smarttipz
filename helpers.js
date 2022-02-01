@@ -76,9 +76,8 @@ export const calculateAvgRating = (originalArray, postId, totalRaters, oldRating
             upadtedPosts.push(post);
         }
         else {
-            const newAdded = (oldRating + newRating);
-            const newVal = (newAdded / (totalRaters + 1))
-            post.avgRating = newVal.toString();
+            const newAvgRating = ((newRating * totalRaters + oldRating) / (totalRaters + 1));
+            post.avgRating = newAvgRating.toString();
             post.totalRaters = (totalRaters + 1).toString();
             upadtedPosts.push(post);
         }

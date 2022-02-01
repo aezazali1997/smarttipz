@@ -248,6 +248,8 @@ const Profile = ({ profile }) => {
                     likeCount,
                     shareCount,
                     commentCount,
+                    avgRating,
+                    totalRaters,
                     Video: {
                       id,
                       UserId,
@@ -283,6 +285,7 @@ const Profile = ({ profile }) => {
                         shareCount={shareCount}
                         commentCount={commentCount}
                         mediaType={mediaType}
+                        avgRating={avgRating}
                         videoType={videoType}
                         videoCost={videoCost}
                         description={description}
@@ -332,6 +335,8 @@ const Profile = ({ profile }) => {
                   likeCount,
                   shareCount,
                   commentCount,
+                  avgRating,
+                  totalRaters,
                   Video: {
                     id,
                     UserId,
@@ -366,6 +371,7 @@ const Profile = ({ profile }) => {
                       videoType={videoType}
                       description={description}
                       isLiked={isLiked}
+                      avgRating={avgRating}
                       likeCount={likeCount}
                       commentCount={commentCount}
                       shareCount={shareCount}

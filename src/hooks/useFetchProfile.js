@@ -396,7 +396,6 @@ const UseFetchProfile = (profile) => {
 
     const _HandleCatalogue = async (videoId, catalogue) => {
         if (catalogueCount < 5 || catalogue === true) {
-            console.log('here: ', catalogueCount);
             try {
                 const data = await axiosInstance.addToCatalogue({ videoId, catalogue });
                 const originalArray = [...catalogues];
