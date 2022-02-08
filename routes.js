@@ -1,4 +1,4 @@
-import { faCog, faComment, faNewspaper, faPlayCircle, faStar, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { faCog, faComment, faNewspaper, faPlayCircle, faStar, faUserCircle,faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const Routes = [
@@ -53,7 +53,8 @@ export const NavbarRoutes = [
         name: 'Favourites',
         path: '/dashboard/favourites',
         badge: false,
-        icon: (<FontAwesomeIcon icon={faStar} />)
+        icon: (<FontAwesomeIcon icon={faHeart} />)
+        // faStar
     },
 ]
 
