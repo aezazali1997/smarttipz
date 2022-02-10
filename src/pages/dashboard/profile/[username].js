@@ -377,7 +377,10 @@ const UserProfile = ({ profile }) => {
 									&nbsp;<p className="text-xs">{views} Views</p>
 								</span>
 								<span className="flex w-full items-center">
-									<Rating value={rating} isHalf={true} edit={false} />
+								{
+									rating!==undefined ? <Rating value={rating} isHalf={true} edit={false} /> : null
+								}
+									
 									&nbsp; <p className="text-xs"> Rating</p>
 								</span>
 							</div>
@@ -411,7 +414,8 @@ const UserProfile = ({ profile }) => {
 							<p className="text-xs no-underline hover:underline text-indigo-600 cursor-pointer">Contact details</p>
 						</div>
 					)}
-					<div className="flex w-full mt-3 items-center px-2 space-x-6">
+					{
+						(!fetchingCatalogues) ? <div className="flex w-full mt-3 items-center px-2 space-x-6">
 						<button onClick={_Follow} className={isFollowing ? 'followingBtn' : 'followBtn'}>
 							{isFollowing ? 'Following' : 'Follow'}
 						</button>
@@ -421,16 +425,21 @@ const UserProfile = ({ profile }) => {
 								Message
 							</button>
 						)}
-					</div>
+					</div> : null
+					}
+					
 				</div>
 			</div>
+			{
+				 isFollowing ? <>
 			<>
 				<div className="flex flex-col w-full px-2 mt-4">
 					<h1 className="text-md font-medium">
 						{accountType === 'Personal' ? (showName ? name + "'s" : showUsername ? username + "'s" : '') : name + "'s"}{' '}
 						Catalogue
 					</h1>
-					{fetchingCatalogues ? (
+					{
+					fetchingCatalogues ? (
 						<div className="flex w-full justify-center">
 							<span className="flex flex-col items-center">
 								<Spinner />
@@ -533,7 +542,7 @@ const UserProfile = ({ profile }) => {
 					<div className="flex w-full justify-center items-center">
 						<p className="text-gray-500"> No Videos Yet</p>
 					</div>
-				) : isFollowing ?  (
+				) : (
 					<div className="w-full mt-6 justify-center lg:justify-start">
 						<Carousel>
 							{myVideos.map(
@@ -606,8 +615,11 @@ const UserProfile = ({ profile }) => {
 							)}
 						</Carousel>
 					</div>
-				) :	<p className="text-gray-500 text-center"> You are not following this user. Follow to see the content</p>}
+				) }
 			</div>
+			</> : ((!fetchingCatalogues && !isFollowing) ?  <p className="text-gray-500 mt-5 text-center"> You are not following this user. Follow to see the content</p> : null)   	
+			}
+			
 			{/* section ends here */}
 			{/* section starts here */}
 

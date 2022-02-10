@@ -429,13 +429,13 @@ const UseFetchNewsFeed = () => {
       console.log('in catch of api rating: ', message);
     }
     oldAvgRating= rated ? nAvg : oldAvgRating
-    console.log("old avg rating",oldAvgRating);
      const updatedPosts = calculateAvgRating(
       posts,
       postId,
       parseInt(totalRaters),
       parseFloat(oldAvgRating),
-      parseFloat(newRating)
+      parseFloat(newRating),
+      rated
     );
     ToggleRatingModal();
     setPosts((prevState) => (prevState = [...updatedPosts]));

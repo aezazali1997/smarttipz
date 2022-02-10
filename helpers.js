@@ -79,19 +79,19 @@ export const calculateAvgRating = (originalArray, postId, totalRaters, oldRating
         }
         else {
             let newAvgRating=0;
-          
-            if(hasRated){
+            
+            if(hasRated===true){
                
-                newAvgRating = (newRating + (totalRaters * oldRating)) / (totalRaters)
+                newAvgRating = oldRating
             }
             else
             {
+              
                 
                 newAvgRating = ((newRating + (totalRaters * oldRating)) / (totalRaters+1))
             }
             
 
-            console.log("new avg rating",newAvgRating);
             post.avgRating = newAvgRating.toString();
             post.totalRaters = totalRaters.toString();
             upadtedPosts.push(post);

@@ -39,12 +39,14 @@ const handler = async (req, res) => {
         where: { username }
       });
 
-      const rating = await db.query(`select avg(r.rating) as"avgRating" from "Users" u 
+      const rating = await db.query(`select avg(v.rating) as"avgRating" from "Videos" v where ("UserId"=${user.id})`)
+                    /* 
+                    select avg(r.rating) as"avgRating" from "Users" u 
                     left join "Videos" v ON u.id=v."UserId"
                     left join "AllPosts" p on v.id = p."VideoId"
                     left join "Ratings" r on p.id = r."AllPostId" 
                     where (u.id=${user.id})
-                    group by u.id`)
+                    group by u.id */
 
       const avgRating = isEmpty(rating[0]) ? 0 : rating[0][0].avgRating;
 

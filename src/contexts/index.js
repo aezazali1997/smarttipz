@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useContext,useMemo, useState } from 'react';
 
 const SearchContext = createContext();
 
@@ -32,6 +32,12 @@ export function AppWrapper({ children }) {
         if (searchText) {
             setSearch(searchText);
             setFilterSearch(searchText);
+        }
+        return ()=> {
+            console.log('returning from searcjh');
+            if(!(router.pathname.includes('/search')))
+             setSearch('');
+             localStorage.removeItem('searchText');
         }
     }, [otherUserDetail]);
 
