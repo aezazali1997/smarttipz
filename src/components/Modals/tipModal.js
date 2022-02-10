@@ -29,7 +29,7 @@ const TipModal = ({ _HandleChangeTip, tip = 0, ToggleTipModal, loading = "false"
                         <div className="w-full h-full relative">
                             <div className="flex flex-col justify-center w-full">
                                 <div className="flex w-auto h-96">
-                                    <Image src={JarContainerGIF} alt="banner" objectFit='cover' />
+                                    <Image src={JarContainerGIF} alt="Smart tipz" objectFit='cover' />
                                 </div>
                                 <div className="flex w-full whitespace-preborder bg-gray-50 rounded-md h-12 mb-4">
                                     <span className="bg-gray-50 text-md border border-r-0 rounded-md rounded-r-none font-bold border-gray-200 px-3 py-3  h-12">

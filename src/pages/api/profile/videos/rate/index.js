@@ -40,7 +40,6 @@ const handler = async (req, res) => {
         }
       });
       if (!isEmpty(hasRated)) {
-        console.log('updated');
         await Rating.update(
           {
             rating: rating
@@ -53,7 +52,6 @@ const handler = async (req, res) => {
           }
         );
       } else {
-        console.log('new created');
         const newRating = await Rating.create({
           reviewerId: user.id,
           rating: rating,
@@ -79,7 +77,10 @@ const handler = async (req, res) => {
       return res.status(201).json({
         error: false,
         message: 'Post rated successfully',
-        data: {}
+        data: {
+          hasRated:!isEmpty(hasRated),
+          newAvg:avgRating
+        }
       });
     } catch (err) {
       console.log('Rate Api Failed Error: ', err.message);

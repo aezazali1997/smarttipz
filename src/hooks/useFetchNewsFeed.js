@@ -388,9 +388,6 @@ const UseFetchNewsFeed = () => {
   };
 
   const OpenRatingModal = ({ postId, avgRating, totalRaters }) => {
-      console.log("post id",postId)
-      console.log("average rating",avgRating)
-      console.log("totalRaters",totalRaters)
     const data = {
       postId: postId,
       oldAvgRating: avgRating,
@@ -414,19 +411,16 @@ const UseFetchNewsFeed = () => {
   };
 
   const _SubmitRating = async () => {
+    let rated=false;
+    let nAvg=0;
     const { oldAvgRating = 0, totalRaters = 0, newRating = 0, postId = 1 } = ratingData;
-    const updatedPosts = await calculateAvgRating(
-      posts,
-      postId,
-      parseInt(totalRaters),
-      parseFloat(oldAvgRating),
-      parseFloat(newRating)
-    );
-    console.log("posts",posts);
-    setPosts((prevState) => (prevState = [...updatedPosts]));
-    ToggleRatingModal();
+      
     try {
-      await axiosInstance.ratePost({ postId: postId, rating: newRating });
+     let res=await axiosInstance.ratePost({ postId: postId, rating: newRating });
+     const {data}=res.data;
+       rated=data.hasRated;
+       nAvg=data.newAvg;
+      
     } catch ({
       response: {
         data: { message }
@@ -434,6 +428,17 @@ const UseFetchNewsFeed = () => {
     }) {
       console.log('in catch of api rating: ', message);
     }
+    oldAvgRating= rated ? nAvg : oldAvgRating
+    console.log("old avg rating",oldAvgRating);
+     const updatedPosts = calculateAvgRating(
+      posts,
+      postId,
+      parseInt(totalRaters),
+      parseFloat(oldAvgRating),
+      parseFloat(newRating)
+    );
+    ToggleRatingModal();
+    setPosts((prevState) => (prevState = [...updatedPosts]));
   };
 
   const ToggleTipModal = (tip) => {

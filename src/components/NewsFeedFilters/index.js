@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-
+import React, { useState,useEffect } from 'react';
+import FilledStar from './FilledStar'
 const NewsFeedFilters = ({
 	account,
 	videoType,
@@ -11,18 +11,27 @@ const NewsFeedFilters = ({
 	_HandleVideoCategoryFilter
 }) => {
 	let color = 'light';
-
 	const [ratingStars, setRatingStars] = useState(0);
+	const [hover,setHover]=useState(0);
+	const [rating,setRating]=useState(0);
+
+	// useEffect(() => {
+		
+	
+	// }, [rating,ratingStars])
+	
+
 
 	const _HandleClickRatingStar = (index) => {
 		setRatingStars(index);
 		_HandleChangeRating(index)
+		setRating(index);
 	}
 
 	const EmptyStar = ({ _HandleClick }) => (
 		<span onClick={_HandleClick}>
 			<svg
-				className="w-4 h-4 text-gray-500 hover:text-purple-600 cursor-pointer"
+				className="empty-star w-4 h-4 text-gray-500  cursor-pointer"
 				fill="currentColor"
 				viewBox="0 0 20 20"
 				xmlns="http://www.w3.org/2000/svg">
@@ -30,18 +39,20 @@ const NewsFeedFilters = ({
 			</svg>
 		</span>)
 
-	const FilledStar = ({ _HandleClick }) => (
-		<span onClick={_HandleClick}>
-			<svg
-				className="w-4 h-4 text cursor-pointer"
-				fill="currentColor"
-				viewBox="0 0 20 20"
-				xmlns="http://www.w3.org/2000/svg">
-				<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-			</svg>
-		</span>)
+	
 
 	const displayRatingStars = () => {
+		return (
+			<span className="flex space-x-1">
+				{
+				[...Array(5)].map((item, index) => {
+					index+=1
+				 return <FilledStar key={index} _HandleClick={() => _HandleClickRatingStar(index)} _hover={hover} _setHover={setHover} _rating={rating}  _index={index}   />
+				 })
+				}
+				</span>
+		)
+		/* 
 		const emptyStars = 5 - ratingStars;
 		return (
 			<span className="flex space-x-1">
@@ -51,11 +62,16 @@ const NewsFeedFilters = ({
 				))}
 			</span>
 		)
+		
+		 */
 	}
 
 	const _HandleClearRating = () => {
+		console.log("handle clear called");
 		setRatingStars(0);
 		_HandleClear();
+		setRating(0);
+		setHover(0);
 	}
 
 

@@ -533,7 +533,7 @@ const UserProfile = ({ profile }) => {
 					<div className="flex w-full justify-center items-center">
 						<p className="text-gray-500"> No Videos Yet</p>
 					</div>
-				) : (
+				) : isFollowing ?  (
 					<div className="w-full mt-6 justify-center lg:justify-start">
 						<Carousel>
 							{myVideos.map(
@@ -606,7 +606,7 @@ const UserProfile = ({ profile }) => {
 							)}
 						</Carousel>
 					</div>
-				)}
+				) :	<p className="text-gray-500 text-center"> You are not following this user. Follow to see the content</p>}
 			</div>
 			{/* section ends here */}
 			{/* section starts here */}

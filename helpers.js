@@ -68,8 +68,8 @@ export const checkCountById = (originalArray, name, postId, operator) => {
 }
 
 
-export const calculateAvgRating = (originalArray, postId, totalRaters, oldRating, newRating) => {
-   
+export const calculateAvgRating = (originalArray, postId, totalRaters, oldRating, newRating,hasRated) => {
+    totalRaters=Number(totalRaters);
 
     const deepCopyVideoPosts = [...originalArray];
     const upadtedPosts = [];
@@ -78,11 +78,22 @@ export const calculateAvgRating = (originalArray, postId, totalRaters, oldRating
             upadtedPosts.push(post);
         }
         else {
-            const newAvgRating = ((newRating + (totalRaters * oldRating)) / (totalRaters + 1));
-            console.log('new avg rating',newAvgRating);
-            console.log();
+            let newAvgRating=0;
+          
+            if(hasRated){
+               
+                newAvgRating = (newRating + (totalRaters * oldRating)) / (totalRaters)
+            }
+            else
+            {
+                
+                newAvgRating = ((newRating + (totalRaters * oldRating)) / (totalRaters+1))
+            }
+            
+
+            console.log("new avg rating",newAvgRating);
             post.avgRating = newAvgRating.toString();
-            post.totalRaters = (totalRaters + 1).toString();
+            post.totalRaters = totalRaters.toString();
             upadtedPosts.push(post);
         }
     }

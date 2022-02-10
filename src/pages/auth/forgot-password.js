@@ -32,7 +32,7 @@ const ForgetPassword = () => {
             <div className="flex flex-col w-full lg:flex-row pt-5 p-5 xs:p-10 pb-2 md:p-16 md:pb-1 md:pt-0">
 
                 <div className="flex w-full h-52 sm:h-64 lg:h-full">
-                    <Image src={forgetPassword} alt="banner" />
+                    <Image src={forgetPassword} alt="Forget Password" />
                 </div>
 
                 <div className="flex flex-col w-full items-center">

@@ -42,9 +42,8 @@ const getFilterdProfilesByVideoType = (videoType) => {
 
 
 const getVideoByRating = (rating) => {
-    console.log('rating: ', rating);
-    return rating === 0 ? {
-        [sequelize.Op.gt]: 0
+    return Number(rating) === 0 ? {
+        [sequelize.Op.gte]: rating
     }
         : {
             [sequelize.Op.eq]: rating
@@ -53,7 +52,6 @@ const getVideoByRating = (rating) => {
 
 
 export const FilterContent = (search, category, videoType, videoCategory, accountType, ArrayOfFollowedPeopleId, rating) => {
-    console.log('searched >>', search);
     return {
         [sequelize.Op.and]: [
             {

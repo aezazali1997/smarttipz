@@ -14,7 +14,7 @@ const RatingComponent = ({ value, edit, isHalf, onChange, size, classNames }) =>
             emptyIcon={<i className="far fa-star"></i>}
             halfIcon={<i className="fa fa-star-half-alt"></i>}
             fullIcon={<i className="fa fa-star"></i>}
-            activeColor="#714de1"
+            activeColor="#f8b93b"
             classNames={classNames}
 
         />

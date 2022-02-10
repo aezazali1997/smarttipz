@@ -139,13 +139,12 @@ const NewsfeedCard = ({
   );
 
   const displayRatingStars = () => {
-    console.log("displaying rating stars");
-    console.log("avg",avgRating);
+    
     if (avgRating !== undefined) {
       if (avgRating === 0) {
         avgRating = parseFloat(avgRating).toFixed(2);
       }
-      const hasDecimal = avgRating.split('.');
+      const hasDecimal = String(avgRating).split('.');
       const firstSplittedValue = parseInt(hasDecimal[0]);
       const secondSplittedValue = hasDecimal[1];
       const emptyStars =

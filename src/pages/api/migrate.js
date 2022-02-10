@@ -16,8 +16,10 @@ const Comment = require('models/Comments');
 
 const handler = async (req, res) => {
     // sequelize.sync({ force: true });
+    // force dlets all data and creates a new table
+    // alter updates the data
     // AllPosts.sync({ alter: true });
-    // Rating.sync({ force: true });
+    // Rating.sync({ alter: true });
     // User.sync({ alter: true });
     // await Business.sync({ force: true });
     // await BusinessCard.sync({ force: true });

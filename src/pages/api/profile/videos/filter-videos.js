@@ -39,6 +39,7 @@ const handler = async (req, res) => {
 
             console.log('ArrayOfFollowedPeopleId', ArrayOfFollowedPeopleId);
 
+
             const videos = await AllPosts.findAll({
                 include: [
                     {
@@ -88,7 +89,7 @@ const handler = async (req, res) => {
                 ],
                 order: [['createdAt', sort]]
             });
-
+       
             for (let i = 0; i < videos.length; i++) {
                 const item = videos[i];
                 const { id, VideoId, Video, Share: Shares, isShared, } = item;
