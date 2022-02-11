@@ -61,6 +61,7 @@ const UseSearch = () => {
         const hideMenu = () => {
             if (window.innerWidth > 991 && showFilterModal) {
                 setShowFilterModal(false);
+                console.log('i resized');
             }
         };
 
@@ -374,6 +375,7 @@ const UseSearch = () => {
     }
 
     const _HandleClearRating = () => {
+        console.log('..................clicked..................');
         setRateFilter(0);
     }
 

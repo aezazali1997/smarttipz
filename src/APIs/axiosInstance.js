@@ -157,6 +157,11 @@ class AxiosInstance {
             { videoType, videoCategory, accountType: account, rating },
             this.getAuthHeader());
     }
+    async getAllFilteredPosts(search, sort, category, videoType, videoCategory, account, rating,curentPage) {
+        return await axios.post(USER_API_BASE_URL + `api/profile/videos/filter-video-all?page=${curentPage}&&search=${search}&&sort=${sort}&&category=${category}&&rating=${rating}`,
+            { videoType, videoCategory, accountType: account, rating },
+            this.getAuthHeader());
+    }
 
     async likePost(videoId) {
         return await axios.post(USER_API_BASE_URL + "api/profile/videos/like", videoId, this.getAuthHeader());

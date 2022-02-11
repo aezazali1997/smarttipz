@@ -139,7 +139,7 @@ const NewsfeedCard = ({
   );
 
   const displayRatingStars = () => {
-    
+    console.log("avg rating",avgRating)
     if (avgRating !== undefined) {
       if (avgRating === 0) {
         avgRating = parseFloat(avgRating).toFixed(2);
