@@ -50,7 +50,6 @@ const handler = async (req, res) => {
                     group by u.id`)
 
             const avgRating = isEmpty(rating[0]) ? 0 : rating[0][0].avgRating;
-
             const { id, name, email, totalViews, about, picture, phoneNumber, showPhone, accessible,
                 accountType, showUsername, showName, isApproved, tip } = user;
 

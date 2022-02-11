@@ -14,7 +14,8 @@ import { PaymentModal, ShareModal, TipModal, VideoRatingModal } from 'src/compon
 import Swal from 'sweetalert2';
 import { calculateAvgRating, checkLikeCount } from 'helpers';
 import { AnimatePresence } from 'framer-motion';
-
+import {calProfileRating} from '../../../../utils/rating'
+import CustomStar from '../../../components/CustomStar'
 
 const initialRatingData = {
 	postId: '',
@@ -52,7 +53,7 @@ const UserProfile = ({ profile }) => {
 	const [showAmountModal, setShowAmountModal] = useState(false);
 	const [videoPayment, setVideoPayment] = useState(0);
 	const [ratingData, setRatingData] = useState({ ...initialRatingData });
-
+	const [profileRating,setProfileRating]=useState(0);
 
 	useEffect(() => {
 		const { accountType, username } = profile;
@@ -124,6 +125,9 @@ const UserProfile = ({ profile }) => {
 		fetchCatalogues(username);
 		fetchMyVideos(username);
 	}, []);
+	useEffect(()=>{
+		setProfileRating(calProfileRating(myVideos));
+	},[myVideos])
 
 
 	const enableFetchCatalogue = () => {
@@ -337,6 +341,8 @@ const UserProfile = ({ profile }) => {
 					_Follow={_Follow}
 					gotoMessaging={gotoMessaging}
 					handleShowBusinessCard={handleShowBusinessCard}
+					_rating={profileRating}
+					_fetching={fetchingMyVideos}
 				/>
 			</div>
 			<div className="hidden md:flex flex-row w-full h-auto">
@@ -377,11 +383,14 @@ const UserProfile = ({ profile }) => {
 									&nbsp;<p className="text-xs">{views} Views</p>
 								</span>
 								<span className="flex w-full items-center">
-								{
-									rating!==undefined ? <Rating value={rating} isHalf={true} edit={false} /> : null
-								}
-									
-									&nbsp; <p className="text-xs"> Rating</p>
+							{!fetchingMyVideos ? (
+                    <>
+                      <CustomStar value={profileRating} isHalf={true} /> &nbsp;
+                      <p className="text-xs"> Rating </p>
+                    </>
+                  ) : (
+                    <Spinner />
+                  )}
 								</span>
 							</div>
 							<div className="flex w-full mt-2 px-2">

@@ -46,4 +46,5 @@ export { default as SortFilter } from './SortFilter';
 export { default as VideoUploadBlock } from './UploadVideoClickBlock';
 export { default as CommentSection } from './CommentSection';
 export { default as PostDeletedAlert } from './PostDeletedAlert';
+export {default as CustomStar} from './CustomStar';
 

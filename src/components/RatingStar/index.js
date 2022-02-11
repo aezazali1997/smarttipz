@@ -6,7 +6,7 @@ const RatingComponent = ({ value, edit, isHalf, onChange, size, classNames }) =>
     return (
         <ReactStars
             count={5}
-            value={value || 0}
+            value={value}
             size={size || 16}
             edit={edit}
             isHalf={isHalf}

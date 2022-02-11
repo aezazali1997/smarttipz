@@ -50,6 +50,11 @@ const UseFetchNewsFeed = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('');
   const [initialValues, setInitialValues] = useState(initials);
   const [showRatingModal, setShowRatingModal] = useState(false);
+
+
+  const [isSubmitingRating,setIsSubmitingRating]=useState(false);
+  
+  
   const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
   const [isloadingFeed, setLoadingFeed] = useState(true);
   const [postRating, setSharePostRating] = useState(0);
@@ -411,6 +416,7 @@ const UseFetchNewsFeed = () => {
   };
 
   const _SubmitRating = async () => {
+    setIsSubmitingRating(true);
     let rated=false;
     let nAvg=0;
     const { oldAvgRating = 0, totalRaters = 0, newRating = 0, postId = 1 } = ratingData;
@@ -437,6 +443,7 @@ const UseFetchNewsFeed = () => {
       parseFloat(newRating),
       rated
     );
+    setIsSubmitingRating(false);
     ToggleRatingModal();
     setPosts((prevState) => (prevState = [...updatedPosts]));
   };
@@ -550,7 +557,9 @@ const UseFetchNewsFeed = () => {
     _HandleCommentCounts,
     ratingData,
     hasMore,
-    _FetchMoreData
+    _FetchMoreData,
+    isSubmitingRating
+    
   };
 };
 

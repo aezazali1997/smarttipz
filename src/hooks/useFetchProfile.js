@@ -6,7 +6,8 @@ import swal from 'sweetalert';
 import { useRouter } from 'next/router';
 import axiosInstance from 'src/APIs/axiosInstance';
 import { RequestTestimonialFormSchema, UploadPhotoVideoSchema } from 'utils/validation_shema';
-import { checkCountById, checkLikeCount } from 'helpers';
+import { calculateAvgRating, checkCountById, checkLikeCount } from 'helpers';
+import {calProfileRating} from '../../utils/rating'
 
 const initial = {
     email: ''
@@ -54,6 +55,7 @@ const UseFetchProfile = (profile) => {
     const [isSharing, setIsSharing] = useState(false);
     const [shareData, setShareData] = useState({});
     const [shareCaption, setShareCaption] = useState('');
+    const [profileRating,setProfileRating]=useState(0);
 
 
     let { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
@@ -114,6 +116,7 @@ const UseFetchProfile = (profile) => {
                 }
             }
             setCatalogueCount(count);
+            
             disableFetchMyVideos();
         }
         catch ({ response: { data: { message } } }) {
@@ -126,6 +129,10 @@ const UseFetchProfile = (profile) => {
         fetchCatalogues();
         fetchMyVideos();
     }, []);
+    useEffect(()=>{
+        console.log("my videos",myVideos)
+        setProfileRating(calProfileRating(myVideos)); 
+    },[myVideos])
 
     useEffect(() => { }, [testimonial, catalogues])
 
@@ -531,7 +538,7 @@ const UseFetchProfile = (profile) => {
         _CloseUploadModal, _OpenUploadModal, catalogues, setCatalogues, fetchingCatalogues, myVideos, fetchingMyVideos,
         _HandleDeleteVideo, _HandleGotoVideoDetails, _HandleGotoUserProfile, HandleLikePost,
         _OpenShareModal, _CloseShareModal, showShareModal, shareData, _HandleSharePost, _HandleChangeCaption,
-        shareCaption, setShareCaption, isSharing, _HandleCommentCounts
+        shareCaption, setShareCaption, isSharing, _HandleCommentCounts,profileRating
     }
 }
 export default UseFetchProfile;

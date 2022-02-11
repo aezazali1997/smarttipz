@@ -18,6 +18,8 @@ import {
   PopupBusinessCard,
   ProfileCard,
   Rating,
+  CustomStar
+  ,
   Spinner,
   TestimonialCard
 } from 'src/components';
@@ -82,21 +84,10 @@ const Profile = ({ profile }) => {
     _HandleCommentCounts,
     shareCaption,
     setShareCaption,
-    isSharing
+    isSharing,
+    profileRating
   } = UseFetchProfile(profile);
-  const {
-    name,
-    about,
-    rating,
-    views,
-    picture,
-    phone,
-    email,
-    accountType,
-    username,
-    showUsername,
-    showName
-  } = profile;
+  const { name, about, rating, views, picture, phone, email, accountType, username, showUsername, showName } = profile;
   const { website } = businessCard;
 
   useEffect(() => {
@@ -119,6 +110,8 @@ const Profile = ({ profile }) => {
           website={website || ''}
           handleShowBusinessCard={handleShowBusinessCard}
           showBusinessCard={showBusinessCard}
+          _fetching={fetchingMyVideos}
+          _rating={profileRating}
         />
       </div>
       <div className="hidden md:flex flex-row w-full h-auto">
@@ -141,23 +134,13 @@ const Profile = ({ profile }) => {
             <div className="flex flex-col w-full lg:w-1/2">
               <div className="flex justify-between items-start lg:items-end w-full md:w-2/3">
                 <h1 className=" text-md lg:text-2xl font-semibold">
-                  {accountType === 'Personal'
-                    ? showName
-                      ? name
-                      : showUsername
-                        ? username
-                        : ''
-                    : name}
+                  {accountType === 'Personal' ? (showName ? name : showUsername ? username : '') : name}
                 </h1>
               </div>
               <h2 className="text-sm text-gray-500">{phone}</h2>
               <div className="flex lg:flex-row lg:justify-between w-full md:max-w-xs mt-1">
                 <span className="flex w-full items-center">
-                  <svg
-                    className="w-4 h-4"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                     <path
                       fillRule="evenodd"
@@ -168,34 +151,33 @@ const Profile = ({ profile }) => {
                   &nbsp;<p className="text-xs">{views} Views</p>
                 </span>
                 <span className="flex w-full items-center">
-                  <Rating value={rating} isHalf={true} edit={false} />
-                  &nbsp; <p className="text-xs"> Rating</p>
+                  {!fetchingMyVideos ? (
+                    <>
+                      <CustomStar value={profileRating} isHalf={true} /> &nbsp;
+                      <p className="text-xs"> Rating </p>
+                    </>
+                  ) : (
+                    <Spinner />
+                  )}
                 </span>
               </div>
               <div className="flex w-full mt-2 px-2">
                 {about ? (
                   <p className="text-sm break-words md:max-w-xs">{about}</p>
                 ) : (
-                  <p className="text-sm text-gray-400">
-                    {' '}
-                    {accountType === 'Business' ? 'Intro' : 'About'}
-                  </p>
+                  <p className="text-sm text-gray-400"> {accountType === 'Business' ? 'Intro' : 'About'}</p>
                 )}
               </div>
             </div>
-            { }
+            {}
             <div className="flex flex-col  lg:w-1/2">
               <div className="flex lg:justify-end space-x-10">
                 <div className="flex flex-col">
-                  <h1 className="text-md lg:text-3xl font-semibold text-center">
-                    {followers?.length}
-                  </h1>
+                  <h1 className="text-md lg:text-3xl font-semibold text-center">{followers?.length}</h1>
                   <h2 className="text-sm text-black">Followers</h2>
                 </div>
                 <div className="flex flex-col ">
-                  <h1 className=" text-md lg:text-3xl font-semibold text-center">
-                    {followed?.length}
-                  </h1>
+                  <h1 className=" text-md lg:text-3xl font-semibold text-center">{followed?.length}</h1>
                   <h2 className="text-sm  text-black">Following</h2>
                 </div>
               </div>
@@ -206,9 +188,7 @@ const Profile = ({ profile }) => {
 
           {accountType === 'Business' && (
             <div className="flex w-full mt-2 px-2 " onClick={handleShowBusinessCard}>
-              <p className="text-xs font-medium no-underline hover:underline text cursor-pointer">
-                Contact details
-              </p>
+              <p className="text-xs font-medium no-underline hover:underline text cursor-pointer">Contact details</p>
             </div>
           )}
         </div>
@@ -218,13 +198,7 @@ const Profile = ({ profile }) => {
       <>
         <div className="flex flex-col w-full px-2 mt-4">
           <h1 className="text-md font-medium">
-            {accountType === 'Personal'
-              ? showName
-                ? name + "'s"
-                : showUsername
-                  ? username + "'s"
-                  : ''
-              : name + "'s"}{' '}
+            {accountType === 'Personal' ? (showName ? name + "'s" : showUsername ? username + "'s" : '') : name + "'s"}{' '}
             Catalogue
           </h1>
           {fetchingCatalogues ? (
@@ -264,7 +238,7 @@ const Profile = ({ profile }) => {
                       videoCost,
                       Shares,
                       productLink
-                    },
+                    }
                   } = item;
                   return (
                     <div key={index} className="my-2 px-5">
@@ -302,7 +276,7 @@ const Profile = ({ profile }) => {
                         _HandleCatalogue={_HandleCatalogue}
                       />
                     </div>
-                  )
+                  );
                 })}
               </Carousel>
             </div>
@@ -351,7 +325,7 @@ const Profile = ({ profile }) => {
                     videoCost,
                     Shares,
                     productLink
-                  },
+                  }
                 } = item;
                 return (
                   <div key={index} className="my-2 px-5">
@@ -389,7 +363,7 @@ const Profile = ({ profile }) => {
                       _HandleDeleteVideo={_HandleDeleteVideo}
                     />
                   </div>
-                )
+                );
               })}
             </Carousel>
           </div>
@@ -406,9 +380,7 @@ const Profile = ({ profile }) => {
                 onSubmit={_AddTestimonial}
                 type="button"
                 childrens={'Request Testimonial'}
-                classNames={
-                  'px-3 py-2 flex justify-center items-center text-white text-sm btn rounded-md '
-                }
+                classNames={'px-3 py-2 flex justify-center items-center text-white text-sm btn rounded-md '}
               />
             </div>
             {showRequestTestimonial && (
@@ -479,33 +451,31 @@ const Profile = ({ profile }) => {
                     <b>Yay! You have seen it all</b>
                   </p>
                 }
-              // below props only if you need pull down functionality
-              // refreshFunction={this.refresh}
-              // pullDownToRefresh
-              // pullDownToRefreshThreshold={50}
-              // pullDownToRefreshContent={
-              //   <h3 style={{ textAlign: 'center' }}>&#8595; Pull down to refresh</h3>
-              // }
-              // releaseToRefreshContent={
-              //   <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
-              // }
+                // below props only if you need pull down functionality
+                // refreshFunction={this.refresh}
+                // pullDownToRefresh
+                // pullDownToRefreshThreshold={50}
+                // pullDownToRefreshContent={
+                //   <h3 style={{ textAlign: 'center' }}>&#8595; Pull down to refresh</h3>
+                // }
+                // releaseToRefreshContent={
+                //   <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
+                // }
               >
                 <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
-                  {filteredTestimonial.map(
-                    ({ id, picture, ownerName, designation, description, isVisible }, index) => (
-                      <div key={index}>
-                        <TestimonialCard
-                          _Toggle={() => _EditTestimonial(id, isVisible)}
-                          image={picture}
-                          name={ownerName}
-                          designation={designation}
-                          description={description}
-                          checked={isVisible}
-                          index={index}
-                        />
-                      </div>
-                    )
-                  )}
+                  {filteredTestimonial.map(({ id, picture, ownerName, designation, description, isVisible }, index) => (
+                    <div key={index}>
+                      <TestimonialCard
+                        _Toggle={() => _EditTestimonial(id, isVisible)}
+                        image={picture}
+                        name={ownerName}
+                        designation={designation}
+                        description={description}
+                        checked={isVisible}
+                        index={index}
+                      />
+                    </div>
+                  ))}
                 </div>
               </InfiniteScroll>
             )}

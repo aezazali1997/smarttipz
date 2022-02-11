@@ -9,19 +9,61 @@ import { UseFetchNewsFeed } from 'src/hooks';
 import { AnimatePresence } from 'framer-motion';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-
 const NewsFeed = () => {
-
-  const { formik, _DeleteImg, ChangeAgreement, agree, urls, setUrls, showModal,
-    _OpenUploadModal, _CloseUploadModal, thumbnailRef, _OnRemoveThumbnail, onChangeThumbnail,
-    _OnThumbnailClick, thumbnailUrl, MediaType, setMediaType, _HandleGotoUserProfile, videoType,
-    uploadingThumbnail, posts, HandleLikePost, _HandleCatalogue, _HandleDeleteVideo,
-    _HandleGotoVideoDetails, ToggleRatingModal, _HandleChangeRating, showRatingModal, ToggleTipModal,
-    _HandleChangeTip, showTipModal, _OpenShareModal, _CloseShareModal, showShareModal, shareData,
-    _HandleSharePost, shareCaption, setShareCaption, isSharing, HandleFavouritePost,
-    _HandleChangePostOnNewsfeed, postOnFeed, tip, isloadingFeed, OpenRatingModal, postRating,
-    _SubmitRating, showAmountModal, _TogglePaymentModal, videoPayment, _HandleCommentCounts, _FetchMoreData,
-    hasMore
+  const {
+    formik,
+    _DeleteImg,
+    ChangeAgreement,
+    agree,
+    urls,
+    setUrls,
+    showModal,
+    _OpenUploadModal,
+    _CloseUploadModal,
+    thumbnailRef,
+    _OnRemoveThumbnail,
+    onChangeThumbnail,
+    _OnThumbnailClick,
+    thumbnailUrl,
+    MediaType,
+    setMediaType,
+    _HandleGotoUserProfile,
+    videoType,
+    uploadingThumbnail,
+    posts,
+    HandleLikePost,
+    _HandleCatalogue,
+    _HandleDeleteVideo,
+    _HandleGotoVideoDetails,
+    ToggleRatingModal,
+    _HandleChangeRating,
+    showRatingModal,
+    ToggleTipModal,
+    _HandleChangeTip,
+    showTipModal,
+    _OpenShareModal,
+    _CloseShareModal,
+    showShareModal,
+    shareData,
+    _HandleSharePost,
+    shareCaption,
+    setShareCaption,
+    isSharing,
+    HandleFavouritePost,
+    _HandleChangePostOnNewsfeed,
+    postOnFeed,
+    tip,
+    isloadingFeed,
+    OpenRatingModal,
+    postRating,
+    _SubmitRating,
+    showAmountModal,
+    _TogglePaymentModal,
+    videoPayment,
+    _HandleCommentCounts,
+    _FetchMoreData,
+    hasMore,
+    isSubmitingRating
   } = UseFetchNewsFeed();
 
   return (
@@ -60,15 +102,16 @@ const NewsFeed = () => {
             dataLength={posts.length} //This is important field to render the next data
             next={_FetchMoreData}
             hasMore={hasMore}
-            loader={<div className="flex justify-center items-center w-full">
-              <CustomLoader />
-            </div>}
+            loader={
+              <div className="flex justify-center items-center w-full">
+                <CustomLoader />
+              </div>
+            }
             endMessage={
               <p style={{ textAlign: 'center', padding: '2px 0' }}>
                 <b>Yay! You have seen it all</b>
               </p>
-            }
-          >
+            }>
             <div className="space-y-4">
               {posts.map((item, index) => {
                 const {
@@ -101,75 +144,72 @@ const NewsFeed = () => {
                     cost
                   }
                 } = item;
-                return (
-                  isShared ? (
-                    <SharedCard
+                return isShared ? (
+                  <SharedCard
+                    key={index}
+                    id={postId}
+                    videoId={id}
+                    index={index}
+                    Video={Video}
+                    Share={Share}
+                    posts={posts}
+                    isLiked={isLiked}
+                    width={'max-w-lg'}
+                    likeCount={likeCount}
+                    shareCount={shareCount}
+                    commentCount={commentCount}
+                    restrictPaidVideo={true}
+                    ToggleTipModal={ToggleTipModal}
+                    _OpenShareModal={_OpenShareModal}
+                    _HandleCommentCounts={_HandleCommentCounts}
+                    HandleLikePost={() => HandleLikePost(postId, isLiked)}
+                    _HandleGotoUserProfile={_HandleGotoUserProfile}
+                    _HandleGotoVideoDetails={_HandleGotoVideoDetails}
+                    TogglePaymentModal={() => _TogglePaymentModal(cost)}
+                  />
+                ) : (
+                  isApproved && isShowOnNewsfeed && (
+                    <NewsfeedCard
                       key={index}
                       id={postId}
                       videoId={id}
+                      UserId={UserId}
                       index={index}
-                      Video={Video}
-                      Share={Share}
-                      posts={posts}
+                      catalogue={catalogue}
+                      isPost={true}
+                      url={url}
+                      views={200}
+                      User={User}
+                      description={description}
+                      title={title}
+                      Shares={Shares}
+                      videoCost={videoCost}
+                      videoType={videoType}
+                      watchLimit={watchLimit}
+                      productLink={productLink}
                       isLiked={isLiked}
+                      posts={posts}
                       width={'max-w-lg'}
                       likeCount={likeCount}
                       shareCount={shareCount}
                       commentCount={commentCount}
+                      avgRating={avgRating}
+                      thumbnail={thumbnail}
                       restrictPaidVideo={true}
-                      ToggleTipModal={ToggleTipModal}
-                      _OpenShareModal={_OpenShareModal}
                       _HandleCommentCounts={_HandleCommentCounts}
                       HandleLikePost={() => HandleLikePost(postId, isLiked)}
-                      _HandleGotoUserProfile={_HandleGotoUserProfile}
-                      _HandleGotoVideoDetails={_HandleGotoVideoDetails}
                       TogglePaymentModal={() => _TogglePaymentModal(cost)}
+                      ToggleTipModal={() => ToggleTipModal(User?.tip)}
+                      _OpenShareModal={_OpenShareModal}
+                      _HandleCatalogue={_HandleCatalogue}
+                      _HandleDeleteVideo={_HandleDeleteVideo}
+                      HandleFavouritePost={HandleFavouritePost}
+                      _HandleGotoUserProfile={_HandleGotoUserProfile}
+                      ToggleRatingModal={() => OpenRatingModal({ postId, avgRating, totalRaters, isSubmitingRating })}
+                      _HandleGotoVideoDetails={_HandleGotoVideoDetails}
                     />
-                  ) : (
-                    isApproved &&
-                    isShowOnNewsfeed && (
-                      <NewsfeedCard
-                        key={index}
-                        id={postId}
-                        videoId={id}
-                        UserId={UserId}
-                        index={index}
-                        catalogue={catalogue}
-                        isPost={true}
-                        url={url}
-                        views={200}
-                        User={User}
-                        description={description}
-                        title={title}
-                        Shares={Shares}
-                        videoCost={videoCost}
-                        videoType={videoType}
-                        watchLimit={watchLimit}
-                        productLink={productLink}
-                        isLiked={isLiked}
-                        posts={posts}
-                        width={'max-w-lg'}
-                        likeCount={likeCount}
-                        shareCount={shareCount}
-                        commentCount={commentCount}
-                        avgRating={avgRating}
-                        thumbnail={thumbnail}
-                        restrictPaidVideo={true}
-                        _HandleCommentCounts={_HandleCommentCounts}
-                        HandleLikePost={() => HandleLikePost(postId, isLiked)}
-                        TogglePaymentModal={() => _TogglePaymentModal(cost)}
-                        ToggleTipModal={() => ToggleTipModal(User?.tip)}
-                        _OpenShareModal={_OpenShareModal}
-                        _HandleCatalogue={_HandleCatalogue}
-                        _HandleDeleteVideo={_HandleDeleteVideo}
-                        HandleFavouritePost={HandleFavouritePost}
-                        _HandleGotoUserProfile={_HandleGotoUserProfile}
-                        ToggleRatingModal={() => OpenRatingModal({ postId, avgRating, totalRaters })}
-                        _HandleGotoVideoDetails={_HandleGotoVideoDetails}
-                      />
-                    )
                   )
-                )
+                );
               })}
             </div>
           </InfiniteScroll>
@@ -211,6 +251,7 @@ const NewsFeed = () => {
             _SubmitRating={_SubmitRating}
             ToggleRatingModal={ToggleRatingModal}
             _HandleChangeRating={_HandleChangeRating}
+            _isSubmiting={isSubmitingRating}
           />
         )}
         {showTipModal && (
@@ -221,7 +262,6 @@ const NewsFeed = () => {
             loading={false}
             modalTitle={'Tip Video'}
           />
-
         )}
         {showShareModal && (
           <ShareModal
@@ -236,15 +276,11 @@ const NewsFeed = () => {
         )}
 
         {showAmountModal && (
-          <PaymentModal
-            ToggleAmountModal={_TogglePaymentModal}
-            loading={isSharing}
-            amount={videoPayment}
-          />
+          <PaymentModal ToggleAmountModal={_TogglePaymentModal} loading={isSharing} amount={videoPayment} />
         )}
       </AnimatePresence>
     </div>
   );
-}
+};
 
 export default NewsFeed;
