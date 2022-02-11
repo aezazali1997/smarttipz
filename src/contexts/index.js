@@ -23,7 +23,7 @@ export function AppWrapper({ children }) {
         }
     };
 
-    useEffect(() => {
+   /*  useEffect(() => {
         const searchText = localStorage.getItem('searchText');
         const otherUserDetails = JSON.parse(localStorage.getItem('profile'));
         if (otherUserDetails) {
@@ -33,13 +33,8 @@ export function AppWrapper({ children }) {
             setSearch(searchText);
             setFilterSearch(searchText);
         }
-        return ()=> {
-            console.log('returning from searcjh');
-            if(!(router.pathname.includes('/search')))
-             setSearch('');
-             localStorage.removeItem('searchText');
-        }
-    }, [otherUserDetail]);
+      
+    }, [otherUserDetail]); */
 
     const data = useMemo(
         () => ({

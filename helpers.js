@@ -38,14 +38,12 @@ export const checkLikeCount = (originalArray, id, isLiked) => {
     const upadtedPosts = [];
     for (const post of deepCopyVideoPosts) {
         if (post.id !== id) {
-            console.log('isLiked: ', isLiked)
             upadtedPosts.push(post);
         }
         else {
             post.isLiked = !isLiked;
             post.likeCount = isLiked ? (post.likeCount - 1) : (post.likeCount + 1)
             upadtedPosts.push(post);
-            console.log('updated: ', post);
         }
     }
     return upadtedPosts;

@@ -58,7 +58,6 @@ const SharedCard = ({
 	};
 
 	const _HandleSubmitComment = async (text) => {
-		console.log('enter', text);
 		if (text !== '') {
 			_HandleCommentCounts(id, '+')
 			try {
@@ -71,7 +70,6 @@ const SharedCard = ({
 	};
 
 	const _HandleDeleteComments = async (index, commentId) => {
-		console.log('Comment id to be deleted: ', commentId);
 		_HandleCommentCounts(id, '-')
 		const deepCopyComments = [...comments];
 		deepCopyComments.splice(index, 1);
@@ -84,7 +82,6 @@ const SharedCard = ({
 
 
 	const _HandlePaidVideos = async () => {
-		console.log('Here: ', Video?.watchLimit);
 		setTimeout(() => {
 			setStopVideo(true);
 			TogglePaymentModal();

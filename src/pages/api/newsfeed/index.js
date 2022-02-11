@@ -17,7 +17,6 @@ const handler = async (req, res) => {
 			headers: { authorization }, query: { page }
 		} = req;
 
-		console.log('page: ', page);
 
 		try {
 			const ArrayOfFollowedPeopleId = [];

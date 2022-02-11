@@ -67,7 +67,6 @@ const NewsFeedFilters = ({
 	}
 
 	const _HandleClearRating = () => {
-		console.log("handle clear called");
 		setRatingStars(0);
 		_HandleClear();
 		setRating(0);

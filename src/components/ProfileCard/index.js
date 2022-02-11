@@ -83,9 +83,6 @@ const ProfileCard = ({
             &nbsp;<p className="text-sm">{views} Views</p>
           </span>
           <span className="flex w-full items-center justify-center">
-          {
-              console.log(_rating)
-          }
            {!_fetching ? ( <>
                       <CustomStar value={_rating} isHalf={true} />
                     </>

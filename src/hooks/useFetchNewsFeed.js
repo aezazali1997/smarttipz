@@ -103,7 +103,6 @@ const UseFetchNewsFeed = () => {
   }, []);
 
   useEffect(() => {
-    console.log('posts updated');
   }, [posts]);
 
   const _FetchMoreData = async () => {

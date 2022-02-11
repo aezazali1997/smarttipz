@@ -1,4 +1,4 @@
-import Rating from 'react-simple-star-rating'
+import {Rating} from 'react-simple-star-rating'
 
 const SimpleRatingStars = ({ size, value, onChange }) => {
     return (

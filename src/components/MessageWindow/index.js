@@ -33,7 +33,6 @@ const MessageWindow = ({ message, setMessage, selected, goBackToUserList }) => {
 
     useEffect(() => {
         socket.on('recieveMessage', (res) => {
-            console.log('res', res);
             let copyArray = [...userMessages];
             let updatedArray = [...copyArray, res]
             setMessages(updatedArray);

@@ -439,7 +439,6 @@ const UseFetchProfile = (profile) => {
     }
 
     const _HandleDeleteVideo = async (index, videoId) => {
-        console.log(index, videoId);
         try {
             const res = await axiosInstance.deleteVideo(videoId);
             const originalArray = [...myVideos];

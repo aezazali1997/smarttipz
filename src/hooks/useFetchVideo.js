@@ -88,7 +88,6 @@ const UseFetchVideo = () => {
           item.Video.catalogue = !catalogue;
           return item;
         });
-        console.log('newFilteredArray:', newFilteredArray);
         setVideos(newArray);
         setFilterVideos(newFilteredArray);
       } catch ({

@@ -30,7 +30,6 @@ const handler = async (req, res) => {
             }
 
             const { id } = await User.findOne({ where: { username: username } });
-            console.log('OwnerID', id)
 
             const chats = await Chat.findAll({
                 limit: 1,
@@ -49,7 +48,6 @@ const handler = async (req, res) => {
                 plain: true
             });
 
-            console.log('isRead: ', isRead);
             const response = {
                 id: recieverID,
                 name: name,

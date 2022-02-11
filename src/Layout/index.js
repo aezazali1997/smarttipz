@@ -17,7 +17,6 @@ const CustomLayout = ({ children }) => {
         const hideMenu = () => {
             if (window.innerWidth > 991 && isOpen) {
                 setIsOpen(false);
-                console.log('i resized');
             }
         };
 

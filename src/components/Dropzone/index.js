@@ -15,19 +15,16 @@ const MyDropzone = ({ setMaterial, setMediaType, accept, heading, urls, Type, _D
     const [uploading, setUploading] = useState(false);
 
     const onDrop = useCallback(async (acceptedFiles) => {
-        console.log('acceptedFiles:', acceptedFiles);
         // FOR SINGLE IMAGE/VIDEO //
         for (let i = 0; i < acceptedFiles.length; i++) {
             setUploading(true);
             let file = acceptedFiles[0];
             let url = await uploadToS3(file);
-            console.log("file: ", url);
             setMediaType(file);
             setMaterial(url.url);
             setUploading(false)
         }
     }, [])
-    console.log('files: ', files);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 

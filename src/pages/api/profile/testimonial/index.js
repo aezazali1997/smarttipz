@@ -93,7 +93,6 @@ const handler = async (req, res) => {
         return res.status(400).send({ error: true, data: [], message: 'No data send to server' })
       }
 
-      console.log('body: ', body);
       // const { ownerName, designation, description, picture, id } = body;
 
       // const testimonial = await Testimonial.findOne({ where: { id } });

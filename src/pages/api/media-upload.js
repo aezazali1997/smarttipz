@@ -21,8 +21,6 @@ export default async function handler(req, res) {
         return res.status(400).send({ error: true, message: 'No file uploaded', data: [] })
     }
 
-    console.log('fileName:', fileName);
-    console.log('fileType: ', fileType);
 
 
     const s3Params = {
@@ -40,7 +38,6 @@ export default async function handler(req, res) {
                 signedRequest: data,
                 url: `https://${S3Bucket}.s3.amazonaws.com/uploads/${fileName}`
             };
-            console.log('returnData', returnData.url);
             // const imageUrl = await prisma.user.update({
             //     where: {
             //         email: session.user.email

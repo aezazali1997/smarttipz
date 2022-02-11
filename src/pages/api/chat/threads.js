@@ -26,7 +26,6 @@ const handler = async (req, res) => {
             );
 
             const { id } = await User.findOne({ where: { username } });
-            console.log('id', id)
             if (!id) {
                 return res.status(400).send({ error: true, data: [], message: 'User not Found' })
             }

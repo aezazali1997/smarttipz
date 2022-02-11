@@ -11,7 +11,6 @@ const ShareModal = ({
     shareData: data = {},
     shareCaption = ''
 }) => {
-    console.log('data: ', data);
     return (
         <>
             <Modal
