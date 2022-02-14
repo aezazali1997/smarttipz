@@ -81,13 +81,20 @@ const Video = sequelize.define("Video", {
 });
 
 
-Video.hasMany(Favourite);
+Video.hasMany(Favourite,{
+  onDelete:'cascade'
+});
 Favourite.belongsTo(Video);
 
-Video.hasMany(AllPosts);
+Video.hasMany(AllPosts,{
+  onDelete:'cascade'
+});
 AllPosts.belongsTo(Video);
 
-Video.hasMany(Share);
+Video.hasMany(Share,
+{
+  onDelete:'cascade'
+});
 Share.belongsTo(Video);
 
 

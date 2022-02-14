@@ -102,6 +102,7 @@ const Search = () => {
 										<p className="text-sm text-gray-400"> Loading Posts</p>
 									</span>
 								</div>
+
 							) : isEmpty(posts) ? (
 								<div className="flex w-full justify-center items-center">
 									<p className="text-gray-500"> No Posts Found</p>

@@ -8,14 +8,14 @@ import { isEmpty } from 'lodash';
 import AllPosts from 'models/AllPost';
 import Comments from 'models/Comments';
 import Share from 'models/Share';
-import { FilterContent,getPagination,getPagingData } from 'utils/consts';
+import { FilterContent } from 'utils/consts';
 
 const handler = async (req, res) => {
     if (req.method === 'POST') {
         const {
             body: { videoType, videoCategory, accountType },
             headers: { authorization },
-            query: { search, sort, category, rating ,currentPage}
+            query: { search, sort, category, rating }
         } = req;
         try {
             if (!authorization) {
@@ -29,10 +29,6 @@ const handler = async (req, res) => {
             });
 
             const ArrayOfFollowedPeopleId = [];
-
-            	const { limit, offset } = getPagination(currentPage, 5)
-            
-            
             ArrayOfFollowedPeopleId.push(userId);
 
             const followers = await db.query(
@@ -42,57 +38,9 @@ const handler = async (req, res) => {
             followers && followers[0].map(({ followers }) => ArrayOfFollowedPeopleId.push(followers));
 
             console.log('ArrayOfFollowedPeopleId', ArrayOfFollowedPeopleId);
-            const videosCount = await AllPosts.count({
-				// where: { VideoId: 1},
-				include: [
-					{
-						model: Video,
-						include: [
-							{
-								model: User,
-							}
-						]
-					},
-					{
-						model: Share,
-						include: [
-							{
-								model: User,
-							}
-						]
-					}
-				],
-				where: {
-					[sequelize.Op.and]: [
-						{
-							'$Video->User.isDeleted$': {
-								[sequelize.Op.eq]: false
-							}
-						},
-						{
-							[sequelize.Op.or]: [
-								{
-									'$Video.UserId$': {
-										[sequelize.Op.in]: ArrayOfFollowedPeopleId
-									}
-								},
-								{
-									'$Share.UserId$': {
-										[sequelize.Op.in]: ArrayOfFollowedPeopleId
-									}
-								},
-							]
-						},
-						{
-							'$Video->User.isBlocked$': {
-								[sequelize.Op.eq]: false
-							}
-						}
-					]
-				},
-			})
 
-            const videos = await AllPosts.findAll({
+
+            const videos = await AllPosts.findOne({
                 include: [
                     {
                         model: Video,
@@ -123,8 +71,6 @@ const handler = async (req, res) => {
                     }
                 ],
                 where: FilterContent(search, category, videoType, videoCategory, accountType, ArrayOfFollowedPeopleId, rating),
-                limit: limit,
-				        offset: offset,
                 group: [
                     'AllPost.id',
                     'Video.id',
@@ -143,10 +89,10 @@ const handler = async (req, res) => {
                 ],
                 order: [['createdAt', sort]]
             });
-       
+               
             for (let i = 0; i < videos.length; i++) {
                 const item = videos[i];
-                const { id, VideoId, Video, Share: Shares, isShared, } = item;
+                const { id, VideoId, Video, Share: Shares, isShared } = item;
                 const likeCount = await PostLikee.count({
                     where: {
                         AllPostId: id
@@ -179,11 +125,11 @@ const handler = async (req, res) => {
 
                 videos[i] = { id, VideoId, totalRaters, avgRating, isShared, Video, Share: Shares, likeCount, shareCount, commentCount, isLiked: isLiked ? true : false }
             };
-          const response = getPagingData(videos, currentPage, limit, videosCount);
+
             res.status(200).json({
                 error: false,
                 message: 'success',
-                data: { videos, ...response }
+                data:  [videos] 
             });
         } catch (err) {
             console.log('Videos Api Failed Error: ', err.message);

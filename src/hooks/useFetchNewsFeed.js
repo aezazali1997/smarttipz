@@ -8,6 +8,7 @@ import { UploadSmartReviewVideoSchema, UploadSmartTipzVideoSchema, UploadVideoSc
 import { calculateAvgRating, checkCount, checkCountById, checkLikeCount } from 'helpers';
 
 const UseFetchNewsFeed = () => {
+  console.log("rendered hook");
   const router = useRouter();
 
   const initials = {
@@ -102,8 +103,8 @@ const UseFetchNewsFeed = () => {
     GetPosts(current);
   }, []);
 
-  useEffect(() => {
-  }, [posts]);
+  // useEffect(() => {
+  // }, [posts]);
 
   const _FetchMoreData = async () => {
     try {
@@ -222,7 +223,7 @@ const UseFetchNewsFeed = () => {
     setSelectedLanguage(value);
   };
 
-  useEffect(() => {}, [urls, posts]);
+  // useEffect(() => {}, [urls, posts]);
 
   const _OnSubmit = async (values, setSubmitting, resetForm) => {
     setSubmitting(true);

@@ -97,6 +97,30 @@ const UseSearch = () => {
     };
 
     //LOADERS END HERE//
+    let getOnePosts= async () =>{
+        enablePostsLoading();
+        try {
+            const { data: { data: { videos } } } = await axiosInstance.getFilteredPost(filterSearch);
+            setPosts(videos);
+            // var count = 0;
+            // for (let i = 0; i < videos.length; i++) {
+            //     if (videos[i].Video.catalogue === true &&
+            //         videos[i].Video.isApproved === true &&
+            //         videos[i].isShared === false &&
+            //         videos[i].Video.UserId == parseInt(localStorage.getItem('id'))) {
+            //         count = count + 1;
+            //     }
+            // }
+            // setCatalogueCount(count);
+            disablePostsLoading();
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log(message);
+            disablePostsLoading();
+        }
+    }
+    
+
 
     let GetPosts = async () => {
         enablePostsLoading();

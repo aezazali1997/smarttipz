@@ -113,7 +113,8 @@ const NewsFeed = () => {
               </p>
             }>
             <div className="space-y-4">
-              {posts.map((item, index) => {
+              {
+              posts.map((item, index) => {
                 const {
                   id: postId,
                   Video,
@@ -168,9 +169,10 @@ const NewsFeed = () => {
                     TogglePaymentModal={() => _TogglePaymentModal(cost)}
                   />
                 ) : (
+                  // ask suleman about this
                   isApproved && isShowOnNewsfeed && (
                     <NewsfeedCard
-                      key={index}
+                      key={index} 
                       id={postId}
                       videoId={id}
                       UserId={UserId}

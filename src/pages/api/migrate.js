@@ -18,18 +18,18 @@ const handler = async (req, res) => {
     // sequelize.sync({ force: true });
     // force dlets all data and creates a new table
     // alter updates the data
-    // AllPosts.sync({ alter: true });
-    // Rating.sync({ alter: true });
+        AllPosts.sync({ alter:true });
+        // Video.sync({ alter: true });
+        // Rating.sync({ alter: true });
+        // Comment.sync({ alter: true });
+        // Share.sync({ alter: true });
+        // Like.sync({ alter: true });
+        // Share.sync({ alter: true });
     // User.sync({ alter: true });
     // await Business.sync({ force: true });
     // await BusinessCard.sync({ force: true });
     // await Session.sync({ force: true });
-    // Comment.sync({ force: true });
-    // Share.sync({ alter: true });
-    // Video.sync({ alter: true });
-    // Like.sync({ force: true });
     // Favourite.sync({ force: true });
-    // Share.sync({ alter: true });
     // await Testimonial.sync({ force: true });
     // await Chat.sync({ force: true });
     res.status(200).send({ message: "Tables created Successfully" });

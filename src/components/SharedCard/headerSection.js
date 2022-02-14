@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react'
-
+import moment from 'moment';
 const HeaderSection = ({ Share, _HandleGotoUserProfile, UserId }) => {
 
     return (
@@ -19,7 +19,7 @@ const HeaderSection = ({ Share, _HandleGotoUserProfile, UserId }) => {
                             {Share?.User?.name}
                         </p>
                     </div>
-                    <p className="text-xs text-gray-500">19h</p>
+                    <p className="text-xs text-gray-500 mt-1">{moment(Share?.createdAt,"YYYYMMDD").fromNow()}</p>
                 </div>
             </div>
         </div>
