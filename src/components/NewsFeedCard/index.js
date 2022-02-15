@@ -295,6 +295,7 @@ const NewsfeedCard = ({
                 />
               </div>
             </div>
+            {/* change for pushing code */}
           </div>
           <p
             onClick={() => _HandleGotoVideoDetails(id)}
