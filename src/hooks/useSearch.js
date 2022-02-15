@@ -40,6 +40,8 @@ const UseSearch = () => {
     const [showAmountModal, setShowAmountModal] = useState(false);
     const [videoPayment, setVideoPayment] = useState(0);
     const [ratingData, setRatingData] = useState({ ...initialRatingData });
+const [currentPage,setCurrentPage]=useState(0);
+const [hasMore,setHasMore]=useState(false);
 
     const [rateFilter, setRateFilter] = useState(0);
     const [account, setAccountType] = useState({
@@ -71,7 +73,14 @@ const UseSearch = () => {
             window.removeEventListener('resize', hideMenu);
         };
     });
-
+  useEffect(()=>{
+        if(activeGenericFilter==='All' || activeGenericFilter==='Posts'){
+            GetPosts(currentPage);
+        }
+        else{
+            GetUserProfiles();
+        }
+    },[activeGenericFilter])
     //LOADERS START HERE//
 
     const enableProfileLoading = () => {
@@ -102,31 +111,6 @@ const UseSearch = () => {
         try {
             const { data: { data: { videos } } } = await axiosInstance.getFilteredPost(filterSearch);
             setPosts(videos);
-            // var count = 0;
-            // for (let i = 0; i < videos.length; i++) {
-            //     if (videos[i].Video.catalogue === true &&
-            //         videos[i].Video.isApproved === true &&
-            //         videos[i].isShared === false &&
-            //         videos[i].Video.UserId == parseInt(localStorage.getItem('id'))) {
-            //         count = count + 1;
-            //     }
-            // }
-            // setCatalogueCount(count);
-            disablePostsLoading();
-        }
-        catch ({ response: { data: { message } } }) {
-            console.log(message);
-            disablePostsLoading();
-        }
-    }
-    
-
-
-    let GetPosts = async () => {
-        enablePostsLoading();
-        try {
-            const { data: { data: { videos } } } = await axiosInstance.getFilteredPosts(filterSearch, sort, category, videoCategory, videoType, account, rateFilter);
-            setPosts(videos);
             var count = 0;
             for (let i = 0; i < videos.length; i++) {
                 if (videos[i].Video.catalogue === true &&
@@ -144,6 +128,89 @@ const UseSearch = () => {
             disablePostsLoading();
         }
     }
+    
+
+
+    let GetPosts = async (currentPageCount) => {
+        enablePostsLoading();
+
+        if(activeGenericFilter==='All'){
+             try {
+            const { data: { data: { videos } } } = await axiosInstance.getFilteredPost(filterSearch, sort, category, videoCategory, videoType, account, rateFilter);
+            setPosts(videos);
+            var count = 0;
+            for (let i = 0; i < videos.length; i++) {
+                if (videos[i].Video.catalogue === true &&
+                    videos[i].Video.isApproved === true &&
+                    videos[i].isShared === false &&
+                    videos[i].Video.UserId == parseInt(localStorage.getItem('id'))) {
+                    count = count + 1;
+                }
+            }
+            setCatalogueCount(count);
+            disablePostsLoading();
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log(message);
+            disablePostsLoading();
+        }
+        }
+        else if (activeGenericFilter==='Posts')
+        {
+            try {
+            const { data: { data:{videos,totalVideos} } } = await axiosInstance.getFilteredPosts(filterSearch, sort, category, videoCategory, videoType, account, rateFilter,currentPageCount);
+            // console.log("data",videos);
+            setPosts(videos);
+            setCurrentPage((prev) => (prev = currentPage));
+            videos.length >= totalVideos ? setHasMore(false) : setHasMore(true)
+            // var count = 0;
+            // for (let i = 0; i < data.videos.length; i++) {
+            //     if (videos[i].Video.catalogue === true &&
+            //         videos[i].Video.isApproved === true &&
+            //         videos[i].isShared === false &&
+            //         videos[i].Video.UserId == parseInt(localStorage.getItem('id'))) {
+            //         count = count + 1;
+            //     }
+            // }
+            // setCatalogueCount(count);
+            disablePostsLoading();
+        }
+        catch ({ response: { data: { message } } }) {
+            console.log(message);
+            disablePostsLoading();
+        }
+
+        }
+        
+    }
+
+     const _FetchMoreData = async () => {
+    try {
+      const {
+        data: {
+          data: { videos: moreVideos, totalVideos }
+        }
+      } = await axiosInstance.getFilteredPosts( filterSearch,
+        sort,
+        category,
+        videoCategory,
+        videoType,
+        account,
+        rateFilter,
+        currentPage + 1);
+      localStorage.setItem('currentPageCount', currentPage + 1);
+      setCurrentPage(currentPage + 1);
+      const updatedPostArray = [...posts, ...moreVideos];
+      updatedPostArray.length >= totalVideos ? setHasMore(false) : setHasMore(true);
+      setPosts([...updatedPostArray]);
+    } catch ({
+      response: {
+        data: { message }
+      }
+    }) {
+      console.log(message);
+    }
+  };
 
     let GetUserProfiles = async () => {
         enableProfileLoading();
@@ -175,9 +242,10 @@ const UseSearch = () => {
 
     useEffect(() => {
         _CheckUrl()
-        GetPosts();
+        GetPosts(currentPage);
         GetUserProfiles();
     }, [filterSearch, sort, category, videoCategory, videoType, account, rateFilter]);
+  
 
 
     const _HandleCatalogue = async (videoId, catalogue) => {
@@ -296,7 +364,7 @@ const UseSearch = () => {
     const _HandleChangeTip = ({ target }) => {
         const { value } = target;
         setTip(value)
-        console.log('value: ', value);
+        // console.log('value: ', value);
     }
 
 
@@ -309,7 +377,7 @@ const UseSearch = () => {
     const _HandleActiveGenericFilter = (active) => {
         setActiveGenericFilter(active);
         router.replace(`/search?active=${active}`)
-        active === 'All' || active === 'Posts' ? GetPosts() : GetUserProfiles();
+        // active === 'All' || active === 'Posts' ? GetPosts() : GetUserProfiles();
     }
 
     let _ChangeCategoryFilter = ({ target }) => {
@@ -393,13 +461,13 @@ const UseSearch = () => {
     }
 
     const _HandleRateFilter = (value) => {
-        console.log("type of Value: ", typeof value)
-        console.log('In Change Rate Filter Method: ', value);
+        // console.log("type of Value: ", typeof value)
+        // console.log('In Change Rate Filter Method: ', value);
         setRateFilter(value);
     }
 
     const _HandleClearRating = () => {
-        console.log('..................clicked..................');
+        // console.log('..................clicked..................');
         setRateFilter(0);
     }
 
@@ -412,7 +480,9 @@ const UseSearch = () => {
         HandleLikePost, tip, _HandleVideoTypeFilter, _HandleVideoCategoryFilter, _HandleToggleFilterModal, showFilterModal,
         _OpenShareModal, _HandleChangeCaption, _HandleSharePost, shareCaption, shareData, isSharing, showShareModal,
         _CloseShareModal, setShareCaption, OpenRatingModal, _SubmitRating, _TogglePaymentModal, showAmountModal,
-        videoPayment, _HandleCommentCounts, rateFilter, _HandleRateFilter, _HandleClearRating
+        videoPayment, _HandleCommentCounts, rateFilter, _HandleRateFilter, _HandleClearRating,
+        _FetchMoreData,
+        hasMore
     }
 }
 

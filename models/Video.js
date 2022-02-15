@@ -78,6 +78,10 @@ const Video = sequelize.define("Video", {
   approvedBy: {
     type: DataTypes.INTEGER,
   },
+    shareCount:{
+        type:DataTypes.INTEGER,
+        defaultValue:0,
+    }
 });
 
 

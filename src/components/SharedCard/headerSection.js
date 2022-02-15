@@ -19,7 +19,9 @@ const HeaderSection = ({ Share, _HandleGotoUserProfile, UserId }) => {
                             {Share?.User?.name}
                         </p>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">{moment(Share?.createdAt,"YYYYMMDD").fromNow()}</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                    {/* {moment(Share?.createdAt,"YYYYMMDD").fromNow()} */}
+                    19h</p>
                 </div>
             </div>
         </div>

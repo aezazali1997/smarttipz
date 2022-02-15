@@ -61,34 +61,54 @@ const handler = async (req, res) => {
             ]
           }
         ],
-        where: {
-          [sequelize.Op.and]: [
-            {
-              '$Video->User.isDeleted$': {
-                [sequelize.Op.eq]: false
-              }
-            },
-            {
-              [sequelize.Op.or]: [
-                {
-                  '$Video.UserId$': {
-                    [sequelize.Op.in]: ArrayOfFollowedPeopleId
-                  }
-                },
-                {
-                  '$Share.UserId$': {
-                    [sequelize.Op.in]: ArrayOfFollowedPeopleId
-                  }
+          where:{
+         [sequelize.Op.and]: [
+           {
+                '$Video->User.isDeleted$': {
+                  [sequelize.Op.eq]: false
                 }
-              ]
-            },
-            {
-              '$Video->User.isBlocked$': {
-                [sequelize.Op.eq]: false
+              },
+              {
+                [sequelize.Op.or]: [
+                  {
+                    '$Video.UserId$': {
+                      [sequelize.Op.in]: ArrayOfFollowedPeopleId
+                    }
+                  },
+                  {
+                    '$Share.UserId$': {
+                      [sequelize.Op.in]: ArrayOfFollowedPeopleId
+                    }
+                  }
+                ]
+              },
+              {
+                '$Video->User.isBlocked$': {
+                  [sequelize.Op.eq]: false
+                }
               }
-            }
-          ]
-        }
+            ],
+           [sequelize.Op.or]: [
+              {
+                'isShared': {
+                  [sequelize.Op.eq]: true
+                }
+              },
+              {
+               [sequelize.Op.and]: [
+              {
+                'isShared': {
+                  [sequelize.Op.eq]: false
+                }
+              },
+              {
+                '$Video.isApproved$': {
+                  [sequelize.Op.eq]: true
+                }
+              }
+            ],
+            }]
+           },
       });
       const catalogCount = await Video.count({
         include: [
@@ -139,50 +159,54 @@ const handler = async (req, res) => {
             ]
           }
         ],
-        where: {
-          [sequelize.Op.and]: [
-            // {
-            //   [sequelize.Op.and]: [
-            //     {
-            //       '$Share.id$': {
-            //         [sequelize.Op.ne]: null
-            //       }
-            //     },
-            //     
-            //     }
-            //   ]
-            // },
-						{
-                  '$Video.isApproved$': {
-                    [sequelize.Op.eq]: true
-                  }
-						},
-            {
-              '$Video->User.isDeleted$': {
-                [sequelize.Op.eq]: false
-              }
-            },
-            {
-              [sequelize.Op.or]: [
-                {
-                  '$Video.UserId$': {
-                    [sequelize.Op.in]: ArrayOfFollowedPeopleId
-                  }
-                },
-                {
-                  '$Share.UserId$': {
-                    [sequelize.Op.in]: ArrayOfFollowedPeopleId
-                  }
+       where:{
+         [sequelize.Op.and]: [
+           {
+                '$Video->User.isDeleted$': {
+                  [sequelize.Op.eq]: false
                 }
-              ]
-            },
-            {
-              '$Video->User.isBlocked$': {
-                [sequelize.Op.eq]: false
+              },
+              {
+                [sequelize.Op.or]: [
+                  {
+                    '$Video.UserId$': {
+                      [sequelize.Op.in]: ArrayOfFollowedPeopleId
+                    }
+                  },
+                  {
+                    '$Share.UserId$': {
+                      [sequelize.Op.in]: ArrayOfFollowedPeopleId
+                    }
+                  }
+                ]
+              },
+              {
+                '$Video->User.isBlocked$': {
+                  [sequelize.Op.eq]: false
+                }
               }
-            }
-          ]
-        },
+            ],
+           [sequelize.Op.or]: [
+              {
+                'isShared': {
+                  [sequelize.Op.eq]: true
+                }
+              },
+              {
+               [sequelize.Op.and]: [
+              {
+                'isShared': {
+                  [sequelize.Op.eq]: false
+                }
+              },
+              {
+                '$Video.isApproved$': {
+                  [sequelize.Op.eq]: true
+                }
+              }
+            ],
+            }]
+           },
         limit: limit,
         offset: offset,
         group: [
@@ -207,30 +231,31 @@ const handler = async (req, res) => {
 
       for (let i = 0; i < videos.length; i++) {
         const item = JSON.parse(JSON.stringify(videos[i]));
-        const { id, VideoId, Video, Share: Shares, isShared } = item;
-
-
-        const likeCount = await PostLikee.count({
-          where: {
-            AllPostId: id
-          }
-        });
+        const { id, VideoId, Video, Share: Shares, isShared,likeCount,commentCount } = item;
         const isLiked = await PostLikee.find({
           where: {
             AllPostId: id,
             reviewerId: userId
           }
         });
-        const commentCount = await Comments.count({
-          where: {
-            AllPostId: id
-          }
-        });
-        const shareCount = await Share.count({
-          where: {
-            VideoId
-          }
-        });
+        
+        // const commentCount = await Comments.count({
+        //   where: {
+        //     AllPostId: id
+        //   }
+        // });
+        // const shareCount = await Share.count({
+        //   where: {
+        //     VideoId
+        //   }
+        // });
+        // const videoShareCount = await Video.findOne({
+        //   where:{
+        //     id:VideoId
+        //     },
+        //   attributes:['shareCount'],
+        // })
+        let shareCount=Video.shareCount
 
         const ratings =
           await db.query(`select avg(r."rating") as "avgRating", count(r."AllPostId") as "totalRaters" from "AllPosts" p
@@ -245,13 +270,12 @@ const handler = async (req, res) => {
           id,
           avgRating: avgRating,
           totalRaters,
-          isApproved: Video.isApproved,
           VideoId,
           isShared,
           Video,
           Share: Shares,
           likeCount,
-          shareCount,
+         shareCount,
           commentCount,
           isLiked: isLiked ? true : false
         };

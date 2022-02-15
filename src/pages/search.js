@@ -8,11 +8,13 @@ import {
 	NewsFeedFilters,
 	ProfileOverviewCard,
 	SharedCard,
+	CustomLoader,
 	SortFilter,
 	Spinner
 } from 'src/components';
 import { FilterModal, PaymentModal, ShareModal, TipModal, VideoRatingModal } from 'src/components/Modals';
 import { UseSearch } from 'src/hooks';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const Search = () => {
 	const {
@@ -66,6 +68,8 @@ const Search = () => {
 		_HandleClearRating,
 		showAmountModal,
 		videoPayment
+		,_FetchMoreData,
+		hasMore
 	} = UseSearch();
 
 	return (
@@ -109,8 +113,8 @@ const Search = () => {
 							</div>
 							) : (
 								<>
-									{posts
-										.slice(0, 1)
+									{[posts]
+										// .slice(0, 1)
 										.map(({
 											id: postId,
 											Video,
@@ -137,7 +141,8 @@ const Search = () => {
 												productLink,
 												watchLimit,
 												isApproved,
-												cost
+												cost,
+												rating
 											}
 										}
 											, index) => (
@@ -176,7 +181,7 @@ const Search = () => {
 														url={url}
 														views={200}
 														User={User}
-														rating={2.5}
+														rating={rating}
 														Shares={Shares}
 														description={description}
 														title={title}
@@ -290,7 +295,24 @@ const Search = () => {
 								<div className="flex w-full justify-center items-center">
 									<p className="text-gray-500"> No Posts Found</p>
 								</div>
-							) :
+							) : 	
+							<InfiniteScroll
+            	dataLength={posts?.length ? posts.length : 0 } //This is important field to render the next data
+            	next={_FetchMoreData}
+            	hasMore={hasMore}
+            	loader={
+              <div className="flex justify-center items-center w-full">
+                <CustomLoader />
+              </div>
+            }
+            endMessage={
+              <p style={{ textAlign: 'center', padding: '2px 0' }}>
+                <b>Yay! You have seen it all</b>
+              </p>
+            }>
+						<div className='space-y-4'>
+						{
+							!isEmpty(posts) && Array.isArray(posts) ?
 								posts.map(
 									(
 										{
@@ -386,7 +408,11 @@ const Search = () => {
 													ToggleRatingModal={() => OpenRatingModal({ postId, avgRating, totalRaters })}
 												/>
 											)
-								)}
+								) : null
+								}
+								</div>
+						</InfiniteScroll>
+								}
 					</div>
 				) : activeGenericFilter === 'Profile' ? (
 					<div className="space-y-4">

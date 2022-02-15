@@ -64,11 +64,7 @@ export const FilterContent = (
           [sequelize.Op.iLike]: `%${category}%`
         }
       },
-      {
-        '$Video.isApproved$': {
-          [sequelize.Op.eq]: true
-        }
-      },
+      
       {
         [sequelize.Op.or]: [
           {
@@ -109,7 +105,27 @@ export const FilterContent = (
       },
       {
         '$Video.rating$': getVideoByRating(rating)
-      }
+      },
+      // {
+      //                 'isShared': {
+      //             [sequelize.Op.eq]: true
+      //           }
+      // },
+      // {
+      //          [sequelize.Op.and]: [
+      //         {
+      //           'isShared': {
+      //             [sequelize.Op.eq]: false
+      //           }
+      //         },
+      //         {
+      //           '$Video.isApproved$': {
+      //             [sequelize.Op.eq]: true
+      //           }
+              
+      // }]
+      // },
+      
     ],
     [sequelize.Op.or]: [
       {
@@ -164,6 +180,7 @@ export const FilterContent = (
         }
       }
     ],
+    
   };
 };
 

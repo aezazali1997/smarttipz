@@ -10,18 +10,14 @@ const   AllPosts = sequelize.define("AllPost", {
         type: DataTypes.BOOLEAN,
         defaultValue: false
     },
-    // likeCount:{
-    //     type:DataTypes.INTEGER,
-    //     defaultValue:0,
-    // },
-    //  commentCount:{
-    //     type:DataTypes.INTEGER,
-    //     defaultValue:0,
-    // },
-    //  shareCount:{
-    //     type:DataTypes.INTEGER,
-    //     defaultValue:0,
-    // }
+    likeCount:{
+        type:DataTypes.INTEGER,
+        defaultValue:0,
+    },
+     commentCount:{
+        type:DataTypes.INTEGER,
+        defaultValue:0,
+    }
 });
 
 AllPosts.hasMany(PostLikee,{

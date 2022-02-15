@@ -85,28 +85,29 @@ const handler = async (req, res) => {
 
             for (let i = 0; i < videos.length; i++) {
                 const item = videos[i];
-                const { id, VideoId, Video, Share: Shares, isShared, } = item;
-                const likeCount = await PostLikee.count({
-                    where: {
-                        AllPostId: id
-                    }
-                });
+                const { id, VideoId, Video, Share: Shares, isShared,likeCount,commentCount } = item;
+                // const likeCount = await PostLikee.count({
+                //     where: {
+                //         AllPostId: id
+                //     }
+                // });
                 const isLiked = await PostLikee.find({
                     where: {
                         AllPostId: id,
                         reviewerId: userId
                     }
                 });
-                const commentCount = await Comments.count({
-                    where: {
-                        AllPostId: id,
-                    }
-                });
-                const shareCount = await Share.count({
-                    where: {
-                        VideoId
-                    }
-                });
+                // const commentCount = await Comments.count({
+                //     where: {
+                //         AllPostId: id,
+                //     }
+                // });
+                // const shareCount = await Share.count({
+                //     where: {
+                //         VideoId
+                //     }
+                // });
+                const shareCount=Video.shareCount
                 const ratings = await db.query(`select avg(r."rating") as "avgRating", count(r."AllPostId") as "totalRaters" from "AllPosts" p
 						left join "Ratings" as r on p.id=r."AllPostId"
 						where (p.id=${id} and r."AllPostId"=${id})

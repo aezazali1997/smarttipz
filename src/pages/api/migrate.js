@@ -18,8 +18,8 @@ const handler = async (req, res) => {
     // sequelize.sync({ force: true });
     // force dlets all data and creates a new table
     // alter updates the data
-        AllPosts.sync({ alter:true });
-        // Video.sync({ alter: true });
+    // AllPosts.sync({ alter:true });
+    // Video.sync({ alter: true });
         // Rating.sync({ alter: true });
         // Comment.sync({ alter: true });
         // Share.sync({ alter: true });

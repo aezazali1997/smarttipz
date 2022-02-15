@@ -7,6 +7,7 @@ import { CommentActionDropdown } from '../Dropdown';
 const CommentCard = ({ data, _HandleGotoUserProfile, loading, _HandleDeleteComments }) => {
 	return (
 		<>
+	
 			{loading ? (
 				<div className="flex justify-center items-center w-full">
 					<Spinner />

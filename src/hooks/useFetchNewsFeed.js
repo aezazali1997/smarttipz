@@ -8,7 +8,6 @@ import { UploadSmartReviewVideoSchema, UploadSmartTipzVideoSchema, UploadVideoSc
 import { calculateAvgRating, checkCount, checkCountById, checkLikeCount } from 'helpers';
 
 const UseFetchNewsFeed = () => {
-  console.log("rendered hook");
   const router = useRouter();
 
   const initials = {
@@ -291,6 +290,7 @@ const UseFetchNewsFeed = () => {
   });
 
   const HandleLikePost = async (id, isLiked) => {
+    console.log("id ",id,"isliked",isLiked)
     const updatedPosts = await checkLikeCount(posts, id, isLiked);
     setPosts(updatedPosts);
     try {

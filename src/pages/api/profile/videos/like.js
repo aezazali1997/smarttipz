@@ -68,7 +68,7 @@ const handler = async (req, res) => {
             console.log('id => ', id);
 
             const allPost = await AllPosts.findOne({
-                attributes: ['id'],
+                attributes: ['id','likeCount'],
                 where: { id: postId }
             });
 
@@ -85,7 +85,12 @@ const handler = async (req, res) => {
                     reviewerId: id,
                     isLiked: true
                 });
-
+                // console.log('post id',postId);
+                // console.log("allPost",allPost.likeCount+1);
+                const likeCount = await AllPosts.update(
+                   { likeCount:allPost.likeCount+1},
+                     {where: {id: postId} },
+                )
                 await like.setAllPost(allPost);
                 return res.status(201).json({
                     error: false,
@@ -94,6 +99,10 @@ const handler = async (req, res) => {
                 });
             }
             await PostLike.destroy({ where: { reviewerId: id } });
+            const likeCount = await AllPosts.update(
+                   { likeCount:allPost.likeCount-1},
+                     {where: {id: postId} },
+                )
             res.status(200).json({
                 error: false,
                 message: 'Post Unliked',

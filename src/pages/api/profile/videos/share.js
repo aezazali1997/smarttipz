@@ -66,7 +66,7 @@ const handler = async (req, res) => {
             });
 
             const video = await Video.findOne({
-                attributes: ['id'],
+                attributes: ['id','shareCount'],
                 where: { id: videoId, isApproved: true }
             });
 
@@ -81,7 +81,15 @@ const handler = async (req, res) => {
                 isShared: true,
                 ShareId: share.id
             });
-
+            await Video.update(
+                {shareCount:video.shareCount+1},
+                {
+                    where:{
+                        id:video.id
+                    }
+                }
+            )
+            
             await share.setUser(user);
             await newPost.setShare(share);
             await newPost.setVideo(video);
