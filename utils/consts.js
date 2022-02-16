@@ -180,6 +180,26 @@ export const FilterContent = (
         }
       }
     ],
+    [sequelize.Op.or]: [
+              {
+                'isShared': {
+                  [sequelize.Op.eq]: true
+                }
+              },
+              {
+               [sequelize.Op.and]: [
+              {
+                'isShared': {
+                  [sequelize.Op.eq]: false
+                }
+              },
+              {
+                '$Video.isApproved$': {
+                  [sequelize.Op.eq]: true
+                }
+              }
+            ],
+            }]
     
   };
 };

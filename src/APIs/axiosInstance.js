@@ -201,8 +201,8 @@ class AxiosInstance {
     async getAllSharedVideos(currentPage) {
         return await axios.get(USER_API_BASE_URL + `api/newsfeed?page=${currentPage}`, this.getAuthHeader());
     }
-    async getRelatedVideos() {
-        return await axios.get(USER_API_BASE_URL + `api/related-videos`, this.getAuthHeader());
+    async getRelatedVideos(curentPage) {
+        return await axios.get(USER_API_BASE_URL + `api/related-videos?page=${curentPage}`, this.getAuthHeader());
     }
 
     async ratePost(payload) {

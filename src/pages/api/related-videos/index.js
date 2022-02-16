@@ -32,6 +32,7 @@ const handler = async (req, res) => {
                 where: { username, isDeleted: false, isBlocked: false }
             });
 
+             const { limit, offset } = getPagination(page, 5);
 
             ArrayOfFollowedPeopleId.push(userId);
 
@@ -40,6 +41,77 @@ const handler = async (req, res) => {
             );
 
             followers && followers[0].map(({ followers }) => ArrayOfFollowedPeopleId.push(followers));
+
+
+        const videosCount = await AllPosts.count({
+        // where: { VideoId: 1},
+        include: [
+          {
+            model: Video,
+            include: [
+              {
+                model: User
+              }
+            ]
+          },
+          {
+            model: Share,
+            include: [
+              {
+                model: User
+              }
+            ]
+          }
+        ],
+          where:{
+         [sequelize.Op.and]: [
+           {
+                '$Video->User.isDeleted$': {
+                  [sequelize.Op.eq]: false
+                }
+              },
+              {
+                [sequelize.Op.or]: [
+                  {
+                    '$Video.UserId$': {
+                      [sequelize.Op.in]: ArrayOfFollowedPeopleId
+                    }
+                  },
+                  {
+                    '$Share.UserId$': {
+                      [sequelize.Op.in]: ArrayOfFollowedPeopleId
+                    }
+                  }
+                ]
+              },
+              {
+                '$Video->User.isBlocked$': {
+                  [sequelize.Op.eq]: false
+                }
+              }
+            ],
+           [sequelize.Op.or]: [
+              {
+                'isShared': {
+                  [sequelize.Op.eq]: true
+                }
+              },
+              {
+               [sequelize.Op.and]: [
+              {
+                'isShared': {
+                  [sequelize.Op.eq]: false
+                }
+              },
+              {
+                '$Video.isApproved$': {
+                  [sequelize.Op.eq]: true
+                }
+              }
+            ],
+            }]
+           },
+      });
 
             const videos = await AllPosts.findAll({
                 include: [
@@ -89,9 +161,30 @@ const handler = async (req, res) => {
                                 [sequelize.Op.eq]: false
                             }
                         }
-                    ]
+                    ],
+                    [sequelize.Op.or]: [
+              {
+                'isShared': {
+                  [sequelize.Op.eq]: true
+                }
+              },
+              {
+               [sequelize.Op.and]: [
+              {
+                'isShared': {
+                  [sequelize.Op.eq]: false
+                }
+              },
+              {
+                '$Video.isApproved$': {
+                  [sequelize.Op.eq]: true
+                }
+              }
+            ],
+            }]
                 },
-
+                limit: limit,
+                offset: offset,
                 group: [
                     'AllPost.id',
                     'Video.id',
@@ -154,12 +247,13 @@ const handler = async (req, res) => {
                     shareCount, commentCount, isLiked: isLiked ? true : false
                 }
             };
+             const response = getPagingData(videos, page, limit, videosCount);
 
 
             res.status(200).send({
                 error: false,
                 message: 'success',
-                data: { videos }
+                data: { videos, ...response }
             });
         } catch (err) {
             console.log('Videos Api Failed Error: ', err.message);

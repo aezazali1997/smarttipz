@@ -229,6 +229,7 @@ const handler = async (req, res) => {
         order: [['createdAt', 'DESC']]
       });
 
+
       for (let i = 0; i < videos.length; i++) {
         const item = JSON.parse(JSON.stringify(videos[i]));
         const { id, VideoId, Video, Share: Shares, isShared,likeCount,commentCount } = item;

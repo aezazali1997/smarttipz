@@ -107,14 +107,14 @@ const Search = () => {
 									</span>
 								</div>
 
-							) : isEmpty(posts) ? (
+							) : isEmpty(posts) || Array.isArray(posts) || posts.length>1 ? (
 								<div className="flex w-full justify-center items-center">
 									<p className="text-gray-500"> No Posts Found</p>
+								
 							</div>
 							) : (
 								<>
 									{[posts]
-										// .slice(0, 1)
 										.map(({
 											id: postId,
 											Video,
@@ -311,6 +311,7 @@ const Search = () => {
               </p>
             }>
 						<div className='space-y-4'>
+					
 						{
 							!isEmpty(posts) && Array.isArray(posts) ?
 								posts.map(

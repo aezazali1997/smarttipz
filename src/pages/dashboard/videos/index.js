@@ -87,6 +87,7 @@ const Videos = () => {
               likeCount,
               commentCount,
               shareCount,
+              avgRating,
               Video: {
                 id,
                 title,
@@ -114,7 +115,7 @@ const Videos = () => {
                   User={User}
                   Shares={Shares}
                   views={200}
-                  rating={2.5}
+                  avgRating={avgRating}
                   isLiked={isLiked}
                   likeCount={likeCount}
                   commentCount={commentCount}

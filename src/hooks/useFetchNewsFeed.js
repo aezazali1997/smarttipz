@@ -309,7 +309,7 @@ const UseFetchNewsFeed = () => {
       const {
         data: { data, message }
       } = await axiosInstance.favouritePost({ videoId: id });
-      GetPosts();
+      GetPosts(0);
     } catch ({
       response: {
         data: { message }
@@ -360,7 +360,7 @@ const UseFetchNewsFeed = () => {
     }
   };
 
-  const _HandleDeleteVideo = async (videoId) => {
+  const _HandleDeleteVideo = async (index,videoId) => {
     try {
       await axiosInstance.deleteVideo(videoId);
       setCatalogueCount((catalogueCount) => catalogueCount - 1);

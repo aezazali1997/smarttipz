@@ -1,17 +1,20 @@
+import { isEmpty } from "lodash";
+
 export const calProfileRating = (videos)=>{
-  if ( Array.isArray(videos) && videos.length===0){
-    return 0;
-  }
-  if(Array.isArray(videos) && videos.length>0){
+  if(isEmpty(videos)) return 0;
     let sum=0;
     const TOTAL=videos.length;
-    for(let i=0; i<TOTAL; i++){
-      sum+=Number(videos[i].avgRating);
+    for(const video of videos){
+    console.log("videos",video)
+    console.log('video avg rating',video.avgRating);
+      sum+=Number(video.avgRating);
     }
-    return decimalSplitter(sum,TOTAL);
-  }
-}
-const decimalSplitter =(sum,TOTAL)=>{
+    console.log(sum)
+    let numberDecimal= decimalSplitter({sum,TOTAL});
+    console.log("decimal splited",numberDecimal);
+    return numberDecimal;
+} 
+const decimalSplitter =({sum,TOTAL})=>{
 
   let avg=(sum/TOTAL).toFixed(1);
     let dec=avg.split('.');

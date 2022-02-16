@@ -133,6 +133,7 @@ const [hasMore,setHasMore]=useState(false);
 
     let GetPosts = async (currentPageCount) => {
         enablePostsLoading();
+        
 
         if(activeGenericFilter==='All'){
              try {

@@ -8,7 +8,7 @@ const CountrySelector = ({ value, onChange }) => {
             country={'us'}
             placeholder="Enter phone number"
             value={value}
-            className="border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md w-full focus:shadow-sm px-2 py-3 h-12"
+            className="bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md w-full focus:shadow-sm h-12"
             onChange={onChange} />
     )
 }

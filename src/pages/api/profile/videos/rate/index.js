@@ -40,6 +40,7 @@ const handler = async (req, res) => {
         }
       });
       if (!isEmpty(hasRated)) {
+        // if rated
         await Rating.update(
           {
             rating: rating
@@ -59,6 +60,7 @@ const handler = async (req, res) => {
         });
         await newRating.setAllPost(newPost);
       }
+      console.log("rating",rating)
 
       const ratings =
         await db.query(`select avg(r."rating") as "avgRating", count(r."AllPostId") as "totalRaters" from "AllPosts" p
@@ -67,11 +69,13 @@ const handler = async (req, res) => {
 						group by p.id`);
 
       const avgRating = isEmpty(ratings[0]) ? 0 : ratings[0][0].avgRating;
+      console.log("avg rating",avgRating);
 
       const video = await Video.findOne({ where: { id: newPost.VideoId } });
 
       await video.update({
-        rating: parseInt(avgRating)
+        rating: avgRating
+        // parse float
       });
 
       return res.status(201).json({

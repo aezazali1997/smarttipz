@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
-import { faPaperPlane, faShareAlt, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { faCommentAlt,faPaperPlane, faShareAlt, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
 import { parseCookies } from 'nookies';
@@ -11,13 +11,27 @@ import {
 	Button, CommentCard, Rating, ReadLessReadMore, SuggestionCard, VideoPlayer
 } from 'src/components';
 import { PostActionDropdown } from 'src/components/Dropdown';
+import {CustomLoader} from 'src/components'
 import { PaymentModal, ShareModal, TipModal, VideoRatingModal } from 'src/components/Modals';
 import HandIcon from 'public/purple-hand.svg';
 import Image from 'next/image';
 import Link from 'next/link';
 import ReactTooltip from 'react-tooltip';
+import {isEmpty} from 'lodash'
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { calculateAvgRating } from 'helpers';
+import ReactStars from 'react-rating-stars-component';
+
 
 const VideoDetailScreen = () => {
+
+	const initialRatingData = {
+    postId: '',
+    oldAvgRating: '',
+    newRating: '',
+    totalRaters: ''
+}
+
 	const router = useRouter();
 	const { id } = router.query;
 	const [video, setVideo] = useState({});
@@ -35,8 +49,13 @@ const VideoDetailScreen = () => {
 	const [stopVideo, setStopVideo] = useState(false);
 	const [showAmountModal, setShowAmountModal] = useState(false);
 	const [videoPayment, setVideoPayment] = useState(0);
+	 const [current, setCurrentPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+	const [ratingData, setRatingData] = useState({ ...initialRatingData });
+
 
 	const _GetVideoById = async () => {
+		console.log("rendering this posts")
 		try {
 			const {
 				data: {
@@ -49,24 +68,27 @@ const VideoDetailScreen = () => {
 		}
 	};
 
-	let GetPosts = async () => {
+	let GetPosts = async (currentPage) => {
+		
 		try {
 			const {
 				data: {
-					data: { videos }
+					data: { videos, totalVideos }
 				}
-			} = await axiosInstance.getRelatedVideos();
+			} = await axiosInstance.getRelatedVideos(currentPage);
 			setPosts(videos);
-			var count = 0;
-			for (let i = 0; i < videos.length; i++) {
-				if (
-					videos[i].Video.catalogue === true &&
-					videos[i].Video.UserId == parseInt(localStorage.getItem('id'))
-				) {
-					count = count + 1;
-				}
-			}
-			setCatalogueCount(count);
+			 setCurrentPage((prev) => (prev = currentPage));
+      videos.length >= totalVideos ? setHasMore(false) : setHasMore(true);
+			// var count = 0;
+			// for (let i = 0; i < videos.length; i++) {
+			// 	if (
+			// 		videos[i].Video.catalogue === true &&
+			// 		videos[i].Video.UserId == parseInt(localStorage.getItem('id'))
+			// 	) {
+			// 		count = count + 1;
+			// 	}
+			// }
+			// setCatalogueCount(count);
 		} catch ({
 			response: {
 				data: { message }
@@ -75,6 +97,28 @@ const VideoDetailScreen = () => {
 			console.log(message);
 		}
 	};
+
+	const _FetchMoreData = async () => {
+    try {
+      const {
+        data: {
+          data: { videos: moreVideos, totalVideos, catalogCount }
+        }
+      } = await axiosInstance.getRelatedVideos(current+1);
+      localStorage.setItem('currentPageCount', current + 1);
+      setCurrentPage(current + 1);
+      setCatalogueCount(catalogCount);
+      const updatedPostArray = [...posts, ...moreVideos];
+      updatedPostArray.length >= totalVideos ? setHasMore(false) : setHasMore(true);
+      setPosts([...updatedPostArray]);
+    } catch ({
+      response: {
+        data: { message }
+      }
+    }) {
+      console.log(message);
+    }
+  };
 
 	const {
 		id: postId = "",
@@ -95,7 +139,8 @@ const VideoDetailScreen = () => {
 			videoCost = '',
 			productLink,
 			watchLimit = '',
-			cost = ''
+			cost = '',
+			likesCount
 		} = {}
 	} = video;
 
@@ -112,7 +157,7 @@ const VideoDetailScreen = () => {
 
 	useEffect(() => {
 		_GetVideoById();
-		GetPosts();
+		GetPosts(current);
 		getAllCommentsByVideoId();
 	}, []);
 
@@ -164,7 +209,59 @@ const VideoDetailScreen = () => {
 			});
 		}
 	};
+	   const EmptyStar = () => (
+    <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+    </svg>
+  );
+  const FilledStar = () => (
+    <svg className="w-4 h-4 text" fill="#f8b93b" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+    </svg>
+  );
+  const HalfStar = () => (
+    <ReactStars
+      count={1}
+      value={0.5}
+      size={18}
+      edit={false}
+      isHalf={true}
+      halfIcon={<i className="fa fa-star-half-alt"></i>}
+      activeColor="#f8b93b"
+    />
+  );
 
+  const displayRatingStars = () => {
+    if(!isEmpty(video)){
+			let {avgRating}=video
+			let {rating}=video.Video
+		if (avgRating !== undefined || rating !==undefined) {
+      if (avgRating === 0) {
+        avgRating = parseFloat(avgRating).toFixed(2);
+      }
+      if(avgRating===undefined){
+        avgRating=rating
+      }
+      const hasDecimal = String(avgRating).split('.');
+      const firstSplittedValue = parseInt(hasDecimal[0]);
+      const secondSplittedValue = hasDecimal[1];
+      const emptyStars =
+        parseInt(secondSplittedValue) > 0 ? 5 - (firstSplittedValue + 1) : 5 - (firstSplittedValue + 0);
+      if (!_.isEmpty(secondSplittedValue)) emptyStars - 1;
+      return (
+        <>
+          {[...Array(firstSplittedValue)].map((val, index) => (
+            <FilledStar key={index} />
+          ))}
+          {!_.isEmpty(secondSplittedValue) && parseInt(secondSplittedValue) > 0 && <HalfStar />}
+          {[...Array(emptyStars)].map((val, index) => (
+            <EmptyStar key={index} />
+          ))}
+        </>
+      );
+    }
+		}
+  };
 	const _HandleDeleteVideo = async (index, videoId) => {
 		try {
 			const res = await axiosInstance.deleteVideo(videoId);
@@ -194,21 +291,64 @@ const VideoDetailScreen = () => {
 	};
 
 	const ToggleRatingModal = () => {
+		setRatingData({ ...initialRatingData });
 		setShowRatingModal(!showRatingModal);
 	}
 
 	const _HandleChangeRating = (value) => {
 		setSharePostRating(value);
+		const copyRatingData = { ...ratingData };
+    copyRatingData.newRating = value;
+    setRatingData(copyRatingData);
 	}
-
+	 const OpenRatingModal = ( {postId, avgRating, totalRaters }) => {
+   
+	  const data = {
+      postId: postId,
+      oldAvgRating: avgRating,
+      totalRaters: totalRaters,
+      newRating: ''
+    };
+    setRatingData(data);
+    setShowRatingModal(true);
+  };
 	const _SubmitRating = async () => {
+		 let rated=false;
+    let nAvg=0;
+
+		const { oldAvgRating = 0, totalRaters = 0, newRating = 0, postId = 1 } = ratingData;
+
+
 		try {
-			await axiosInstance.ratePost({ postId: postId, rating: postRating });
-			ToggleRatingModal();
+			let res=await axiosInstance.ratePost({ postId: postId, rating: newRating });
+			const {data}=res.data;
+       rated=data.hasRated;
+       nAvg=data.newAvg;
+			// ToggleRatingModal();
 		}
 		catch ({ response: { data: { message } } }) {
 			console.log('in catch of api rating: ', message);
 		}
+		 oldAvgRating= rated ? nAvg : oldAvgRating
+     const updatedPosts = calculateAvgRating(
+      posts,
+      postId,
+      parseInt(totalRaters),
+      parseFloat(oldAvgRating),
+      parseFloat(newRating),
+      rated
+    );
+		let updatedPost=updatedPosts.filter(reviewPost => Number(reviewPost.id)===Number(postId)
+		)
+
+		
+    // setIsSubmitingRating(false);
+		// console.log("updatedPost",updatedPost);
+    ToggleRatingModal();
+    setPosts((prevState) => (prevState = [...updatedPosts]));
+		setVideo({...video,
+		avgRating:updatedPost[0].avgRating
+		})
 	}
 	const ToggleTipModal = () => {
 		setShowTipModal(!showTipModal);
@@ -301,7 +441,7 @@ const VideoDetailScreen = () => {
 		enableShareLoading();
 		try {
 			const { data: { message } } = await axiosInstance.sharePost({ caption: shareCaption, videoId: videoId });
-			GetPosts();
+			GetPosts(0);
 			Swal.fire({
 				text: message,
 				icon: 'success',
@@ -330,7 +470,7 @@ const VideoDetailScreen = () => {
 		setVideoPayment(cost);
 		setShowAmountModal(!showAmountModal);
 	}
-
+	
 
 	return (
 		<div className="flex flex-col lg:flex-row min-h-screen py-5 px-3 cursor-auto bg-gray-100">
@@ -386,7 +526,25 @@ const VideoDetailScreen = () => {
 							xmlns="http://www.w3.org/2000/svg">
 							<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
 						</svg> */}
-						<svg
+						{/* <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-6 h-6 text-gray-500 hover:text-purple-600 cursor-pointer"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg> */}
+								<span data-for="fav" data-tip onClick={() => HandleFavouritePost(id)}>
+                {/* <svg
+									xmlns="http://www.w3.org/2000/svg">
+									<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+								</svg> */}
+                <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="w-6 h-6 text-gray-500 hover:text-purple-600 cursor-pointer"
                   fill="currentColor"
@@ -399,6 +557,10 @@ const VideoDetailScreen = () => {
                     d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                   />
                 </svg>
+                <ReactTooltip id="fav" place="top" effect="solid" border={false} borderColor="white" clickable={false}>
+                  Add to favourite
+                </ReactTooltip>
+              </span>
 						<div className="flex items-start justify-start">
 							<PostActionDropdown
 								_HandleCatalogue={() => _HandleCatalogue(postId, catalogue)}
@@ -551,11 +713,15 @@ const VideoDetailScreen = () => {
 								type="button"
 								childrens={
 									<>
-										<FontAwesomeIcon icon={faThumbsUp} className={`w-4 h-4 ${isLiked === false ? 'text-gray-600' : 'text-purple-600'} group-hover:text-purple-600`} />
-										<p
-											className={`cursor-pointer w-full text-xs text-center ${isLiked === false ? 'text-gray-600' : 'text-purple-600'} group-hover:text-purple-600`}>
-											Like
-										</p>
+										<FontAwesomeIcon icon={faThumbsUp} className={`w-6 h-6 ${isLiked ===null ||isLiked === false  ? 'text-gray-600' : 'text-purple-600'} group-hover:text-purple-600`} />
+										 <p
+                  className={`cursor-pointer w-full text-xs text-center 
+                                    ${
+                                      isLiked == null || isLiked == false ? 'text-gray-600' : 'text-purple-600'
+                                    } group-hover:text-purple-600`}>
+                  {video?.likeCount ? video.likeCount : 0 }
+                </p>
+
 
 									</>
 								}
@@ -568,31 +734,32 @@ const VideoDetailScreen = () => {
 								type="button"
 								childrens={
 									<>
-										<FontAwesomeIcon icon={faShareAlt} className="w-4 h-4 text-gray-600 group-hover:text-purple-600" />
-										<p className=" cursor-pointer text-xs w-full text-center text-gray-600 group-hover:text-purple-600">
-											Share
-										</p>
-									</>
+										<FontAwesomeIcon icon={faShareAlt} className="w-6 h-6 text-gray-600 group-hover:text-purple-600" />
+									
+									 <p className=" cursor-pointer text-xs w-full text-center text-gray-600 group-hover:text-purple-600">
+                  {video?.shareCount ? video.shareCount : 0 }
+                </p>
+								</>
 								}
 								classNames={
 									'py-1 px-5 hover:shadow w-20 bg-white group flex flex-col m-auto items-center rounded-md '
 								}
 							/>
 						</div>
-						<div className="flex divide-x divide-gray-500 items-center justify-center space-x-2">
-							<span>
-								<p className="text-sm ">{likeCount} {likeCount > 1 ? 'Likes' : 'Like'}</p>
-							</span>
-							<span>
-								<p className="text-sm ml-2">{shareCount} Shares</p>
-							</span>
-						</div>
 					</div>
 					<div className="flex space-x-3 divide-x divide-gray-500 justify-end md:justify-center items-center">
 						<div>
-							<span onClick={ToggleRatingModal} className="flex items-center cursor-pointer">
-								<Rating value={4} isHalf={true} edit={false} />
-								&nbsp; <p className="text-xs"> Rating</p>
+						
+							<span  data-tip
+            	data-tip-disable={
+									localStorage.getItem('id') == UserId}
+						   onClick={localStorage.getItem('id') !== UserId ? ()=>{OpenRatingModal({ postId, avgRating:video.avgRating, totalRaters:video.totalRaters})} : () => {}}
+            className={`flex items-center z-0 ${
+              localStorage.getItem('id') !== UserId ? 'cursor-pointer' : 'cursor-default'
+            }`}>
+								{/* <Rating value={4} isHalf={true} edit={false} />
+								&nbsp; <p className="text-xs"> Rating</p> */}
+								 {displayRatingStars()}
 							</span>
 						</div>
 						<div>
@@ -654,10 +821,25 @@ const VideoDetailScreen = () => {
 			</div>
 			<div className="w-full lg:w-4/12 flex flex-col">
 				<p className="font-bold text-md mb-3 px-5">Related Videos</p>
-				<div className="space-y-2 px-5">
+			
+					  <InfiniteScroll
+            dataLength={posts.length} //This is important field to render the next data
+            next={_FetchMoreData}
+            hasMore={hasMore}
+            loader={
+              <div className="flex justify-center items-center w-full">
+                <CustomLoader />
+              </div>
+            }
+            endMessage={
+              <p style={{ textAlign: 'center', padding: '2px 0' }}>
+                <b>Yay! You have seen it all</b>
+              </p>
+            }>
+						<div className="space-y-2 px-5">
 					{posts &&
 						posts.map(({
-							id: postId, Video: {
+							id: postId,avgRating, Video: {
 								description, title, url, UserId, thumbnail, catalogue, User, videoType,
 								videoCost, mediaType, productLink, tip
 							},
@@ -671,7 +853,7 @@ const VideoDetailScreen = () => {
 									url={url}
 									User={User}
 									views={200}
-									rating={2.5}
+									rating={avgRating}
 									productLink={productLink}
 									videoCost={videoCost}
 									videoType={videoType}
@@ -690,6 +872,10 @@ const VideoDetailScreen = () => {
 						)
 						)}
 				</div>
+						</InfiniteScroll>
+				
+				
+				
 			</div>
 			{showRatingModal && (
 				<VideoRatingModal

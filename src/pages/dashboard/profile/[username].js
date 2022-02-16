@@ -125,8 +125,9 @@ const UserProfile = ({ profile }) => {
 		fetchCatalogues(username);
 		fetchMyVideos(username);
 	}, []);
+
 	useEffect(()=>{
-		setProfileRating(calProfileRating(myVideos));
+		if(myVideos) setProfileRating(profileRating => profileRating = calProfileRating(myVideos));
 	},[myVideos])
 
 
@@ -260,18 +261,24 @@ const UserProfile = ({ profile }) => {
 	}
 
 	const _SubmitRating = async () => {
+		 
 		const { oldAvgRating = 0, totalRaters = 0, newRating = 0, postId = 1 } = ratingData;
-		const updatedCatPosts = await calculateAvgRating(catalogues, postId, parseInt(totalRaters), parseFloat(oldAvgRating), parseFloat(newRating));
-		const updatedVideoPosts = await calculateAvgRating(myVideos, postId, parseInt(totalRaters), parseFloat(oldAvgRating), parseFloat(newRating));
-		setCatalogues((prevState) => prevState = [...updatedCatPosts]);
-		setMyVideos((prevState) => prevState = [...updatedVideoPosts]);
-		ToggleRatingModal();
-		try {
-			await axiosInstance.ratePost({ postId: postId, rating: newRating });
+	let rated=false;
+try {
+			const {data:{data:{hasRated,newAvg}}} =await axiosInstance.ratePost({ postId: postId, rating: newRating });
+			rated=hasRated;
+			oldAvgRating= hasRated ? newAvg : oldAvgRating
 		}
 		catch ({ response: { data: { message } } }) {
 			console.log('in catch of api rating: ', message);
 		}
+
+		const updatedCatPosts = await calculateAvgRating(catalogues, postId, parseInt(totalRaters), parseFloat(oldAvgRating), parseFloat(newRating),rated);
+		const updatedVideoPosts = await calculateAvgRating(myVideos, postId, parseInt(totalRaters), parseFloat(oldAvgRating), parseFloat(newRating),rated);
+		setCatalogues((prevState) => prevState = [...updatedCatPosts]);
+		setMyVideos((prevState) => prevState = [...updatedVideoPosts]);
+		ToggleRatingModal();
+		
 	}
 
 
