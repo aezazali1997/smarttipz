@@ -33,7 +33,7 @@ const ChatCard = ({ image, name, badge, connected, message, time, containerStyle
                         <div className="tracking-wide text-xs md:text-sm lg:text-md text-black font-semibold">{name}</div>
                         {
                             time && (
-                                <div className="tracking-wide text-xs text-indigo-600 font-semibold">{moment(time).format('h:mm a')}</div>
+                                <div className="tracking-wide text-xs text-indigo-600 font-semibold">{moment(time).format('H:mm')}</div>
                             )
                         }
 

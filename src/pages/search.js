@@ -110,7 +110,7 @@ const Search = () => {
 							) : isEmpty(posts) || Array.isArray(posts) || posts.length>1 ? (
 								<div className="flex w-full justify-center items-center">
 									<p className="text-gray-500"> No Posts Found</p>
-								
+					
 							</div>
 							) : (
 								<>
@@ -142,7 +142,8 @@ const Search = () => {
 												watchLimit,
 												isApproved,
 												cost,
-												rating
+												rating,
+												createdAt
 											}
 										}
 											, index) => (
@@ -195,8 +196,10 @@ const Search = () => {
 														productLink={productLink}
 														avgRating={avgRating}
 														width={'max-w-lg'}
+
 														thumbnail={thumbnail}
 														restrictPaidVideo={true}
+														createdAt={createdAt}
 														_OpenShareModal={_OpenShareModal}
 														_HandleCommentCounts={_HandleCommentCounts}
 														_HandleDeleteVideo={_HandleDeleteVideo}
@@ -251,7 +254,8 @@ const Search = () => {
 													accountType,
 													Followed,
 													Follower,
-													accessible
+													accessible,
+													avgRating
 												},
 												index
 											) => (
@@ -266,6 +270,7 @@ const Search = () => {
 													accessible={accessible}
 													Followed={Followed}
 													Follower={Follower}
+													profileRating={avgRating}
 												/>
 											)
 										)}
@@ -342,7 +347,8 @@ const Search = () => {
 												productLink,
 												watchLimit,
 												isApproved,
-												cost
+												cost,
+												createdAt
 											}
 										},
 										index
@@ -361,6 +367,7 @@ const Search = () => {
 												shareCount={shareCount}
 												width={'max-w-lg'}
 												restrictPaidVideo={true}
+												createdAt={createdAt}
 												ToggleTipModal={ToggleTipModal}
 												_OpenShareModal={_OpenShareModal}
 												_HandleCommentCounts={_HandleCommentCounts}
@@ -397,6 +404,7 @@ const Search = () => {
 													width={'max-w-lg'}
 													thumbnail={thumbnail}
 													restrictPaidVideo={true}
+													createdAt={createdAt}
 													_OpenShareModal={_OpenShareModal}
 													_HandleCatalogue={_HandleCatalogue}
 													_HandleDeleteVideo={_HandleDeleteVideo}
@@ -416,39 +424,58 @@ const Search = () => {
 								}
 					</div>
 				) : activeGenericFilter === 'Profile' ? (
-					<div className="space-y-4">
-						{userProfiles.map(
-							(
-								{
-									id,
-									name,
-									email,
-									picture,
-									showName,
-									showUsername,
-									username,
-									accountType,
-									Follower,
-									Followed,
-									accessible
-								},
-								index
-							) => (
-								<ProfileOverviewCard
-									key={index}
-									_HandleGotoUserProfile={() => _HandleGotoUserProfile(id, username)}
-									name={accountType === 'Personal' ? (showName ? name : showUsername ? username : '') : name}
-									picture={picture}
-									email={email}
-									id={id}
-									username={username}
-									accessible={accessible}
-									Followed={Followed}
-									Follower={Follower}
-								/>
-							)
-						)}
-					</div>
+					<div className="space-y-4 mt-4">
+							{userProfileLoading ? (
+								<div className="flex w-full justify-center">
+									<span className="flex flex-col items-center">
+										<Spinner />
+										<p className="text-sm text-gray-400"> Loading Profiles</p>
+									</span>
+								</div>
+							) : isEmpty(userProfiles) ? (
+								<div className="flex w-full justify-center items-center">
+									<p className="text-gray-500"> No User Profiles Found</p>
+								</div>
+							) : (
+								<>
+									{userProfiles
+										.map(
+											(
+												{
+													id,
+													name,
+													email,
+													picture,
+													showName,
+													showUsername,
+													username,
+													accountType,
+													Followed,
+													Follower,
+													accessible,
+													avgRating
+												},
+												index
+											) => (
+												<ProfileOverviewCard
+													key={index}
+													_HandleGotoUserProfile={() => _HandleGotoUserProfile(id, username)}
+													name={accountType === 'Personal' ? (showName ? name : showUsername ? username : '') : name}
+													picture={picture}
+													email={email}
+													id={id}
+													username={username}
+													accessible={accessible}
+													Followed={Followed}
+													Follower={Follower}
+													profileRating={avgRating}
+												/>
+											)
+										)}
+								
+								</>
+							)}
+						</div>
 				) : (
 					''
 				)}

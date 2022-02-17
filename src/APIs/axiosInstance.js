@@ -146,8 +146,8 @@ class AxiosInstance {
         return await axios.get(USER_API_BASE_URL + `api/profile/catalogue/${username}`, this.getAuthHeader());
     }
 
-    async getFilteredUserProfiles(search, sort, account) {
-        return await axios.post(USER_API_BASE_URL + `api/profile/filter-profile?search=${search}&&sort=${sort}`,
+    async getFilteredUserProfiles(search, sort, account,rateFilter) {
+        return await axios.post(USER_API_BASE_URL + `api/profile/filter-profile?search=${search}&&sort=${sort}&&rate=${rateFilter}`,
             { accountType: account },
             this.getAuthHeader());
     }

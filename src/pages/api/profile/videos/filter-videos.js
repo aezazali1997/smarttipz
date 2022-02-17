@@ -77,7 +77,7 @@ const handler = async (req, res) => {
                     },
                     {
                         model: Share,
-                        attributes: ['id', 'caption'],
+                        attributes: ['id', 'caption','createdAt'],
                         include: [
                             {
                                 model: User,

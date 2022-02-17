@@ -6,7 +6,7 @@ const { FilterProfiles } = require("utils/consts");
 const handler = async (req, res) => {
     if (req.method === 'POST') {
 
-        const { query: { search, sort }, body: { accountType } } = req;
+        const { query: { search, sort,rate }, body: { accountType } } = req;
 
         try {
             if (!req.headers.authorization) {
@@ -28,9 +28,10 @@ const handler = async (req, res) => {
                     'username',
                     'showUsername',
                     'accountType',
-                    'accessible'
+                    'accessible',
+                    'avgRating'
                 ],
-                where: FilterProfiles(search, accountType),
+                where: FilterProfiles(search, accountType,rate),
                 order: [["createdAt", sort]]
             });
 

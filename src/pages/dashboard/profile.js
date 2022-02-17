@@ -18,8 +18,7 @@ import {
   PopupBusinessCard,
   ProfileCard,
   Rating,
-  CustomStar
-  ,
+  CustomStar,
   Spinner,
   TestimonialCard
 } from 'src/components';
@@ -151,14 +150,8 @@ const Profile = ({ profile }) => {
                   &nbsp;<p className="text-xs">{views} Views</p>
                 </span>
                 <span className="flex w-full items-center">
-                  {!fetchingMyVideos ? (
-                    <>
-                      <CustomStar value={profileRating} isHalf={true} /> &nbsp;
-                      <p className="text-xs"> Rating </p>
-                    </>
-                  ) : (
-                    <Spinner />
-                  )}
+                  <CustomStar value={profileRating || 0 } isHalf={true} /> &nbsp;
+                  <p className="text-xs"> Rating </p>
                 </span>
               </div>
               <div className="flex w-full mt-2 px-2">
@@ -237,7 +230,8 @@ const Profile = ({ profile }) => {
                       videoType,
                       videoCost,
                       Shares,
-                      productLink
+                      productLink,
+                      createdAt
                     }
                   } = item;
                   return (
@@ -262,6 +256,7 @@ const Profile = ({ profile }) => {
                         avgRating={avgRating}
                         videoType={videoType}
                         videoCost={videoCost}
+                        createdAt={createdAt}
                         description={description}
                         title={title}
                         productLink={productLink}
@@ -324,7 +319,8 @@ const Profile = ({ profile }) => {
                     videoType,
                     videoCost,
                     Shares,
-                    productLink
+                    productLink,
+                    createdAt
                   }
                 } = item;
                 return (
@@ -339,7 +335,7 @@ const Profile = ({ profile }) => {
                       User={User}
                       Shares={Shares}
                       views={200}
-                      rating={2.5}
+                      createdAt={createdAt}
                       mediaType={mediaType}
                       videoCost={videoCost}
                       videoType={videoType}

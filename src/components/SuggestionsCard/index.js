@@ -5,6 +5,7 @@ import { Rating, VideoPlayer } from '..';
 import { PostActionDropdown } from '../Dropdown';
 import ReactTooltip from 'react-tooltip';
 import ReactStars from 'react-rating-stars-component'
+import moment from 'moment';
 
 
 const SuggestionCard = ({
@@ -23,6 +24,7 @@ const SuggestionCard = ({
     views,
     width,
     User,
+    createdAt,
     productLink,
     _HandleCatalogue,
     _HandleDeleteVideo,
@@ -104,7 +106,11 @@ const SuggestionCard = ({
                                 className="text-sm w-28 font-bold font-sans hover:underline whitespace-nowrap overflow-ellipsis overflow-hidden cursor-pointer">
                                 {User?.name}
                             </p>
-                            <p className="text-xs text-gray-500">19h</p>
+                            <p className="text-sm text-gray-500">{
+                              moment(createdAt).format('D MMM YYYY')
+                            }, {
+                              moment(createdAt).format('H:mm')
+                            }</p>
                         </div>
                     </div>
                     <div className="flex space-x-2">

@@ -77,9 +77,10 @@ const UserProfile = ({ profile }) => {
 
 	useEffect(() => {
 		const { username } = profile;
-		axiosInstance.getSpecificFollow(username).then(({ data: { data: { followers, followed } } }) => {
+		axiosInstance.getSpecificFollow(username).then(({ data: { data: { followers, followed,avgProfileRating } } }) => {
 			setFollowed(followed);
 			setFollowers(followers);
+			setProfileRating(avgProfileRating);
 			let Followed = followers.filter(user => user?.id === parseInt(localStorage.getItem('id')) && user);
 			if (!isEmpty(Followed)) {
 				setIsFollowing(true);
@@ -390,14 +391,7 @@ try {
 									&nbsp;<p className="text-xs">{views} Views</p>
 								</span>
 								<span className="flex w-full items-center">
-							{!fetchingMyVideos ? (
-                    <>
-                      <CustomStar value={profileRating} isHalf={true} /> &nbsp;
-                      <p className="text-xs"> Rating </p>
-                    </>
-                  ) : (
-                    <Spinner />
-                  )}
+                      <CustomStar value={profileRating || 0} isHalf={true} /> 
 								</span>
 							</div>
 							<div className="flex w-full mt-2 px-2">
@@ -495,6 +489,7 @@ try {
 												productLink,
 												watchLimit,
 												cost,
+												createdAt
 											}
 										},
 										index
@@ -509,7 +504,7 @@ try {
 												url={url}
 												User={User}
 												views={200}
-												rating={2.5}
+												createdAt={createdAt}
 												mediaType={mediaType}
 												videoType={videoType}
 												videoCost={videoCost}
@@ -585,7 +580,8 @@ try {
 											Shares,
 											productLink,
 											watchLimit,
-											cost
+											cost,
+											createdAt
 										}
 									},
 									index
@@ -600,7 +596,7 @@ try {
 											url={url}
 											User={User}
 											views={200}
-											rating={2.5}
+											createdAt={createdAt}
 											videoType={videoType}
 											videoCost={videoCost}
 											Shares={Shares}

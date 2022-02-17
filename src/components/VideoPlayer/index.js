@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { Player, BigPlayButton } from 'video-react';
 
 const VideoPlayer = ({ poster, src, className, ...props }) => {
@@ -8,6 +8,8 @@ const VideoPlayer = ({ poster, src, className, ...props }) => {
             playsInline
             poster={poster}
             src={src}
+            
+
         >
             <BigPlayButton position="center "  />
         </Player>

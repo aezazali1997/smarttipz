@@ -74,11 +74,11 @@ const [hasMore,setHasMore]=useState(false);
         };
     });
   useEffect(()=>{
-        if(activeGenericFilter==='All' || activeGenericFilter==='Posts'){
-            GetPosts(currentPage);
+        if(activeGenericFilter==='Profile' ){
+            GetUserProfiles();
         }
         else{
-            GetUserProfiles();
+            GetPosts(currentPage);
         }
     },[activeGenericFilter])
     //LOADERS START HERE//
@@ -216,7 +216,7 @@ const [hasMore,setHasMore]=useState(false);
     let GetUserProfiles = async () => {
         enableProfileLoading();
         try {
-            const { data: { data: { users } } } = await axiosInstance.getFilteredUserProfiles(filterSearch, sort, account);
+            const { data: { data: { users } } } = await axiosInstance.getFilteredUserProfiles(filterSearch, sort, account,rateFilter);
             const deepCopyUsers = [...users];
             const filtered = deepCopyUsers.filter(user => user?.id !== parseInt(localStorage.getItem('id')) && user)
             setUserProfiles(filtered);

@@ -25,6 +25,7 @@ const SharedCard = ({
 	TogglePaymentModal,
 	_HandleGotoVideoDetails,
 	_HandleGotoUserProfile,
+	createdAt
 }) => {
 	const [showCommentSection, setShowCommentSection] = useState(false);
 	const [message, setMessage] = useState('');
@@ -93,13 +94,14 @@ const SharedCard = ({
 			className={`mx-auto ${width} shadow flex flex-col justify-center rounded-lg overflow-hidden
                 bg-white space-y-2`}>
 			<div className="flex flex-col">
-				<HeaderSection Share={Share} _HandleGotoUserProfile={_HandleGotoUserProfile} />
+				<HeaderSection Share={Share}  _HandleGotoUserProfile={_HandleGotoUserProfile} />
 				<CaptionSection Share={Share} />
 			</div>
 			<div className="px-3">
 				{
 					Video && Video?.isApproved ?
 						<ContentSection
+							createdAt={createdAt}
 							SharedPost={Video}
 							stopVideo={stopVideo}
 							restrict={restrictPaidVideo}

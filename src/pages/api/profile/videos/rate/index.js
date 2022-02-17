@@ -60,7 +60,6 @@ const handler = async (req, res) => {
         });
         await newRating.setAllPost(newPost);
       }
-      console.log("rating",rating)
 
       const ratings =
         await db.query(`select avg(r."rating") as "avgRating", count(r."AllPostId") as "totalRaters" from "AllPosts" p
@@ -69,7 +68,6 @@ const handler = async (req, res) => {
 						group by p.id`);
 
       const avgRating = isEmpty(ratings[0]) ? 0 : ratings[0][0].avgRating;
-      console.log("avg rating",avgRating);
 
       const video = await Video.findOne({ where: { id: newPost.VideoId } });
 
@@ -77,13 +75,29 @@ const handler = async (req, res) => {
         rating: avgRating
         // parse float
       });
+      const profileRating=await db.query(`
+     select avg(v.rating) from "Videos" v where v."UserId" =${video.UserId} and v."isApproved" =true
+
+      `)
+      const profileAvgRating = isEmpty(profileRating[0]) ? 0 : profileRating[0][0].avg;
+      await User.update(
+        {
+          avgRating:profileAvgRating
+        },
+        {
+          where:{
+            id:video.UserId
+          }
+        }
+      )
 
       return res.status(201).json({
         error: false,
         message: 'Post rated successfully',
         data: {
           hasRated:!isEmpty(hasRated),
-          newAvg:avgRating
+          newAvg:avgRating,
+          profileUpdatedRating:profileAvgRating
         }
       });
     } catch (err) {

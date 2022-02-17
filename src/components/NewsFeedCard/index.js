@@ -11,6 +11,7 @@ import axiosInstance from 'src/APIs/axiosInstance';
 import { CommentSection, VideoPlayer } from '..';
 import HandIcon from 'public/purple-hand.svg';
 import { PostActionDropdown } from '../Dropdown';
+import moment from 'moment';
 
 const NewsfeedCard = ({
   index,
@@ -37,6 +38,7 @@ const NewsfeedCard = ({
   watchLimit,
   TogglePaymentModal,
   restrictPaidVideo,
+  createdAt,
   HandleLikePost,
   ToggleTipModal,
   _OpenShareModal,
@@ -238,7 +240,12 @@ const NewsfeedCard = ({
                   className="text-sm font-bold font-sans hover:underline cursor-pointer">
                   {User?.name}
                 </p>
-                <p className="text-xs text-gray-500">19h</p>
+                <p className="text-gray-500 text-sm">{
+                  moment(createdAt).format('D MMM YYYY')
+                }, {
+                  moment(createdAt).format('H:mm')
+                }
+                </p>
               </div>
             </div>
             <div className="flex space-x-2">

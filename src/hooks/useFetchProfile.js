@@ -55,7 +55,7 @@ const UseFetchProfile = (profile) => {
     const [isSharing, setIsSharing] = useState(false);
     const [shareData, setShareData] = useState({});
     const [shareCaption, setShareCaption] = useState('');
-    const [profileRating,setProfileRating]=useState(0);
+    const [profileRating,setProfileRating]=useState(null);
 
 
     let { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
@@ -67,9 +67,10 @@ const UseFetchProfile = (profile) => {
         localStorage.setItem('isApproved', isApproved);
         localStorage.setItem('username', username);
         localStorage.setItem('accountType', accountType);
-        axiosInstance.getFollow().then(({ data: { data: { followers, followed } } }) => {
+        axiosInstance.getFollow().then(({ data: { data: { followers, followed,avgProfileRating } } }) => {
             setFollowed(followed);
             setFollowers(followers);
+            setProfileRating(avgProfileRating);
         }).catch(({ response: { data: { message } } }) => {
         })
         if (accountType === 'Business') {
@@ -130,7 +131,11 @@ const UseFetchProfile = (profile) => {
         fetchMyVideos();
     }, []);
     useEffect(()=>{
-        console.log("my videos",myVideos)
+        // if(!(profileRating===null || profileRating>0)){
+        // console.log("my videos",myVideos)
+        // console.log("profile rating",profileRating);
+        // // avgRating
+        // }
         setProfileRating(calProfileRating(myVideos)); 
     },[myVideos])
 

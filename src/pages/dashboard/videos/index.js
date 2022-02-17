@@ -101,7 +101,8 @@ const Videos = () => {
                 videoCost,
                 videoType,
                 Shares,
-                productLink
+                productLink,
+                createdAt
               } } = item;
             return (
               <div key={index}>
@@ -115,6 +116,7 @@ const Videos = () => {
                   User={User}
                   Shares={Shares}
                   views={200}
+                  createdAt={createdAt}
                   avgRating={avgRating}
                   isLiked={isLiked}
                   likeCount={likeCount}

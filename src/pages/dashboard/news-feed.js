@@ -142,7 +142,8 @@ const NewsFeed = () => {
                     isApproved,
                     productLink,
                     watchLimit,
-                    cost
+                    cost,
+                    createdAt
                   }
                 } = item;
                 return isShared ? (
@@ -160,6 +161,7 @@ const NewsFeed = () => {
                     shareCount={shareCount}
                     commentCount={commentCount}
                     restrictPaidVideo={true}
+                    createdAt={createdAt}
                     ToggleTipModal={ToggleTipModal}
                     _OpenShareModal={_OpenShareModal}
                     _HandleCommentCounts={_HandleCommentCounts}
@@ -197,6 +199,7 @@ const NewsFeed = () => {
                       commentCount={commentCount}
                       avgRating={avgRating}
                       thumbnail={thumbnail}
+                      createdAt={createdAt}
                       restrictPaidVideo={true}
                       _HandleCommentCounts={_HandleCommentCounts}
                       HandleLikePost={() => HandleLikePost(postId, isLiked)}

@@ -64,7 +64,7 @@ export const FilterContent = (
           [sequelize.Op.iLike]: `%${category}%`
         }
       },
-      
+
       {
         [sequelize.Op.or]: [
           {
@@ -105,7 +105,7 @@ export const FilterContent = (
       },
       {
         '$Video.rating$': getVideoByRating(rating)
-      },
+      }
       // {
       //                 'isShared': {
       //             [sequelize.Op.eq]: true
@@ -122,10 +122,9 @@ export const FilterContent = (
       //           '$Video.isApproved$': {
       //             [sequelize.Op.eq]: true
       //           }
-              
+
       // }]
       // },
-      
     ],
     [sequelize.Op.or]: [
       {
@@ -181,74 +180,96 @@ export const FilterContent = (
       }
     ],
     [sequelize.Op.or]: [
-              {
-                'isShared': {
-                  [sequelize.Op.eq]: true
-                }
-              },
-              {
-               [sequelize.Op.and]: [
-              {
-                'isShared': {
-                  [sequelize.Op.eq]: false
-                }
-              },
-              {
-                '$Video.isApproved$': {
-                  [sequelize.Op.eq]: true
-                }
-              }
-            ],
-            }]
-    
+      {
+        isShared: {
+          [sequelize.Op.eq]: true
+        }
+      },
+      {
+        [sequelize.Op.and]: [
+          {
+            isShared: {
+              [sequelize.Op.eq]: false
+            }
+          },
+          {
+            '$Video.isApproved$': {
+              [sequelize.Op.eq]: true
+            }
+          }
+        ]
+      }
+    ]
   };
 };
 
-export const FilterProfiles = (search, accountType) => {
-  console.log('searched >>', search, accountType);
+export const FilterProfiles = (search, accountType, rate) => {
+  rate = Number(rate);
   return {
     [sequelize.Op.and]: [
       {
         isDeleted: {
           [sequelize.Op.eq]: false
-        },
+        }
+      },
+      {
         isBlocked: {
           [sequelize.Op.eq]: false
         }
-      }
-    ],
-    [sequelize.Op.or]: [
-      {
-        name: {
-          [sequelize.Op.iLike]: `%${search}%`
-        }
       },
       {
-        email: {
-          [sequelize.Op.iLike]: `%${search}%`
-        }
+        [sequelize.Op.or]: [
+          {
+            name: {
+              [sequelize.Op.iLike]: `%${search}%`
+            }
+          },
+          {
+            email: {
+              [sequelize.Op.iLike]: `%${search}%`
+            }
+          },
+          {
+            username: {
+              [sequelize.Op.iLike]: `%${search}%`
+            }
+          },
+          {
+            accountType: {
+              [sequelize.Op.iLike]: `%${search}%`
+            }
+          },
+          {
+            phoneNumber: {
+              [sequelize.Op.iLike]: `%${search}%`
+            }
+          }
+        ]
       },
       {
-        username: {
-          [sequelize.Op.iLike]: `%${search}%`
-        }
+        [sequelize.Op.and]: [
+          {
+            accountType: {
+              [sequelize.Op.iLike]: `%${getFilterdProfilesByAccountType(accountType)}`
+            }
+          }
+        ]
       },
       {
-        accountType: {
-          [sequelize.Op.iLike]: `%${search}%`
-        }
-      },
-      {
-        phoneNumber: {
-          [sequelize.Op.iLike]: `%${search}%`
-        }
-      }
-    ],
-    [sequelize.Op.and]: [
-      {
-        accountType: {
-          [sequelize.Op.iLike]: `%${getFilterdProfilesByAccountType(accountType)}`
-        }
+        [sequelize.Op.and]: [
+          {
+            avgRating: {
+              [sequelize.Op.gte]: rate
+              // Math.floor(rate)
+            }
+          },
+          {
+            avgRating: {
+              [sequelize.Op.lte]: rate + 1
+              // Math.ceil(rate)
+            }
+          }
+        ]
       }
     ]
   };

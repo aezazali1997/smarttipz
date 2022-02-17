@@ -83,14 +83,7 @@ const ProfileCard = ({
             &nbsp;<p className="text-sm">{views} Views</p>
           </span>
           <span className="flex w-full items-center justify-center">
-           {!_fetching ? ( <>
-                      <CustomStar value={_rating} isHalf={true} />
-                    </>
-                  ) : (
-                    <Spinner />
-                  )
-            }
-            {/* &nbsp; <p className="text-xs" > Rating</p> */}
+            <CustomStar value={_rating || 0} isHalf={true} />
           </span>
         </div>
       </div>
