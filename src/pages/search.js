@@ -195,7 +195,7 @@ const Search = () => {
 														videoType={videoType}
 														watchLimit={watchLimit}
 														productLink={productLink}
-														avgRating={avgRating}
+														// avgRating={avgRating}
 														width={'max-w-lg'}
 
 														thumbnail={thumbnail}
