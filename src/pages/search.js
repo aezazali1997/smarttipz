@@ -147,29 +147,29 @@ const Search = () => {
 											}
 										}
 											, index) => (
-											isShared ? (
-												<SharedCard
-													key={index}
-													id={postId}
-													videoId={id}
-													index={index}
-													Video={Video}
-													Share={Share}
-													isLiked={isLiked}
-													likeCount={likeCount}
-													commentCount={commentCount}
-													shareCount={shareCount}
-													width={'max-w-lg'}
-													restrictPaidVideo={true}
-													ToggleTipModal={ToggleTipModal}
-													_OpenShareModal={_OpenShareModal}
-													_HandleCommentCounts={_HandleCommentCounts}
-													HandleLikePost={() => HandleLikePost(postId, isLiked)}
-													_HandleGotoUserProfile={_HandleGotoUserProfile}
-													_HandleGotoVideoDetails={_HandleGotoVideoDetails}
-													TogglePaymentModal={() => _TogglePaymentModal(cost)}
-												/>
-											) :
+											// isShared ? (
+											// 	<SharedCard
+											// 		key={index}
+											// 		id={postId}
+											// 		videoId={id}
+											// 		index={index}
+											// 		Video={Video}
+											// 		Share={Share}
+											// 		isLiked={isLiked}
+											// 		likeCount={likeCount}
+											// 		commentCount={commentCount}
+											// 		shareCount={shareCount}
+											// 		width={'max-w-lg'}
+											// 		restrictPaidVideo={true}
+											// 		ToggleTipModal={ToggleTipModal}
+											// 		_OpenShareModal={_OpenShareModal}
+											// 		_HandleCommentCounts={_HandleCommentCounts}
+											// 		HandleLikePost={() => HandleLikePost(postId, isLiked)}
+											// 		_HandleGotoUserProfile={_HandleGotoUserProfile}
+											// 		_HandleGotoVideoDetails={_HandleGotoVideoDetails}
+											// 		TogglePaymentModal={() => _TogglePaymentModal(cost)}
+											// 	/>
+											// ) :
 												isApproved && (
 													<NewsfeedCard
 														key={index}
@@ -353,29 +353,29 @@ const Search = () => {
 										},
 										index
 									) =>
-										isShared ? (
-											<SharedCard
-												key={index}
-												id={postId}
-												videoId={id}
-												index={index}
-												Video={Video}
-												Share={Share}
-												isLiked={isLiked}
-												likeCount={likeCount}
-												commentCount={commentCount}
-												shareCount={shareCount}
-												width={'max-w-lg'}
-												restrictPaidVideo={true}
-												createdAt={createdAt}
-												ToggleTipModal={ToggleTipModal}
-												_OpenShareModal={_OpenShareModal}
-												_HandleCommentCounts={_HandleCommentCounts}
-												_HandleGotoUserProfile={_HandleGotoUserProfile}
-												_HandleGotoVideoDetails={_HandleGotoVideoDetails}
-												TogglePaymentModal={() => _TogglePaymentModal(cost)}
-												HandleLikePost={() => HandleLikePost(postId, isLiked)} />
-										) :
+										// isShared ? (
+										// 	<SharedCard
+										// 		key={index}
+										// 		id={postId}
+										// 		videoId={id}
+										// 		index={index}
+										// 		Video={Video}
+										// 		Share={Share}
+										// 		isLiked={isLiked}
+										// 		likeCount={likeCount}
+										// 		commentCount={commentCount}
+										// 		shareCount={shareCount}
+										// 		width={'max-w-lg'}
+										// 		restrictPaidVideo={true}
+										// 		createdAt={createdAt}
+										// 		ToggleTipModal={ToggleTipModal}
+										// 		_OpenShareModal={_OpenShareModal}
+										// 		_HandleCommentCounts={_HandleCommentCounts}
+										// 		_HandleGotoUserProfile={_HandleGotoUserProfile}
+										// 		_HandleGotoVideoDetails={_HandleGotoVideoDetails}
+										// 		TogglePaymentModal={() => _TogglePaymentModal(cost)}
+										// 		HandleLikePost={() => HandleLikePost(postId, isLiked)} />
+										// ) :
 											isApproved && (
 												<NewsfeedCard
 													key={index}

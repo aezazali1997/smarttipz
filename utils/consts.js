@@ -64,34 +64,19 @@ export const FilterContent = (
           [sequelize.Op.iLike]: `%${category}%`
         }
       },
-
-      {
-        [sequelize.Op.or]: [
           {
             '$Video.UserId$': {
               [sequelize.Op.in]: ArrayOfFollowedPeopleId
             }
-          },
-          {
-            '$Share.UserId$': {
-              [sequelize.Op.in]: ArrayOfFollowedPeopleId
-            }
-          }
-        ]
+        
+        
       },
-      {
-        [sequelize.Op.or]: [
+  
           {
             '$Video->User.accountType$': {
               [sequelize.Op.iLike]: `%${getFilterdProfilesByAccountType(accountType)}%`
             }
-          },
-          {
-            '$Share->User.accountType$': {
-              [sequelize.Op.iLike]: `%${getFilterdProfilesByAccountType(accountType)}%`
-            }
-          }
-        ]
+        
       },
       {
         '$Video.videoCost$': {
@@ -105,103 +90,112 @@ export const FilterContent = (
       },
       {
         '$Video.rating$': getVideoByRating(rating)
-      }
-      // {
-      //                 'isShared': {
-      //             [sequelize.Op.eq]: true
-      //           }
-      // },
-      // {
-      //          [sequelize.Op.and]: [
-      //         {
-      //           'isShared': {
-      //             [sequelize.Op.eq]: false
-      //           }
-      //         },
-      //         {
-      //           '$Video.isApproved$': {
-      //             [sequelize.Op.eq]: true
-      //           }
-
-      // }]
-      // },
+      },
+       {
+            '$Video.isApproved$': {
+              [sequelize.Op.eq]: true
+            }
+          },
+          {
+            isShared:{
+              [sequelize.Op.eq]:false
+            }
+          }
     ],
     [sequelize.Op.or]: [
+      {
+        '$Video.title$': {
+          [sequelize.Op.iLike]: `%${search}%` 
+        }
+      },
+      //       {
+      //   '$Video.title$': {
+      //     [sequelize.Op.iLike]: `%${search}%` 
+      //   }
+      // },
+
       {
         '$Video->User.name$': {
           [sequelize.Op.iLike]: `%${search}%`
         }
       },
+    ]
+  }
+}
+export const FilterSearchContent = (
+  search,
+  category,
+  videoType,
+  videoCategory,
+  accountType,
+  ArrayOfFollowedPeopleId,
+  rating
+) => {
+  return {
+    [sequelize.Op.and]: [
       {
-        '$Video->User.email$': {
-          [sequelize.Op.iLike]: `%${search}%`
+        '$Video.category$': {
+          [sequelize.Op.iLike]: `%${category}%`
         }
       },
-      {
-        '$Video.title$': {
-          [sequelize.Op.iLike]: `%${search}%`
-        }
-      },
-      {
-        '$Share.caption$': {
-          [sequelize.Op.iLike]: `%${search}%`
-        }
-      },
-      {
-        '$Video->User.username$': {
-          [sequelize.Op.iLike]: `%${search}%`
-        }
-      },
-
-      {
-        '$Video->User.phoneNumber$': {
-          [sequelize.Op.iLike]: `%${search}%`
-        }
-      },
-      {
-        '$Share->User.name$': {
-          [sequelize.Op.iLike]: `%${search}%`
-        }
-      },
-      {
-        '$Share->User.email$': {
-          [sequelize.Op.iLike]: `%${search}%`
-        }
-      },
-      {
-        '$Share->User.username$': {
-          [sequelize.Op.iLike]: `%${search}%`
-        }
-      },
-      {
-        '$Share->User.phoneNumber$': {
-          [sequelize.Op.iLike]: `%${search}%`
-        }
-      }
-    ],
-    [sequelize.Op.or]: [
-      {
-        isShared: {
-          [sequelize.Op.eq]: true
-        }
-      },
-      {
-        [sequelize.Op.and]: [
           {
-            isShared: {
-              [sequelize.Op.eq]: false
+            '$Video.UserId$': {
+              [sequelize.Op.in]: ArrayOfFollowedPeopleId
             }
-          },
+        
+        
+      },
+  
           {
+            '$Video->User.accountType$': {
+              [sequelize.Op.iLike]: `%${getFilterdProfilesByAccountType(accountType)}%`
+            }
+        
+      },
+      {
+        '$Video.videoCost$': {
+          [sequelize.Op.iLike]: `%${getFilterdProfilesByVideoCategory(videoType)}`
+        }
+      },
+      {
+        '$Video.videoType$': {
+          [sequelize.Op.iLike]: `%${getFilterdProfilesByVideoType(videoCategory)}`
+        }
+      },
+      {
+        '$Video.rating$': getVideoByRating(rating)
+      },
+       {
             '$Video.isApproved$': {
               [sequelize.Op.eq]: true
             }
+          },
+          {
+            isShared:{
+              [sequelize.Op.eq]:false
+            }
           }
-        ]
-      }
+    ],
+    [sequelize.Op.or]: [
+      {
+        '$Video.title$': {
+          [sequelize.Op.iLike]: `${search}` 
+        }
+      },
+      //       {
+      //   '$Video.title$': {
+      //     [sequelize.Op.iLike]: `%${search}%` 
+      //   }
+      // },
+
+      {
+        '$Video->User.name$': {
+          [sequelize.Op.iLike]: `%${search}%`
+        }
+      },
     ]
-  };
-};
+  }
+}
 
 export const FilterProfiles = (search, accountType, rate) => {
   rate = Number(rate);

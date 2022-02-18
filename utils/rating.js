@@ -2,6 +2,8 @@ import { isEmpty } from "lodash";
 
 export const calProfileRating = (videos)=>{
   if(isEmpty(videos)) return 0;
+    console.log('videos',videos)
+    videos = videos.filter(video => video.avgRating!==0)
     let sum=0;
     const TOTAL=videos.length;
     for(const video of videos){

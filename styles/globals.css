@@ -136,3 +136,7 @@
   border: 1px solid #eaeaea;
   margin-right: 0;
 }
+
+.react-stars > span{
+  margin-bottom: 0.6px;
+}

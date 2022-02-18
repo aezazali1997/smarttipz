@@ -182,12 +182,13 @@ const NewsfeedCard = ({
   );
   const HalfStar = () => (
     <ReactStars
+    className={'align-icon'}
       count={1}
       value={0.5}
-      size={18}
+      size={17.7}
       edit={false}
       isHalf={true}
-      halfIcon={<i className="fa fa-star-half-alt"></i>}
+      halfIcon={<span className="fa fa-star-half-alt"></span>}
       activeColor="#f8b93b"
     />
   );

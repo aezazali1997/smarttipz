@@ -70,7 +70,7 @@ const UseFetchProfile = (profile) => {
         axiosInstance.getFollow().then(({ data: { data: { followers, followed,avgProfileRating } } }) => {
             setFollowed(followed);
             setFollowers(followers);
-            setProfileRating(avgProfileRating);
+            // setProfileRating(avgProfileRating);
         }).catch(({ response: { data: { message } } }) => {
         })
         if (accountType === 'Business') {

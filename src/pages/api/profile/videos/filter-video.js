@@ -1,6 +1,6 @@
 const PostLikee = require('models/Like');
 const User = require('models/User');
-const Video = require('models/Video');
+const VideoModel = require('models/Video');
 const jwt = require('jsonwebtoken');
 const sequelize = require('sequelize');
 const db = require('models/db');
@@ -8,7 +8,7 @@ import { isEmpty } from 'lodash';
 import AllPosts from 'models/AllPost';
 import Comments from 'models/Comments';
 import Share from 'models/Share';
-import { FilterContent } from 'utils/consts';
+import { FilterContent,FilterSearchContent } from 'utils/consts';
 
 const handler = async (req, res) => {
   if (req.method === 'POST') {
@@ -42,7 +42,7 @@ const handler = async (req, res) => {
       const videos = await AllPosts.findOne({
         include: [
           {
-            model: Video,
+            model: VideoModel,
             include: [
               {
                 model: User,
@@ -61,7 +61,7 @@ const handler = async (req, res) => {
             ]
           }
         ],
-        where: FilterContent(search, category, videoType, videoCategory, accountType, ArrayOfFollowedPeopleId, rating),
+        where: FilterSearchContent(search, category, videoType, videoCategory, accountType, ArrayOfFollowedPeopleId, rating),
         group: [
           'AllPost.id',
           'Video.id',
@@ -81,8 +81,10 @@ const handler = async (req, res) => {
         order: [['createdAt', sort]]
       });
 
-      for (let i = 0; i < videos.length; i++) {
-        const item = videos[i];
+      if (!videos) {
+        return res.status(400).send({ error: true, data: [], message: 'No related Videos Found' });
+      }
+        const item = videos;
         const { id, VideoId, Video, Share: Shares, isShared, likeCount, commentCount } = item;
         // const likeCount = await PostLikee.count({
         //     where: {
@@ -108,6 +110,8 @@ const handler = async (req, res) => {
         //   attributes: ['shareCount']
         // });
         let shareCount = Video.shareCount;
+        console.log("is liked",isLiked);
+        console.log("share count",shareCount);
         // const shareCount = await Share.count({
         //   where: {
         //     VideoId
@@ -122,7 +126,7 @@ const handler = async (req, res) => {
         const avgRating = isEmpty(ratings[0]) ? 0 : ratings[0][0].avgRating;
         const totalRaters = isEmpty(ratings[0]) ? 0 : ratings[0][0].totalRaters;
 
-        videos[i] = {
+        let VIDEOS = {
           id,
           VideoId,
           totalRaters,
@@ -135,12 +139,12 @@ const handler = async (req, res) => {
           commentCount,
           isLiked: isLiked ? true : false
         };
-      }
+      
 
       res.status(200).json({
         error: false,
         message: 'success',
-        data: { videos }
+        data: { videos:VIDEOS }
       });
     } catch (err) {
       console.log('Videos Api Failed Error: ', err.message);

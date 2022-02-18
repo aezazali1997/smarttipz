@@ -80,7 +80,7 @@ const UserProfile = ({ profile }) => {
 		axiosInstance.getSpecificFollow(username).then(({ data: { data: { followers, followed,avgProfileRating } } }) => {
 			setFollowed(followed);
 			setFollowers(followers);
-			setProfileRating(avgProfileRating);
+			// setProfileRating(avgProfileRating);
 			let Followed = followers.filter(user => user?.id === parseInt(localStorage.getItem('id')) && user);
 			if (!isEmpty(Followed)) {
 				setIsFollowing(true);
