@@ -47,6 +47,23 @@ const getVideoByRating = (rating) => {
         [sequelize.Op.eq]: rating
       };
 };
+const getProfileByRating = (rate) => {
+  console.log("called",rate)
+  return Number(rate) === 0
+    ? {
+        [sequelize.Op.gte]: rate
+      }
+    : {
+        [sequelize.Op.and]: [
+        {
+          [sequelize.Op.gte]:rate
+        },
+        {
+          [sequelize.Op.lt]:rate+1
+        }
+        ]
+      };
+}
 
 export const FilterContent = (
   search,
@@ -131,8 +148,30 @@ export const FilterSearchContent = (
   ArrayOfFollowedPeopleId,
   rating
 ) => {
+
   return {
-    [sequelize.Op.and]: [
+    [sequelize.Op.and]:[
+      {
+      [sequelize.Op.or]: [
+      {
+        '$Video.title$': {
+          [sequelize.Op.iLike]: `%${search}%` 
+        }
+      },
+      //       {
+      //   '$Video.title$': {
+      //     [sequelize.Op.iLike]: `%${search}%` 
+      //   }
+      // },
+
+      {
+        '$Video->User.name$': {
+          [sequelize.Op.iLike]: `%${search}%`
+        }
+      },
+    ],
+      },{
+[sequelize.Op.and]: [
       {
         '$Video.category$': {
           [sequelize.Op.iLike]: `%${category}%`
@@ -170,30 +209,17 @@ export const FilterSearchContent = (
               [sequelize.Op.eq]: true
             }
           },
-          {
-            isShared:{
-              [sequelize.Op.eq]:false
-            }
-          }
+    //       {
+    //         isShared:{
+    //           [sequelize.Op.eq]:false
+    //         }
+    //       }
     ],
-    [sequelize.Op.or]: [
-      {
-        '$Video.title$': {
-          [sequelize.Op.iLike]: `${search}` 
-        }
-      },
-      //       {
-      //   '$Video.title$': {
-      //     [sequelize.Op.iLike]: `%${search}%` 
-      //   }
-      // },
-
-      {
-        '$Video->User.name$': {
-          [sequelize.Op.iLike]: `%${search}%`
-        }
-      },
-    ]
+      }
+    ],
+     
+    
+  
   }
 }
 
@@ -201,6 +227,7 @@ export const FilterProfiles = (search, accountType, rate) => {
   rate = Number(rate);
   return {
     [sequelize.Op.and]: [
+     
       {
         isDeleted: {
           [sequelize.Op.eq]: false
@@ -249,22 +276,14 @@ export const FilterProfiles = (search, accountType, rate) => {
           }
         ]
       },
-      {
-        [sequelize.Op.and]: [
-          {
-            avgRating: {
-              [sequelize.Op.gte]: rate
-              // Math.floor(rate)
-            }
-          },
-          {
-            avgRating: {
-              [sequelize.Op.lte]: rate + 1
-              // Math.ceil(rate)
-            }
-          }
-        ]
-      }
+     
+    ],
+    [sequelize.Op.or]:[
+     {   
+        avgRating: getProfileByRating(rate)
+         
+      
+    }
     ]
   };
 };

@@ -68,7 +68,7 @@ export const checkCountById = (originalArray, name, postId, operator) => {
 
 export const calculateAvgRating = (originalArray, postId, totalRaters, oldRating, newRating,hasRated) => {
     let totalRATERS=Number(totalRaters);
-
+    // console.log("hasRated",hasRated,newRating)
     const deepCopyVideoPosts = [...originalArray];
     const upadtedPosts = [];
     for (const post of deepCopyVideoPosts) {

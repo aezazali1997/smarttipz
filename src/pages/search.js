@@ -182,6 +182,7 @@ const Search = () => {
 														url={url}
 														views={200}
 														User={User}
+														avgRating={avgRating}
 														rating={rating}
 														Shares={Shares}
 														description={description}
