@@ -1,3 +1,8 @@
+import Image from 'next/image';
+import EmptyImg from '../../public/Empty.svg';
+import HalfImg from '../../public/HalfStar.svg';
+import FilledImg from '../../public/FullStar.svg';
+
 export const Email = ({ className }) => {
     return <svg className={className} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" /><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" /></svg>
 }
@@ -58,3 +63,23 @@ export const SearchSVG = ({ className }) => {
         </svg>
     )
 }
+
+
+export const EmptyStar = () => (
+    <span className="flex relative w-3 h-3">
+        <Image src={EmptyImg}
+            layout="fill" objectFit="cover" alt="brand logo" priority={true} />
+    </span>
+);
+export const FilledStar = () => (
+    <span className="flex relative w-3 h-3">
+        <Image src={FilledImg}
+            layout="fill" objectFit="cover" alt="brand logo" priority={true} />
+    </span>
+);
+export const HalfStar = () => (
+    <span className="flex relative w-3 h-3">
+        <Image src={HalfImg}
+            layout="fill" objectFit="cover" alt="brand logo" priority={true} />
+    </span>
+);
