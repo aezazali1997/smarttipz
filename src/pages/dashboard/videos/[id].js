@@ -20,6 +20,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { calculateAvgRating } from 'helpers';
 import ReactStars from 'react-rating-stars-component';
 import moment from 'moment';
+import { EmptyStar, FilledStar, HalfStar } from 'src/assets/SVGs';
 
 const VideoDetailScreen = () => {
   const initialRatingData = {
@@ -158,7 +159,7 @@ const VideoDetailScreen = () => {
     getAllCommentsByVideoId();
   }, []);
 
-  useEffect(() => {}, [video, posts]);
+  useEffect(() => { }, [video, posts]);
 
   const _HandleCatalogue = async (videoId, catalogue) => {
     if (catalogueCount < 5 || catalogue === true) {
@@ -205,27 +206,27 @@ const VideoDetailScreen = () => {
       });
     }
   };
-  const EmptyStar = () => (
-    <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-    </svg>
-  );
-  const FilledStar = () => (
-    <svg className="w-4 h-4 text" fill="#f8b93b" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-    </svg>
-  );
-  const HalfStar = () => (
-    <ReactStars
-      count={1}
-      value={0.5}
-      size={18}
-      edit={false}
-      isHalf={true}
-      halfIcon={<i className="fa fa-star-half-alt"></i>}
-      activeColor="#f8b93b"
-    />
-  );
+  // const EmptyStar = () => (
+  //   <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+  //     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+  //   </svg>
+  // );
+  // const FilledStar = () => (
+  //   <svg className="w-4 h-4 text" fill="#f8b93b" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+  //     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+  //   </svg>
+  // );
+  // const HalfStar = () => (
+  //   <ReactStars
+  //     count={1}
+  //     value={0.5}
+  //     size={18}
+  //     edit={false}
+  //     isHalf={true}
+  //     halfIcon={<i className="fa fa-star-half-alt"></i>}
+  //     activeColor="#f8b93b"
+  //   />
+  // );
 
   const displayRatingStars = () => {
     if (!isEmpty(video)) {
@@ -599,7 +600,7 @@ const VideoDetailScreen = () => {
                 {User?.name}
               </p>
               <p className="text-sm text-gray-500">
-                
+
                 {moment(video.createdAt).format('D MMM YYYY')}, {moment(video.createdAt).format('H:mm')}
               </p>
             </div>
@@ -711,15 +712,13 @@ const VideoDetailScreen = () => {
                   <>
                     <FontAwesomeIcon
                       icon={faThumbsUp}
-                      className={`w-6 h-6 ${
-                        isLiked === null || isLiked === false ? 'text-gray-600' : 'text-purple-600'
-                      } group-hover:text-purple-600`}
+                      className={`w-6 h-6 ${isLiked === null || isLiked === false ? 'text-gray-600' : 'text-purple-600'
+                        } group-hover:text-purple-600`}
                     />
                     <p
                       className={`cursor-pointer w-full text-xs text-center 
-                                    ${
-                                      isLiked == null || isLiked == false ? 'text-gray-600' : 'text-purple-600'
-                                    } group-hover:text-purple-600`}>
+                                    ${isLiked == null || isLiked == false ? 'text-gray-600' : 'text-purple-600'
+                        } group-hover:text-purple-600`}>
                       {video?.likeCount ? video.likeCount : 0}
                     </p>
                   </>
@@ -748,12 +747,16 @@ const VideoDetailScreen = () => {
             <div>
               <span
                 data-tip
-                // data-tip-disable={localStorage.getItem('id') == UserId}
-                onClick={() => {
-                        OpenRatingModal({ postId, avgRating: video.avgRating, totalRaters: video.totalRaters });
-                      }
+                data-tip-disable={localStorage.getItem('id') == UserId}
+                onClick={
+                  localStorage.getItem('id') !== UserId
+                    ? () => {
+                      OpenRatingModal({ postId, avgRating: video.avgRating, totalRaters: video.totalRaters });
                     }
-                className={`flex items-center z-0 cursor-pointer`}>
+                    : () => { }
+                }
+                className={`flex items-center z-0 ${localStorage.getItem('id') !== UserId ? 'cursor-pointer' : 'cursor-default'
+                  }`}>
                 {/* <Rating value={4} isHalf={true} edit={false} />
 								&nbsp; <p className="text-xs"> Rating</p> */}
                 {displayRatingStars()}

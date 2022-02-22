@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-const FilledStar = ({ _HandleClick, _index,_hover, _setHover, _rating }) => {
+const FilledStar = ({ _HandleClick, _index, _hover, _setHover, _rating }) => {
   return <span onClick={_HandleClick}>
     <svg
       className={`w-4 h-4  cursor-pointer ${_index <= (_hover || _rating) ? 'filled' : 'empty'}`}

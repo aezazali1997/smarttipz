@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import FilledStar from './FilledStar'
 const NewsFeedFilters = ({
 	account,
@@ -12,14 +12,14 @@ const NewsFeedFilters = ({
 }) => {
 	let color = 'light';
 	const [ratingStars, setRatingStars] = useState(0);
-	const [hover,setHover]=useState(0);
-	const [rating,setRating]=useState(0);
+	const [hover, setHover] = useState(0);
+	const [rating, setRating] = useState(0);
 
 	// useEffect(() => {
-		
-	
+
+
 	// }, [rating,ratingStars])
-	
+
 
 
 	const _HandleClickRatingStar = (index) => {
@@ -39,18 +39,18 @@ const NewsFeedFilters = ({
 			</svg>
 		</span>)
 
-	
+
 
 	const displayRatingStars = () => {
 		return (
 			<span className="flex space-x-1">
 				{
-				[...Array(5)].map((item, index) => {
-					index+=1
-				 return <FilledStar key={index} _HandleClick={() => _HandleClickRatingStar(index)} _hover={hover} _setHover={setHover} _rating={rating}  _index={index}   />
-				 })
+					[...Array(5)].map((item, index) => {
+						index += 1
+						return <FilledStar key={index} _HandleClick={() => _HandleClickRatingStar(index)} _hover={hover} _setHover={setHover} _rating={rating} _index={index} />
+					})
 				}
-				</span>
+			</span>
 		)
 		/* 
 		const emptyStars = 5 - ratingStars;
