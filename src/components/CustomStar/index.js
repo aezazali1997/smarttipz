@@ -4,7 +4,7 @@ import { EmptyStar, FilledStar, HalfStar } from 'src/assets/SVGs';
 
 
 const CustomStar = ({ value, edit, isHalf, onChange, size, classNames }) => {
-  let avgRating = value;
+  let avgRating = (value===undefined || value===null) ? 0 : value;
   if (avgRating !== undefined) {
     if (avgRating === 0) {
       avgRating = parseFloat(avgRating).toFixed(2);

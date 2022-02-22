@@ -13,7 +13,7 @@ const handler = async (req, res) => {
       );
 
       const user = await User.findOne({
-        attributes: ['id','avgRating'],
+        attributes: ['id','avgRating','totalViews'],
         where: { username }
       });
       if (!user) {
@@ -29,7 +29,7 @@ const handler = async (req, res) => {
         data: {
           followers: followers,
           followed: followed,
-          avgProfileRating:user.avgRating
+          avgProfileRating:user.avgRating,
         },
         message: 'Data Fetched Successfully'
       });

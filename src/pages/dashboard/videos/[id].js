@@ -50,7 +50,7 @@ const VideoDetailScreen = () => {
   const [current, setCurrentPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [ratingData, setRatingData] = useState({ ...initialRatingData });
-
+  const [isViewed,setIsViewed]=useState(false);
   const _GetVideoById = async () => {
     console.log('rendering this posts');
     try {
@@ -64,7 +64,13 @@ const VideoDetailScreen = () => {
       console.log('api failed => ', e);
     }
   };
-
+    const postViewOnVideo = async (VideoId) => {
+    try {
+      await axiosInstance.viewPost({VideoId:VideoId});
+    } catch (error) {
+      console.log("ERROR:",error);
+    }
+  };
   let GetPosts = async (currentPage) => {
     try {
       const {
@@ -136,11 +142,12 @@ const VideoDetailScreen = () => {
       productLink,
       watchLimit = '',
       cost = '',
-      likesCount
+      likesCount,
+      views
     } = {}
   } = video;
-
   const getAllCommentsByVideoId = async () => {
+  
     try {
       const {
         data: {
@@ -464,7 +471,9 @@ const VideoDetailScreen = () => {
   };
 
   const _HandlePaidVideos = async () => {
-    console.log('Here');
+    
+    	!isViewed && localStorage.getItem('id')!=(UserId) && postViewOnVideo(videoId);
+		setIsViewed(true);
     setTimeout(() => {
       setStopVideo(true);
       _TogglePaymentModal();
@@ -698,7 +707,10 @@ const VideoDetailScreen = () => {
             </div>
           )
         ) : (
-          <div className="detail-page-video-wrapper">
+          <div className="detail-page-video-wrapper" onClick={()=>{
+            !isViewed && localStorage.getItem('id')!=UserId && postViewOnVideo(videoId)
+            setIsViewed(true);
+          }}>
             <VideoPlayer poster={thumbnail} src={url} />
           </div>
         )}
@@ -747,16 +759,18 @@ const VideoDetailScreen = () => {
             <div>
               <span
                 data-tip
-                data-tip-disable={localStorage.getItem('id') == UserId}
+                // data-tip-disable={localStorage.getItem('id') == UserId}
                 onClick={
-                  localStorage.getItem('id') !== UserId
-                    ? () => {
-                      OpenRatingModal({ postId, avgRating: video.avgRating, totalRaters: video.totalRaters });
+                  // localStorage.getItem('id') !== UserId
+                  //   ? 
+                    () => {
+                      OpenRatingModal({ postId, avgRating: video.avgRating, totalRaters: video.totalRaters })
                     }
-                    : () => { }
+                    // : () => { }
                 }
-                className={`flex items-center z-0 ${localStorage.getItem('id') !== UserId ? 'cursor-pointer' : 'cursor-default'
-                  }`}>
+                // flex items-center z-0 ${localStorage.getItem('id') !== UserId ? 'cursor-pointer' : 'cursor-default'
+                //   }
+                className={`flex items-center z-0 cursor-pointer`}>
                 {/* <Rating value={4} isHalf={true} edit={false} />
 								&nbsp; <p className="text-xs"> Rating</p> */}
                 {displayRatingStars()}
@@ -776,7 +790,7 @@ const VideoDetailScreen = () => {
                     clipRule="evenodd"
                   />
                 </svg>
-                &nbsp;<p className="text-xs">{200} Views</p>
+                &nbsp;<p className="text-xs">{views} Views</p>
               </span>
             </div>
           </div>
@@ -855,7 +869,9 @@ const VideoDetailScreen = () => {
                       mediaType,
                       productLink,
                       tip,
-                      createdAt
+                      createdAt,
+                      views,
+                      id:videoId
                     }
                   },
                   index
@@ -868,7 +884,7 @@ const VideoDetailScreen = () => {
                       catalogue={catalogue}
                       url={url}
                       User={User}
-                      views={200}
+                      views={views}
                       createdAt={createdAt}
                       rating={avgRating}
                       productLink={productLink}
@@ -884,6 +900,10 @@ const VideoDetailScreen = () => {
                       _HandleDeleteVideo={_HandleDeleteVideo}
                       _HandleGotoUserProfile={_HandleGotoUserProfile}
                       _HandleGotoVideoDetails={_HandleGotoVideoDetails}
+                      _handleViewsOnVideo={postViewOnVideo}
+                      isViewed={isViewed}
+                      setIsViewed={setIsViewed}
+                      videoId={videoId}
                     />
                   </div>
                 )

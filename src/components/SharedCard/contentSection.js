@@ -14,7 +14,11 @@ const ContentSection = ({
   _HandleGotoVideoDetails,
   TogglePaymentModal,
   restrict,
-  createdAt
+  createdAt,
+  _handleViewsOnVideo,
+	isViewed,
+	setIsViewed,
+  videoId
 }) => {
   const { thumbnail = '', url = '', title = '', User = {}, UserId = '', id = '', videoCost = '' } = SharedPost;
 
@@ -60,7 +64,10 @@ const ContentSection = ({
           </div>
         )
       ) : (
-        <div className="video-wrapper">
+        <div className="video-wrapper" onClick={()=>{
+          !isViewed && localStorage.getItem('id')!=UserId && _handleViewsOnVideo(videoId)
+          setIsViewed(true)
+        }}>
           <VideoPlayer poster={thumbnail} src={url} />
         </div>
       )}

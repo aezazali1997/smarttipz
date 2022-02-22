@@ -63,7 +63,8 @@ const NewsFeed = () => {
     _HandleCommentCounts,
     _FetchMoreData,
     hasMore,
-    isSubmitingRating
+    isSubmitingRating,
+    postViewOnVideo
   } = UseFetchNewsFeed();
 
   return (
@@ -143,7 +144,8 @@ const NewsFeed = () => {
                     productLink,
                     watchLimit,
                     cost,
-                    createdAt
+                    createdAt,
+                    views
                   }
                 } = item;
                 return isShared ? (
@@ -166,6 +168,7 @@ const NewsFeed = () => {
                     _OpenShareModal={_OpenShareModal}
                     _HandleCommentCounts={_HandleCommentCounts}
                     HandleLikePost={() => HandleLikePost(postId, isLiked)}
+                    _handleViewsOnVideo={postViewOnVideo}
                     _HandleGotoUserProfile={_HandleGotoUserProfile}
                     _HandleGotoVideoDetails={_HandleGotoVideoDetails}
                     TogglePaymentModal={() => _TogglePaymentModal(cost)}
@@ -182,7 +185,7 @@ const NewsFeed = () => {
                       catalogue={catalogue}
                       isPost={true}
                       url={url}
-                      views={200}
+                      views={views}
                       User={User}
                       description={description}
                       title={title}
@@ -212,6 +215,7 @@ const NewsFeed = () => {
                       _HandleGotoUserProfile={_HandleGotoUserProfile}
                       ToggleRatingModal={() => OpenRatingModal({ postId, avgRating, totalRaters, isSubmitingRating })}
                       _HandleGotoVideoDetails={_HandleGotoVideoDetails}
+                      _handleViewsOnVideo={postViewOnVideo}
                     />
                   )
                 );

@@ -51,10 +51,8 @@ const UseFetchNewsFeed = () => {
   const [initialValues, setInitialValues] = useState(initials);
   const [showRatingModal, setShowRatingModal] = useState(false);
 
+  const [isSubmitingRating, setIsSubmitingRating] = useState(false);
 
-  const [isSubmitingRating,setIsSubmitingRating]=useState(false);
-  
-  
   const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
   const [isloadingFeed, setLoadingFeed] = useState(true);
   const [postRating, setSharePostRating] = useState(0);
@@ -65,6 +63,14 @@ const UseFetchNewsFeed = () => {
   const [hasMore, setHasMore] = useState(true);
 
   let thumbnailRef = useRef();
+
+  const postViewOnVideo = async (VideoId) => {
+    try {
+      await axiosInstance.viewPost({VideoId:VideoId});
+    } catch (error) {
+      console.log("ERROR:",error);
+    }
+  };
 
   let GetPosts = async (currentPage) => {
     try {
@@ -244,7 +250,6 @@ const UseFetchNewsFeed = () => {
       delete values.second;
     }
 
-
     try {
       const {
         data: { message }
@@ -358,10 +363,10 @@ const UseFetchNewsFeed = () => {
     }
   };
 
-  const _HandleDeleteVideo = async (index,videoId) => {
+  const _HandleDeleteVideo = async (index, videoId) => {
     try {
-      let res=await axiosInstance.deleteVideo(videoId);
-      console.log("res in use fetch news",res)
+      let res = await axiosInstance.deleteVideo(videoId);
+      console.log('res in use fetch news', res);
       setCatalogueCount((catalogueCount) => catalogueCount - 1);
       const originalArray = [...posts];
       let newArray = originalArray.map((item, i) => {
@@ -416,16 +421,15 @@ const UseFetchNewsFeed = () => {
 
   const _SubmitRating = async () => {
     setIsSubmitingRating(true);
-    let rated=false;
-    let nAvg=0;
+    let rated = false;
+    let nAvg = 0;
     const { oldAvgRating = 0, totalRaters = 0, newRating = 0, postId = 1 } = ratingData;
-      
+
     try {
-     let res=await axiosInstance.ratePost({ postId: postId, rating: newRating });
-     const {data}=res.data;
-       rated=data.hasRated;
-       nAvg=data.newAvg;
-      
+      let res = await axiosInstance.ratePost({ postId: postId, rating: newRating });
+      const { data } = res.data;
+      rated = data.hasRated;
+      nAvg = data.newAvg;
     } catch ({
       response: {
         data: { message }
@@ -433,8 +437,8 @@ const UseFetchNewsFeed = () => {
     }) {
       console.log('in catch of api rating: ', message);
     }
-    oldAvgRating= rated ? nAvg : oldAvgRating
-     const updatedPosts = calculateAvgRating(
+    oldAvgRating = rated ? nAvg : oldAvgRating;
+    const updatedPosts = calculateAvgRating(
       posts,
       postId,
       parseInt(totalRaters),
@@ -556,8 +560,8 @@ const UseFetchNewsFeed = () => {
     ratingData,
     hasMore,
     _FetchMoreData,
-    isSubmitingRating
-    
+    isSubmitingRating,
+    postViewOnVideo
   };
 };
 

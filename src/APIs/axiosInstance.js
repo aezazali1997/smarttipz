@@ -208,6 +208,9 @@ class AxiosInstance {
     async ratePost(payload) {
         return await axios.post(USER_API_BASE_URL + `api/profile/videos/rate`, payload, this.getAuthHeader());
     }
+    async viewPost(payload) {
+        return await axios.post(USER_API_BASE_URL + `api/profile/videos/view`,payload,this.getAuthHeader());
+    }
 
 }
 

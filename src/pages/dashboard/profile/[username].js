@@ -175,6 +175,13 @@ const UserProfile = ({ profile }) => {
   const enableFetchMyVideos = () => {
     setFetchMyVideos(true);
   };
+    const postViewOnVideo = async (VideoId) => {
+    try {
+      await axiosInstance.viewPost({VideoId:VideoId});
+    } catch (error) {
+      console.log("ERROR:",error);
+    }
+  };
 
   const disableFetchMyVideos = () => {
     setFetchMyVideos(false);
@@ -562,7 +569,8 @@ const UserProfile = ({ profile }) => {
                             productLink,
                             watchLimit,
                             cost,
-                            createdAt
+                            createdAt,
+                            views
                           }
                         },
                         index
@@ -576,7 +584,7 @@ const UserProfile = ({ profile }) => {
                             catalogue={catalogue}
                             url={url}
                             User={User}
-                            views={200}
+                            views={views}
                             createdAt={createdAt}
                             mediaType={mediaType}
                             videoType={videoType}
@@ -601,6 +609,7 @@ const UserProfile = ({ profile }) => {
                             TogglePaymentModal={() => _TogglePaymentModal(cost)}
                             HandleLikePost={() => HandleLikePost(postId, isLiked)}
                             ToggleRatingModal={() => OpenRatingModal({ postId, avgRating, totalRaters })}
+                          _handleViewsOnVideo={postViewOnVideo}
                           />
                         </div>
                       )
@@ -654,7 +663,8 @@ const UserProfile = ({ profile }) => {
                           productLink,
                           watchLimit,
                           cost,
-                          createdAt
+                          createdAt,
+                          views
                         }
                       },
                       index
@@ -668,7 +678,7 @@ const UserProfile = ({ profile }) => {
                           catalogue={catalogue}
                           url={url}
                           User={User}
-                          views={200}
+                          views={views}
                           createdAt={createdAt}
                           videoType={videoType}
                           videoCost={videoCost}
@@ -693,6 +703,7 @@ const UserProfile = ({ profile }) => {
                           TogglePaymentModal={() => _TogglePaymentModal(cost)}
                           HandleLikePost={() => HandleLikePost(postId, isLiked)}
                           ToggleRatingModal={() => OpenRatingModal({ postId, avgRating, totalRaters })}
+                          _handleViewsOnVideo={postViewOnVideo}
                         />
                       </div>
                     )

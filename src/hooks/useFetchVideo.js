@@ -107,7 +107,13 @@ const UseFetchVideo = () => {
       });
     }
   };
-
+   const postViewOnVideo = async (VideoId) => {
+    try {
+      await axiosInstance.viewPost({VideoId:VideoId});
+    } catch (error) {
+      console.log("ERROR:",error);
+    }
+  };
   const _HandleDeleteVideo = async (index, videoId) => {
     try {
       const res = await axiosInstance.deleteVideo(videoId);
@@ -221,6 +227,7 @@ const UseFetchVideo = () => {
     isSharing,
     shareData,
     shareCaption,
+    postViewOnVideo
   };
 };
 

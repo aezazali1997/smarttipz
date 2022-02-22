@@ -404,7 +404,7 @@ const UseFetchProfile = (profile) => {
     }
 
     // console.log('catalogueCount: ', catalogueCount);
-
+   
     const _HandleCatalogue = async (videoId, catalogue) => {
         if (catalogueCount < 5 || catalogue === true) {
             try {
@@ -475,7 +475,13 @@ const UseFetchProfile = (profile) => {
     const _HandleGotoVideoDetails = (id) => {
         router.push(`/dashboard/videos/${id}`)
     }
-
+ const postViewOnVideo = async (VideoId) => {
+    try {
+      await axiosInstance.viewPost({VideoId:VideoId});
+    } catch (error) {
+      console.log("ERROR:",error);
+    }
+  };
     const HandleLikePost = async (id, isLiked) => {
         const updatedCatPosts = await checkLikeCount(catalogues, id, isLiked);
         const updatedVideoPosts = await checkLikeCount(myVideos, id, isLiked);
@@ -548,7 +554,8 @@ const UseFetchProfile = (profile) => {
         _CloseUploadModal, _OpenUploadModal, catalogues, setCatalogues, fetchingCatalogues, myVideos, fetchingMyVideos,
         _HandleDeleteVideo, _HandleGotoVideoDetails, _HandleGotoUserProfile, HandleLikePost,
         _OpenShareModal, _CloseShareModal, showShareModal, shareData, _HandleSharePost, _HandleChangeCaption,
-        shareCaption, setShareCaption, isSharing, _HandleCommentCounts,profileRating
+        shareCaption, setShareCaption, isSharing, _HandleCommentCounts,profileRating,
+        postViewOnVideo
     }
 }
 export default UseFetchProfile;

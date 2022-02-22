@@ -80,7 +80,13 @@ const UseSearch = () => {
     }
   }, [posts]);
   //LOADERS START HERE//
-
+   const postViewOnVideo = async (VideoId) => {
+    try {
+      await axiosInstance.viewPost({VideoId:VideoId});
+    } catch (error) {
+      console.log("ERROR:",error);
+    }
+  };
   const enableProfileLoading = () => {
     setUserProfileLoading(true);
   };
@@ -603,7 +609,8 @@ const UseSearch = () => {
     _HandleRateFilter,
     _HandleClearRating,
     _FetchMoreData,
-    hasMore
+    hasMore,
+    postViewOnVideo
   };
 };
 

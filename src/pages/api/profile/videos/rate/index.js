@@ -76,7 +76,7 @@ const handler = async (req, res) => {
         // parse float
       });
       const profileRating=await db.query(`
-       select avg(nullif (v.rating,0)) from "Videos" v where v."UserId" =${video.UserId} and v."isApproved" =true 
+       select avg(nullif (v.rating,0)) from "Videos" v where v."UserId" =${video.UserId} 
       `)
       const profileAvgRating = isEmpty(profileRating[0]) ? 0 : profileRating[0][0].avg;
       await User.update(

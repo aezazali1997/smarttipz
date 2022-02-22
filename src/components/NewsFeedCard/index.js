@@ -49,13 +49,15 @@ const NewsfeedCard = ({
   HandleFavouritePost,
   _HandleCommentCounts,
   _HandleGotoUserProfile,
-  _HandleGotoVideoDetails
+  _HandleGotoVideoDetails,
+  _handleViewsOnVideo,
 }) => {
   const [showCommentSection, setShowCommentSection] = useState(false);
   const [message, setMessage] = useState('');
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [stopVideo, setStopVideo] = useState(false);
+  const [isViewed,setIsViewed]=useState(false);
 
   const getAllCommentsByVideoId = async () => {
     try {
@@ -103,7 +105,6 @@ const NewsfeedCard = ({
       const {
         data: { message }
       } = await axiosInstance.deleteCommentById(commentId);
-     
     } catch ({
       response: {
         data: { message }
@@ -114,6 +115,8 @@ const NewsfeedCard = ({
   };
 
   const _HandlePaidVideos = async () => {
+    !isViewed && localStorage.getItem('id')!=UserId && _handleViewsOnVideo(videoId)
+    setIsViewed(true)
     setTimeout(() => {
       setStopVideo(true);
       TogglePaymentModal();
@@ -144,13 +147,12 @@ const NewsfeedCard = ({
   // );
 
   const displayRatingStars = () => {
- 
-    if (avgRating !== undefined || rating !==undefined) {
+    if (avgRating !== undefined || rating !== undefined) {
       if (avgRating === 0) {
         avgRating = parseFloat(avgRating).toFixed(2);
       }
-      if(avgRating===undefined){
-        avgRating=rating
+      if (avgRating === undefined) {
+        avgRating = rating;
       }
       const hasDecimal = String(avgRating).split('.');
       const firstSplittedValue = parseInt(hasDecimal[0]);
@@ -190,11 +192,8 @@ const NewsfeedCard = ({
                   className="text-sm font-bold font-sans hover:underline cursor-pointer">
                   {User?.name}
                 </p>
-                <p className="text-gray-500 text-sm">{
-                  moment(createdAt).format('D MMM YYYY')
-                }, {
-                  moment(createdAt).format('H:mm')
-                }
+                <p className="text-gray-500 text-sm">
+                  {moment(createdAt).format('D MMM YYYY')}, {moment(createdAt).format('H:mm')}
                 </p>
               </div>
             </div>
@@ -263,7 +262,9 @@ const NewsfeedCard = ({
         {videoCost === 'Paid' && restrictPaidVideo ? (
           !stopVideo ? (
             <div className="video-wrapper" onClick={_HandlePaidVideos}>
-              <VideoPlayer poster={thumbnail} src={url} />
+             
+                <VideoPlayer poster={thumbnail} src={url} />
+              
             </div>
           ) : (
             <div className="video-wrapper flex flex-col justify-center items-center">
@@ -277,7 +278,10 @@ const NewsfeedCard = ({
             </div>
           )
         ) : (
-          <div className="video-wrapper">
+          <div className="video-wrapper" onClick={()=>{
+            !isViewed && localStorage.getItem('id')!=UserId && _handleViewsOnVideo(videoId)
+            setIsViewed(true)
+          } }>
             <VideoPlayer poster={thumbnail} src={url} />
           </div>
         )}

@@ -24,7 +24,8 @@ const Videos = () => {
     showShareModal,
     isSharing,
     shareData,
-    shareCaption
+    shareCaption,
+    postViewOnVideo
   } = UseFetchVideo();
 
   return (
@@ -102,7 +103,9 @@ const Videos = () => {
                 videoType,
                 Shares,
                 productLink,
-                createdAt
+                createdAt,
+                views
+
               } } = item;
             return (
               <div key={index}>
@@ -115,7 +118,7 @@ const Videos = () => {
                   url={url}
                   User={User}
                   Shares={Shares}
-                  views={200}
+                  views={views}
                   createdAt={createdAt}
                   avgRating={avgRating}
                   isLiked={isLiked}
@@ -137,6 +140,7 @@ const Videos = () => {
                   _HandleCatalogue={_HandleCatalogue}
                   _HandleDeleteVideo={_HandleDeleteVideo}
                   _HandleGotoVideoDetails={_HandleGotoVideoDetails}
+                  _handleViewsOnVideo={postViewOnVideo}
                 />
               </div>
             )

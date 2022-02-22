@@ -84,7 +84,8 @@ const Profile = ({ profile }) => {
     shareCaption,
     setShareCaption,
     isSharing,
-    profileRating
+    profileRating,
+    postViewOnVideo
   } = UseFetchProfile(profile);
   const { name, about, rating, views, picture, phone, email, accountType, username, showUsername, showName } = profile;
   const { website } = businessCard;
@@ -231,7 +232,8 @@ const Profile = ({ profile }) => {
                       videoCost,
                       Shares,
                       productLink,
-                      createdAt
+                      createdAt,
+                      views
                     }
                   } = item;
                   return (
@@ -245,7 +247,7 @@ const Profile = ({ profile }) => {
                         url={url}
                         User={User}
                         Shares={Shares}
-                        views={200}
+                        views={views}
                         rating={2.5}
                         posts={catalogues}
                         isLiked={isLiked}
@@ -269,6 +271,7 @@ const Profile = ({ profile }) => {
                         _HandleGotoVideoDetails={_HandleGotoVideoDetails}
                         _HandleDeleteVideo={_HandleDeleteVideo}
                         _HandleCatalogue={_HandleCatalogue}
+                        _handleViewsOnVideo={postViewOnVideo}
                       />
                     </div>
                   );
@@ -320,7 +323,8 @@ const Profile = ({ profile }) => {
                     videoCost,
                     Shares,
                     productLink,
-                    createdAt
+                    createdAt,
+                    views
                   }
                 } = item;
                 return (
@@ -334,7 +338,7 @@ const Profile = ({ profile }) => {
                       url={url}
                       User={User}
                       Shares={Shares}
-                      views={200}
+                      views={views}
                       createdAt={createdAt}
                       mediaType={mediaType}
                       videoCost={videoCost}
@@ -357,6 +361,7 @@ const Profile = ({ profile }) => {
                       _HandleGotoVideoDetails={_HandleGotoVideoDetails}
                       _HandleCatalogue={_HandleCatalogue}
                       _HandleDeleteVideo={_HandleDeleteVideo}
+                      _handleViewsOnVideo={postViewOnVideo}
                     />
                   </div>
                 );

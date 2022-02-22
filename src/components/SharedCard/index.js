@@ -25,13 +25,16 @@ const SharedCard = ({
 	TogglePaymentModal,
 	_HandleGotoVideoDetails,
 	_HandleGotoUserProfile,
-	createdAt
+	_handleViewsOnVideo,
+	createdAt,
 }) => {
 	const [showCommentSection, setShowCommentSection] = useState(false);
 	const [message, setMessage] = useState('');
 	const [comments, setComments] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [stopVideo, setStopVideo] = useState(false);
+	const [isViewed,setIsViewed]=useState(false);
+	
 
 	const getAllCommentsByVideoId = async () => {
 		try {
@@ -83,6 +86,8 @@ const SharedCard = ({
 
 
 	const _HandlePaidVideos = async () => {
+		!isViewed && localStorage.getItem('id')!=UserId && _handleViewsOnVideo(videoId);
+		setIsViewed(true);
 		setTimeout(() => {
 			setStopVideo(true);
 			TogglePaymentModal();
@@ -110,6 +115,11 @@ const SharedCard = ({
 							_HandlePaidVideos={_HandlePaidVideos}
 							_HandleGotoUserProfile={_HandleGotoUserProfile}
 							_HandleGotoVideoDetails={_HandleGotoVideoDetails}
+							_handleViewsOnVideo={_handleViewsOnVideo}
+							isViewed={isViewed}
+							setIsViewed={setIsViewed}
+							videoId={videoId}
+
 						/> :
 						<div className='mb-2'>
 							<PostDeletedAlert />

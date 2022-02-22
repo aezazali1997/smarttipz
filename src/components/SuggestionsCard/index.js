@@ -12,6 +12,7 @@ import { EmptyStar, FilledStar, HalfStar } from 'src/assets/SVGs';
 const SuggestionCard = ({
   index,
   id,
+  videoId,
   catalogue,
   UserId,
   isPost,
@@ -30,7 +31,10 @@ const SuggestionCard = ({
   _HandleCatalogue,
   _HandleDeleteVideo,
   _HandleGotoUserProfile,
-  _HandleGotoVideoDetails
+  _HandleGotoVideoDetails,
+  _handleViewsOnVideo,
+  isViewed,
+  setIsViewed,
 }) => {
 
 
@@ -154,7 +158,10 @@ const SuggestionCard = ({
         >
           {title}
         </p>
-        <div className="suggestion-video-wrapper">
+        <div className="suggestion-video-wrapper" onClick={()=>{
+          !isViewed && localStorage.getItem('id')!=UserId && _handleViewsOnVideo(videoId)
+          setIsViewed(true)
+        }}  >
           <VideoPlayer poster={thumbnail} src={url} />
         </div>
         {/* <img src="https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"
