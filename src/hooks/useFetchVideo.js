@@ -111,6 +111,7 @@ const UseFetchVideo = () => {
   const _HandleDeleteVideo = async (index, videoId) => {
     try {
       const res = await axiosInstance.deleteVideo(videoId);
+      console.log("res delete in use fetch videos",res)
       setCatalogueCount((catalogueCount) => catalogueCount - 1);
       const originalArray = [...Videos];
       const originalFilteredArray = [...filterdVideos];
@@ -118,7 +119,6 @@ const UseFetchVideo = () => {
       let newFilteredArray = originalFilteredArray.filter((item, i) => {
         if (item.Video.id !== videoId) return item;
       });
-      console.log('newFilteredArray: ', newFilteredArray);
       setFilterVideos(newFilteredArray);
       setVideos(originalArray);
     } catch ({

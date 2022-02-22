@@ -63,20 +63,20 @@ const handler = async (req, res) => {
                 where: { username, isBlocked: false, isDeleted: false }
             });
 
-            console.log('id => ', id);
+            // console.log('id => ', id);
 
             const video = await Video.findOne({
                 attributes: ['id'],
                 where: { id: videoId, isApproved: true }
             });
 
-            console.log('video => ', video);
+            // console.log('video => ', video);
 
 
             const post = await Favourite.findOne({ where: { VideoId: video.id, reviewerId: id } });
 
-            console.log('post => ', post);
-
+            // console.log('post => ', post);
+// 
 
             if (post === null) {
                 const favourite = await Favourite.create({

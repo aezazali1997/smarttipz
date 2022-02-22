@@ -110,8 +110,8 @@ const handler = async (req, res) => {
         //   attributes: ['shareCount']
         // });
         let shareCount = Video.shareCount;
-        console.log("is liked",isLiked);
-        console.log("share count",shareCount);
+        // console.log("is liked",isLiked);
+        // console.log("share count",shareCount);
         // const shareCount = await Share.count({
         //   where: {
         //     VideoId

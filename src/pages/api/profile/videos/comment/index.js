@@ -30,7 +30,7 @@ const handler = async (req, res) => {
         order: [['createdAt', 'DESC']]
       });
 
-      console.log('sharedPosts: ', comments);
+      // console.log('sharedPosts: ', comments);
 
       res.status(200).json({
         error: false,

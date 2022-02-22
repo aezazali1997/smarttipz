@@ -25,14 +25,14 @@ const handler = async (req, res) => {
 
     try {
       if (Token && Token !== '') {
-        console.log('hasToken')
+        // console.log('hasToken')
         const { email } = jwt.verify(
           Token,
           process.env.SECRET_KEY
         );
         userEmail = email;
       } else {
-        console.log('noToken')
+        // console.log('noToken')
         userEmail = email;
       }
 

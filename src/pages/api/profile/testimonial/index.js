@@ -26,7 +26,7 @@ const handler = async (req, res) => {
 
       const testimonials = await business.getTestimonials({ where: { isDeleted: false }, order: [["createdAt", "DESC"]] });
 
-      console.log(testimonials);
+      // console.log(testimonials);
 
       res.status(200).json({
         error: false, message: 'Data fetched successfully', data: testimonials

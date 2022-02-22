@@ -150,7 +150,7 @@ const Profile = ({ profile }) => {
                   &nbsp;<p className="text-xs">{views} Views</p>
                 </span>
                 <span className="flex w-full items-center">
-                  <CustomStar value={profileRating || 0 } isHalf={true} /> &nbsp;
+                  <CustomStar value={profileRating} isHalf={true} /> &nbsp;
                   <p className="text-xs"> Rating </p>
                 </span>
               </div>

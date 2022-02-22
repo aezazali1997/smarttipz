@@ -70,7 +70,7 @@ const UseFetchProfile = (profile) => {
         axiosInstance.getFollow().then(({ data: { data: { followers, followed,avgProfileRating } } }) => {
             setFollowed(followed);
             setFollowers(followers);
-            // setProfileRating(avgProfileRating);
+            setProfileRating(avgProfileRating);
         }).catch(({ response: { data: { message } } }) => {
         })
         if (accountType === 'Business') {
@@ -130,14 +130,13 @@ const UseFetchProfile = (profile) => {
         fetchCatalogues();
         fetchMyVideos();
     }, []);
-    useEffect(()=>{
-        // if(!(profileRating===null || profileRating>0)){
-        // console.log("my videos",myVideos)
-        // console.log("profile rating",profileRating);
-        // // avgRating
-        // }
-        setProfileRating(calProfileRating(myVideos)); 
-    },[myVideos])
+    // useEffect(()=>{
+    //     // if(!(profileRating===null || profileRating>0)){
+       
+    //     // // avgRating
+    //     // }
+    //     // setProfileRating(calProfileRating(myVideos)); 
+    // },[myVideos])
 
     useEffect(() => { }, [testimonial, catalogues])
 
@@ -404,7 +403,7 @@ const UseFetchProfile = (profile) => {
         setAgree(checked);
     }
 
-    console.log('catalogueCount: ', catalogueCount);
+    // console.log('catalogueCount: ', catalogueCount);
 
     const _HandleCatalogue = async (videoId, catalogue) => {
         if (catalogueCount < 5 || catalogue === true) {
@@ -445,7 +444,14 @@ const UseFetchProfile = (profile) => {
 
     const _HandleDeleteVideo = async (index, videoId) => {
         try {
-            const res = await axiosInstance.deleteVideo(videoId);
+            const {
+                data:{
+                    data:{
+                        profileUpdatedRating
+                    }
+                }
+                } = await axiosInstance.deleteVideo(videoId);
+                setProfileRating(profileUpdatedRating)
             const originalArray = [...myVideos];
             const originalCatalogueArray = [...catalogues];
             let newArray = originalCatalogueArray.filter(item => item.id !== videoId && item)

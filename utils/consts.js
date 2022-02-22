@@ -48,7 +48,7 @@ const getVideoByRating = (rating) => {
       };
 };
 const getProfileByRating = (rate) => {
-  console.log("called",rate)
+  // console.log("called",rate)
   return Number(rate) === 0
     ? {
         [sequelize.Op.gte]: rate

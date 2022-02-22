@@ -244,7 +244,6 @@ const UseFetchNewsFeed = () => {
       delete values.second;
     }
 
-    // console.log('values: ', values);
 
     try {
       const {
@@ -290,7 +289,6 @@ const UseFetchNewsFeed = () => {
   });
 
   const HandleLikePost = async (id, isLiked) => {
-    console.log("id ",id,"isliked",isLiked)
     const updatedPosts = await checkLikeCount(posts, id, isLiked);
     setPosts(updatedPosts);
     try {
@@ -362,7 +360,8 @@ const UseFetchNewsFeed = () => {
 
   const _HandleDeleteVideo = async (index,videoId) => {
     try {
-      await axiosInstance.deleteVideo(videoId);
+      let res=await axiosInstance.deleteVideo(videoId);
+      console.log("res in use fetch news",res)
       setCatalogueCount((catalogueCount) => catalogueCount - 1);
       const originalArray = [...posts];
       let newArray = originalArray.map((item, i) => {
@@ -491,7 +490,6 @@ const UseFetchNewsFeed = () => {
 
   const _HandleChangeCaption = ({ target }) => {
     const { value } = target;
-    console.log(value);
     setShareCaption(value);
   };
 

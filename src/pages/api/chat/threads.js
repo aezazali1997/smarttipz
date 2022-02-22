@@ -53,7 +53,7 @@ const handler = async (req, res) => {
                             },
                             order: [["createdAt", "DESC"]],
                         });
-                        console.log('chats: ', res);
+                        // console.log('chats: ', res);
                         const { name, picture } = await User.findOne({ where: { id: value } });
                         const { isRead, connected } = await Session.findOne({ where: { userId: value } });
                         users.push({

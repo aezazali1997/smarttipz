@@ -77,7 +77,7 @@ const SharedCard = ({
 		setComments(deepCopyComments);
 		try {
 			const { data: { message } } = await axiosInstance.deleteCommentById(commentId);
-			console.log(message);
+		
 		} catch ({ response: { data: { message } } }) { console.log(message); }
 	}
 

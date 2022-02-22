@@ -41,7 +41,7 @@ const Messages = () => {
     }, []);
 
     useEffect(() => {
-        console.log("In Listener effect")
+        // console.log("In Listener effect")
         socket.on('connected', ({ data: { id }, message }) => {
             let copyArray = [...userList];
             copyArray = copyArray.map((item, i) => {

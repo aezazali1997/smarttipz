@@ -32,7 +32,7 @@ const handler = async (req, res) => {
     if (error) return res.status(400).json({ error: error.details[0].message });
 
     const { username, email, phone, password, accountType, website, name } = req.body;
-    console.log('Signup:', req.body);
+    // console.log('Signup:', req.body);
 
     let user = null;
 
@@ -55,7 +55,7 @@ const handler = async (req, res) => {
         charset: 'numeric'
       });
 
-      console.log('varifyCode:', varificationCode);
+      // console.log('varifyCode:', varificationCode);
 
       const { success, message } = await sendEmail(
         email,

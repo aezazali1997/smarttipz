@@ -65,19 +65,19 @@ const handler = async (req, res) => {
                 where: { username, isBlocked: false, isDeleted: false }
             });
 
-            console.log('id => ', id);
+            // console.log('id => ', id);
 
             const allPost = await AllPosts.findOne({
                 attributes: ['id','likeCount'],
                 where: { id: postId }
             });
 
-            console.log('video => ', postId);
+            // console.log('video => ', postId);
 
 
             const post = await PostLike.findOne({ where: { AllPostId: postId, reviewerId: id } });
 
-            console.log('post => ', post);
+            // console.log('post => ', post);
 
 
             if (post === null) {

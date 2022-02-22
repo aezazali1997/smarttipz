@@ -31,7 +31,7 @@ const handler = async (req, res) => {
                 return res.status(404).send({ error: true, data: [], message: 'User Not Found' })
             }
 
-            console.log('user: ', user);
+            // console.log('user: ', user);
             const { id, id: userId } = user;
 
             const videos = await AllPosts.findAll({

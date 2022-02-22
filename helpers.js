@@ -33,7 +33,7 @@ export const scrollToBottom = (messagesEndRef) => {
 
 
 export const checkLikeCount = (originalArray, id, isLiked) => {
-    console.log(originalArray, id, isLiked)
+    
     const deepCopyVideoPosts = [...originalArray];
     const upadtedPosts = [];
     for (const post of deepCopyVideoPosts) {
@@ -68,7 +68,7 @@ export const checkCountById = (originalArray, name, postId, operator) => {
 
 export const calculateAvgRating = (originalArray, postId, totalRaters, oldRating, newRating,hasRated) => {
     let totalRATERS=Number(totalRaters);
-    // console.log("hasRated",hasRated,newRating)
+   
     const deepCopyVideoPosts = [...originalArray];
     const upadtedPosts = [];
     for (const post of deepCopyVideoPosts) {
@@ -97,5 +97,33 @@ export const calculateAvgRating = (originalArray, postId, totalRaters, oldRating
         }
     }
     return upadtedPosts;
+
+}
+export const calculateSinglePostAvgRating = (originalArray, postId, totalRaters, oldRating, newRating,hasRated) => {
+    let totalRATERS=Number(totalRaters);
+   
+    const deepCopyVideoPost = {...originalArray};
+    
+        
+            let newAvgRating=0.0;
+            
+            if(hasRated===true){
+               
+                newAvgRating = oldRating
+                deepCopyVideoPost.totalRaters = (totalRATERS).toString();
+
+            }
+            else
+            {
+
+                newAvgRating = ((newRating + (totalRATERS * oldRating)) / (totalRATERS+1))
+            deepCopyVideoPost.totalRaters = (totalRATERS+1).toString();
+            }
+            
+
+            deepCopyVideoPost.avgRating = newAvgRating.toString();
+        
+    
+    return deepCopyVideoPost;
 
 }

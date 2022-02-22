@@ -26,7 +26,7 @@ const handler = async (req, res) => {
                 }]
             });
 
-            console.log('sharedPosts: ', sharedPosts);
+            // console.log('sharedPosts: ', sharedPosts);
 
             res.status(200).json({
                 error: false,

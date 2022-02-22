@@ -2,7 +2,7 @@ import React from 'react'
 import ReactStars from 'react-rating-stars-component'
 import {isEmpty} from 'lodash'
 const CustomStar = ({ value, edit, isHalf, onChange, size, classNames }) => {
-    let avgRating=value;
+    let avgRating=(value === null || value=== undefined) ? 0 : value;
     // return (
     //     <ReactStars
     //         count={5}
@@ -20,8 +20,7 @@ const CustomStar = ({ value, edit, isHalf, onChange, size, classNames }) => {
     //     />
     // )
      
-    
-    if (avgRating !== undefined) {
+    if (avgRating !== undefined || avgRating!==null) {
       if (avgRating === 0) {
         avgRating = parseFloat(avgRating).toFixed(2);
       }
@@ -33,7 +32,9 @@ const CustomStar = ({ value, edit, isHalf, onChange, size, classNames }) => {
       if (!isEmpty(secondSplittedValue)) emptyStars - 1;
       return (
         <>
-          {[...Array(firstSplittedValue)].map((val, index) => (
+        {/* error */}
+          { 
+          [...Array(firstSplittedValue)].map((val, index) => (
             <FilledStar key={index} />
           ))}
           {!isEmpty(secondSplittedValue) && parseInt(secondSplittedValue) > 0 && <HalfStar />}

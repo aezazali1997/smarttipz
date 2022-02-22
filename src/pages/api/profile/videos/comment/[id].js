@@ -24,7 +24,7 @@ const handler = async (req, res) => {
                 },
                 attributes:['id','AllPostId']
             })
-            console.log("comment",comment.AllPostId);
+            // console.log("comment",comment.AllPostId);
             await Comment.destroy({
                 where: { id: id }
             });

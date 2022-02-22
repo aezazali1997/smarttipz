@@ -21,7 +21,7 @@ const handler = async (req, res) => {
 
     const { varificationCode, OTPToken } = body;
 
-    console.log(body);
+    // console.log(body);
 
     try {
 

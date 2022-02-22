@@ -261,6 +261,7 @@ const VideoDetailScreen = () => {
   const _HandleDeleteVideo = async (index, videoId) => {
     try {
       const res = await axiosInstance.deleteVideo(videoId);
+      console.log('deleting video in id',res)
       setCatalogueCount((catalogueCount) => catalogueCount - 1);
       const originalArray = [...posts];
       originalArray.splice(index, 1);
@@ -348,7 +349,7 @@ const VideoDetailScreen = () => {
   };
 
   const _HandleChangeTip = (value) => {
-    console.log('value: ', value);
+    // console.log('value: ', value);
   };
 
   const HandleLikePost = async () => {
@@ -747,17 +748,12 @@ const VideoDetailScreen = () => {
             <div>
               <span
                 data-tip
-                data-tip-disable={localStorage.getItem('id') == UserId}
-                onClick={
-                  localStorage.getItem('id') !== UserId
-                    ? () => {
+                // data-tip-disable={localStorage.getItem('id') == UserId}
+                onClick={() => {
                         OpenRatingModal({ postId, avgRating: video.avgRating, totalRaters: video.totalRaters });
                       }
-                    : () => {}
-                }
-                className={`flex items-center z-0 ${
-                  localStorage.getItem('id') !== UserId ? 'cursor-pointer' : 'cursor-default'
-                }`}>
+                    }
+                className={`flex items-center z-0 cursor-pointer`}>
                 {/* <Rating value={4} isHalf={true} edit={false} />
 								&nbsp; <p className="text-xs"> Rating</p> */}
                 {displayRatingStars()}

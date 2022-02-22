@@ -141,13 +141,34 @@ const handler = async (req, res) => {
                 authorization.split(' ')[1],
                 process.env.SECRET_KEY
             );
-
+            
             await Video.update(
                 { isApproved: false }, {
                 where: { id },
             });
+            const video = await Video.find({
+                where:{id}
+                
+            });
+             const profileRating=await db.query(`
+       select avg(nullif (v.rating,0)) from "Videos" v where v."UserId" =${video.UserId} and v."isApproved" =true 
+      `)
+      console.log("before checking is emoty",profileRating)
+      let profileAvgRating = isEmpty(profileRating[0]) ? 0 : profileRating[0][0].avg;
+     profileAvgRating= profileAvgRating===null ? 0 : profileAvgRating; 
+     console.log("profile rating",profileAvgRating)
+      await User.update(
+        {
+          avgRating:profileAvgRating
+        },
+        {
+          where:{
+            id:video.UserId
+          }
+        }
+      )
 
-            res.status(200).json({ error: false, data: {}, message: 'Video deleted successfuly.' });
+            res.status(200).json({ error: false, data: {profileUpdatedRating:profileAvgRating}, message: 'Video deleted successfuly.' });
         }
         catch (err) {
             console.log(err)

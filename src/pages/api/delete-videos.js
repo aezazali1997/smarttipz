@@ -13,7 +13,6 @@ const handler = async (req, res) => {
         isApproved:false
       }
     })
-    console.log(videos);
     // res.send(videos)
     res.status(200).send({ message: 'deleted videos succesfully' });
 }

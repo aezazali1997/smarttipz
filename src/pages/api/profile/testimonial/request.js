@@ -63,12 +63,12 @@ const handler = async (req, res) => {
                     clientToken: token
                 },
             }
-            console.log("msg => ", msg);
+            // console.log("msg => ", msg);
             sgMail
                 .send(msg)
                 .then((response) => {
-                    console.log(response[0].statusCode)
-                    console.log(response[0].headers)
+                    // console.log(response[0].statusCode)
+                    // console.log(response[0].headers)
                     return res.send({
                         error: false,
                         data: {},

@@ -41,7 +41,7 @@ const handler = async (req, res) => {
                     ],
                 }
             })
-            console.log('chats: ', chats);
+            // console.log('chats: ', chats);
             const response = chats.map(({ to, from, content, createdAt }) => {
                 return {
                     to: to,

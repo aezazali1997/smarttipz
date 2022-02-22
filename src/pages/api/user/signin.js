@@ -18,7 +18,7 @@ const handler = async (req, res) => {
       });
       return schema.validate(data);
     };
-    console.log(body)
+    // console.log(body)
     const { error } = validateSignin(body);
 
     if (error)

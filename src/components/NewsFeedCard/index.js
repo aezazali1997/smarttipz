@@ -102,7 +102,7 @@ const NewsfeedCard = ({
       const {
         data: { message }
       } = await axiosInstance.deleteCommentById(commentId);
-      console.log(message);
+     
     } catch ({
       response: {
         data: { message }
@@ -142,8 +142,7 @@ const NewsfeedCard = ({
   // );
 
   // const displayRatingStars = () => {
-  //   // console.log("avg rating",avgRating)
-  //   // console.log("rating",rating)
+ 
   //   if (avgRating !== undefined || rating !==undefined) {
   //     if (avgRating === 0) {
   //       avgRating = parseFloat(avgRating).toFixed(2);
@@ -194,8 +193,7 @@ const NewsfeedCard = ({
   );
 
   const displayRatingStars = () => {
-    console.log("avg rating",avgRating)
-    console.log("rating",rating)
+ 
     if (avgRating !== undefined || rating !==undefined) {
       if (avgRating === 0) {
         avgRating = parseFloat(avgRating).toFixed(2);
