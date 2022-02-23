@@ -78,7 +78,7 @@ const handler = async (req, res) => {
          * difference should be at least one day
          * TODO:change condition to to (>=1)
          */
-        if (Number(nowDate.diff(viewDate, 'days')) <= 1) {
+        if (Number(nowDate.diff(viewDate, 'days')) >= 1) {
           
           await ViewsModel.create({
             VideoId,
