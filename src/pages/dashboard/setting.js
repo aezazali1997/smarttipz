@@ -7,7 +7,7 @@ import ReactToolTip from 'react-tooltip';
 import { getInputClasses, fixedWithoutRoundOff } from 'helpers';
 import { UseFetchSetting } from 'src/hooks';
 import { AccountSetting, BusinessCard, Button, PhoneInput, InputField, Switch } from 'src/components';
-import { BankDetails } from './components';
+import BankDetails from './components/BankDetails/index';
 import { Email, LinkSVG, User, TopUp, WithDraw, Wallet } from 'src/assets/SVGs';
 import { TopUpModal, WithDrawModal } from 'src/components/Modals';
 import { AnimatePresence } from 'framer-motion';
