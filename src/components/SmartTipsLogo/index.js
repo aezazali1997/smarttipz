@@ -1,8 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
-const SmartTipzLogo = React.forwardRef(({href},ref) => {
+const SmartTipzLogo = () => {
   return (
-    <a href={href} ref={ref}>
+    <a>
       <span>
         <div className="relative w-36 h-full flex items-center">
           <Image
@@ -15,5 +15,5 @@ const SmartTipzLogo = React.forwardRef(({href},ref) => {
       </span>
     </a>
   );
-});
+};
 export default SmartTipzLogo;
