@@ -5,8 +5,8 @@ import { KeySVG, UserSVG, IBANSVG } from 'src/assets/SVGs';
 import { getInputClasses } from 'helpers';
 import { useFormik } from 'formik';
 import {isEmpty} from 'lodash'
-import { bankInitialValues} from './BankValidation/initials';
-import {validationSchema} from './BankValidation/BankValidation';
+import validationSchema from './BankValidation/BankValidation';
+import bankInitialValues from './BankValidation/initials';
 
 const BankDetails = ({
     setHasBankDetails
