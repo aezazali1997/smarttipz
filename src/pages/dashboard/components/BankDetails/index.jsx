@@ -101,7 +101,6 @@ const BankDetails = ({
             'IBAN'
           )} border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
           label={'Account Title'}
-          label={'IBAN Number'}
         />
         {formik.touched.IBAN && formik.errors.IBAN && <div className="text-red-700 text-sm mb-4">{errors.IBAN}</div>}
 
