@@ -1,7 +1,7 @@
-const bankInitialValues = {
-  accountTitle:'',
-  // accountNumber:'',
-  IBAN:'',
-  // branchCode:'',
-}
-export default bankInitialValues;
+// const bankInitialValues = {
+//   accountTitle:'',
+//   // accountNumber:'',
+//   IBAN:'',
+//   // branchCode:'',
+// }
+// export default bankInitialValues;

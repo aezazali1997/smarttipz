@@ -1,13 +1,25 @@
 import React, { useState, useEffect } from 'react';
+import * as Yup from 'yup';
 import { InputField, Button } from 'src/components';
 import AxiosInstance from 'src/APIs/axiosInstance';
 import { KeySVG, UserSVG, IBANSVG } from 'src/assets/SVGs';
 import { getInputClasses } from 'helpers';
 import { useFormik } from 'formik';
 import {isEmpty} from 'lodash'
-import validationSchema from './BankValidation/BankValidation';
-import bankInitialValues from './BankValidation/initials';
 
+const validationSchema = Yup.object({
+  accountTitle:Yup.string().required('Required'),
+  // accountNumber:Yup.string().required('Required'),
+  IBAN:Yup.string().required('Required'),
+  // branchCode:Yup.string().required('Required')
+
+})
+const bankInitialValues = {
+  accountTitle:'',
+  // accountNumber:'',
+  IBAN:'',
+  // branchCode:'',
+}
 const BankDetails = ({
     setHasBankDetails
 }) => {
