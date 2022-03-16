@@ -47,4 +47,5 @@ export { default as VideoUploadBlock } from './UploadVideoClickBlock';
 export { default as CommentSection } from './CommentSection';
 export { default as PostDeletedAlert } from './PostDeletedAlert';
 export {default as CustomStar} from './CustomStar';
-
+export {default as CheckoutForm } from './CheckoutForm'
+export {default as SmartTipzLogo} from './SmartTipsLogo';

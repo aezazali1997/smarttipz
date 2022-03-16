@@ -18,6 +18,7 @@
 @import "react-languages-select/css/react-languages-select.css";
 @import "//netdna.bootstrapcdn.com/font-awesome/3.0/css/font-awesome.css";
 @import "./NewsFeedFilters.css";
+@import "./custom.css";
 
 @tailwind base;
 @tailwind components;
@@ -81,12 +82,28 @@
 .success {
   color: #34D399
 }
-
-.tip-hand:hover {
-  animation: bounce 1s infinite;
-  -webkit-animation: bounce 1s infinite;
+.tip-hand{
+  position: relative;
 }
+.animation-container:hover .tip-hand{
+animation: bounceAnimation 1.4s infinite ease;
+  -webkit-animation: bounceAnimation 1.4s infinite ease;
+}
+ /* {
+  
 
+} */
+@keyframes bounceAnimation {
+  0% {
+    top: 0%;
+  }
+  50% {
+    top:-20%
+  }
+  100% {
+    top:0%
+  }
+}
 .flag-select {
   position: relative;
   display: flex;

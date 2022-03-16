@@ -45,7 +45,7 @@ const ProfileCard = ({
         <img src={picture} className="rounded-full w-28 h-28 object-cover" alt="" />
       ) : (
         /* </div> */
-        <div class="inline-block h-28 w-28 ring-2 ring-white relative">
+        <div className="inline-block h-28 w-28 ring-2 ring-white relative">
           <img
             className="rounded-full"
             src="https://thumbs.dreamstime.com/b/solid-purple-gradient-user-icon-web-mobile-design-interface-ui-ux-developer-app-137467998.jpg"

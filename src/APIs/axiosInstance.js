@@ -162,11 +162,7 @@ class AxiosInstance {
             { videoType, videoCategory, accountType: account, rating },
             this.getAuthHeader());
     }
-    // async getAllFilteredPosts(search, sort, category, videoType, videoCategory, account, rating,curentPage) {
-    //     return await axios.post(USER_API_BASE_URL + `api/profile/videos/filter-video-all?page=${curentPage}&&search=${search}&&sort=${sort}&&category=${category}&&rating=${rating}`,
-    //         { videoType, videoCategory, accountType: account, rating },
-    //         this.getAuthHeader());
-    // }
+ 
 
     async likePost(videoId) {
         return await axios.post(USER_API_BASE_URL + "api/profile/videos/like", videoId, this.getAuthHeader());
@@ -210,6 +206,43 @@ class AxiosInstance {
     }
     async viewPost(payload) {
         return await axios.post(USER_API_BASE_URL + `api/profile/videos/view`,payload,this.getAuthHeader());
+    }
+    async topUpProfile(topUp,email) {
+        let payload={
+            topUp,email
+        }
+        return await axios.post(USER_API_BASE_URL+`api/profile/topup`,payload,this.getAuthHeader())
+    }
+    async withDrawProfile(withDraw,email){
+        let payload = {
+            withDraw,
+            email
+        }
+        return await axios.post(USER_API_BASE_URL+`api/profile/withdraw`,payload,this.getAuthHeader())
+    }
+    async postTip (payload){
+        return await axios.post(USER_API_BASE_URL+`api/profile/videos/tip`,payload,this.getAuthHeader())
+
+    }
+    async postPaid (payload){
+        return await axios.post(USER_API_BASE_URL+`api/profile/videos/pay`,payload,this.getAuthHeader())
+    }
+    // getting user balance
+    async getUserBalance(id){
+        return await axios.get(`${USER_API_BASE_URL}api/profile/balance?id=${id}`,this.getAuthHeader())
+    }
+    // for test purpose
+    async test (payload){
+        return await axios.post(USER_API_BASE_URL+`api/testpayment`,payload)
+    }
+    // Get Bank Details
+
+    async getBankDetails(id){
+        console.log('getting bank details')
+        return await axios.get(`${USER_API_BASE_URL}api/profile/bankdetails?userId=${id}`,this.getAuthHeader()) 
+    }
+    async saveBankDetails(payload){
+        return await axios.post(`${USER_API_BASE_URL}api/profile/bankdetails`,payload,this.getAuthHeader()) 
     }
 
 }

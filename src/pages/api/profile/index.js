@@ -34,11 +34,13 @@ const handler = async (req, res) => {
           'accessible',
           'accountType',
           'isApproved',
-          'tip'
+          'tip',
+          'totalTipsAmount'
         ],
         where: { username }
       });
-
+      console.log("User find out",user)
+      console.log("finding videos average")
       const rating = await db.query(`select avg(v.rating) as"avgRating" from "Videos" v where ("UserId"=${user.id})`)
                     /* 
                     select avg(r.rating) as"avgRating" from "Users" u 
@@ -50,18 +52,21 @@ const handler = async (req, res) => {
 
       const avgRating = isEmpty(rating[0]) ? 0 : rating[0][0].avgRating;
 
+      
 
       if (!user) {
         return res.status(404).send({ error: true, data: [], message: 'User Not Found' })
       }
 
-      const { name, email, totalViews, about, picture, phoneNumber, showPhone, accessible,
-        accountType, showUsername, showName, isApproved, tip } = user;
+      const { id,name, email, totalViews, about, picture, phoneNumber, showPhone, accessible,
+        accountType, showUsername, showName, isApproved, tip,totalTipsAmount } = user;
+        
 
       res.status(200).json({
         error: false,
         message: 'Data fetched successfully',
         data: {
+          id,
           name: name,
           email: email,
           username,
@@ -77,7 +82,8 @@ const handler = async (req, res) => {
           showUsername: showUsername,
           accountType: accountType,
           isApproved,
-          tip
+          tip,
+          totalTipsAmount
         }
       });
     } catch (err) {

@@ -51,7 +51,7 @@ const NewsfeedCard = ({
   _HandleGotoUserProfile,
   _HandleGotoVideoDetails,
   _handleViewsOnVideo,
-}) => {
+  }) => {
   const [showCommentSection, setShowCommentSection] = useState(false);
   const [message, setMessage] = useState('');
   const [comments, setComments] = useState([]);
@@ -198,13 +198,12 @@ const NewsfeedCard = ({
               </div>
             </div>
             <div className="flex space-x-2">
-              {/* {videoCost === 'Paid' && ( */}
-              <>
+              
+              <div className='animation-container h-auto  cursor-pointer' data-tip
+                  data-for={`tip`}  onClick={ToggleTipModal}>
                 <span
-                  onClick={ToggleTipModal}
-                  data-tip
-                  data-for={`tip`}
-                  className="inline-flex h-8 w-14 cursor-pointer tip-hand">
+                 
+                  className="inline-flex h-8 w-14 tip-hand">
                   <Image src={HandIcon} alt="banner" objectFit="contain" />
                 </span>
                 <ReactTooltip
@@ -216,14 +215,10 @@ const NewsfeedCard = ({
                   clickable={false}>
                   Give a Tip
                 </ReactTooltip>
-              </>
-              {/* )} */}
+              </div>
 
               <span data-for="fav" data-tip onClick={() => HandleFavouritePost(id)}>
-                {/* <svg
-									xmlns="http://www.w3.org/2000/svg">
-									<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-								</svg> */}
+                
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="w-6 h-6 text-gray-500 hover:text-purple-600 cursor-pointer"
@@ -237,9 +232,9 @@ const NewsfeedCard = ({
                     d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                   />
                 </svg>
-                <ReactTooltip id="fav" place="top" effect="solid" border={false} borderColor="white" clickable={false}>
+               <ReactTooltip id="fav" place="top" effect="solid" border={false} borderColor="white" clickable={false}>
                   Add to favourite
-                </ReactTooltip>
+                 </ReactTooltip>
               </span>
               <div className="flex items-start justify-start">
                 <PostActionDropdown
@@ -251,7 +246,7 @@ const NewsfeedCard = ({
                 />
               </div>
             </div>
-            {/* change for pushing code */}
+            
           </div>
           <p
             onClick={() => _HandleGotoVideoDetails(id)}
@@ -259,14 +254,17 @@ const NewsfeedCard = ({
             {title}
           </p>
         </div>
-        {videoCost === 'Paid' && restrictPaidVideo ? (
+        {
+          
+          (localStorage.getItem('id')!=UserId) &&
+         videoCost === 'Paid' && restrictPaidVideo  ? (
           !stopVideo ? (
             <div className="video-wrapper" onClick={_HandlePaidVideos}>
              
                 <VideoPlayer poster={thumbnail} src={url} />
               
             </div>
-          ) : (
+          ) :   (
             <div className="video-wrapper flex flex-col justify-center items-center">
               <p className="text-md text-gray-500 text-center">To continue watching video</p>
               <button
@@ -296,8 +294,7 @@ const NewsfeedCard = ({
               Number(localStorage.getItem('id')) !== UserId ? 'cursor-pointer' : 'cursor-default'
             }`}>
             {displayRatingStars()}
-            {/* <Rating value={parseFloat(avgRating).toFixed(1) || 0} isHalf={true} edit={false} /> */}
-            {/* &nbsp; <p className="text-xs text-gray-500"> Rating</p> */}
+            
             <ReactTooltip
               id="rating"
               place="bottom"

@@ -64,7 +64,15 @@ const NewsFeed = () => {
     _FetchMoreData,
     hasMore,
     isSubmitingRating,
-    postViewOnVideo
+    postViewOnVideo,
+    paymentSubmit,
+    handleTipSubmit,
+    showCelebration,
+    setShowCelebration,
+    isPaying,
+    paymentError,
+    tipError
+    
   } = UseFetchNewsFeed();
 
   return (
@@ -78,7 +86,7 @@ const NewsFeed = () => {
         {/*SEO Support End */}
         <div className="flex w-full justify-center mb-4">
           <div className="md:w-full lg:w-1/2 space-y-2 md:space-x-2 md:space-y-0  flex flex-col md:flex-row">
-            <VideoUploadBlock
+             <VideoUploadBlock
               openModal={() => _OpenUploadModal('SmartTipz')}
               title={'Click to upload SmartTipz Videos'}
               tooltip={'SmartTIpz can be any video'}
@@ -87,7 +95,7 @@ const NewsFeed = () => {
               openModal={() => _OpenUploadModal('SmartReview')}
               title={'Click to upload SmartReviews Videos'}
               tooltip={'SmartReview is a product or service review video'}
-            />
+            /> 
           </div>
         </div>
         {isloadingFeed ? (
@@ -146,7 +154,8 @@ const NewsFeed = () => {
                     cost,
                     createdAt,
                     views
-                  }
+                  },
+                  hasPaid
                 } = item;
                 return isShared ? (
                   <SharedCard
@@ -203,11 +212,11 @@ const NewsFeed = () => {
                       avgRating={avgRating}
                       thumbnail={thumbnail}
                       createdAt={createdAt}
-                      restrictPaidVideo={true}
+                      restrictPaidVideo={!hasPaid}
                       _HandleCommentCounts={_HandleCommentCounts}
                       HandleLikePost={() => HandleLikePost(postId, isLiked)}
-                      TogglePaymentModal={() => _TogglePaymentModal(cost)}
-                      ToggleTipModal={() => ToggleTipModal(User?.tip)}
+                      TogglePaymentModal={() => _TogglePaymentModal(cost,id,UserId)}
+                      ToggleTipModal={() => ToggleTipModal(User?.tip,id,UserId)}
                       _OpenShareModal={_OpenShareModal}
                       _HandleCatalogue={_HandleCatalogue}
                       _HandleDeleteVideo={_HandleDeleteVideo}
@@ -268,8 +277,12 @@ const NewsFeed = () => {
             _HandleChangeTip={_HandleChangeTip}
             tip={tip}
             ToggleTipModal={ToggleTipModal}
-            loading={false}
+            loading={isPaying}
             modalTitle={'Tip Video'}
+            handleTipSubmit={handleTipSubmit}
+            showCelebration={showCelebration}
+            tipError={tipError}
+            
           />
         )}
         {showShareModal && (
@@ -285,7 +298,7 @@ const NewsFeed = () => {
         )}
 
         {showAmountModal && (
-          <PaymentModal ToggleAmountModal={_TogglePaymentModal} loading={isSharing} amount={videoPayment} />
+          <PaymentModal ToggleAmountModal={_TogglePaymentModal} loading={isPaying} amount={videoPayment} paymentSubmit={paymentSubmit} paymentError={paymentError} />
         )}
       </AnimatePresence>
     </div>

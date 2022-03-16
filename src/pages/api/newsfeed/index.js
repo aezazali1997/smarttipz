@@ -9,6 +9,7 @@ const AllPosts = require('models/AllPost');
 const Comments = require('models/Comments');
 const Rating = require('models/Rating');
 const jwt = require('jsonwebtoken');
+const Pay = require('models/Pay');
 const db = require('models/db');
 
 const handler = async (req, res) => {
@@ -30,7 +31,7 @@ const handler = async (req, res) => {
         attributes: ['id'],
         where: { username, isDeleted: false, isBlocked: false }
       });
-
+        
       const { limit, offset } = getPagination(page, 5);
 
       ArrayOfFollowedPeopleId.push(userId);
@@ -266,7 +267,20 @@ const handler = async (req, res) => {
 
         const avgRating = isEmpty(ratings[0]) ? 0 : ratings[0][0].avgRating;
         const totalRaters = isEmpty(ratings[0]) ? 0 : ratings[0][0].totalRaters;
+        let paid=null;
+        
+        
+        if(Video.videoCost==='Paid'){
+    
+          paid = await Pay.findOne({
+          where:{
+            userId:userId,
+            videoId:VideoId
 
+          }})
+   
+        }
+        
         videos[i] = {
           id,
           avgRating: avgRating,
@@ -278,7 +292,8 @@ const handler = async (req, res) => {
           likeCount,
          shareCount,
           commentCount,
-          isLiked: isLiked ? true : false
+          isLiked: isLiked ? true : false,
+          hasPaid: paid!==null ? true : false
         };
       }
 

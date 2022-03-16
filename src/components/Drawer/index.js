@@ -51,8 +51,10 @@ const Drawer = ({ isOpen, toggle, logout }) => {
                 >
                     <div className="py-7 flex items-center flex-col relative">
                         <Link href='/dashboard/news-feed'>
+                            <a>
                             <Image src='https://smart-tipz-data-bucket.s3.ap-southeast-1.amazonaws.com/public/logo.svg'
                                 alt="brand" layout="fill" objectFit="cover" />
+                            </a>
                         </Link>
                     </div>
                     <div className='my-4 w-52'>

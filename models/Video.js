@@ -58,8 +58,10 @@ const Video = sequelize.define("Video", {
     type: DataTypes.FLOAT,
     defaultValue: 0
   },
+  //amount
   tip: {
     type: DataTypes.INTEGER,
+    defaultValue:0
   },
   cost: {
     type: DataTypes.INTEGER,

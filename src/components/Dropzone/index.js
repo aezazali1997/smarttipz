@@ -9,13 +9,25 @@ import { useS3Upload } from 'next-s3-upload';
 import { CustomLoader, ProgressBar } from 'src/components';
 
 
-const MyDropzone = ({ setMaterial, setMediaType, accept, heading, urls, Type, _DeleteImg }) => {
+
+
+const MyDropzone = ({ setMaterial, setMediaType, accept, heading, urls, Type, _DeleteImg,setDuration }) => {
 
     let { uploadToS3, files } = useS3Upload();
+    const [videoSrc,setVideoSrc]=useState(null);
     const [uploading, setUploading] = useState(false);
 
+
     const onDrop = useCallback(async (acceptedFiles) => {
-        // FOR SINGLE IMAGE/VIDEO //
+        
+        let video = document.createElement('video');
+        video.preload='metadata';
+        video.onloadedmetadata = function (){
+            window.URL.revokeObjectURL(video.src)
+            setDuration(video.duration);
+        }
+        video.src = URL.createObjectURL(acceptedFiles[0]);
+        // FOR SINGLE IMAGE/VIDEO //     
         for (let i = 0; i < acceptedFiles.length; i++) {
             setUploading(true);
             let file = acceptedFiles[0];
@@ -29,7 +41,8 @@ const MyDropzone = ({ setMaterial, setMediaType, accept, heading, urls, Type, _D
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
     return (
-        <div {...getRootProps()}>
+        <div  {...getRootProps()}>
+        <div id='video-placer' > </div>
             <input {...getInputProps()} multiple={false} accept={accept} />
             {
                 isDragActive ?

@@ -61,7 +61,14 @@ const UseFetchNewsFeed = () => {
   const [ratingData, setRatingData] = useState({ ...initialRatingData });
   const [current, setCurrentPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
-
+  const [amountReciever,setAmountReciever]=useState(null);
+  const [paymentVideoId,setPaymentVideoId]=useState(null);
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [isPaying,setIsPaying]=useState(false);
+  const [userBalance,setUserBalance]=useState(null);
+  const [paymentError,setPaymentError]=useState('');
+  const [tipError,setTipError]=useState('');
+    
   let thumbnailRef = useRef();
 
   const postViewOnVideo = async (VideoId) => {
@@ -71,6 +78,41 @@ const UseFetchNewsFeed = () => {
       console.log("ERROR:",error);
     }
   };
+  const handleTipSubmit = async() => {
+        
+        if (localStorage.getItem('id')==amountReciever) {
+        
+          return
+        } 
+        if(tip>userBalance){
+          setTipError('You do not have the required amount in your wallet. Please top up your wallet from Settings.');
+        return
+        }
+        setShowCelebration(true);
+        setIsPaying(true)
+        try {
+          let data={
+            sender:localStorage.getItem('id'),
+            reciever:amountReciever,
+            video:paymentVideoId,
+            tip
+          }
+        
+        let {data:{balance}} = await axiosInstance.postTip(data)
+        setUserBalance(balance) 
+
+        setTip(0);
+        setPaymentVideoId(null);
+        setAmountReciever(null);
+
+        } catch (error) {
+          
+        }
+            setIsPaying(false)
+            setShowCelebration(false);
+            ToggleTipModal();
+    }
+
 
   let GetPosts = async (currentPage) => {
     try {
@@ -103,9 +145,30 @@ const UseFetchNewsFeed = () => {
       setLoadingFeed(false);
     }
   };
+  const getBalance = async ()=>{
+    try {
+      let { data:{
+        balance
+      }
+
+      } = await axiosInstance.getUserBalance(localStorage.getItem('id'))
+      setUserBalance(balance);
+    } catch (error) {
+      console.log("Error while getting user balance");
+    } 
+  }
 
   useEffect(() => {
     GetPosts(current);
+    getBalance();
+    return ()=> {
+      setPosts([]);
+      setCurrentPage(0);
+      setHasMore(false);
+      setCatalogueCount(0);
+      setLoadingFeed(false);
+      setUserBalance(0);
+    }
   }, []);
 
   // useEffect(() => {
@@ -138,12 +201,70 @@ const UseFetchNewsFeed = () => {
     for (let i = 0; i < files.length; i++) {
       setUploadingThumbnail(true);
       let file = files[0];
+
+  
+
+
       setThumbnailFile(file);
       const { url } = await uploadToS3(file);
       setThumbnailUrl(url);
       setUploadingThumbnail(false);
     }
   };
+  const paymentSubmit= async()=>{
+     if(videoPayment > userBalance){
+        setPaymentError('You do not have the required amount in your wallet. Please top up your wallet from Settings.');
+        return
+        }
+    setIsPaying(true);   
+
+
+    try {
+       
+      const data={
+        senderId:localStorage.getItem('id'),
+        receiverId:amountReciever,
+        paid:videoPayment,
+        videoId:paymentVideoId
+      }
+      let {data:{balance}} = await axiosInstance.postPaid(data)
+      setUserBalance(balance)
+      setIsPaying(false);
+      setAmountReciever(null)
+    _TogglePaymentModal()
+      // needs to update the original array of news feed that has a bolean so that user can view only that video and not other videos gets disrupted by this check.
+      let tempPosts = [...posts]
+      for (let i=0; i<posts.length; i++){
+        if(tempPosts[i].VideoId===paymentVideoId){
+          tempPosts[i].hasPaid=true;
+        }
+      }
+      setPosts(tempPosts)
+    
+
+// uncomment this
+      // setPaymentVideoId(null);
+
+      // GetPosts(0);
+      Swal.fire({
+        text: 'You can now View the Video',
+        icon: 'success',
+        timer: 3000,
+        showConfirmButton: false,
+        showCancelButton: false
+      });
+    } catch (error) {
+      console.log("Error! ",error.message);
+          _TogglePaymentModal()
+      Swal.fire({
+        text: error.message,
+        icon: 'error',
+        
+        showConfirmButton: false,
+        showCancelButton: false
+      });
+    }
+  }
 
   let _OnThumbnailClick = () => {
     thumbnailRef.current.click();
@@ -188,9 +309,12 @@ const UseFetchNewsFeed = () => {
     setShowShareModal(true);
   };
 
-  let _TogglePaymentModal = (cost) => {
+  let _TogglePaymentModal = (cost,id=0,UserId=0) => {
     setVideoPayment(cost);
+    setPaymentVideoId(id);
+    setAmountReciever(UserId);
     setShowAmountModal(!showAmountModal);
+    setPaymentError('');
   };
 
   let _CloseShareModal = () => {
@@ -451,7 +575,26 @@ const UseFetchNewsFeed = () => {
     setPosts((prevState) => (prevState = [...updatedPosts]));
   };
 
-  const ToggleTipModal = (tip) => {
+  const ToggleTipModal = (tip,id,UserId) => {
+    if(UserId===undefined){
+          setShowTipModal(!showTipModal)
+          return
+    }
+    if(UserId!==undefined)
+    {
+      if(localStorage.getItem('id')==UserId){
+         Swal.fire({
+        text: 'You cannot tip your own video',
+        timer: 3000,
+        icon: 'error',
+        showCancelButton: false,
+        showConfirmButton: false
+      });
+        return
+      }
+    }
+    setAmountReciever(UserId);
+    setPaymentVideoId(id);
     setTip(tip);
     setShowTipModal(!showTipModal);
   };
@@ -561,7 +704,13 @@ const UseFetchNewsFeed = () => {
     hasMore,
     _FetchMoreData,
     isSubmitingRating,
-    postViewOnVideo
+    postViewOnVideo,
+    paymentSubmit,
+    handleTipSubmit,
+    showCelebration,
+    isPaying,
+    paymentError,
+    tipError
   };
 };
 

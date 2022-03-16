@@ -287,3 +287,4 @@ export const FilterProfiles = (search, accountType, rate) => {
     ]
   };
 };
+

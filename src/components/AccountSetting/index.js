@@ -5,7 +5,7 @@ import Button from '../Button';
 
 const AccountSetting = ({ formik, accountLoading, getInputClasses }) => {
     return (
-        <>
+        <form onSubmit={formik.handleSubmit}>
             <h1 className="text-lg font-semibold">Account Information</h1>
             <div className="flex flex-col w-full">
                 <InputField
@@ -69,7 +69,7 @@ const AccountSetting = ({ formik, accountLoading, getInputClasses }) => {
                     classNames={"px-3 py-2 flex justify-center items-center text-white text-sm btn rounded-md "} />
 
             </div>
-        </>
+        </form>
     )
 }
 

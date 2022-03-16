@@ -4,7 +4,8 @@ const Video = require('./Video');
 const Business = require('./Business');
 const Comment = require('./Comments');
 const Share = require('./Share');
-
+const WithDrawRequest = require('./WithDrawRequest');
+const BankDetails=require ('./BankDetail')
 const User = sequelize.define('User', {
   name: {
     type: DataTypes.STRING
@@ -71,6 +72,7 @@ const User = sequelize.define('User', {
     type: DataTypes.INTEGER,
     defaultValue: 0
   },
+  // totalAmount
   totalTipsAmount: {
     type: DataTypes.DOUBLE,
     defaultValue: 0
@@ -135,5 +137,9 @@ Comment.belongsTo(User);
 
 User.hasMany(Share);
 Share.belongsTo(User);
+
+User.hasOne(BankDetails);
+
+User.hasOne(WithDrawRequest);
 
 module.exports = User;

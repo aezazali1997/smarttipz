@@ -41,6 +41,10 @@ const Admin = sequelize.define('Admin', {
     isDelete: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
+    },
+    totalAmount:{
+        type:DataTypes.DOUBLE,
+        defaultValue:0,
     }
 });
 

@@ -53,11 +53,18 @@
 .btn {
   background: #714de1;
 }
+.btn-disabled{
+
+  background: #806ac2 !important;
+}
+.btn-customized{
+  background: #714de1;
+  cursor: default;
+}
 
 .btn:hover {
   background: #6740df;
 }
-
 .icon {
   color: #714de1;
 }
