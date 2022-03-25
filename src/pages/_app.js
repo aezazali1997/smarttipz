@@ -6,15 +6,14 @@ import { parseCookies } from 'nookies';
 import CustomLayout from 'src/Layout';
 import { AppWrapper } from 'src/contexts';
 import Head from 'next/head';
-
 const MyApp = ({ Component, pageProps }) => {
-  const [authorized, setAuthorized] = useState(null)
+  const [authorized, setAuthorized] = useState(null);
 
   useEffect(() => {
     const cookies = parseCookies();
     const token = cookies?.token || null;
-    setAuthorized(token)
-  })
+    setAuthorized(token);
+  });
 
   if (authorized) {
     return (
@@ -28,7 +27,7 @@ const MyApp = ({ Component, pageProps }) => {
           <Component {...pageProps} />
         </CustomLayout>
       </AppWrapper>
-    )
+    );
   }
   return (
     <AppWrapper>
@@ -39,7 +38,7 @@ const MyApp = ({ Component, pageProps }) => {
       {/* Add the favicon */}
       <Component {...pageProps} />
     </AppWrapper>
-  )
-}
+  );
+};
 
 export default MyApp;

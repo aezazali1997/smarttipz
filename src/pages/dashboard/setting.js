@@ -9,7 +9,7 @@ import { UseFetchSetting } from 'src/hooks';
 import { AccountSetting, BusinessCard, Button, PhoneInput, InputField, Switch } from 'src/components';
 import BankDetails from './components/BankDetails/index';
 import { Email, LinkSVG, User, TopUp, WithDraw, Wallet } from 'src/assets/SVGs';
-import { TopUpModal, WithDrawModal } from 'src/components/Modals';
+import { TopUpModal, WithDrawModal, StripeCheckoutModal } from 'src/components/Modals';
 import { AnimatePresence } from 'framer-motion';
 
 const Setting = ({ settings }) => {
@@ -42,15 +42,16 @@ const Setting = ({ settings }) => {
     withDraw,
     setWithDraw,
     isWithDrawing,
-    withDrawError
-    // handleTopUpChange
+    withDrawError,
+    showCheckout,
+    toggleCheckoutModal
   } = UseFetchSetting(settings);
 
   const { id, name, email, about, accessible, showPhone, accountType, phone, username, showName, showUsername, tip } =
     personalInfo;
   const { website } = businessCard;
 
-   const [hasBankDetails,setHasBankDetails]=useState(true);  
+  const [hasBankDetails, setHasBankDetails] = useState(true);
 
   return (
     <div className="flex flex-col h-full w-full p-3 sm:p-5 ">
@@ -375,6 +376,7 @@ const Setting = ({ settings }) => {
             modalTitle={'Top up'}
           />
         )}
+        {showCheckout && <StripeCheckoutModal toggleCheckoutModal={toggleCheckoutModal} topUp={topUp} />}
       </AnimatePresence>
     </div>
   );

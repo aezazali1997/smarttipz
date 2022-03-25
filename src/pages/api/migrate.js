@@ -17,37 +17,41 @@ const TipTransaction = require('models/TipTransaction');
 const Pay = require('models/Pay');
 const BankDetail = require('models/BankDetail');
 const WithDrawRequest = require('models/WithDrawRequest');
+const Charge = require('models/Charge');
 const handler = async (req, res) => {
-    // Admin.sync({alter:true})
-    BankDetail.sync({
-        alter:true
-    })
-    User.sync({ alter: true });
-    WithDrawRequest.sync({
-        alter:true
-    })
-    // sequelize.sync({ force: true });
-    // force dlets all data and creates a new table
-    // alter updates the data
-    // Views.sync({force:true});
-    // AllPosts.sync({ alter:true });
-    // Video.sync({ alter: true });
-        // Rating.sync({ alter: true });
-        // Comment.sync({ alter: true });
-        // Share.sync({ alter: true });
-        // Like.sync({ alter: true });
-        // Share.sync({ alter: true });
-    // await Business.sync({ force: true });
-    // await BusinessCard.sync({ force: true });
-    // await Session.sync({ force: true });
-    // Favourite.sync({ force: true });
-    // await Testimonial.sync({ force: true });
-    // await Chat.sync({ force: true });
-    // TipTransaction.sync({alter:true})
-    // Pay.sync({
-        // alter:true
-    // })
-    // User.sync({alter:true})
-    res.status(200).send({ message: "New Table created Successfully" });
-}
+  // force: delets all data and creates a new table
+  // alter: updates the data
+  // Admin.sync({alter:true})
+  // BankDetail.sync({
+  // alter:true
+  // })
+  // User.sync({ alter: true });
+  // WithDrawRequest.sync({
+  // alter:true
+  // })
+  // sequelize.sync({ force: true });
+  // Views.sync({force:true});
+  // AllPosts.sync({ alter:true });
+  // Video.sync({ alter: true });
+  // Rating.sync({ alter: true });
+  // Comment.sync({ alter: true });
+  // Share.sync({ alter: true });
+  // Like.sync({ alter: true });
+  // Share.sync({ alter: true });
+  // await Business.sync({ force: true });
+  // await BusinessCard.sync({ force: true });
+  // await Session.sync({ force: true });
+  // Favourite.sync({ force: true });
+  // await Testimonial.sync({ force: true });
+  // await Chat.sync({ force: true });
+  // TipTransaction.sync({alter:true})
+  // Pay.sync({
+  // alter:true
+  // })
+  // User.sync({alter:true})
+  Charge.sync({
+    alter: true
+  });
+  res.status(200).send({ message: 'New Table created Successfully' });
+};
 export default handler;

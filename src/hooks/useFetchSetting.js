@@ -44,7 +44,7 @@ const UseFetchSetting = (settings) => {
   const [isWithDrawing, setIsWithDrawing] = useState(false);
   const [showWithDrawModal,setShowWithDrawModal]=useState(false);
   const [withDrawError,setWithDrawError]=useState('')
- 
+  const [showCheckout, setShowCheckout] = useState(false);
 
   useEffect(() => {
     const { accountType } = settings;
@@ -88,20 +88,18 @@ const UseFetchSetting = (settings) => {
     setPersonalLoading(false);
   };
   const toggleTopUpModal = () => {
-    
     setShowTopUpModal(!showTopUpModal);
   };
-  const toggleWithDrawModal = () => {    
-    setShowWithDrawModal(!showWithDrawModal)
+  const toggleWithDrawModal = () => {
+    setShowWithDrawModal(!showWithDrawModal);
   };
 
-   const withDrawFunds = async() => {
-     
-     if(withDraw>balance){
-       setWithDrawError('Amount exceeded balance')
-       return
-     }
-     setWithDrawError('');
+  const withDrawFunds = async () => {
+    if (withDraw > balance) {
+      setWithDrawError('Amount exceeded balance');
+      return;
+    }
+    setWithDrawError('');
     let email = personalInfo.email;
     setIsWithDrawing(true);
     try {
@@ -112,22 +110,23 @@ const UseFetchSetting = (settings) => {
     } catch (error) {}
     setIsWithDrawing(false);
     toggleWithDrawModal();
-    };
-
+  };
 
   const topUpSubmit = async () => {
-    let email = personalInfo.email;
-    setToppingUp(true);
+    toggleTopUpModal();
+    setShowCheckout(true);
+
+    // let email = personalInfo.email;
+    // setToppingUp(true);
     try {
-      let {
-        data: { totalTipsAmount }
-      } = await axiosInstance.topUpProfile(topUp, email);
-      console.log("total tips",totalTipsAmount)
-      setBalance(totalTipsAmount);
+      //   let {
+      //     data: { totalTipsAmount }
+      //   } = await axiosInstance.topUpProfile(topUp, email);
+      //   console.log('total tips', totalTipsAmount);
+      //   setBalance(totalTipsAmount);
     } catch (error) {}
     setToppingUp(false);
     setWithDrawError('');
-    toggleTopUpModal();
   };
   const enableAccountLoading = () => {
     setAccountLoading(true);
@@ -136,7 +135,7 @@ const UseFetchSetting = (settings) => {
   const disableAccountLoading = () => {
     setAccountLoading(false);
   };
- 
+
   let handleFileChange = async (file) => {
     let { url } = await uploadToS3(file);
     axiosInstance
@@ -237,7 +236,9 @@ const UseFetchSetting = (settings) => {
         disablePersonalLoading();
       });
   };
-
+  const toggleCheckoutModal = () => {
+    setShowCheckout(!showCheckout);
+  };
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: initialValues,
@@ -305,7 +306,9 @@ const UseFetchSetting = (settings) => {
     setWithDraw,
     toggleWithDrawModal,
     isWithDrawing,
-    withDrawError
+    withDrawError,
+    toggleCheckoutModal,
+    showCheckout
     // handleTopUpChange
   };
 };

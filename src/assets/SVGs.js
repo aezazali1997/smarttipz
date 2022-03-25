@@ -7,6 +7,23 @@ import virtualwallet from '../../public/Virtual-Wallet.svg';
 import Withdraw from '../../public/Withdraw.svg';
 import user from '../../public/user.svg';
 import lock from '../../public/lock.svg';
+import success from '../../public/success.svg';
+// import solidlock from '../../public/icons/solidlock.svg'
+
+export const SuccessTick = () => {
+  return (
+    <span className="flex relative h-6 w-6 text-gray-500">
+      <Image
+        className="text-gray-500"
+        src={success}
+        layout="fill"
+        objectFit="cover"
+        alt="Success Tick"
+        property="true"
+      />
+    </span>
+  );
+};
 export const Email = ({ className }) => {
   return (
     <svg className={className} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -83,15 +100,29 @@ export const KeySVG = ({ className }) => {
 export const UserSVG = () => {
   return (
     <span className="flex relative h-6 w-6 text-gray-500">
-    <Image className='text-gray-500'  src={user} layout="fill" objectFit="cover" alt="Virtaul Wallet" property="true" />
-  </span>
+      <Image
+        className="text-gray-500"
+        src={user}
+        layout="fill"
+        objectFit="cover"
+        alt="Virtaul Wallet"
+        property="true"
+      />
+    </span>
   );
 };
 export const IBANSVG = () => {
   return (
     <span className="flex relative h-6 w-6 text-gray-500">
-    <Image className='text-gray-500'  src={lock} layout="fill" objectFit="cover" alt="Virtaul Wallet" property="true" />
-  </span>
+      <Image
+        className="text-gray-500"
+        src={lock}
+        layout="fill"
+        objectFit="cover"
+        alt="Virtaul Wallet"
+        property="true"
+      />
+    </span>
   );
 };
 
@@ -141,11 +172,16 @@ export const Wallet = () => (
 );
 export const WithDraw = () => (
   <span className="flex relative sm:w-8 sm:h-8 mr-3 h-6 w-6">
-    <Image src={Withdraw} layout="fill"  objectFit="cover" alt="Virtaul Wallet" property="true" />
+    <Image src={Withdraw} layout="fill" objectFit="cover" alt="Virtaul Wallet" property="true" />
   </span>
 );
-export const TopUp = () => (
+export const TopUp = (data) => (
   <span className="flex relative sm:w-8 sm:h-8 mr-3 h-6 w-6">
     <Image src={topUp} layout="fill" objectFit="cover" alt="Virtaul Wallet" property="true" />
+  </span>
+);
+export const Lock = () => (
+  <span className="flex relative sm:w-6 sm:h-6 mr-3 h-4 w-4">
+    <Image src={lock} layout="fill" objectFit="cover" alt="Virtaul Wallet" property="true" />
   </span>
 );

@@ -4,7 +4,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { isEmpty } from 'lodash';
 import { MediaUploadForm, NewsfeedCard, VideoUploadBlock, Spinner, SharedCard, CustomLoader } from 'src/components';
-import { PaymentModal, ShareModal, TipModal, VideoRatingModal } from 'src/components/Modals';
+import { PaymentModal, ShareModal, TipModal, VideoRatingModal, StripeCheckoutModal } from 'src/components/Modals';
 import { UseFetchNewsFeed } from 'src/hooks';
 import { AnimatePresence } from 'framer-motion';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -68,11 +68,9 @@ const NewsFeed = () => {
     paymentSubmit,
     handleTipSubmit,
     showCelebration,
-    setShowCelebration,
     isPaying,
     paymentError,
     tipError
-    
   } = UseFetchNewsFeed();
 
   return (
@@ -86,7 +84,7 @@ const NewsFeed = () => {
         {/*SEO Support End */}
         <div className="flex w-full justify-center mb-4">
           <div className="md:w-full lg:w-1/2 space-y-2 md:space-x-2 md:space-y-0  flex flex-col md:flex-row">
-             <VideoUploadBlock
+            <VideoUploadBlock
               openModal={() => _OpenUploadModal('SmartTipz')}
               title={'Click to upload SmartTipz Videos'}
               tooltip={'SmartTIpz can be any video'}
@@ -95,7 +93,7 @@ const NewsFeed = () => {
               openModal={() => _OpenUploadModal('SmartReview')}
               title={'Click to upload SmartReviews Videos'}
               tooltip={'SmartReview is a product or service review video'}
-            /> 
+            />
           </div>
         </div>
         {isloadingFeed ? (
@@ -122,8 +120,7 @@ const NewsFeed = () => {
               </p>
             }>
             <div className="space-y-4">
-              {
-              posts.map((item, index) => {
+              {posts.map((item, index) => {
                 const {
                   id: postId,
                   Video,
@@ -186,7 +183,7 @@ const NewsFeed = () => {
                   // ask suleman about this
                   isApproved && isShowOnNewsfeed && (
                     <NewsfeedCard
-                      key={index} 
+                      key={index}
                       id={postId}
                       videoId={id}
                       UserId={UserId}
@@ -215,8 +212,8 @@ const NewsFeed = () => {
                       restrictPaidVideo={!hasPaid}
                       _HandleCommentCounts={_HandleCommentCounts}
                       HandleLikePost={() => HandleLikePost(postId, isLiked)}
-                      TogglePaymentModal={() => _TogglePaymentModal(cost,id,UserId)}
-                      ToggleTipModal={() => ToggleTipModal(User?.tip,id,UserId)}
+                      TogglePaymentModal={() => _TogglePaymentModal(cost, id, UserId)}
+                      ToggleTipModal={() => ToggleTipModal(User?.tip, id, UserId)}
                       _OpenShareModal={_OpenShareModal}
                       _HandleCatalogue={_HandleCatalogue}
                       _HandleDeleteVideo={_HandleDeleteVideo}
@@ -282,7 +279,6 @@ const NewsFeed = () => {
             handleTipSubmit={handleTipSubmit}
             showCelebration={showCelebration}
             tipError={tipError}
-            
           />
         )}
         {showShareModal && (
@@ -298,7 +294,13 @@ const NewsFeed = () => {
         )}
 
         {showAmountModal && (
-          <PaymentModal ToggleAmountModal={_TogglePaymentModal} loading={isPaying} amount={videoPayment} paymentSubmit={paymentSubmit} paymentError={paymentError} />
+          <PaymentModal
+            ToggleAmountModal={_TogglePaymentModal}
+            loading={isPaying}
+            amount={videoPayment}
+            paymentSubmit={paymentSubmit}
+            paymentError={paymentError}
+          />
         )}
       </AnimatePresence>
     </div>

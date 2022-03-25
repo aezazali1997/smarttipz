@@ -7,3 +7,4 @@ export { default as FilterModal } from './filterModal';
 export { default as PaymentModal } from './paymentModal';
 export { default as TopUpModal} from './topUpModal';
 export { default as WithDrawModal } from './withDraw';
+export { default as StripeCheckoutModal } from './StripeCheckoutModal';

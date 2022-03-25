@@ -131,3 +131,10 @@ export const fixedWithoutRoundOff = (num, fixed)=> {
     var re = new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?');
     return num.toString().match(re)[0];
 }
+export const stripeFeeCal = (amount) => {
+  const STRIPE_FIXED_FEE = 0.3;
+  let stripePerentageFee = 2.9 / 100;
+  const nom = amount + STRIPE_FIXED_FEE;
+  const denom = 1 - stripePerentageFee;
+  return (nom / denom).toFixed(2);
+}; 
