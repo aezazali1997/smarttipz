@@ -8,3 +8,25 @@
     font-weight: 500; 
     }
 } */
+.horizontal-line:before{
+    content: "";
+    position: absolute;
+    left: 0px;
+    top:50%;
+    transform: translateY(-50%);
+    width: 45%;
+    /* border: 1px solid black; */
+    height: 1px;
+    background:gray;
+}
+.horizontal-line:after{
+    content: "";
+    position: absolute;
+    right: 0px;
+    top:50%;
+    transform: translateY(-50%);
+    width: 45%;
+    /* border: 1px solid black; */
+    height: 1px;
+    background:gray;
+}

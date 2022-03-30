@@ -3,13 +3,11 @@ const Joi = require('joi');
 const bcrypt = require('bcryptjs');
 const sequelize = require("sequelize");
 const User = require('models/User');
+import withCors from '../cors';
 
 const handler = async (req, res) => {
   if (req.method === 'POST') {
-
-    const {
-      body
-    } = req;
+    const { body } = req;
 
     const validateSignin = (data) => {
       const schema = Joi.object({
@@ -21,8 +19,7 @@ const handler = async (req, res) => {
     // console.log(body)
     const { error } = validateSignin(body);
 
-    if (error)
-      return res.status(400).json({ error: true, message: error.details[0].message, data: [] });
+    if (error) return res.status(400).json({ error: true, message: error.details[0].message, data: [] });
 
     const { email, password } = body;
 
@@ -40,9 +37,7 @@ const handler = async (req, res) => {
       const { emailConfirmed, id, picture } = user;
 
       if (emailConfirmed === false) {
-        return res
-          .status(405)
-          .json({ error: true, message: 'Confirmation code sent to email address', data: [] });
+        return res.status(405).json({ error: true, message: 'Confirmation code sent to email address', data: [] });
       }
 
       const match = await bcrypt.compare(password, user.password);
@@ -53,9 +48,11 @@ const handler = async (req, res) => {
 
       const token = jwt.sign({ username: user.username, id: user.id }, process.env.SECRET_KEY);
 
-      res
-        .status(200)
-        .json({ error: false, message: 'Login successful', data: { id: id, username: user.username, image: picture, token } });
+      res.status(200).json({
+        error: false,
+        message: 'Login successful',
+        data: { id: id, username: user.username, image: picture, token }
+      });
     } catch (err) {
       res.status(500).json({ error: true, message: err.message, data: [] });
     }

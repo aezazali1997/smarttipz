@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '../Modal';
-import { Button } from '../';
+import { Button, CreditCard, GoogleApplePay, PayPal } from 'src/components';
 import Stripe from '../Stripe';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
@@ -31,6 +31,11 @@ const StripeCheckoutModal = ({
   const [creditCard, setCreditCard] = useState(false);
   // const [amount, setAmount] = useState(0);
   const [finalAmount, setFinalAmount] = useState(0);
+  const [showCreditButton, setShowCreditButton] = useState(false);
+
+  const [creditCardMethod, setCreditCardMethod] = useState(true);
+  const [googleApplePayMethod, setGoogleApplePayMethod] = useState(true);
+  const [paypalMethod, setPaypalMethod] = useState(true);
   useEffect(() => {
     setFinalAmount(stripeFeeCal(Number(topUp)));
   }, [1]);
@@ -47,6 +52,11 @@ const StripeCheckoutModal = ({
       console.log('error', error.message);
     }
     setIsProcessing(false);
+  };
+  const togglePaymentButtons = () => {
+    setPaypalMethod(false);
+    setGoogleApplePayMethod(false);
+    setCreditCardMethod(false);
   };
 
   return (
@@ -89,25 +99,28 @@ const StripeCheckoutModal = ({
                 <div className="flex justify-between px-2 mt-2">
                   <h1 className="font-bold text-lg"> Total including fee</h1>
                   <h1 className="text-right text-2xl font-bol">$ {finalAmount}</h1>
-                  {/* <Elements stripe={stripe}>
-                      <Stripe setIsVerified={setIsVerified} setCardToken={setCardToken} isVerified={isVerified} />
-                    </Elements> */}
                 </div>
               </div>
               <div className="flex flex-col">
                 <div className="flex justify-between">
                   <div>
-                    <h1 className="font-bold text-lg">Pay with</h1>{' '}
+                    <h1 className="font-bold text-lg">Topup using</h1>{' '}
                   </div>
                   <div className="flex">
                     {' '}
                     <Lock /> secure{' '}
                   </div>
                 </div>
-                <div className="flex flex-col justify-center">
-                  <button>method a</button>
-                  <button>method b</button>
-                  <button>method c</button>
+                {/* <div className="flex">
+                  {creditCardMethod && <CreditCard handleClick={togglePaymentButtons} />}
+                  {googleApplePayMethod && <GoogleApplePay handleClick={togglePaymentButtons} />}
+                  {paypalMethod && <PayPal handleClick={togglePaymentButtons} />}
+                </div> */}
+                <div className="relative w-full text-center horizontal-line">or</div>
+                <div className="px-2 my-2">
+                  <Elements stripe={stripe}>
+                    <Stripe setIsVerified={setIsVerified} setCardToken={setCardToken} isVerified={isVerified} />
+                  </Elements>
                 </div>
               </div>
             </div>

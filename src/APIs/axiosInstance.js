@@ -243,9 +243,8 @@ class AxiosInstance {
   }
   // Get Bank Details
 
-  async getBankDetails(id) {
-    console.log('getting bank details');
-    return await axios.get(`${USER_API_BASE_URL}api/profile/bankdetails?userId=${id}`, this.getAuthHeader());
+  async getBankDetails() {
+    return await axios.get(`${USER_API_BASE_URL}api/profile/bankdetails`, this.getAuthHeader());
   }
   async saveBankDetails(payload) {
     return await axios.post(`${USER_API_BASE_URL}api/profile/bankdetails`, payload, this.getAuthHeader());

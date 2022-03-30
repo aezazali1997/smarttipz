@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node server.js",
+    "dev": "next dev",
     "build": "next build",
-    "start": "NODE_ENV=production node server.js -p $PORT",
+    "start": "NODE_ENV=production next start -p $PORT",
     "lint": "next lint",
     "test": "jest",
     "storybook": "start-storybook -p 6006",

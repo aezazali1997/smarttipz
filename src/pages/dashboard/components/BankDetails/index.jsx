@@ -29,7 +29,7 @@ const BankDetails = ({
     try {
       const {
         data: { data }
-      } = await AxiosInstance.getBankDetails(localStorage.getItem('id'));
+      } = await AxiosInstance.getBankDetails();
     //   setHasBankDetails()
     if(isEmpty(data)){
       setHasBankDetails(false)

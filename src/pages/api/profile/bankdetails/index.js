@@ -1,26 +1,42 @@
 import BankDetail from 'models/BankDetail';
-import BankDetails from 'src/pages/dashboard/components/BankDetails';
-
+const jwt = require('jsonwebtoken');
 const User = require('models/User');
-const handler = async (req, res) => {
-  if (!req.headers.authorization) {
-    res.status(401).json({
-      error: true,
-      message: 'Not Authorized',
-      data: []
-    });
-  }
+const { AUTH, REQUEST, API } = require('src/pages/api/consts');
 
-  try {
-    if (req.method === 'POST') {
-      if (!req.body) {
-        res.status(403).json({
-          error: true,
-          message: 'no body defined',
-          data: []
-        });
+const handler = async (req, res) => {
+  if (req.method === REQUEST.POST) {
+    if (!req.headers.authorization) {
+      return res.status(401).send({
+        error: true,
+        message: AUTH.NOT_LOGGED_IN,
+        data: {}
+      });
+    }
+    const { username } = jwt.verify(req.headers.authorization.split('')[1], process.env.SECRET_KEY);
+
+    const { id: userId } = User.findOne({
+      where: {
+        username
       }
-      const { id, accountTitle, IBAN } = req.body;
+    });
+
+    if (!userId) {
+      return res.status(404).send({
+        error: false,
+        data: {},
+        message: AUTH.USER_NOT_FOUND
+      });
+    }
+
+    if (!req.body) {
+      return res.status(400).send({
+        error: true,
+        message: AUTH.NO_BODY,
+        data: {}
+      });
+    }
+    const { id, accountTitle, IBAN } = req.body;
+    try {
       const user = await BankDetail.find({
         where: {
           UserId: id
@@ -40,7 +56,7 @@ const handler = async (req, res) => {
         );
         res.status(201).json({
           erorr: false,
-          message: 'Bank Account Details Updated',
+          message: API.SUCCESS,
           data: []
         });
       } else {
@@ -51,40 +67,74 @@ const handler = async (req, res) => {
         });
         res.status(201).json({
           erorr: false,
-          message: 'Bank Account Detail Saved',
+          message: API.SUCCESS,
           data: []
         });
       }
-    } else if (req.method === 'GET') {
-      const { userId } = req.query;
+    } catch (error) {
+      res.status(404).send({
+        error: true,
+        message: API.ERROR,
+        data: {}
+      });
+    }
+  } else if (req.method === REQUEST.GET) {
+    if (!req.headers.authorization) {
+      return res.status(401).send({
+        error: true,
+        message: AUTH.NOT_LOGGED_IN,
+        data: {}
+      });
+    }
+    const { username } = jwt.verify(req.headers.authorization.split(' ')[1], process.env.SECRET_KEY);
+
+    const { id: userId } = await User.findOne({
+      where: {
+        username: username
+      }
+    });
+
+    if (!userId) {
+      return res.status(404).send({
+        error: false,
+        data: {},
+        message: AUTH.USER_NOT_FOUND
+      });
+    }
+    try {
       const bankDetails = await BankDetail.find({
         where: {
           UserId: userId
         }
       });
-      if(bankDetails){
+      if (bankDetails) {
         res.status(200).json({
-        error: false,
-        message: 'data found',
-        data: {
-          accountTitle: bankDetails.accountTitle,
-          IBAN: bankDetails.iban
-        }
-      });
+          error: false,
+          message: API.SUCCESS,
+          data: {
+            accountTitle: bankDetails.accountTitle,
+            IBAN: bankDetails.iban
+          }
+        });
+      } else {
+        res.status(200).json({
+          error: false,
+          message: API.NO_DATA,
+          data: {}
+        });
       }
-      else{
-        res.status(200).json({
-        error: false,
-        message: 'No data found',
+    } catch (error) {
+      return res.status(500).send({
+        error: true,
+        message: API.ERROR,
         data: {}
       });
-      }
-          }
-  } catch (error) {
-    res.status(500).json({
+    }
+  } else {
+    res.status(404).send({
       error: true,
-      message: `Bank Detail API failed ${error.message}`,
-      data: []
+      message: API.NO_PAGE,
+      data: {}
     });
   }
 };

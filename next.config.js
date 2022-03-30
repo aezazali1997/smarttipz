@@ -6,6 +6,6 @@ module.exports = {
       `${process.env.S3_UPLOAD_BUCKET}.amazonaws.com`,
       'smart-tipz-data-bucket.s3.ap-southeast-1.amazonaws.com',
       'thumbs.dreamstime.com'
-    ],
+    ]
   }
-}
+};

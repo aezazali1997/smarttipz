@@ -1,34 +1,55 @@
 const User = require('models/User');
-
-const handler = async(req,res )=>{
-if (!req.headers.authorization) {
-    return res.status(401).send({ error: true, data: [], message: 'Please Login' });
-  }
-  if(req.method==='GET'){
-    
-    
-    const {query:{id}}=req
-
+const jwt = require('jsonwebtoken');
+const { API, AUTH, REQUEST } = require('src/pages/api/consts');
+const handler = async (req, res) => {
+  if (req.method === REQUEST.GET) {
+    const {
+      query: { id }
+    } = req;
 
     try {
-      const user= await User.find({
-        where:{
+      if (!req.headers.authorization) {
+        return res.status(401).send({ error: true, data: [], message: AUTH.NOT_LOGGED_IN });
+      }
+      const { username } = jwt.verify(req.headers.authorization.split(' ')[1], process.env.SECRET_KEY);
+
+      const { id: userId } = await User.findOne({
+        where: {
+          username
+        }
+      });
+      if (!userId) {
+        res.status(404).send({
+          error: false,
+          message: AUTH.USER_NOT_FOUND,
+          data: {}
+        });
+      }
+
+      const user = await User.find({
+        where: {
           id
         }
       });
-      console.log('user ',user)
+      // console.log('user ', user);
       res.status(200).send({
-        error:false,
-        message:'balance found',
-        balance:Number(user.totalTipsAmount),
-      })
+        error: false,
+        message: API.SUCCESS,
+        balance: Number(user.totalTipsAmount)
+      });
     } catch (error) {
-       res.status(500).send({
-        error:true,
-        message:error.message,
-        data:[]
-       })
+      res.status(404).send({
+        error: true,
+        message: API.ERROR,
+        data: []
+      });
     }
+  } else {
+    res.status(500).send({
+      error: true,
+      message: API.NO_PAGE,
+      data: {}
+    });
   }
-}
-module.exports=handler;
+};
+module.exports = handler;

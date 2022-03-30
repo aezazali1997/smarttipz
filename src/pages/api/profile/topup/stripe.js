@@ -44,14 +44,20 @@ const handler = async (req, res) => {
 
       if (card) {
         const { cardId, customerId } = card;
-        const charge = await stripe.charges.create({
+
+        const paymentIntent = await stripe.paymentIntents.create({
           amount: amountCal,
-          currency: 'usd',
-          description: 'Charging the customer For Smart tipz',
-          source: cardId,
-          receipt_email: email,
-          customer: customerId
+          currency: 'usd'
         });
+
+        // const charge = await stripe.charges.create({
+        //   amount: amountCal,
+        //   currency: 'usd',
+        //   description: 'Charging the customer For Smart tipz',
+        //   source: cardId,
+        //   receipt_email: email,
+        //   customer: customerId
+        // });
       } else {
         const customer = await stripe.customers.create({
           description: 'Creating a customer for the SmartTipz User',
