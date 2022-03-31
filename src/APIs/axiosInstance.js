@@ -18,6 +18,7 @@ class AxiosInstance {
   }
 
   async login(credentials) {
+    console.log('inside axios api');
     return await axios.post(USER_API_BASE_URL + 'api/user/signin', credentials);
   }
 
