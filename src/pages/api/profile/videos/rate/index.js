@@ -5,9 +5,10 @@ import Rating from 'models/Rating';
 import User from 'models/User';
 import db from 'models/db';
 import Video from 'models/Video';
+import { REQUEST, API, AUTH } from 'src/pages/api/consts';
 
 const handler = async (req, res) => {
-  if (req.method === 'POST') {
+  if (req.method === REQUEST.POST) {
     const {
       body,
       body: { postId, rating },
@@ -16,13 +17,13 @@ const handler = async (req, res) => {
 
     try {
       if (!authorization) {
-        return res.status(401).send({ error: true, data: [], message: 'Please Login' });
+        return res.status(401).send({ error: true, data: [], message: AUTH.NOT_LOGGED_IN });
       }
 
       const { username, id } = jwt.verify(authorization.split(' ')[1], process.env.SECRET_KEY);
 
       if (!body) {
-        return res.status(400).send({ error: true, data: [], message: 'No data passed to server' });
+        return res.status(400).send({ error: true, data: [], message: AUTH.NO_USER_SENT });
       }
 
       const user = await User.findOne({
@@ -75,33 +76,33 @@ const handler = async (req, res) => {
         rating: avgRating
         // parse float
       });
-      const profileRating=await db.query(`
+      const profileRating = await db.query(`
        select avg(nullif (v.rating,0)) from "Videos" v where v."UserId" =${video.UserId} 
-      `)
+      `);
       const profileAvgRating = isEmpty(profileRating[0]) ? 0 : profileRating[0][0].avg;
       await User.update(
         {
-          avgRating:profileAvgRating
+          avgRating: profileAvgRating
         },
         {
-          where:{
-            id:video.UserId
+          where: {
+            id: video.UserId
           }
         }
-      )
+      );
 
       return res.status(201).json({
         error: false,
-        message: 'Post rated successfully',
+        message: API.SUCCESS,
         data: {
-          hasRated:!isEmpty(hasRated),
-          newAvg:avgRating,
-          profileUpdatedRating:profileAvgRating
+          hasRated: !isEmpty(hasRated),
+          newAvg: avgRating,
+          profileUpdatedRating: profileAvgRating
         }
       });
     } catch (err) {
       console.log('Rate Api Failed Error: ', err.message);
-      res.status(500).send({ error: true, data: [], message: err.message });
+      res.status(500).send({ error: true, data: [], message: `${API.ERROR}:${err.message}` });
     }
   } else {
     res.status(404).end('Page Not Found');

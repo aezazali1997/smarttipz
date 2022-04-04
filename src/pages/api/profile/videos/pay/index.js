@@ -2,12 +2,13 @@ const Video = require('models/Video');
 const User = require('models/User');
 const Admin = require('models/Admin');
 const Pay = require('models/Pay');
+const { API, AUTH, REQUEST } = require('src/pages/api/consts');
 const handler = async (req, res) => {
   if (!req.headers.authorization) {
     res.status(401).send({
       error: true,
       data: [],
-      message: 'Please Login'
+      message: AUTH.NOT_LOGGED_IN
     });
   }
 
@@ -15,11 +16,11 @@ const handler = async (req, res) => {
     res.status(400).send({
       error: true,
       data: [],
-      message: 'No body defined'
+      message: AUTH.NO_BODY
     });
   }
 
-  if (req.method === 'POST') {
+  if (req.method === REQUEST.POST) {
     const { senderId, receiverId, paid, videoId } = req.body;
     try {
       await Pay.create({
@@ -93,14 +94,14 @@ const handler = async (req, res) => {
 
       res.status(201).send({
         error: false,
-        message: 'reciedved payment',
-        balance:  Number(userSender.totalTipsAmount) - Number(paid)
+        message: API.SUCCESS,
+        balance: Number(userSender.totalTipsAmount) - Number(paid)
       });
     } catch (error) {
       res.status(500).send({
         error: true,
         data: [],
-        message: 'API Failed'
+        message: `${API.ERROR}:${error.message}`
       });
     }
   }

@@ -2,16 +2,15 @@ const PostLikee = require('models/Like');
 const User = require('models/User');
 const Video = require('models/Video');
 const jwt = require('jsonwebtoken');
-const sequelize = require('sequelize');
 const db = require('models/db');
-import { isEmpty } from 'lodash';
-import AllPosts from 'models/AllPost';
-import Comments from 'models/Comments';
-import Share from 'models/Share';
-import { FilterContent,getPagination,getPagingData } from 'utils/consts';
+const { isEmpty } = require('lodash');
+const AllPosts = require('models/AllPost');
+const Share = require('models/Share');
+const { FilterContent, getPagination, getPagingData } = require('utils/consts');
+const {API,AUTH,REQUEST}= require('src/pages/api/consts')
 
 const handler = async (req, res) => {
-    if (req.method === 'POST') {
+    if (req.method === REQUEST.POST) {
         const {
             body: { videoType, videoCategory, accountType },
             headers: { authorization },
@@ -20,7 +19,7 @@ const handler = async (req, res) => {
         let currentPage=page;
         try {
             if (!authorization) {
-                return res.status(401).send({ error: true, data: [], message: 'Please Login' });
+                return res.status(401).send({ error: true, data: [], message: AUTH.NOT_LOGGED_IN });
             }
             const { username } = jwt.verify(authorization.split(' ')[1], process.env.SECRET_KEY);
 
@@ -159,15 +158,15 @@ const handler = async (req, res) => {
             const response = getPagingData(videos, currentPage, limit, videosCount);
             res.status(200).json({
                 error: false,
-                message: 'success',
+                message: API.SUCCESS,
                 data: {videos,...response} 
             });
         } catch (err) {
             console.log('Videos Api Failed Error: ', err.message);
-            res.status(500).send({ error: true, data: [], message: err.message });
+            res.status(500).send({ error: true, data: [], message: `${API.ERROR}:${err.message}` });
         }
     } else {
-        res.status(404).end('Page Not Found');
+        res.status(404).end(API.NO_PAGE);
     }
 };
 

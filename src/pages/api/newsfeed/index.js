@@ -9,9 +9,20 @@ const AllPosts = require('models/AllPost');
 const jwt = require('jsonwebtoken');
 const Pay = require('models/Pay');
 const db = require('models/db');
+import Cors from 'cors';
+import initMiddleware from 'utils/init-middleWare';
+
 const { API, AUTH, REQUEST } = require('src/pages/api/consts');
 
 const handler = async (req, res) => {
+  const cors = initMiddleware(
+    Cors({
+      methods: ['GET', 'POST', 'OPTIONS', 'UPDATE'],
+      origin: ['https://m.stripe.com/6', 'https://pay.google.com']
+    })
+  );
+  await cors(req, res);
+
   if (req.method === REQUEST.GET) {
     const {
       headers: { authorization },
@@ -35,7 +46,7 @@ const handler = async (req, res) => {
         res.status(404).send({
           error: true,
           data: {},
-          message: AUTH.USER_NOT_FOUND
+          message: AUTH.NO_USER_FOUND
         });
       }
 
@@ -295,7 +306,7 @@ const handler = async (req, res) => {
       });
     } catch (err) {
       console.log('Videos Api Failed Error: ', err.message);
-      res.status(500).send({ error: true, data: [], message: API.ERROR });
+      res.status(500).send({ error: true, data: [], message: `${API.ERROR}:${err.message}` });
     }
   } else {
     res.status(404).end(API.NO_PAGE);

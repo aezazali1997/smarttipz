@@ -1,9 +1,9 @@
 const Comment = require('models/Comments');
 const AllPosts = require('models/AllPost');
 const jwt = require('jsonwebtoken');
-
+const {API,AUTH,REQUEST} = require('src/pages/api/consts')
 const handler = async (req, res) => {
-    if (req.method === 'DELETE') {
+    if (req.method === REQUEST.DELETE) {
         const {
             query: { id },
             headers: { authorization }
@@ -11,7 +11,7 @@ const handler = async (req, res) => {
 
         try {
             if (!authorization) {
-                return res.status(401).send({ error: true, data: [], message: 'Please Login' })
+                return res.status(401).send({ error: true, data: [], message: AUTH.NOT_LOGGED_IN })
             }
 
             const { username } = jwt.verify(
@@ -42,18 +42,18 @@ const handler = async (req, res) => {
 
             return res.status(200).json({
                 error: false,
-                message: 'Comment deleted successfully',
+                message: API.SUCCESS,
                 data: []
             });
 
         } catch (err) {
             console.log("delete Comment Api Failed Error: ", err.message);
-            res.status(500).send({ error: true, data: [], message: err.message });
+            res.status(500).send({ error: true, data: [], message: `${API.ERROR}:${err.message}` });
         }
     }
 
     else {
-        res.status(404).end('Page Not Found');
+        res.status(404).end(API.NO_PAGE);
     }
 };
 

@@ -9,7 +9,7 @@ const Sequelize = require("sequelize");
 
 const handler = async (req, res) => {
     if (req.method === REQUEST.GET) {
-      const { body, headers } = req;
+      const { headers } = req;
 
       try {
         let users = [];
@@ -21,7 +21,7 @@ const handler = async (req, res) => {
 
         const { id } = await User.findOne({ where: { username } });
         if (!id) {
-          return res.status(404).send({ error: true, data: [], message: AUTH.USER_NOT_FOUND });
+          return res.status(404).send({ error: true, data: [], message: AUTH.NO_USER_FOUND });
         }
 
         let userSet = new Set();
@@ -70,7 +70,7 @@ const handler = async (req, res) => {
 
         res.status(200).send({ error: false, data: users, message: API.SUCCESS });
       } catch (err) {
-        res.status(500).send({ error: true, data: [], message: API.ERROR });
+        res.status(500).send({ error: true, data: [], message: `${API.ERROR}:${err.message}` });
       }
     } else {
       res.status(404).end(API.NO_PAGE);

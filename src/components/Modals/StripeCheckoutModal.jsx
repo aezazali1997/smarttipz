@@ -35,10 +35,20 @@ const StripeCheckoutModal = ({
 
   const [creditCardMethod, setCreditCardMethod] = useState(true);
   const [googleApplePayMethod, setGoogleApplePayMethod] = useState(true);
+  const [clientSecret, setClientSecret] = useState('');
   const [paypalMethod, setPaypalMethod] = useState(true);
+  const setClientSecretMethod = async () => {
+    console.log('calling the client secret');
+    let {
+      data: {
+        data: { client_secret }
+      }
+    } = await axiosInstance.getClientSecret();
+    setClientSecret(client_secret);
+  };
   useEffect(() => {
     setFinalAmount(stripeFeeCal(Number(topUp)));
-  }, [1]);
+  }, []);
 
   const handleTopUpSubmit = async () => {
     setIsProcessing(true);
@@ -57,6 +67,9 @@ const StripeCheckoutModal = ({
     setPaypalMethod(false);
     setGoogleApplePayMethod(false);
     setCreditCardMethod(false);
+  };
+  const options = {
+    clientSecret
   };
 
   return (
@@ -116,10 +129,15 @@ const StripeCheckoutModal = ({
                   {googleApplePayMethod && <GoogleApplePay handleClick={togglePaymentButtons} />}
                   {paypalMethod && <PayPal handleClick={togglePaymentButtons} />}
                 </div> */}
-                <div className="relative w-full text-center horizontal-line">or</div>
+
                 <div className="px-2 my-2">
                   <Elements stripe={stripe}>
-                    <Stripe setIsVerified={setIsVerified} setCardToken={setCardToken} isVerified={isVerified} />
+                    <Stripe
+                      setIsVerified={setIsVerified}
+                      setCardToken={setCardToken}
+                      isVerified={isVerified}
+                      amount={finalAmount}
+                    />
                   </Elements>
                 </div>
               </div>

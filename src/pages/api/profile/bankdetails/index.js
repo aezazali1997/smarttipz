@@ -2,8 +2,17 @@ import BankDetail from 'models/BankDetail';
 const jwt = require('jsonwebtoken');
 const User = require('models/User');
 const { AUTH, REQUEST, API } = require('src/pages/api/consts');
+import Cors from 'cors';
+import initMiddleware from 'utils/init-middleWare';
 
 const handler = async (req, res) => {
+  const cors = initMiddleware(
+    Cors({
+      methods: ['GET', 'POST', 'OPTIONS', 'UPDATE'],
+      origin: ['https://m.stripe.com/6']
+    })
+  );
+  await cors(req, res);
   if (req.method === REQUEST.POST) {
     if (!req.headers.authorization) {
       return res.status(401).send({
@@ -98,7 +107,7 @@ const handler = async (req, res) => {
       return res.status(404).send({
         error: false,
         data: {},
-        message: AUTH.USER_NOT_FOUND
+        message: AUTH.NO_USER_FOUND
       });
     }
     try {
@@ -123,10 +132,10 @@ const handler = async (req, res) => {
           data: {}
         });
       }
-    } catch (error) {
+    } catch (err) {
       return res.status(500).send({
         error: true,
-        message: API.ERROR,
+        message: `${API.ERROR}:${err.message}`,
         data: {}
       });
     }

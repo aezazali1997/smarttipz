@@ -1,8 +1,8 @@
 const User = require('models/User');
 const jwt = require('jsonwebtoken');
-
+const {API,AUTH,REQUEST} = require('src/pages/api/consts')
 const handler = async (req, res) => {
-    if (req.method === 'GET') {
+    if (req.method === REQUEST.GET) {
         const {
             headers,
             query: { username }
@@ -10,7 +10,7 @@ const handler = async (req, res) => {
 
         try {
             if (!headers.authorization) {
-                return res.status(401).send({ error: true, data: [], message: 'Please Login' });
+                return res.status(401).send({ error: true, data: [], message: AUTH.NOT_LOGGED_IN });
             }
 
             jwt.verify(
@@ -24,7 +24,7 @@ const handler = async (req, res) => {
                 where: { username }
             });
             if (!user) {
-                return res.status(404).send({ error: true, data: [], message: 'User Not Found' });
+                return res.status(404).send({ error: true, data: [], message: AUTH.NO_USER_FOUND });
             }
 
             const followers = await user.getFollower();
@@ -38,13 +38,13 @@ const handler = async (req, res) => {
                     followed: followed,
                      avgProfileRating:user.avgRating
                 },
-                message: 'Data Fetched Successfully'
+                message: API.SUCCESS
             });
         } catch (err) {
-            res.status(500).send({ error: true, data: [], message: err.message });
+            res.status(500).send({ error: true, data: [], message: `${API.ERROR}:${err.message}` });
         }
     } else {
-        res.status(404).end('Page Not Found');
+        res.status(404).end(API.NO_PAGE);
     }
 };
 

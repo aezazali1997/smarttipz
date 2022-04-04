@@ -28,7 +28,7 @@ const handler = async (req, res) => {
       if (!id) {
         return res.status(404).send({
           error: true,
-          message: AUTH.USER_NOT_FOUND,
+          message: AUTH.NO_USER_FOUND,
           data: {}
         });
       }
@@ -68,7 +68,7 @@ const handler = async (req, res) => {
 
       return res.status(200).send({ error: false, data: response, message: API.SUCCESS });
     } catch (err) {
-      return res.status(500).send({ error: true, data: [], message: API.ERROR });
+      return res.status(500).send({ error: true, data: [], message: `${API.ERROR}:${err.message}` });
     }
   } else {
     res.status(404).end(API.NO_PAGE);

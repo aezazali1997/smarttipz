@@ -5,9 +5,9 @@ const jwt = require('jsonwebtoken');
 
 const User = require('models/User');
 const Testimonial = require('models/Testimonial');
-
+const {API,AUTH,REQUEST} = require('src/pages/api/consts')
 const handler = async (req, res) => {
-    if (req.method === 'POST') {
+    if (req.method === REQUEST.POST) {
 
         const { body, body: { token } } = req;
 
@@ -25,16 +25,16 @@ const handler = async (req, res) => {
                 return res.status(400).send({ error: true, message: 'You have already reviewed', data: [] });
             }
             else {
-                return res.status(200).send({ error: false, message: '', data: { username, ownerEmail } });
+                return res.status(200).send({ error: false, message: API.SUCCESS, data: { username, ownerEmail } });
             }
         }
         catch (err) {
             console.log('errr', err)
-            res.status(500).json({ error: true, message: err, data: [] });
+            res.status(500).json({ error: true,  message:`${API.ERROR}:${err.message}`, data: [] });
         }
     }
     else {
-        res.status(404).end('Page Not Found');
+        res.status(404).end(API.NO_PAGE);
     }
 };
 

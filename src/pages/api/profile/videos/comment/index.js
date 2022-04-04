@@ -1,13 +1,10 @@
-import AllPosts from 'models/AllPost';
-
+const AllPosts = require('models/AllPost');
 const Comment = require('models/Comments');
 const jwt = require('jsonwebtoken');
 const User = require('models/User');
-const Video = require('models/Video');
-const sequelize = require('sequelize');
-
+const { API, AUTH, REQUEST } = require('src/pages/api/consts');
 const handler = async (req, res) => {
-  if (req.method === 'GET') {
+  if (req.method === REQUEST.GET) {
     const {
       headers: { authorization },
       query: { videoId }
@@ -15,7 +12,7 @@ const handler = async (req, res) => {
 
     try {
       if (!authorization) {
-        return res.status(401).send({ error: true, data: [], message: 'Please Login' });
+        return res.status(401).send({ error: true, data: [], message: AUTH.NOT_LOGGED_IN });
       }
       const { username } = jwt.verify(authorization.split(' ')[1], process.env.SECRET_KEY);
 
@@ -34,14 +31,14 @@ const handler = async (req, res) => {
 
       res.status(200).json({
         error: false,
-        message: 'success',
+        message: API.SUCCESS,
         data: { comments }
       });
     } catch (err) {
       console.log('Shared Posts Api Failed Error: ', err.message);
-      res.status(500).send({ error: true, data: [], message: err.message });
+      res.status(500).send({ error: true, data: [], message: `${API.ERROR}:${err.message}` });
     }
-  } else if (req.method === 'POST') {
+  } else if (req.method === REQUEST.POST) {
     const {
       body,
       body: { videoId, comment: message },
@@ -50,7 +47,7 @@ const handler = async (req, res) => {
 
     try {
       if (!authorization) {
-        return res.status(401).send({ error: true, data: [], message: 'Please Login' });
+        return res.status(401).send({ error: true, data: [], message: AUTH.NOT_LOGGED_IN });
       }
 
       const { username } = jwt.verify(authorization.split(' ')[1], process.env.SECRET_KEY);
@@ -61,7 +58,7 @@ const handler = async (req, res) => {
       });
 
       if (!body) {
-        return res.status(400).send({ error: true, data: [], message: 'No data passed to server' });
+        return res.status(400).send({ error: true, data: [], message: AUTH.NO_USER_SENT });
       }
 
       const allPost = await AllPosts.findOne({
@@ -87,15 +84,15 @@ const handler = async (req, res) => {
 
       return res.status(201).json({
         error: false,
-        message: 'Comment posted',
+        message: API.SUCCESS,
         data: {}
       });
     } catch (err) {
       console.log('post Comment Api Failed Error: ', err.message);
-      res.status(500).send({ error: true, data: [], message: err.message });
+      res.status(500).send({ error: true, data: [], message: `${API.ERROR}:${err.message}` });
     }
   } else {
-    res.status(404).end('Page Not Found');
+    res.status(404).send(API.NO_PAGE);
   }
 };
 

@@ -3,9 +3,18 @@ const Joi = require('joi');
 const bcrypt = require('bcryptjs');
 const sequelize = require("sequelize");
 const User = require('models/User');
-// import withCors from '../cors';
+import Cors from 'cors';
+import initMiddleware from 'utils/init-middleWare';
 
 const handler = async (req, res) => {
+  const cors = initMiddleware(
+    Cors({
+      methods: ['GET', 'POST', 'OPTIONS', 'UPDATE'],
+      origin: ['https://m.stripe.com/6']
+    })
+  );
+  await cors(req, res);
+
   console.log('post signi in');
   if (req.method === 'POST') {
     const { body } = req;

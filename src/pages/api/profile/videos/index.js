@@ -1,22 +1,21 @@
-import { isEmpty } from 'lodash';
-import AllPosts from 'models/AllPost';
-import Comments from 'models/Comments';
-import PostLikee from 'models/Like';
-
+const { isEmpty }= require('lodash');
+const AllPosts = require('models/AllPost');
+const PostLikee = require('models/Like');
 const Share = require('models/Share');
 const User = require('models/User');
 const Video = require('models/Video');
 const jwt = require('jsonwebtoken');
 const sequelize = require('sequelize');
-import db from 'models/db';
+const db = require('models/db');
+const {API,AUTH,REQUEST} = require('src/pages/api/consts')
 
 
 
 const handler = async (req, res) => {
-    if (req.method === 'GET') {
+    if (req.method === REQUEST.GET) {
         try {
             if (!req.headers.authorization) {
-                return res.status(401).send({ error: true, data: [], message: 'Please Login' })
+                return res.status(401).send({ error: true, data: [], message: AUTH.NOT_LOGGED_IN })
             }
             const { username } = jwt.verify(
                 req.headers.authorization.split(' ')[1],
@@ -29,7 +28,7 @@ const handler = async (req, res) => {
             });
 
             if (!user) {
-                return res.status(404).send({ error: true, data: [], message: 'User Not Found' })
+                return res.status(404).send({ error: true, data: [], message: AUTH.NO_USER_FOUND })
             }
             const { id, id: userId } = user;
 
@@ -121,21 +120,21 @@ const handler = async (req, res) => {
             };
 
             res.status(200).json({
-                message: 'success',
+                message: API.SUCCESS,
                 data: { videos }
             });
         } catch (err) {
             console.log("Videos Api Failed Error: ", err.message);
-            res.status(500).send({ error: true, data: [], message: err.message });
+            res.status(500).send({ error: true, data: [], message: `${API.ERROR}:${err.message}` });
         }
     
     }
-    else if (req.method === 'DELETE') {
+    else if (req.method === REQUEST.DELETE) {
         const { query: { id }, headers: { authorization } } = req;
 
         try {
             if (!authorization) {
-                return res.status(401).send({ error: true, data: [], message: 'Please Login' })
+                return res.status(401).send({ error: true, data: [], message: AUTH.NOT_LOGGED_IN })
             };
 
             const { username } = jwt.verify(
@@ -167,15 +166,15 @@ const handler = async (req, res) => {
         }
       )
 
-            res.status(200).json({ error: false, data: {profileUpdatedRating:profileAvgRating}, message: 'Video deleted successfuly.' });
+            res.status(200).json({ error: false, data: {profileUpdatedRating:profileAvgRating}, message: API.SUCCESS });
         }
         catch (err) {
             console.log(err)
-            res.status(500).send({ error: true, data: [], message: err.message });
+            res.status(500).send({ error: true, data: [], message: `${API.ERROR}:${err.message}` });
         }
     }
     else {
-        res.status(404).end('Page Not Found');
+        res.status(404).end(API.NO_PAGE);
     }
 };
 

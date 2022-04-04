@@ -2,14 +2,14 @@ const User = require('models/User');
 const Video = require('models/Video');
 const jwt = require('jsonwebtoken');
 const sequelize = require('sequelize');
-
+const {API,AUTH,REQUEST} = require('src/pages/api/consts')
 const handler = async (req, res) => {
-    if (req.method === 'GET') {
+    if (req.method === REQUEST.GET) {
         const { body: { videoId }, headers: { authorization } }
             = req;
         try {
             if (!authorization) {
-                return res.status(401).send({ error: true, data: [], message: 'Please Login' })
+                return res.status(401).send({ error: true, data: [], message: AUTH.NOT_LOGGED_IN })
             }
             const { username } = jwt.verify(
                 authorization.split(' ')[1],
@@ -22,7 +22,7 @@ const handler = async (req, res) => {
             });
 
             if (!user) {
-                return res.status(404).send({ error: true, data: [], message: 'User Not Found' })
+                return res.status(404).send({ error: true, data: [], message: AUTH.NO_USER_FOUND })
             }
             const { id } = user;
 
@@ -42,17 +42,17 @@ const handler = async (req, res) => {
             });
 
             res.status(200).json({
-                message: 'success',
+                message: API.SUCCESS,
                 data: { videos }
             });
         } catch (err) {
             console.log("Videos Api Failed Error: ", err.message);
-            res.status(500).send({ error: true, data: [], message: err.message });
+            res.status(500).send({ error: true, data: [], message: `${API.ERROR}:${err.message}` });
         }
     }
 
     else {
-        res.status(404).end('Page Not Found');
+        res.status(404).end(API.NO_PAGE);
     }
 };
 

@@ -1,7 +1,17 @@
 const User = require('models/User');
 const jwt = require('jsonwebtoken');
 const { API, AUTH, REQUEST } = require('src/pages/api/consts');
+import Cors from 'cors';
+import initMiddleware from 'utils/init-middleWare';
 const handler = async (req, res) => {
+  const cors = initMiddleware(
+    Cors({
+      methods: ['GET', 'POST', 'OPTIONS', 'UPDATE'],
+      origin: ['https://m.stripe.com/6']
+    })
+  );
+  await cors(req, res);
+
   if (req.method === REQUEST.GET) {
     const {
       query: { id }
@@ -21,7 +31,7 @@ const handler = async (req, res) => {
       if (!userId) {
         res.status(404).send({
           error: false,
-          message: AUTH.USER_NOT_FOUND,
+          message: AUTH.NO_USER_FOUND,
           data: {}
         });
       }
@@ -37,10 +47,10 @@ const handler = async (req, res) => {
         message: API.SUCCESS,
         balance: Number(user.totalTipsAmount)
       });
-    } catch (error) {
+    } catch (err) {
       res.status(404).send({
         error: true,
-        message: API.ERROR,
+        message: `${API.ERROR}:${err.message}`,
         data: []
       });
     }

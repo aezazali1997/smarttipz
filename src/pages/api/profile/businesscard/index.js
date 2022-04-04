@@ -14,7 +14,7 @@ const handler = async (req, res) => {
           where: { username }
         });
         if (!user) {
-          return res.status(404).send({ error: true, data: [], message: AUTH.USER_NOT_FOUND });
+          return res.status(404).send({ error: true, data: [], message: AUTH.NO_USER_FOUND });
         }
 
         const business = await user.getBusiness();
@@ -34,7 +34,7 @@ const handler = async (req, res) => {
           }
         });
       } catch (err) {
-        res.status(500).send({ error: true, data: [], message: API.ERROR });
+        res.status(500).send({ error: true, data: [], message: `${API.ERROR}:${err.message}` });
       }
     } else {
       res.status(404).end(API.NO_PAGE);

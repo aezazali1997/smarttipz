@@ -1,3 +1,5 @@
+import { API, AUTH, REQUEST } from 'src/pages/api/consts';
+
 const Favourite = require('models/Favourite');
 
 const User = require('models/User');
@@ -6,7 +8,7 @@ const jwt = require('jsonwebtoken');
 const sequelize = require('sequelize');
 
 const handler = async (req, res) => {
-    if (req.method === 'GET') {
+    if (req.method === REQUEST.GET) {
         try {
             // if (!req.headers.authorization) {
             //     return res.status(401).send({ error: true, data: [], message: 'Please Login' })
@@ -28,16 +30,16 @@ const handler = async (req, res) => {
 
             res.status(200).json({
                 error: false,
-                message: 'success',
+                message: API.SUCCESS,
                 data: {}
             });
         } catch (err) {
             console.log("Videos Api Failed Error: ", err.message);
-            res.status(500).send({ error: true, data: [], message: err.message });
+            res.status(500).send({ error: true, data: [], message: `${API.ERROR}:${err.message}` });
         }
     }
 
-    else if (req.method === 'POST') {
+    else if (req.method === REQUEST.POST) {
         const {
             body,
             body: { videoId },
@@ -46,7 +48,7 @@ const handler = async (req, res) => {
 
         try {
             if (!authorization) {
-                return res.status(401).send({ error: true, data: [], message: 'Please Login' })
+                return res.status(401).send({ error: true, data: [], message: AUTH.NOT_LOGGED_IN })
             }
 
             const { username } = jwt.verify(
@@ -55,7 +57,7 @@ const handler = async (req, res) => {
             );
 
             if (!body) {
-                return res.status(400).send({ error: true, data: [], message: 'No data passed to server' })
+                return res.status(400).send({ error: true, data: [], message: AUTH.NO_USER_SENT })
             }
 
             const { id } = await User.findOne({
@@ -86,20 +88,20 @@ const handler = async (req, res) => {
                 await favourite.setVideo(video);
                 return res.status(201).json({
                     error: false,
-                    message: 'Post added to favourites',
+                    message: API.SUCCESS,
                     data: {}
                 });
             }
             await Favourite.destroy({ where: { reviewerId: id } });
-            res.status(200).json({
-                error: false,
-                message: 'Post removed from favourites',
-                data: {}
-            });
+            // res.status(200).json({
+            //     error: false,
+            //     message: 'Post removed from favourites',
+            //     data: {}
+            // });
 
         } catch (err) {
             console.log("Favourite Api Failed Error: ", err.message);
-            res.status(500).send({ error: true, data: [], message: err.message });
+            res.status(500).send({ error: true, data: [], message: `${API.ERROR}:${err.message}` });
         }
     }
 

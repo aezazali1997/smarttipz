@@ -253,6 +253,9 @@ class AxiosInstance {
   async topUpStripe(payload) {
     return await axios.post(`${USER_API_BASE_URL}api/profile/topup/stripe`, payload, this.getAuthHeader());
   }
+  async getClientSecret(payload) {
+    return await axios.post(`${USER_API_BASE_URL}api/profile/topup/clientsecret`, payload, this.getAuthHeader());
+  }
 }
 
 export default new AxiosInstance;
