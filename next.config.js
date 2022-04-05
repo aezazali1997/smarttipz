@@ -7,5 +7,18 @@ module.exports = {
       'smart-tipz-data-bucket.s3.ap-southeast-1.amazonaws.com',
       'thumbs.dreamstime.com'
     ]
+  },
+  async headers() {
+    return [
+      {
+        source: '/.well-known/apple-developer-merchantid-domain-association',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/json'
+          }
+        ]
+      }
+    ];
   }
 };
