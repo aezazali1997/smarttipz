@@ -11,8 +11,8 @@ import {
 } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import axiosInstance from 'src/APIs/axiosInstance';
-
-const Stripe = ({ setIsVerified, setCardToken, isVerified, amount }) => {
+import Swal from 'sweetalert2';
+const Stripe = ({ setIsVerified, setCardToken, amount, setBalance, personalInfo, toggleCheckoutModal, topUp }) => {
   const [verifying, setVerifying] = useState(false);
   const [verificationRequired, setverificationRequired] = useState(true);
   const stripe = useStripe();
@@ -40,7 +40,6 @@ const Stripe = ({ setIsVerified, setCardToken, isVerified, amount }) => {
       requestPayerEmail: true
     });
     pr.canMakePayment().then(async (result) => {
-      console.log(result);
       setPaymentRequest(pr);
       let {
         data: {
@@ -77,7 +76,21 @@ const Stripe = ({ setIsVerified, setCardToken, isVerified, amount }) => {
             console.log('The payment has succeeded');
           }
         } else {
-          console.log('The payment has succesded');
+          toggleCheckoutModal();
+          Swal.fire({
+            text: 'Your account has been top up',
+            icon: 'success',
+            timer: 3000,
+            showConfirmButton: false,
+            showCancelButton: false
+          });
+          let email = personalInfo.email;
+          console.log('success', email);
+          let {
+            data: { totalTipsAmount }
+          } = await axiosInstance.topUpProfile(topUp, email);
+          console.log('total tips', totalTipsAmount);
+          setBalance(totalTipsAmount);
         }
       }
     });

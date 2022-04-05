@@ -116,15 +116,6 @@ const UseFetchSetting = (settings) => {
     toggleTopUpModal();
     setShowCheckout(true);
 
-    // let email = personalInfo.email;
-    // setToppingUp(true);
-    try {
-      //   let {
-      //     data: { totalTipsAmount }
-      //   } = await axiosInstance.topUpProfile(topUp, email);
-      //   console.log('total tips', totalTipsAmount);
-      //   setBalance(totalTipsAmount);
-    } catch (error) {}
     setToppingUp(false);
     setWithDrawError('');
   };

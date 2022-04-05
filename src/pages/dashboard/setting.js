@@ -35,6 +35,7 @@ const Setting = ({ settings }) => {
     toggleTopUpModal,
     toggleWithDrawModal,
     balance,
+    setBalance,
     topUp,
     setTopUp,
     topUpSubmit,
@@ -376,7 +377,15 @@ const Setting = ({ settings }) => {
             modalTitle={'Top up'}
           />
         )}
-        {showCheckout && <StripeCheckoutModal toggleCheckoutModal={toggleCheckoutModal} topUp={topUp} />}
+        {showCheckout && (
+          <StripeCheckoutModal
+            toggleCheckoutModal={toggleCheckoutModal}
+            topUp={topUp}
+            handleTopUpChange={setTopUp}
+            personalInfo={personalInfo}
+            setBalance={setBalance}
+          />
+        )}
       </AnimatePresence>
     </div>
   );

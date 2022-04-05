@@ -10,10 +10,14 @@ import { stripeFeeCal } from 'helpers';
 import { motion } from 'framer-motion';
 import moment from 'moment';
 import { Lock } from 'src/assets/SVGs';
+import Swal from 'sweetalert2';
 const stripe_pk = process.env.NEXT_PUBLIC_STRIPE_PK;
 const StripeCheckoutModal = ({
   toggleCheckoutModal,
   topUp,
+  handleTopUpChange,
+  setBalance,
+  personalInfo,
   // _HandleChangeTip,
   // tip = 0,
   // ToggleTipModal,
@@ -38,7 +42,6 @@ const StripeCheckoutModal = ({
   const [clientSecret, setClientSecret] = useState('');
   const [paypalMethod, setPaypalMethod] = useState(true);
   const setClientSecretMethod = async () => {
-    console.log('calling the client secret');
     let {
       data: {
         data: { client_secret }
@@ -56,12 +59,29 @@ const StripeCheckoutModal = ({
       amount: finalAmount.toString(),
       token: cardToken
     };
+    let email = personalInfo.email;
+
     try {
       const response = await axiosInstance.topUpStripe(data);
+      if (response.status === 200) {
+        let {
+          data: { totalTipsAmount }
+        } = await axiosInstance.topUpProfile(topUp, email);
+        console.log('total tips', totalTipsAmount);
+        setBalance(totalTipsAmount);
+      }
     } catch (error) {
       console.log('error', error.message);
     }
     setIsProcessing(false);
+    toggleCheckoutModal();
+    Swal.fire({
+      text: 'Your account has been top up',
+      icon: 'success',
+      timer: 3000,
+      showConfirmButton: false,
+      showCancelButton: false
+    });
   };
   const togglePaymentButtons = () => {
     setPaypalMethod(false);
@@ -137,6 +157,10 @@ const StripeCheckoutModal = ({
                       setCardToken={setCardToken}
                       isVerified={isVerified}
                       amount={finalAmount}
+                      topUp={topUp}
+                      personalInfo={personalInfo}
+                      setBalance={setBalance}
+                      toggleCheckoutModal={toggleCheckoutModal}
                     />
                   </Elements>
                 </div>
@@ -146,7 +170,10 @@ const StripeCheckoutModal = ({
               {
                 <>
                   <button
-                    onClick={toggleCheckoutModal}
+                    onClick={() => {
+                      handleTopUpChange(0);
+                      toggleCheckoutModal();
+                    }}
                     type="button"
                     className="mt-3 w-full inline-flex justify-center hover:underline  px-4 py-2 text-base font-medium text  sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                     Cancel

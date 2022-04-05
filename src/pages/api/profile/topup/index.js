@@ -1,12 +1,22 @@
 const User = require('models/User');
 const jwt = require('jsonwebtoken');
 const { API, AUTH, REQUEST } = require('src/pages/api/consts');
-const handler = async(req, res) => {
+import Cors from 'cors';
+import initMiddleware from 'utils/init-middleWare';
+const handler = async (req, res) => {
+  const cors = initMiddleware(
+    Cors({
+      methods: ['GET', 'POST', 'OPTIONS', 'UPDATE'],
+      origin: ['https://m.stripe.com/', 'https://pay.google.com']
+    })
+  );
+  await cors(req, res);
+
   const { authorization } = req.headers;
   if (!authorization) {
     return res.status(401).send({ error: true, data: [], message: AUTH.NOT_LOGGED_IN });
   }
-        
+
   const { username } = jwt.verify(authorization.split(' ')[1], process.env.SECRET_KEY);
 
   const { id: userId } = await User.findOne({
