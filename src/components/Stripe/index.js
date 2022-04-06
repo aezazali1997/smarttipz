@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SuccessTick } from 'src/assets/SVGs';
+import Spinner from 'src/components/Spinner';
 import {
   CardNumberElement,
   CardExpiryElement,
@@ -33,24 +34,33 @@ const Stripe = ({ setIsVerified, setCardToken, amount, setBalance, personalInfo,
       country: 'US',
       currency: 'usd',
       total: {
-        label: 'Demo total',
+        label: 'Top up',
         amount: Number((amount * 100).toString().split('.')[0])
       },
       requestPayerName: true,
       requestPayerEmail: true
     });
-    pr.canMakePayment().then(async (result) => {
-      setPaymentRequest(pr);
-      let {
-        data: {
-          data: { client_secret }
-        }
-      } = await axiosInstance.getClientSecret({
-        amount
-      });
 
-      clientSecret = client_secret;
-    });
+    pr?.canMakePayment()
+      .then(async (result) => {
+        if (result) {
+          setPaymentRequest(pr);
+          let {
+            data: {
+              data: { client_secret }
+            }
+          } = await axiosInstance.getClientSecret({
+            amount
+          });
+
+          clientSecret = client_secret;
+        } else {
+          console.log('No payment request wallet added');
+        }
+      })
+      .catch((error) => {
+        console.log('error', error.message);
+      });
 
     pr.on('paymentmethod', async (ev) => {
       console.log(clientSecret);
@@ -126,12 +136,18 @@ const Stripe = ({ setIsVerified, setCardToken, amount, setBalance, personalInfo,
 
   return (
     <>
-      <div className="my-2">{paymentRequest && <PaymentRequestButtonElement options={{ paymentRequest }} />}</div>
-      <div className="relative w-full text-center horizontal-line">or</div>
+      {paymentRequest && (
+        <>
+          <div className="my-2">
+            <PaymentRequestButtonElement options={{ paymentRequest }} />
+          </div>
+          <div className="relative w-full text-center horizontal-line">or</div>
+        </>
+      )}
 
       <ElementsConsumer>
         {({ stripe, elements }) => (
-          <form className="">
+          <form className="my-2">
             <div className="my-1">
               <div>
                 <label>Enter Card Number</label>
