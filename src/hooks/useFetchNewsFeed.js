@@ -53,6 +53,7 @@ const UseFetchNewsFeed = () => {
   const [isSubmitingRating, setIsSubmitingRating] = useState(false);
 
   const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
+  const [thumbnailFile, setThumbnailFile] = useState('');
   const [isloadingFeed, setLoadingFeed] = useState(true);
   const [postRating, setSharePostRating] = useState(0);
   const [showAmountModal, setShowAmountModal] = useState(false);

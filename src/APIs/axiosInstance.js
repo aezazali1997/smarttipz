@@ -18,7 +18,6 @@ class AxiosInstance {
   }
 
   async login(credentials) {
-    console.log('inside axios api');
     return await axios.post(USER_API_BASE_URL + 'api/user/signin', credentials);
   }
 
@@ -256,6 +255,12 @@ class AxiosInstance {
   async getClientSecret(payload) {
     return await axios.post(`${USER_API_BASE_URL}api/profile/topup/clientsecret`, payload, this.getAuthHeader());
   }
+  async generateStripeAccountLink(payload) {
+    return await axios.post(`${USER_API_BASE_URL}api/profile/onboard`, null, this.getAuthHeader());
+  }
+  // async checkAccount() {
+  //   return await axios.post(`${USER_API_BASE_URL}api/profile/stripeAccount`, null, this.getAuthHeader());
+  // }
 }
 
 export default new AxiosInstance;

@@ -54,7 +54,8 @@ const User = sequelize.define('User', {
   },
   picture: {
     type: DataTypes.STRING,
-    defaultValue: 'https://thumbs.dreamstime.com/b/solid-purple-gradient-user-icon-web-mobile-design-interface-ui-ux-developer-app-137467998.jpg'
+    defaultValue:
+      'https://thumbs.dreamstime.com/b/solid-purple-gradient-user-icon-web-mobile-design-interface-ui-ux-developer-app-137467998.jpg'
   },
   avgRating: {
     type: DataTypes.FLOAT,
@@ -110,6 +111,16 @@ const User = sequelize.define('User', {
     type: DataTypes.INTEGER
   },
   isDeleted: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
+  stripeAccountType: {
+    type: DataTypes.STRING
+  },
+  stripeAccountId: {
+    type: DataTypes.STRING
+  },
+  onBoarded: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
   }

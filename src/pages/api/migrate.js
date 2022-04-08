@@ -48,10 +48,10 @@ const handler = async (req, res) => {
   // Pay.sync({
   // alter:true
   // })
-  // User.sync({alter:true})
-  Charge.sync({
-    alter: true
-  });
+  // User.sync({ alter: true });
+  // Charge.sync({
+  // alter: true
+  // });
   res.status(200).send({ message: 'New Table created Successfully' });
-};
+};;;
 export default handler;

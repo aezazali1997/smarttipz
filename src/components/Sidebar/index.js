@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/link-passhref */
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Badge, GlobalSearchbar,SmartTipzLogo } from 'src/components';
+import { Badge, GlobalSearchbar, SmartTipzLogo } from 'src/components';
 import { useOutsideClick } from 'src/hooks';
 import { NavbarRoutes } from 'routes';
 import { NavDropdown } from '../Dropdown';
@@ -34,13 +34,13 @@ const Sidebar = ({ logout }) => {
       <nav className="flex w-full h-14 py-2 px-2 text-white justify-between navbar" role="navigation">
         <div className="flex space-x-20 w-1/2">
           <Link href={'/dashboard/news-feed'} passHref>
-           <SmartTipzLogo />
-           
+            <SmartTipzLogo />
           </Link>
           <span className="w-full">
             <GlobalSearchbar />
           </span>
         </div>
+        {/* drop down issue */}
         <div className="flex space-x-3">
           <div className="flex space-x-1">
             {NavbarRoutes &&
@@ -56,7 +56,6 @@ const Sidebar = ({ logout }) => {
                       {badge && <Badge />}
                     </div>
                   </a>
-                  
                 </Link>
               ))}
           </div>

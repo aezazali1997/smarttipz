@@ -6,7 +6,7 @@ const User = require('models/User');
 const Business = require('models/Business');
 const Session = require('models/Session');
 const sendEmail = require('utils/sendMail');
-
+const stripe = require('stripe')(process.env.STRIPE_SK);
 
 const handler = async (req, res) => {
   if (req.method === 'POST') {
@@ -32,12 +32,13 @@ const handler = async (req, res) => {
     if (error) return res.status(400).json({ error: error.details[0].message });
 
     const { username, email, phone, password, accountType, website, name } = req.body;
-    // console.log('Signup:', req.body);
 
     let user = null;
 
     try {
-      const trimedUsername = username.replace(/\s+/g, '').trim()
+      const account = await stripe.accounts.create({ type: 'standard', email });
+
+      const trimedUsername = username.replace(/\s+/g, '').trim();
 
       user = await User.findOne({ where: { username: trimedUsername } });
       if (user) {
@@ -55,7 +56,7 @@ const handler = async (req, res) => {
         charset: 'numeric'
       });
 
-      // console.log('varifyCode:', varificationCode);
+      console.log('varifyCode:', varificationCode);
 
       const { success, message } = await sendEmail(
         email,
@@ -66,7 +67,6 @@ const handler = async (req, res) => {
 
       if (!success) return res.status(400).json({ error: true, message: message, data: [] });
 
-
       const newUser = await User.create({
         name,
         username: trimedUsername,
@@ -74,7 +74,9 @@ const handler = async (req, res) => {
         phoneNumber: phone,
         password: encPassword,
         accountType,
-        varificationCode: varificationCode
+        varificationCode: varificationCode,
+        stripeAccountType: account.type,
+        stripeAccountId: account.id
       });
 
       if (accountType === 'Business') {

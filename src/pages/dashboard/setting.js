@@ -45,7 +45,10 @@ const Setting = ({ settings }) => {
     isWithDrawing,
     withDrawError,
     showCheckout,
-    toggleCheckoutModal
+    toggleCheckoutModal,
+    generateLink,
+    isGeneratingLink,
+    link
   } = UseFetchSetting(settings);
 
   const { id, name, email, about, accessible, showPhone, accountType, phone, username, showName, showUsername, tip } =
@@ -365,6 +368,10 @@ const Setting = ({ settings }) => {
             modalTitle={'Withdraw'}
             error={withDrawError}
             hasBankDetails={hasBankDetails}
+            onBoarded={personalInfo.onBoarded}
+            generateLink={generateLink}
+            isGeneratingLink={isGeneratingLink}
+            link={link}
           />
         )}
         {showTopUpModal && (

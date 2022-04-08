@@ -5,7 +5,7 @@ import swal from 'sweetalert';
 import axiosInstance from 'src/APIs/axiosInstance';
 import { AccountInfoValidationSchema } from 'utils/validation_shema';
 import { useSearchContext } from 'src/contexts';
-
+import moment from 'moment';
 const initialValues = {
   old: '',
   new: '',
@@ -28,7 +28,9 @@ const UseFetchSetting = (settings) => {
     accountType: '',
     showName: '',
     showUsername: '',
-    tip: ''
+    tip: '',
+    stripeAccountId: '',
+    onBoarded: false
   });
   const [updated, setUpdated] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
@@ -39,22 +41,25 @@ const UseFetchSetting = (settings) => {
   let { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
   const [balance, setBalance] = useState(0.0);
   const [topUp, setTopUp] = useState(0);
-  const [withDraw,setWithDraw]=useState(0);
+  const [withDraw, setWithDraw] = useState(0);
   const [ToppingUp, setToppingUp] = useState(false);
   const [isWithDrawing, setIsWithDrawing] = useState(false);
-  const [showWithDrawModal,setShowWithDrawModal]=useState(false);
-  const [withDrawError,setWithDrawError]=useState('')
+  const [isGeneratingLink, setIsGeneratingLink] = useState(false);
+  const [showWithDrawModal, setShowWithDrawModal] = useState(false);
+  const [withDrawError, setWithDrawError] = useState('');
   const [showCheckout, setShowCheckout] = useState(false);
+  const [link, setLink] = useState('');
+  const [onBoarding, setOnBoarding] = useState(false);
 
   useEffect(() => {
     const { accountType } = settings;
+
     if (update !== updated) {
       axiosInstance
         .profile()
         .then(({ data: { data } }) => {
           setImageUrl(data?.picture);
           setPersonalInfo(data);
-          // console.log("data",data);
 
           setCountryCode(data?.phone);
         })
@@ -119,6 +124,34 @@ const UseFetchSetting = (settings) => {
     setToppingUp(false);
     setWithDrawError('');
   };
+
+  const generateLink = async () => {
+    if (link === '') {
+      try {
+        setIsGeneratingLink(true);
+        let {
+          data: {
+            data: {
+              accountLink,
+              accountLink: { url }
+            }
+          }
+        } = await axiosInstance.generateStripeAccountLink();
+        setLink(url);
+        let diff = accountLink.expires_at - accountLink.created;
+      } catch (error) {
+        console.log('ERROR: ', error.message);
+      }
+      setIsGeneratingLink(false);
+    } else {
+      let anchor = document.createElement('a');
+      anchor.setAttribute('href', link);
+      anchor.setAttribute('target', '_blank');
+      anchor.click();
+      setLink('');
+    }
+  };
+
   const enableAccountLoading = () => {
     setAccountLoading(true);
   };
@@ -299,8 +332,11 @@ const UseFetchSetting = (settings) => {
     isWithDrawing,
     withDrawError,
     toggleCheckoutModal,
-    showCheckout
-    // handleTopUpChange
+    showCheckout,
+    // handleTopUpChange,
+    generateLink,
+    isGeneratingLink,
+    link
   };
 };
 

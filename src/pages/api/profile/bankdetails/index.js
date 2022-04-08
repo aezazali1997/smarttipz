@@ -21,14 +21,13 @@ const handler = async (req, res) => {
         data: {}
       });
     }
-    const { username } = jwt.verify(req.headers.authorization.split('')[1], process.env.SECRET_KEY);
+    const { username } = jwt.verify(req.headers.authorization.split(' ')[1], process.env.SECRET_KEY);
 
-    const { id: userId } = User.findOne({
+    const { id: userId } = await User.findOne({
       where: {
-        username
+        username: username
       }
     });
-
     if (!userId) {
       return res.status(404).send({
         error: false,
