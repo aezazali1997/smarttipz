@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 const SmartTipzLogo = () => {
   return (
-    <a href={href} ref={ref}>
+    <a>
       <span>
         <div className="relative w-36 h-full flex items-center">
           <Image
