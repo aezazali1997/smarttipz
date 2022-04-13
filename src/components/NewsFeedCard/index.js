@@ -115,8 +115,8 @@ const NewsfeedCard = ({
   };
 
   const _HandlePaidVideos = async () => {
-    !isViewed && localStorage.getItem('id')!=UserId && _handleViewsOnVideo(videoId)
-    setIsViewed(true)
+    !isViewed && localStorage.getItem('id') != UserId && _handleViewsOnVideo(videoId);
+    setIsViewed(true);
     setTimeout(() => {
       setStopVideo(true);
       TogglePaymentModal();

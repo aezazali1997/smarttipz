@@ -33,7 +33,7 @@ const Sidebar = ({ logout }) => {
     <div className="sidebar z-50">
       <nav className="flex w-full h-14 py-2 px-2 text-white justify-between navbar" role="navigation">
         <div className="flex space-x-20 w-1/2">
-          <Link href={'/dashboard/news-feed'} passHref>
+          <Link href={'/dashboard/news-feed/'} passHref={true}>
             <SmartTipzLogo />
           </Link>
           <span className="w-full">

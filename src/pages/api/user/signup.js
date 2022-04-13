@@ -31,10 +31,10 @@ const handler = async (req, res) => {
 
     if (error) return res.status(400).json({ error: error.details[0].message });
 
-    const { username, email, phone, password, accountType, website, name } = req.body;
-
+    let { username, email, phone, password, accountType, website, name } = req.body;
+    email = email.toString().toLowerCase();
     let user = null;
-
+    // create a connected account for the user
     try {
       const account = await stripe.accounts.create({ type: 'standard', email });
 

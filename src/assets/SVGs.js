@@ -7,23 +7,22 @@ import virtualwallet from '../../public/Virtual-Wallet.svg';
 import Withdraw from '../../public/Withdraw.svg';
 import user from '../../public/user.svg';
 import lock from '../../public/lock.svg';
-import success from '../../public/success.svg';
 // import solidlock from '../../public/icons/solidlock.svg'
 
-export const SuccessTick = () => {
-  return (
-    <span className="flex relative h-6 w-6 text-gray-500">
-      <Image
-        className="text-gray-500"
-        src={success}
-        layout="fill"
-        objectFit="cover"
-        alt="Success Tick"
-        property="true"
-      />
-    </span>
-  );
-};
+// export const SuccessTick = () => {
+//   return (
+//     <span className="flex relative h-6 w-6 text-gray-500">
+//       <Image
+//         className="text-gray-500"
+//         src={success}
+//         layout="fill"
+//         objectFit="cover"
+//         alt="Success Tick"
+//         property="true"
+//       />
+//     </span>
+//   );
+// };
 export const Email = ({ className }) => {
   return (
     <svg className={className} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">

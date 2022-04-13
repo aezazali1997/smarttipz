@@ -40,6 +40,14 @@ const handler = async (req, res) => {
           id: receiver
         }
       });
+      console.log(
+        '-----------------------------',
+        'uptill now',
+        '--------------',
+        receiverUser,
+        platformFee,
+        senderUser
+      );
 
       // make a transaction table object
       await Tip.create({
@@ -53,7 +61,6 @@ const handler = async (req, res) => {
         adminPreviousTotal: admin.totalAmount,
         videoId
       });
-
       // update the sender ammount
       await User.update(
         {

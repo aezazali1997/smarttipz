@@ -1,13 +1,14 @@
-import AllPosts from 'models/AllPost';
-import Comments from 'models/Comments';
-import PostLikee from 'models/Like';
-import Shares from 'models/Share';
-import db from 'models/db';
+const AllPosts = require('models/AllPost');
+const Comments = require('models/Comments');
+const PostLikee = require('models/Like');
+const Shares = require('models/Share');
+const db = require('models/db');
 const jwt = require('jsonwebtoken');
 const Users = require('models/User');
 const Videos = require('models/Video');
-import { isEmpty } from 'lodash';
-import { API, AUTH, REQUEST } from 'src/pages/api/consts';
+const Pay = require('models/Pay');
+const { isEmpty } = require('lodash');
+const { API, AUTH, REQUEST } = require('src/pages/api/consts');
 
 const handler = async (req, res) => {
   if (req.method === REQUEST.GET) {
@@ -69,41 +70,59 @@ const handler = async (req, res) => {
 
 export default handler;
 
-
 const getStats = async (video, userId) => {
-    let tempData = JSON.parse(JSON.stringify(video));
-    const { id, VideoId } = tempData;
-    const likeCount = await PostLikee.count({
-        where: {
-            AllPostId: id
-        }
-    });
-    const isLiked = await PostLikee.find({
-        where: {
-            AllPostId: id,
-            reviewerId: userId
-        }
-    });
-    const commentCount = await Comments.count({
-        where: {
-            AllPostId: id,
-        }
-    });
-    const shareCount = await Shares.count({
-        where: {
-            VideoId
-        }
-    });
-    const ratings = await db.query(`select avg(r."rating") as "avgRating", count(r."AllPostId") as "totalRaters" from "AllPosts" p
+  let tempData = JSON.parse(JSON.stringify(video));
+  const { id, VideoId } = tempData;
+  const likeCount = await PostLikee.count({
+    where: {
+      AllPostId: id
+    }
+  });
+  const isLiked = await PostLikee.find({
+    where: {
+      AllPostId: id,
+      reviewerId: userId
+    }
+  });
+  const commentCount = await Comments.count({
+    where: {
+      AllPostId: id
+    }
+  });
+  const shareCount = await Shares.count({
+    where: {
+      VideoId
+    }
+  });
+  const ratings =
+    await db.query(`select avg(r."rating") as "avgRating", count(r."AllPostId") as "totalRaters" from "AllPosts" p
 						left join "Ratings" as r on p.id=r."AllPostId"
 						where (p.id=${id} and r."AllPostId"=${id})
-						group by p.id`)
+						group by p.id`);
 
+  const avgRating = isEmpty(ratings[0]) ? 0 : ratings[0][0].avgRating;
+  const totalRaters = isEmpty(ratings[0]) ? 0 : ratings[0][0].totalRaters;
 
-    const avgRating = isEmpty(ratings[0]) ? 0 : ratings[0][0].avgRating;
-    const totalRaters = isEmpty(ratings[0]) ? 0 : ratings[0][0].totalRaters;
+  let paid = null;
+  const { Video } = video;
+  if (Video.videoCost === 'Paid') {
+    paid = await Pay.findOne({
+      where: {
+        userId: userId,
+        videoId: VideoId
+      }
+    });
+  }
 
-    const data = { ...tempData, avgRating, totalRaters, likeCount, commentCount, shareCount, isLiked: isLiked ? true : false }
-    return data;
-
-}
+  const data = {
+    ...tempData,
+    avgRating,
+    totalRaters,
+    likeCount,
+    commentCount,
+    shareCount,
+    isLiked: isLiked ? true : false,
+    hasPaid: paid !== null ? true : false
+  };
+  return data;
+};

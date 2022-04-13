@@ -28,7 +28,7 @@ const TipModal = ({
                 <div className="flex w-auto h-96">
                   <Image src={JarContainerGIF} alt="Smart tipz" objectFit="cover" />
                 </div>
-                
+
                 <div className="flex w-full whitespace-preborder bg-gray-50 rounded-md h-12 mb-4">
                   <span className="bg-gray-50 text-md border border-r-0 rounded-md rounded-r-none font-bold border-gray-200 px-3 py-3  h-12">
                     $
@@ -37,15 +37,14 @@ const TipModal = ({
                   <InputField
                     name={'tip'}
                     type={'number'}
-                    value={tip}
+                    value={tip > 0 ? tip : ''}
                     min={0}
                     onChange={(e) => _HandleChangeTip(e)}
                     inputClass={`border bg-gray-50 text-sm border-gray-200  rounded-l-none focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3  h-12`}
                     label={'Tip'}
                   />
                 </div>
-                  {
-                tipError !== '' ? (
+                {tipError !== '' ? (
                   <div className="ml-0 mb-2 text-center">
                     <p className="text-red-600">{tipError}</p>
                   </div>
@@ -66,7 +65,9 @@ const TipModal = ({
             <Button
               onClick={handleTipSubmit}
               type="button"
-              className={`w-full inline-flex justify-center rounded-md border-none px-4 py-2 btn text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm ${tipError==='' ? 'cursor-pointer' : 'cursor-default btn-disable'}`}
+              className={`w-full inline-flex justify-center rounded-md border-none px-4 py-2 btn text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm ${
+                tipError === '' ? 'cursor-pointer' : 'cursor-default btn-disable'
+              }`}
               childrens={'Submit'}
               loading={loading}
             />

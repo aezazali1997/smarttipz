@@ -57,17 +57,17 @@ const UseFetchNewsFeed = () => {
   const [isloadingFeed, setLoadingFeed] = useState(true);
   const [postRating, setSharePostRating] = useState(0);
   const [showAmountModal, setShowAmountModal] = useState(false);
-  const [videoPayment, setVideoPayment] = useState(0);
   const [ratingData, setRatingData] = useState({ ...initialRatingData });
   const [current, setCurrentPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [amountReciever, setAmountReciever] = useState(null);
   const [paymentVideoId, setPaymentVideoId] = useState(null);
   const [showCelebration, setShowCelebration] = useState(false);
-  const [isPaying, setIsPaying] = useState(false);
   const [userBalance, setUserBalance] = useState(null);
-  const [paymentError, setPaymentError] = useState('');
   const [tipError, setTipError] = useState('');
+  const [isPaying, setIsPaying] = useState(false);
+  const [paymentError, setPaymentError] = useState('');
+  const [videoPayment, setVideoPayment] = useState(0);
 
   let thumbnailRef = useRef();
 

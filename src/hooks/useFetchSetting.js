@@ -97,6 +97,8 @@ const UseFetchSetting = (settings) => {
   };
   const toggleWithDrawModal = () => {
     setShowWithDrawModal(!showWithDrawModal);
+    setWithDrawError('');
+    setWithDraw(0);
   };
 
   const withDrawFunds = async () => {

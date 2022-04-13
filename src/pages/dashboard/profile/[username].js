@@ -62,8 +62,26 @@ const UserProfile = ({ profile }) => {
   const [videoPayment, setVideoPayment] = useState(0);
   const [ratingData, setRatingData] = useState({ ...initialRatingData });
   const [profileRating, setProfileRating] = useState(0);
+  const [userBalance, setUserBalance] = useState(null);
+  const [isPaying, setIsPaying] = useState(false);
+  const [paymentError, setPaymentError] = useState('');
+  const [amountReciever, setAmountReciever] = useState(null);
+  const [paymentVideoId, setPaymentVideoId] = useState(null);
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [tipError, setTipError] = useState('');
 
+  const getBalance = async () => {
+    try {
+      let {
+        data: { balance }
+      } = await axiosInstance.getUserBalance(localStorage.getItem('id'));
+      setUserBalance(balance);
+    } catch (error) {
+      console.log('Error while getting user balance');
+    }
+  };
   useEffect(() => {
+    getBalance();
     const { accountType, username } = profile;
     setPersonalInfo(profile);
     if (accountType === 'Business') {
@@ -134,6 +152,61 @@ const UserProfile = ({ profile }) => {
     }
   };
 
+  const paymentSubmit = async () => {
+    if (videoPayment > userBalance) {
+      setPaymentError('You do not have the required amount in your wallet. Please top up your wallet from Settings.');
+      return;
+    }
+    setIsPaying(true);
+
+    try {
+      const data = {
+        senderId: localStorage.getItem('id'),
+        receiverId: amountReciever,
+        paid: videoPayment,
+        videoId: paymentVideoId
+      };
+
+      let {
+        data: { balance }
+      } = await axiosInstance.postPaid(data);
+      setUserBalance(balance);
+      setIsPaying(false);
+      setAmountReciever(null);
+      _TogglePaymentModal();
+
+      let tempVideos = [...myVideos];
+      for (let i = 0; i < myVideos.length; i++) {
+        if (tempVideos[i].VideoId === paymentVideoId) {
+          tempVideos[i].hasPaid = true;
+        }
+      }
+      setMyVideos(tempVideos);
+
+      // uncomment this
+      // setPaymentVideoId(null);
+
+      // GetPosts(0);
+      Swal.fire({
+        text: 'You can now View the Video',
+        icon: 'success',
+        timer: 3000,
+        showConfirmButton: false,
+        showCancelButton: false
+      });
+    } catch (error) {
+      console.log('Error! ', error.message);
+      _TogglePaymentModal();
+      Swal.fire({
+        text: error.message,
+        icon: 'error',
+
+        showConfirmButton: false,
+        showCancelButton: false
+      });
+    }
+  };
+
   const fetchMyVideos = async (username) => {
     enableFetchMyVideos();
     try {
@@ -175,11 +248,11 @@ const UserProfile = ({ profile }) => {
   const enableFetchMyVideos = () => {
     setFetchMyVideos(true);
   };
-    const postViewOnVideo = async (VideoId) => {
+  const postViewOnVideo = async (VideoId) => {
     try {
-      await axiosInstance.viewPost({VideoId:VideoId});
+      await axiosInstance.viewPost({ VideoId: VideoId });
     } catch (error) {
-      console.log("ERROR:",error);
+      console.log('ERROR:', error);
     }
   };
 
@@ -262,6 +335,46 @@ const UserProfile = ({ profile }) => {
     router.push(`/dashboard/videos/${id}`);
   };
 
+  const handleTipSubmit = async () => {
+    if (localStorage.getItem('id') == amountReciever) {
+      return;
+    }
+    if (tip > userBalance) {
+      setTipError('You do not have the required amount in your wallet. Please top up your wallet from Settings.');
+      return;
+    }
+
+    setIsPaying(true);
+    setShowCelebration(true);
+    try {
+      let data = {
+        sender: localStorage.getItem('id'),
+        reciever: amountReciever,
+        video: paymentVideoId,
+        tip
+      };
+
+      let {
+        data: { balance }
+      } = await axiosInstance.postTip(data);
+      setUserBalance(balance);
+
+      setTip(0);
+      setPaymentVideoId(null);
+      setAmountReciever(null);
+    } catch (error) {
+      console.log('ERROR', error.message);
+      Swal.fire({
+        icon: 'error',
+        text: error.message,
+        showCancelButton: false,
+        showConfirmButton: false
+      });
+    }
+    setIsPaying(false);
+    setShowCelebration(false);
+    ToggleTipModal();
+  };
   let _OpenShareModal = (id, thumbnail, url, picture, name, title) => {
     setShareData({
       videoId: id,
@@ -343,9 +456,12 @@ const UserProfile = ({ profile }) => {
     ToggleRatingModal();
   };
 
-  const ToggleTipModal = (tip) => {
+  const ToggleTipModal = (tip, UserId, id) => {
+    setAmountReciever(UserId);
     setTip(tip);
+    setPaymentVideoId(id);
     setShowTipModal(!showTipModal);
+    setTipError('');
   };
 
   const _HandleChangeTip = ({ target }) => {
@@ -381,8 +497,10 @@ const UserProfile = ({ profile }) => {
     }
   };
 
-  let _TogglePaymentModal = (cost) => {
+  let _TogglePaymentModal = (cost, UserId, id) => {
     setVideoPayment(cost);
+    setAmountReciever(UserId);
+    setPaymentVideoId(id);
     setShowAmountModal(!showAmountModal);
   };
 
@@ -606,10 +724,10 @@ const UserProfile = ({ profile }) => {
                             _OpenShareModal={_OpenShareModal}
                             _HandleCommentCounts={_HandleCommentCounts}
                             _HandleGotoVideoDetails={_HandleGotoVideoDetails}
-                            TogglePaymentModal={() => _TogglePaymentModal(cost)}
+                            TogglePaymentModal={() => _TogglePaymentModal(cost, UserId, id)}
                             HandleLikePost={() => HandleLikePost(postId, isLiked)}
                             ToggleRatingModal={() => OpenRatingModal({ postId, avgRating, totalRaters })}
-                          _handleViewsOnVideo={postViewOnVideo}
+                            _handleViewsOnVideo={postViewOnVideo}
                           />
                         </div>
                       )
@@ -665,7 +783,8 @@ const UserProfile = ({ profile }) => {
                           cost,
                           createdAt,
                           views
-                        }
+                        },
+                        hasPaid
                       },
                       index
                     ) => (
@@ -695,12 +814,12 @@ const UserProfile = ({ profile }) => {
                           avgRating={avgRating}
                           watchLimit={watchLimit}
                           thumbnail={thumbnail}
-                          restrictPaidVideo={true}
-                          ToggleTipModal={() => ToggleTipModal(User?.tip)}
+                          restrictPaidVideo={!hasPaid}
+                          ToggleTipModal={() => ToggleTipModal(User?.tip, UserId, id)}
                           _OpenShareModal={_OpenShareModal}
                           _HandleCommentCounts={_HandleCommentCounts}
                           _HandleGotoVideoDetails={_HandleGotoVideoDetails}
-                          TogglePaymentModal={() => _TogglePaymentModal(cost)}
+                          TogglePaymentModal={() => _TogglePaymentModal(cost, UserId, id)}
                           HandleLikePost={() => HandleLikePost(postId, isLiked)}
                           ToggleRatingModal={() => OpenRatingModal({ postId, avgRating, totalRaters })}
                           _handleViewsOnVideo={postViewOnVideo}
@@ -781,10 +900,14 @@ const UserProfile = ({ profile }) => {
             _HandleChangeTip={_HandleChangeTip}
             tip={tip}
             ToggleTipModal={ToggleTipModal}
-            loading={false}
             modalTitle={'Tip Video'}
+            loading={isPaying}
+            handleTipSubmit={handleTipSubmit}
+            showCelebration={showCelebration}
+            tipError={tipError}
           />
         )}
+        {/* handleTipSubmit={handleTipSubmit} */}
         {showShareModal && (
           <ShareModal
             modalTitle={'Share Post'}
@@ -797,13 +920,19 @@ const UserProfile = ({ profile }) => {
           />
         )}
         {showAmountModal && (
-          <PaymentModal ToggleAmountModal={_TogglePaymentModal} loading={isSharing} amount={videoPayment} />
+          <PaymentModal
+            ToggleAmountModal={_TogglePaymentModal}
+            loading={isPaying}
+            amount={videoPayment}
+            paymentSubmit={paymentSubmit}
+            paymentError={paymentError}
+          />
         )}
       </AnimatePresence>
       {/* section ends here */}
     </div>
   );
-};
+};;
 
 export const getServerSideProps = async (context) => {
   const {

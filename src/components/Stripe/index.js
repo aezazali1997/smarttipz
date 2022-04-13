@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { SuccessTick } from 'src/assets/SVGs';
-import Spinner from 'src/components/Spinner';
 import {
   CardNumberElement,
   CardExpiryElement,
@@ -43,19 +41,9 @@ const Stripe = ({ setIsVerified, setCardToken, amount, setBalance, personalInfo,
 
     pr?.canMakePayment()
       .then(async (result) => {
+        console.log('result', result);
         if (result) {
           setPaymentRequest(pr);
-          let {
-            data: {
-              data: { client_secret }
-            }
-          } = await axiosInstance.getClientSecret({
-            amount
-          });
-
-          clientSecret = client_secret;
-        } else {
-          console.log('No payment request wallet added');
         }
       })
       .catch((error) => {
@@ -63,7 +51,16 @@ const Stripe = ({ setIsVerified, setCardToken, amount, setBalance, personalInfo,
       });
 
     pr.on('paymentmethod', async (ev) => {
-      console.log(clientSecret);
+      console.log('opayment button clicked');
+      let {
+        data: {
+          data: { client_secret }
+        }
+      } = await axiosInstance.getClientSecret({
+        amount
+      });
+
+      clientSecret = client_secret;
       const { paymentIntent, error: confirmError } = await stripe.confirmCardPayment(
         clientSecret,
         {

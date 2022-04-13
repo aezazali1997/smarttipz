@@ -28,7 +28,8 @@ const handler = async (req, res) => {
       const { VideoId } = body;
 
       const view = await ViewsModel.findOne({
-        where: { VideoId, UserId: id }
+        where: { VideoId, UserId: id },
+        order: [['createdAt', 'DESC']]
       });
       const video = await VideoModel.findOne({
         where: {
@@ -73,10 +74,10 @@ const handler = async (req, res) => {
       } else {
         const nowDate = moment();
         let viewDate = moment(view.createdAt);
-        /**
+        /*
          * difference should be at least one day
-         * TODO:change condition to to (>=1)
          */
+
         if (Number(nowDate.diff(viewDate, 'days')) >= 1) {
           await ViewsModel.create({
             VideoId,

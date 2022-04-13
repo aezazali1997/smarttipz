@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '../Modal';
-import { Button, CreditCard, GoogleApplePay, PayPal } from 'src/components';
+
 import Stripe from '../Stripe';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
@@ -12,6 +12,7 @@ import moment from 'moment';
 import { Lock } from 'src/assets/SVGs';
 import Swal from 'sweetalert2';
 const stripe_pk = process.env.NEXT_PUBLIC_STRIPE_PK;
+import { Button } from 'src/components';
 const StripeCheckoutModal = ({
   toggleCheckoutModal,
   topUp,
@@ -32,23 +33,9 @@ const StripeCheckoutModal = ({
   const [isProcessing, setIsProcessing] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [cardToken, setCardToken] = useState('');
-  const [creditCard, setCreditCard] = useState(false);
-  // const [amount, setAmount] = useState(0);
-  const [finalAmount, setFinalAmount] = useState(0);
-  const [showCreditButton, setShowCreditButton] = useState(false);
 
-  const [creditCardMethod, setCreditCardMethod] = useState(true);
-  const [googleApplePayMethod, setGoogleApplePayMethod] = useState(true);
-  const [clientSecret, setClientSecret] = useState('');
-  const [paypalMethod, setPaypalMethod] = useState(true);
-  const setClientSecretMethod = async () => {
-    let {
-      data: {
-        data: { client_secret }
-      }
-    } = await axiosInstance.getClientSecret();
-    setClientSecret(client_secret);
-  };
+  const [finalAmount, setFinalAmount] = useState(0);
+
   useEffect(() => {
     setFinalAmount(stripeFeeCal(Number(topUp)));
   }, []);
@@ -82,14 +69,6 @@ const StripeCheckoutModal = ({
       showConfirmButton: false,
       showCancelButton: false
     });
-  };
-  const togglePaymentButtons = () => {
-    setPaypalMethod(false);
-    setGoogleApplePayMethod(false);
-    setCreditCardMethod(false);
-  };
-  const options = {
-    clientSecret
   };
 
   return (
@@ -144,11 +123,6 @@ const StripeCheckoutModal = ({
                     <Lock /> secure{' '}
                   </div>
                 </div>
-                {/* <div className="flex">
-                  {creditCardMethod && <CreditCard handleClick={togglePaymentButtons} />}
-                  {googleApplePayMethod && <GoogleApplePay handleClick={togglePaymentButtons} />}
-                  {paypalMethod && <PayPal handleClick={togglePaymentButtons} />}
-                </div> */}
 
                 <div className="px-2 my-2">
                   <Elements stripe={stripe}>

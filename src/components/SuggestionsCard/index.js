@@ -1,14 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { Rating, VideoPlayer } from '..';
 import { PostActionDropdown } from '../Dropdown';
 import ReactTooltip from 'react-tooltip';
-import ReactStars from 'react-rating-stars-component'
+import ReactStars from 'react-rating-stars-component';
 import moment from 'moment';
 import { EmptyStar, FilledStar, HalfStar } from 'src/assets/SVGs';
-
-
+import { PaymentModal } from 'src/components/Modals';
+import Swal from 'sweetalert2';
+import axiosInstance from 'src/APIs/axiosInstance';
 const SuggestionCard = ({
   index,
   id,
@@ -19,6 +20,7 @@ const SuggestionCard = ({
   name,
   videoType,
   videoCost,
+  cost,
   thumbnail,
   url,
   title,
@@ -35,9 +37,13 @@ const SuggestionCard = ({
   _handleViewsOnVideo,
   isViewed,
   setIsViewed,
+  watchLimit,
+  userBalance,
+  setUserBalance,
+  posts,
+  setPosts,
+  restrictPaidVideo
 }) => {
-
-
   //    const EmptyStar = () => (
   //   <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
   //     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -60,8 +66,22 @@ const SuggestionCard = ({
   //   />
   // );
 
-  const displayRatingStars = () => {
+  const [stopVideo, setStopVideo] = useState(false);
+  const [showAmountModal, setShowAmountModal] = useState(false);
+  const [isPaying, setIsPaying] = useState(false);
+  const [paymentError, setPaymentError] = useState('');
+  const [videoPayment, setVideoPayment] = useState(0);
+  const [paymentVideoId, setPaymentVideoId] = useState(null);
+  const [amountReciever, setAmountReciever] = useState(null);
 
+  const postViewOnVideo = async (VideoId) => {
+    try {
+      await axiosInstance.viewPost({ VideoId: VideoId });
+    } catch (error) {
+      console.log('ERROR:', error);
+    }
+  };
+  const displayRatingStars = () => {
     let avgRating = rating;
 
     if (avgRating !== undefined || rating !== undefined) {
@@ -69,7 +89,7 @@ const SuggestionCard = ({
         avgRating = parseFloat(avgRating).toFixed(2);
       }
       if (avgRating === undefined) {
-        avgRating = rating
+        avgRating = rating;
       }
       const hasDecimal = String(avgRating).split('.');
       const firstSplittedValue = parseInt(hasDecimal[0]);
@@ -90,9 +110,75 @@ const SuggestionCard = ({
       );
     }
   };
+  const _HandlePaidVideos = async () => {
+    !isViewed && localStorage.getItem('id') != UserId && postViewOnVideo(videoId);
+    setIsViewed(true);
+    setTimeout(() => {
+      setStopVideo(true);
+      _TogglePaymentModal();
+    }, watchLimit);
+  };
+  let _TogglePaymentModal = () => {
+    setVideoPayment(cost);
+    setPaymentVideoId(videoId);
+    setAmountReciever(UserId);
+    setShowAmountModal(!showAmountModal);
+  };
+  const paymentSubmit = async () => {
+    if (videoPayment > userBalance) {
+      // adding userBalance functionality
+      setPaymentError('You do not have the required amount in your wallet. Please top up your wallet from Settings.');
+      return;
+    }
+    setIsPaying(true);
 
+    try {
+      const data = {
+        senderId: localStorage.getItem('id'),
+        receiverId: amountReciever,
+        paid: videoPayment,
+        videoId: paymentVideoId
+      };
+      console.log(data);
+      let {
+        data: { balance }
+      } = await axiosInstance.postPaid(data);
+      setUserBalance(balance);
 
+      setAmountReciever(null);
 
+      let tempPosts = [...posts];
+      for (let i = 0; i < posts.length; i++) {
+        if (tempPosts[i].VideoId === paymentVideoId) {
+          tempPosts[i].hasPaid = true;
+        }
+      }
+      setPosts(tempPosts);
+
+      //   // uncomment this
+      //   // setPaymentVideoId(null);
+
+      //   // GetPosts(0);
+      Swal.fire({
+        text: 'You can now View the Video',
+        icon: 'success',
+        timer: 3000,
+        showConfirmButton: false,
+        showCancelButton: false
+      });
+    } catch (error) {
+      console.log('Error! ', error.message);
+      Swal.fire({
+        text: error.message,
+        icon: 'error',
+
+        showConfirmButton: false,
+        showCancelButton: false
+      });
+    }
+    setIsPaying(false);
+    _TogglePaymentModal();
+  };
   return (
     <>
       <div
@@ -101,8 +187,7 @@ const SuggestionCard = ({
         <div className="flex w-full py-1 px-2 justify-between space-x-2">
           <div className="flex space-x-2">
             <img
-              src={User?.picture ||
-                "https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"}
+              src={User?.picture || 'https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png'}
               className="rounded-full w-10 h-10 object-cover"
               alt="avatar"></img>
             <div className="flex flex-col w-full">
@@ -111,11 +196,9 @@ const SuggestionCard = ({
                 className="text-sm w-28 font-bold font-sans hover:underline whitespace-nowrap overflow-ellipsis overflow-hidden cursor-pointer">
                 {User?.name}
               </p>
-              <p className="text-sm text-gray-500">{
-                moment(createdAt).format('D MMM YYYY')
-              }, {
-                  moment(createdAt).format('H:mm')
-                }</p>
+              <p className="text-sm text-gray-500">
+                {moment(createdAt).format('D MMM YYYY')}, {moment(createdAt).format('H:mm')}
+              </p>
             </div>
           </div>
           <div className="flex space-x-2">
@@ -154,31 +237,42 @@ const SuggestionCard = ({
         </div>
         <p
           onClick={() => _HandleGotoVideoDetails(id)}
-          className="px-5 text-sm max-w-sm hover:underline  cursor-pointer"
-        >
+          className="px-5 text-sm max-w-sm hover:underline  cursor-pointer">
           {title}
         </p>
-        <div className="suggestion-video-wrapper" onClick={()=>{
-          !isViewed && localStorage.getItem('id')!=UserId && _handleViewsOnVideo(videoId)
-          setIsViewed(true)
-        }}  >
-          <VideoPlayer poster={thumbnail} src={url} />
-        </div>
+
+        {localStorage.getItem('id') != UserId && videoCost === 'Paid' && restrictPaidVideo ? (
+          !stopVideo ? (
+            <div className="suggestion-video-wrapper" onClick={_HandlePaidVideos}>
+              <VideoPlayer poster={thumbnail} src={url} />
+            </div>
+          ) : (
+            <div className="suggestion-video-wrapper flex flex-col justify-center items-center">
+              <p className="text-lg text-gray-500 text-center">To continue watching video</p>
+              <button
+                onClick={_TogglePaymentModal}
+                type="button"
+                className="mt-3 text-lg w-full inline-flex justify-center hover:underline  px-4 py-2 text-base font-medium text  sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                PAY NOW
+              </button>
+            </div>
+          )
+        ) : (
+          <div
+            className="suggestion-video-wrapper"
+            onClick={() => {
+              !isViewed && localStorage.getItem('id') != UserId && _handleViewsOnVideo(videoId);
+              setIsViewed(true);
+            }}>
+            <VideoPlayer poster={thumbnail} src={url} />
+          </div>
+        )}
         {/* <img src="https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"
                 className="w-full h-auto" alt="avatar"></img> */}
-
         <div className="flex justify-between w-full px-3 pb-1">
-          <span className="flex items-center z-0">
-            {
-              displayRatingStars()
-            }
-          </span>
+          <span className="flex items-center z-0">{displayRatingStars()}</span>
           <span className="flex  items-center">
-            <svg
-              className="w-4 h-4 text"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg">
+            <svg className="w-4 h-4 text" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
               <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
               <path
                 fillRule="evenodd"
@@ -193,24 +287,30 @@ const SuggestionCard = ({
           <div className="flex px-2 h-6 rounded-lg  background items-center justify-center">
             <p className="text-white font-sm ">{videoType}</p>
           </div>
-          {
-            videoCost ? (
-              <div className="flex px-2 h-6 max-w-sm background items-center justify-center rounded-lg">
-                <p className="text-white font-sm">{videoCost}</p>
-              </div>
+          {videoCost ? (
+            <div className="flex px-2 h-6 max-w-sm background items-center justify-center rounded-lg">
+              <p className="text-white font-sm">{videoCost}</p>
+            </div>
+          ) : (
+            productLink && (
+              <Link href={productLink} passHref>
+                <a target="_blank">
+                  <span className="text font-sm hover:underline cursor-pointer">Product Link</span>
+                </a>
+              </Link>
             )
-              :
-              productLink && (
-                <Link href={productLink} passHref>
-                  <a target='_blank'>
-                    <span className="text font-sm hover:underline cursor-pointer">
-                      Product Link
-                    </span>
-                  </a>
-                </Link>)
-          }
+          )}
         </div>
       </div>
+      {showAmountModal && (
+        <PaymentModal
+          ToggleAmountModal={_TogglePaymentModal}
+          loading={isPaying}
+          amount={videoPayment}
+          paymentSubmit={paymentSubmit}
+          paymentError={paymentError}
+        />
+      )}
     </>
   );
 };

@@ -68,9 +68,16 @@ const Search = () => {
     _HandleClearRating,
     showAmountModal,
     videoPayment,
+    isPaying,
+    paymentError,
     _FetchMoreData,
     hasMore,
-    postViewOnVideo
+    postViewOnVideo,
+    paymentSubmit,
+    setAmountReciever,
+    handleTipSubmit,
+    tipError,
+    showCelebration
   } = UseSearch();
 
   return (
@@ -126,6 +133,7 @@ const Search = () => {
                         commentCount,
                         avgRating,
                         totalRaters,
+                        hasPaid,
                         Video: {
                           id,
                           description,
@@ -200,7 +208,7 @@ const Search = () => {
                           // avgRating={avgRating}
                           width={'max-w-lg'}
                           thumbnail={thumbnail}
-                          restrictPaidVideo={true}
+                          restrictPaidVideo={!hasPaid}
                           createdAt={createdAt}
                           _OpenShareModal={_OpenShareModal}
                           _HandleCommentCounts={_HandleCommentCounts}
@@ -208,8 +216,8 @@ const Search = () => {
                           _HandleCatalogue={_HandleCatalogue}
                           _HandleGotoUserProfile={_HandleGotoUserProfile}
                           _HandleGotoVideoDetails={_HandleGotoVideoDetails}
-                          ToggleTipModal={() => ToggleTipModal(User?.tip)}
-                          TogglePaymentModal={() => _TogglePaymentModal(cost)}
+                          ToggleTipModal={() => ToggleTipModal(UserId, id)}
+                          TogglePaymentModal={() => _TogglePaymentModal(cost, UserId, id)}
                           HandleLikePost={() => HandleLikePost(postId, isLiked)}
                           _handleViewsOnVideo={postViewOnVideo}
                           ToggleRatingModal={() => OpenRatingModal({ postId, avgRating, totalRaters })}
@@ -331,6 +339,7 @@ const Search = () => {
                             commentCount,
                             avgRating,
                             totalRaters,
+                            hasPaid,
                             Video: {
                               id,
                               description,
@@ -403,16 +412,16 @@ const Search = () => {
                               productLink={productLink}
                               width={'max-w-lg'}
                               thumbnail={thumbnail}
-                              restrictPaidVideo={true}
+                              restrictPaidVideo={!hasPaid}
                               createdAt={createdAt}
                               _OpenShareModal={_OpenShareModal}
                               _HandleCatalogue={_HandleCatalogue}
                               _HandleDeleteVideo={_HandleDeleteVideo}
                               _HandleCommentCounts={_HandleCommentCounts}
                               _HandleGotoUserProfile={_HandleGotoUserProfile}
-                              ToggleTipModal={() => ToggleTipModal(User?.tip)}
+                              ToggleTipModal={() => ToggleTipModal(UserId, id)}
                               _HandleGotoVideoDetails={_HandleGotoVideoDetails}
-                              TogglePaymentModal={() => _TogglePaymentModal(cost)}
+                              TogglePaymentModal={() => _TogglePaymentModal(cost, UserId, id)}
                               HandleLikePost={() => HandleLikePost(postId, isLiked)}
                               ToggleRatingModal={() => OpenRatingModal({ postId, avgRating, totalRaters })}
                               _handleViewsOnVideo={postViewOnVideo}
@@ -514,11 +523,14 @@ const Search = () => {
         )}
         {showTipModal && (
           <TipModal
-            tip={tip}
-            loading={false}
-            modalTitle={'Tip Video'}
-            ToggleTipModal={ToggleTipModal}
             _HandleChangeTip={_HandleChangeTip}
+            tip={tip}
+            ToggleTipModal={ToggleTipModal}
+            loading={isPaying}
+            modalTitle={'Video Tip Modal'}
+            handleTipSubmit={handleTipSubmit}
+            tipError={tipError}
+            showCelebration={showCelebration}
           />
         )}
         {showShareModal && (
@@ -554,7 +566,13 @@ const Search = () => {
           />
         )}
         {showAmountModal && (
-          <PaymentModal ToggleAmountModal={_TogglePaymentModal} loading={isSharing} amount={videoPayment} />
+          <PaymentModal
+            ToggleAmountModal={_TogglePaymentModal}
+            loading={isPaying}
+            amount={videoPayment}
+            paymentSubmit={paymentSubmit}
+            paymentError={paymentError}
+          />
         )}
       </AnimatePresence>
     </div>

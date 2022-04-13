@@ -6,6 +6,7 @@ const db = require('models/db');
 const { isEmpty } = require('lodash');
 const AllPosts = require('models/AllPost');
 const Share = require('models/Share');
+const Pay = require('models/Pay');
 const { FilterSearchContent } = require('utils/consts');
 const { API, AUTH, REQUEST } = require('src/pages/api/consts');
 const handler = async (req, res) => {
@@ -140,6 +141,17 @@ const handler = async (req, res) => {
       const avgRating = isEmpty(ratings[0]) ? 0 : ratings[0][0].avgRating;
       const totalRaters = isEmpty(ratings[0]) ? 0 : ratings[0][0].totalRaters;
 
+      let paid = null;
+
+      if (Video.videoCost === 'Paid') {
+        paid = await Pay.findOne({
+          where: {
+            userId: userId,
+            videoId: VideoId
+          }
+        });
+      }
+
       let VIDEOS = {
         id,
         VideoId,
@@ -151,7 +163,8 @@ const handler = async (req, res) => {
         likeCount,
         shareCount,
         commentCount,
-        isLiked: isLiked ? true : false
+        isLiked: isLiked ? true : false,
+        hasPaid: paid !== null ? true : false
       };
 
       res.status(200).json({

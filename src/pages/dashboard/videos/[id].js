@@ -1,27 +1,32 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
 import { faCommentAlt, faPaperPlane, faShareAlt, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
 import { parseCookies } from 'nookies';
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import axiosInstance from 'src/APIs/axiosInstance';
-import { Button, CommentCard, Rating, ReadLessReadMore, SuggestionCard, VideoPlayer } from 'src/components';
+import {
+  Button,
+  CommentCard,
+  Rating,
+  ReadLessReadMore,
+  SuggestionCard,
+  VideoPlayer,
+  CustomLoader
+} from 'src/components';
 import { PostActionDropdown } from 'src/components/Dropdown';
-import { CustomLoader } from 'src/components';
 import { PaymentModal, ShareModal, TipModal, VideoRatingModal } from 'src/components/Modals';
 import HandIcon from 'public/purple-hand.svg';
-import Image from 'next/image';
 import Link from 'next/link';
 import ReactTooltip from 'react-tooltip';
 import { isEmpty } from 'lodash';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { calculateAvgRating } from 'helpers';
-import ReactStars from 'react-rating-stars-component';
 import moment from 'moment';
 import { EmptyStar, FilledStar, HalfStar } from 'src/assets/SVGs';
-
 const VideoDetailScreen = () => {
   const initialRatingData = {
     postId: '',
@@ -46,29 +51,127 @@ const VideoDetailScreen = () => {
   const [commentMessage, setCommentMessage] = useState('');
   const [stopVideo, setStopVideo] = useState(false);
   const [showAmountModal, setShowAmountModal] = useState(false);
-  const [videoPayment, setVideoPayment] = useState(0);
   const [current, setCurrentPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [ratingData, setRatingData] = useState({ ...initialRatingData });
-  const [isViewed,setIsViewed]=useState(false);
+  const [isViewed, setIsViewed] = useState(false);
+  const [paymentError, setPaymentError] = useState('');
+  const [videoPayment, setVideoPayment] = useState(0);
+  const [isPaying, setIsPaying] = useState(false);
+  const [userBalance, setUserBalance] = useState(0);
+  const [amountReciever, setAmountReciever] = useState(null);
+  const [paymentVideoId, setPaymentVideoId] = useState(null);
+  const [restrictPaidVideo, setRestrictPaidVideo] = useState(false);
+  const [tip, setTip] = useState(0);
+  const [tipError, setTipError] = useState('');
+  const [showCelebration, setShowCelebration] = useState(false);
+
+  useEffect(() => {
+    getBalance();
+    return () => {
+      setUserBalance(0);
+    };
+  }, []);
+
+  const getBalance = async () => {
+    try {
+      let {
+        data: { balance }
+      } = await axiosInstance.getUserBalance(localStorage.getItem('id'));
+      setUserBalance(balance);
+    } catch (error) {
+      console.log('Error while getting user balance');
+    }
+  };
+
+  const paymentSubmit = async () => {
+    console.log(videoPayment, userBalance);
+    if (videoPayment > userBalance) {
+      // adding userBalance functionality
+      setPaymentError('You do not have the required amount in your wallet. Please top up your wallet from Settings.');
+      return;
+    }
+    setIsPaying(true);
+
+    try {
+      const data = {
+        senderId: localStorage.getItem('id'),
+        receiverId: amountReciever,
+        paid: videoPayment,
+        videoId: paymentVideoId
+      };
+      let {
+        data: { balance }
+      } = await axiosInstance.postPaid(data);
+      setUserBalance(balance);
+      setIsPaying(false);
+      setAmountReciever(null);
+      _TogglePaymentModal();
+      setRestrictPaidVideo(false);
+      // let tempPosts = [...posts];
+      // for (let i = 0; i < posts.length; i++) {
+      //   if (tempPosts[i].VideoId === paymentVideoId) {
+      //     tempPosts[i].hasPaid = true;
+      //   }
+      // }
+      // setPosts(tempPosts);
+
+      // uncomment this
+      // setPaymentVideoId(null);
+
+      // GetPosts(0);
+      Swal.fire({
+        text: 'You can now View the Video',
+        icon: 'success',
+        timer: 3000,
+        showConfirmButton: false,
+        showCancelButton: false
+      });
+    } catch (error) {
+      console.log('Error! ', error.message);
+      _TogglePaymentModal();
+      Swal.fire({
+        text: error.message,
+        icon: 'error',
+
+        showConfirmButton: false,
+        showCancelButton: false
+      });
+    }
+  };
+
   const _GetVideoById = async () => {
     console.log('rendering this posts');
     try {
       const {
         data: {
-          data: { video }
+          data: {
+            video,
+
+            video: {
+              VideoId,
+              hasPaid,
+              Video: { cost, UserId }
+            }
+          }
         }
       } = await axiosInstance.getVideoById(id);
       setVideo(video);
+      setRestrictPaidVideo(!hasPaid);
+      setVideoPayment(cost);
+      setPaymentVideoId(VideoId);
+      setAmountReciever(UserId);
+
+      console.log('user id', UserId);
     } catch (e) {
       console.log('api failed => ', e);
     }
   };
-    const postViewOnVideo = async (VideoId) => {
+  const postViewOnVideo = async (VideoId) => {
     try {
-      await axiosInstance.viewPost({VideoId:VideoId});
+      await axiosInstance.viewPost({ VideoId: VideoId });
     } catch (error) {
-      console.log("ERROR:",error);
+      console.log('ERROR:', error);
     }
   };
   let GetPosts = async (currentPage) => {
@@ -147,7 +250,6 @@ const VideoDetailScreen = () => {
     } = {}
   } = video;
   const getAllCommentsByVideoId = async () => {
-  
     try {
       const {
         data: {
@@ -166,7 +268,7 @@ const VideoDetailScreen = () => {
     getAllCommentsByVideoId();
   }, []);
 
-  useEffect(() => { }, [video, posts]);
+  useEffect(() => {}, [video, posts]);
 
   const _HandleCatalogue = async (videoId, catalogue) => {
     if (catalogueCount < 5 || catalogue === true) {
@@ -213,28 +315,6 @@ const VideoDetailScreen = () => {
       });
     }
   };
-  // const EmptyStar = () => (
-  //   <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-  //     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-  //   </svg>
-  // );
-  // const FilledStar = () => (
-  //   <svg className="w-4 h-4 text" fill="#f8b93b" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-  //     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-  //   </svg>
-  // );
-  // const HalfStar = () => (
-  //   <ReactStars
-  //     count={1}
-  //     value={0.5}
-  //     size={18}
-  //     edit={false}
-  //     isHalf={true}
-  //     halfIcon={<i className="fa fa-star-half-alt"></i>}
-  //     activeColor="#f8b93b"
-  //   />
-  // );
-
   const displayRatingStars = () => {
     if (!isEmpty(video)) {
       let { avgRating } = video;
@@ -269,7 +349,7 @@ const VideoDetailScreen = () => {
   const _HandleDeleteVideo = async (index, videoId) => {
     try {
       const res = await axiosInstance.deleteVideo(videoId);
-      console.log('deleting video in id',res)
+      console.log('deleting video in id', res);
       setCatalogueCount((catalogueCount) => catalogueCount - 1);
       const originalArray = [...posts];
       originalArray.splice(index, 1);
@@ -353,11 +433,57 @@ const VideoDetailScreen = () => {
     setVideo({ ...video, avgRating: updatedPost[0].avgRating });
   };
   const ToggleTipModal = () => {
+    setAmountReciever(video.Video.UserId);
+    setPaymentVideoId(video.VideoId);
     setShowTipModal(!showTipModal);
+    setTipError('');
+    setTip(0);
   };
+  const handleTipSubmit = async () => {
+    if (localStorage.getItem('id') == amountReciever) {
+      return;
+    }
+    if (tip > userBalance) {
+      console.log('hellllllo');
+      setTipError('You do not have the required amount in your wallet. Please top up your wallet from Settings.');
+      return;
+    }
 
-  const _HandleChangeTip = (value) => {
-    // console.log('value: ', value);
+    setIsPaying(true);
+    setShowCelebration(true);
+    try {
+      let data = {
+        sender: localStorage.getItem('id'),
+        reciever: amountReciever,
+        video: paymentVideoId,
+        tip
+      };
+
+      let {
+        data: { balance }
+      } = await axiosInstance.postTip(data);
+      setUserBalance(balance);
+
+      setTip(0);
+      setPaymentVideoId(null);
+      setAmountReciever(null);
+    } catch (error) {
+      console.log('ERROR', error.message);
+      Swal.fire({
+        icon: 'error',
+        text: error.message,
+        showCancelButton: false,
+        showConfirmButton: false
+      });
+    }
+    setIsPaying(false);
+    setShowCelebration(false);
+    ToggleTipModal();
+  };
+  const _HandleChangeTip = ({ target }) => {
+    const { value } = target;
+
+    setTip(value);
   };
 
   const HandleLikePost = async () => {
@@ -471,9 +597,8 @@ const VideoDetailScreen = () => {
   };
 
   const _HandlePaidVideos = async () => {
-    
-    	!isViewed && localStorage.getItem('id')!=(UserId) && postViewOnVideo(videoId);
-		setIsViewed(true);
+    !isViewed && localStorage.getItem('id') != UserId && postViewOnVideo(videoId);
+    setIsViewed(true);
     setTimeout(() => {
       setStopVideo(true);
       _TogglePaymentModal();
@@ -481,7 +606,7 @@ const VideoDetailScreen = () => {
   };
 
   let _TogglePaymentModal = () => {
-    setVideoPayment(cost);
+    // setVideoPayment(cost);
     setShowAmountModal(!showAmountModal);
   };
 
@@ -609,7 +734,6 @@ const VideoDetailScreen = () => {
                 {User?.name}
               </p>
               <p className="text-sm text-gray-500">
-
                 {moment(video.createdAt).format('D MMM YYYY')}, {moment(video.createdAt).format('H:mm')}
               </p>
             </div>
@@ -690,7 +814,8 @@ const VideoDetailScreen = () => {
           className="px-3 pb-1 text-sm max-w-md whitespace-nowrap overflow-ellipsis overflow-hidden">
           {title}
         </p>
-        {videoCost === 'Paid' ? (
+
+        {localStorage.getItem('id') != UserId && videoCost === 'Paid' && restrictPaidVideo ? (
           !stopVideo ? (
             <div className="detail-page-video-wrapper" onClick={_HandlePaidVideos}>
               <VideoPlayer poster={thumbnail} src={url} />
@@ -707,10 +832,12 @@ const VideoDetailScreen = () => {
             </div>
           )
         ) : (
-          <div className="detail-page-video-wrapper" onClick={()=>{
-            !isViewed && localStorage.getItem('id')!=UserId && postViewOnVideo(videoId)
-            setIsViewed(true);
-          }}>
+          <div
+            className="detail-page-video-wrapper"
+            onClick={() => {
+              !isViewed && localStorage.getItem('id') != UserId && postViewOnVideo(videoId);
+              setIsViewed(true);
+            }}>
             <VideoPlayer poster={thumbnail} src={url} />
           </div>
         )}
@@ -724,13 +851,15 @@ const VideoDetailScreen = () => {
                   <>
                     <FontAwesomeIcon
                       icon={faThumbsUp}
-                      className={`w-6 h-6 ${isLiked === null || isLiked === false ? 'text-gray-600' : 'text-purple-600'
-                        } group-hover:text-purple-600`}
+                      className={`w-6 h-6 ${
+                        isLiked === null || isLiked === false ? 'text-gray-600' : 'text-purple-600'
+                      } group-hover:text-purple-600`}
                     />
                     <p
                       className={`cursor-pointer w-full text-xs text-center 
-                                    ${isLiked == null || isLiked == false ? 'text-gray-600' : 'text-purple-600'
-                        } group-hover:text-purple-600`}>
+                                    ${
+                                      isLiked == null || isLiked == false ? 'text-gray-600' : 'text-purple-600'
+                                    } group-hover:text-purple-600`}>
                       {video?.likeCount ? video.likeCount : 0}
                     </p>
                   </>
@@ -762,11 +891,11 @@ const VideoDetailScreen = () => {
                 // data-tip-disable={localStorage.getItem('id') == UserId}
                 onClick={
                   // localStorage.getItem('id') !== UserId
-                  //   ? 
-                    () => {
-                      OpenRatingModal({ postId, avgRating: video.avgRating, totalRaters: video.totalRaters })
-                    }
-                    // : () => { }
+                  //   ?
+                  () => {
+                    OpenRatingModal({ postId, avgRating: video.avgRating, totalRaters: video.totalRaters });
+                  }
+                  // : () => { }
                 }
                 // flex items-center z-0 ${localStorage.getItem('id') !== UserId ? 'cursor-pointer' : 'cursor-default'
                 //   }
@@ -856,6 +985,7 @@ const VideoDetailScreen = () => {
                   {
                     id: postId,
                     avgRating,
+                    hasPaid,
                     Video: {
                       description,
                       title,
@@ -871,7 +1001,9 @@ const VideoDetailScreen = () => {
                       tip,
                       createdAt,
                       views,
-                      id:videoId
+                      id: videoId,
+                      watchLimit,
+                      cost
                     }
                   },
                   index
@@ -889,6 +1021,7 @@ const VideoDetailScreen = () => {
                       rating={avgRating}
                       productLink={productLink}
                       videoCost={videoCost}
+                      cost={cost}
                       videoType={videoType}
                       mediaType={mediaType}
                       description={description}
@@ -904,6 +1037,12 @@ const VideoDetailScreen = () => {
                       isViewed={isViewed}
                       setIsViewed={setIsViewed}
                       videoId={videoId}
+                      watchLimit={watchLimit}
+                      userBalance={userBalance}
+                      setUserBalance={setUserBalance}
+                      posts={posts}
+                      setPosts={setPosts}
+                      restrictPaidVideo={!hasPaid}
                     />
                   </div>
                 )
@@ -935,15 +1074,29 @@ const VideoDetailScreen = () => {
       {showTipModal && (
         <TipModal
           _HandleChangeTip={_HandleChangeTip}
-          tip={2}
+          tip={tip}
           ToggleTipModal={ToggleTipModal}
-          loading={false}
+          loading={isPaying}
           modalTitle={'Video Tip Modal'}
+          handleTipSubmit={handleTipSubmit}
+          tipError={tipError}
+          showCelebration={showCelebration}
         />
       )}
+
       {showAmountModal && (
-        <PaymentModal ToggleAmountModal={_TogglePaymentModal} loading={isSharing} amount={videoPayment} />
+        <PaymentModal
+          ToggleAmountModal={_TogglePaymentModal}
+          loading={isPaying}
+          amount={videoPayment}
+          paymentSubmit={paymentSubmit}
+          paymentError={paymentError}
+        />
       )}
+
+      {/* {showAmountModal && (
+        <PaymentModal ToggleAmountModal={_TogglePaymentModal} loading={isSharing} amount={videoPayment} />
+      )} */}
     </div>
   );
 };

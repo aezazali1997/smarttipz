@@ -1,8 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
-const SmartTipzLogo = () => {
+const SmartTipzLogo = ({ href }) => {
   return (
-    <a>
+    <a href={href}>
       <span>
         <div className="relative w-36 h-full flex items-center">
           <Image

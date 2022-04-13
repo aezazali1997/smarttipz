@@ -39,6 +39,8 @@ const UseSearch = () => {
   const [ratingData, setRatingData] = useState({ ...initialRatingData });
   const [currentPage, setCurrentPage] = useState(0);
   const [hasMore, setHasMore] = useState(false);
+  const [tipError, setTipError] = useState('');
+  const [showCelebration, setShowCelebration] = useState(false);
 
   const [rateFilter, setRateFilter] = useState(0);
   const [account, setAccountType] = useState({
@@ -54,6 +56,64 @@ const UseSearch = () => {
     SmartTipz: false
   });
 
+  const [userBalance, setUserBalance] = useState(0);
+  const [isPaying, setIsPaying] = useState(false);
+  const [paymentError, setPaymentError] = useState('');
+  const [amountReciever, setAmountReciever] = useState(null);
+  const [paymentVideoId, setPaymentVideoId] = useState(null);
+
+  const getBalance = async () => {
+    try {
+      let {
+        data: { balance }
+      } = await axiosInstance.getUserBalance(localStorage.getItem('id'));
+      setUserBalance(balance);
+    } catch (error) {
+      console.log('Error while getting user balance');
+    }
+  };
+  const handleTipSubmit = async () => {
+    console.log('testing');
+    if (localStorage.getItem('id') == amountReciever) {
+      return;
+    }
+    if (tip > userBalance) {
+      console.log('hellllllo');
+      setTipError('You do not have the required amount in your wallet. Please top up your wallet from Settings.');
+      return;
+    }
+
+    setIsPaying(true);
+    setShowCelebration(true);
+    try {
+      let data = {
+        sender: localStorage.getItem('id'),
+        reciever: amountReciever,
+        video: paymentVideoId,
+        tip
+      };
+
+      let {
+        data: { balance }
+      } = await axiosInstance.postTip(data);
+      setUserBalance(balance);
+
+      setTip(0);
+      setPaymentVideoId(null);
+      setAmountReciever(null);
+    } catch (error) {
+      console.log('ERROR', error.message);
+      Swal.fire({
+        icon: 'error',
+        text: error.message,
+        showCancelButton: false,
+        showConfirmButton: false
+      });
+    }
+    setIsPaying(false);
+    setShowCelebration(false);
+    ToggleTipModal();
+  };
   useEffect(() => {
     const hideMenu = () => {
       if (window.innerWidth > 991 && showFilterModal) {
@@ -79,12 +139,17 @@ const UseSearch = () => {
       GetUserProfiles();
     }
   }, [posts]);
+
+  useEffect(() => {
+    getBalance();
+  }, []);
+
   //LOADERS START HERE//
-   const postViewOnVideo = async (VideoId) => {
+  const postViewOnVideo = async (VideoId) => {
     try {
-      await axiosInstance.viewPost({VideoId:VideoId});
+      await axiosInstance.viewPost({ VideoId: VideoId });
     } catch (error) {
-      console.log("ERROR:",error);
+      console.log('ERROR:', error);
     }
   };
   const enableProfileLoading = () => {
@@ -110,35 +175,95 @@ const UseSearch = () => {
   };
 
   //LOADERS END HERE//
-  let getOnePosts = async () => {
-    enablePostsLoading();
+  // let getOnePosts = async () => {
+  //   enablePostsLoading();
+  //   try {
+  //     const {
+  //       data: {
+  //         data: { videos }
+  //       }
+  //     } = await axiosInstance.getFilteredPost(filterSearch);
+  //     setPosts(videos);
+  //     var count = 0;
+  //     for (let i = 0; i < videos.length; i++) {
+  //       if (
+  //         videos[i].Video.catalogue === true &&
+  //         videos[i].Video.isApproved === true &&
+  //         videos[i].isShared === false &&
+  //         videos[i].Video.UserId == parseInt(localStorage.getItem('id'))
+  //       ) {
+  //         count = count + 1;
+  //       }
+  //     }
+  //     setCatalogueCount(count);
+  //     disablePostsLoading();
+  //   } catch ({
+  //     response: {
+  //       data: { message }
+  //     }
+  //   }) {
+  //     console.log(message);
+  //     disablePostsLoading();
+  //   }
+  // };
+  const paymentSubmit = async () => {
+    if (videoPayment > userBalance) {
+      setPaymentError('You do not have the required amount in your wallet. Please top up your wallet from Settings.');
+      return;
+    }
+    setIsPaying(true);
+
     try {
-      const {
-        data: {
-          data: { videos }
+      const data = {
+        senderId: localStorage.getItem('id'),
+        receiverId: amountReciever,
+        paid: videoPayment,
+        videoId: paymentVideoId
+      };
+      let {
+        data: { balance }
+      } = await axiosInstance.postPaid(data);
+      setUserBalance(balance);
+      setIsPaying(false);
+      setAmountReciever(null);
+      _TogglePaymentModal();
+      if (activeGenericFilter === 'Posts') {
+        console.log('posts');
+        let tempPosts = [...posts];
+        console.log('tmp posts', tempPosts);
+        for (let i = 0; i < posts.length; i++) {
+          console.log('i', i);
+          if (tempPosts[i].VideoId === paymentVideoId) {
+            console.log('paymentid', paymentVideoId, 'post video id', tempPosts[i].VideoId);
+            tempPosts[i].hasPaid = true;
+            console.log('has paid', tempPosts[i].hasPaid);
+          }
         }
-      } = await axiosInstance.getFilteredPost(filterSearch);
-      setPosts(videos);
-      var count = 0;
-      for (let i = 0; i < videos.length; i++) {
-        if (
-          videos[i].Video.catalogue === true &&
-          videos[i].Video.isApproved === true &&
-          videos[i].isShared === false &&
-          videos[i].Video.UserId == parseInt(localStorage.getItem('id'))
-        ) {
-          count = count + 1;
-        }
+        setPosts(tempPosts);
+      } else {
+        let tempPosts = { ...posts };
+        tempPosts.hasPaid = true;
+
+        setPosts(tempPosts);
       }
-      setCatalogueCount(count);
-      disablePostsLoading();
-    } catch ({
-      response: {
-        data: { message }
-      }
-    }) {
-      console.log(message);
-      disablePostsLoading();
+
+      Swal.fire({
+        text: 'You can now View the Video',
+        icon: 'success',
+        timer: 3000,
+        showConfirmButton: false,
+        showCancelButton: false
+      });
+    } catch (error) {
+      console.log('Error! ', error.message);
+      _TogglePaymentModal();
+      Swal.fire({
+        text: error.message,
+        icon: 'error',
+
+        showConfirmButton: false,
+        showCancelButton: false
+      });
     }
   };
 
@@ -364,9 +489,12 @@ const UseSearch = () => {
     router.push(`/dashboard/videos/${id}`);
   };
 
-  let _TogglePaymentModal = (cost) => {
+  let _TogglePaymentModal = (cost, UserId = 0, id = 0) => {
     setVideoPayment(cost);
+    setPaymentVideoId(id);
+    setAmountReciever(UserId);
     setShowAmountModal(!showAmountModal);
+    setPaymentError('');
   };
 
   const OpenRatingModal = ({ postId, avgRating, totalRaters }) => {
@@ -435,9 +563,13 @@ const UseSearch = () => {
     ToggleRatingModal();
   };
 
-  const ToggleTipModal = (tip) => {
-    setTip(tip);
+  const ToggleTipModal = (userId, videoId) => {
+    setAmountReciever(userId);
+    setPaymentVideoId(videoId);
+    setTipError('');
+
     setShowTipModal(!showTipModal);
+    setTip(0);
   };
 
   const _HandleChangeTip = ({ target }) => {
@@ -555,6 +687,7 @@ const UseSearch = () => {
 
   return {
     _HandleAccountTypeFilter,
+    handleTipSubmit,
     _HandleActiveGenericFilter,
     _HandleChangeTip,
     _HandleChangeRating,
@@ -610,7 +743,13 @@ const UseSearch = () => {
     _HandleClearRating,
     _FetchMoreData,
     hasMore,
-    postViewOnVideo
+    postViewOnVideo,
+    paymentError,
+    isPaying,
+    paymentSubmit,
+    tipError,
+    showCelebration,
+    setAmountReciever
   };
 };
 

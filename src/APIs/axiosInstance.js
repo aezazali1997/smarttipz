@@ -237,10 +237,7 @@ class AxiosInstance {
   async getUserBalance(id) {
     return await axios.get(`${USER_API_BASE_URL}api/profile/balance?id=${id}`, this.getAuthHeader());
   }
-  // for test purpose
-  async test(payload) {
-    return await axios.post(USER_API_BASE_URL + `api/testpayment`, payload);
-  }
+
   // Get Bank Details
 
   async getBankDetails() {

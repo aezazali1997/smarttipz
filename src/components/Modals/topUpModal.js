@@ -45,7 +45,7 @@ const topUpModal = ({
                 toggleTopUpModal();
               }}
               type="button"
-              className="mt-3 w-full inline-flex justify-center hover:underline  px-4 py-2 text-base font-medium text  sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+              className="w-full inline-flex justify-center hover:underline  px-4 py-2 text-base font-medium text  sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
               Cancel
             </button>
             <Button

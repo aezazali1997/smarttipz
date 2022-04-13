@@ -21,25 +21,25 @@ const PostActionDropdown = ({ toggleDropdown, DropdownRef, logout, dropdown, set
 	const { profilePic } = useSearchContext();
 
 	const openDropdownPopover = () => {
-		createPopper(btnDropdownRef.current, popoverDropdownRef.current, {
-			placement: 'bottom-end',
-			modifiers: [
-				{
-					name: 'offset',
-					options: {
-						offset: [0, 8],
-					},
-				},
-			],
-		});
-		setDropdownPopoverShow(true);
-	};
-	const closeDropdownPopover = () => {
+    createPopper(btnDropdownRef.current, popoverDropdownRef.current, {
+      placement: 'bottom-end',
+      modifiers: [
+        {
+          name: 'offset',
+          options: {
+            offset: [0, 8]
+          }
+        }
+      ]
+    });
+    setDropdownPopoverShow(true);
+  };
+  const closeDropdownPopover = () => {
     setDropdownPopoverShow(false);
   };
 
   useOutsideClick(popoverDropdownRef, () => {
-    console.log('outside');
+    console.log('this closes the active menu');
     setDropdownPopoverShow(false);
   });
 
@@ -65,7 +65,8 @@ const PostActionDropdown = ({ toggleDropdown, DropdownRef, logout, dropdown, set
         ref={btnDropdownRef}
         onClick={(e) => {
           e.preventDefault();
-          dropdownPopoverShow ? closeDropdownPopover() : openDropdownPopover();
+          // dropdownPopoverShow ? closeDropdownPopover() : openDropdownPopover();
+          openDropdownPopover();
         }}>
         <div className="items-center flex">
           <img

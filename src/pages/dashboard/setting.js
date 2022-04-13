@@ -53,6 +53,7 @@ const Setting = ({ settings }) => {
 
   const { id, name, email, about, accessible, showPhone, accountType, phone, username, showName, showUsername, tip } =
     personalInfo;
+
   const { website } = businessCard;
 
   const [hasBankDetails, setHasBankDetails] = useState(true);
@@ -258,7 +259,7 @@ const Setting = ({ settings }) => {
                     maxLength={150}
                     name="about"
                     className={`border bg-gray-50 text-sm border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-2 py-3`}
-                    value={!about === null ? about : ''}
+                    value={about}
                     onChange={_OnChange}
                     placeholder="name@example.com"
                     autoComplete="off"

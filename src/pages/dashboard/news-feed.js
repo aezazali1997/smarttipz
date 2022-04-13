@@ -180,7 +180,6 @@ const NewsFeed = () => {
                     TogglePaymentModal={() => _TogglePaymentModal(cost)}
                   />
                 ) : (
-                  // ask suleman about this
                   isApproved && isShowOnNewsfeed && (
                     <NewsfeedCard
                       key={index}
