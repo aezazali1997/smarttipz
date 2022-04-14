@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { TopUpModal, WithDrawModal, StripeCheckoutModal } from 'src/components/Modals';
 import { Email, LinkSVG, User, TopUp, WithDraw, Wallet } from 'src/assets/SVGs';
 import { fixedWithoutRoundOff } from 'helpers';
-const wallet = () => {
+const WalletPage = () => {
   const [balance, setBalance] = useState(0);
 
   const getBalance = async () => {
@@ -67,4 +67,4 @@ export const getServerSideProps = async (context) => {
     return { props: {} };
   }
 };
-export default wallet;
+export default WalletPage;
