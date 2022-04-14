@@ -1,8 +1,11 @@
+import AllPosts from 'models/AllPost';
+
 const Video = require('models/Video');
 const User = require('models/User');
 const Admin = require('models/Admin');
 const Pay = require('models/Pay');
 const { API, AUTH, REQUEST } = require('src/pages/api/consts');
+const sendEmail = require('utils/sendMail');
 const handler = async (req, res) => {
   if (!req.headers.authorization) {
     res.status(401).send({
@@ -80,6 +83,12 @@ const handler = async (req, res) => {
           id: videoId
         }
       });
+      const AllPost = await AllPosts.find({
+        where: {
+          VideoId: videoId
+        }
+      });
+      
 
       await Video.update(
         {
@@ -91,6 +100,18 @@ const handler = async (req, res) => {
           }
         }
       );
+      // send mail to user who recieved payment of their video
+
+      const { success, message } = await sendEmail(
+        userReceiver.email,
+        'You got a paid view for your video!',
+        `You have received $ ${
+          paid - platformFee
+        } payment against your paid video http://smart-tipz.vercel.app/dashboard/videos/${AllPost.id}`,
+        'd-74e5e4a92cee4c35bf6630183cb5f52c'
+      );
+
+      if (!success) return res.status(400).json({ error: true, message: message, data: [] });
 
       res.status(201).send({
         error: false,

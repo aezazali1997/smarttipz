@@ -1,3 +1,5 @@
+import AllPosts from 'models/AllPost';
+import SendEmail from 'utils/sendMail';
 const Video = require('models/Video');
 const User = require('models/User');
 const Admin = require('models/Admin');
@@ -40,14 +42,6 @@ const handler = async (req, res) => {
           id: receiver
         }
       });
-      console.log(
-        '-----------------------------',
-        'uptill now',
-        '--------------',
-        receiverUser,
-        platformFee,
-        senderUser
-      );
 
       // make a transaction table object
       await Tip.create({
@@ -99,6 +93,13 @@ const handler = async (req, res) => {
           id: videoId
         }
       });
+
+      const AllPost = await AllPosts.find({
+        where: {
+          VideoId: videoId
+        }
+      });
+
       await Video.update(
         {
           tip: Number(tip) + Number(video.tip)
@@ -109,6 +110,16 @@ const handler = async (req, res) => {
           }
         }
       );
+
+      const { success, message } = await SendEmail(
+        receiverUser.email,
+        'You got a tip for your video!',
+        `You have received $ ${
+          tip - platformFee
+        } tip against your video http://smart-tipz.vercel.app/dashboard/videos/${AllPost.id}`,
+        'd-56caec057d4542e5809d9499af2a1f1c'
+      );
+      if (!success) return res.status(400).json({ error: true, message: message, data: [] });
 
       res.status(201).send({
         error: false,

@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-key */
 import { isEmpty } from 'lodash';
+import { parseCookies } from 'nookies';
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { NewsfeedCard, Spinner } from 'src/components';
@@ -105,8 +106,8 @@ const Videos = () => {
                 productLink,
                 createdAt,
                 views
-
-              } } = item;
+              }
+            } = item;
             return (
               <div key={index}>
                 <NewsfeedCard
@@ -143,7 +144,7 @@ const Videos = () => {
                   _handleViewsOnVideo={postViewOnVideo}
                 />
               </div>
-            )
+            );
           })}
         </div>
       )}
@@ -160,6 +161,20 @@ const Videos = () => {
       )}
     </div>
   );
+};
+export const getServerSideProps = async (context) => {
+  const { token } = parseCookies(context);
+  if (!token)
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/auth/login'
+      },
+      props: {}
+    };
+  else {
+    return { props: {} };
+  }
 };
 
 export default Videos;

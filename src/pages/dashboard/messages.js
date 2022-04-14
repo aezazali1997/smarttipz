@@ -131,7 +131,7 @@ const Messages = () => {
     )
 }
 
-
+// protected route
 export const getServerSideProps = async (context) => {
     const { token } = parseCookies(context);
     if (!token)

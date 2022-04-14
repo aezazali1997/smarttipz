@@ -4,11 +4,11 @@ import { Helmet } from 'react-helmet';
 import { parseCookies } from 'nookies';
 import axios from 'axios';
 import ReactToolTip from 'react-tooltip';
-import { getInputClasses, fixedWithoutRoundOff } from 'helpers';
+import { getInputClasses } from 'helpers';
 import { UseFetchSetting } from 'src/hooks';
 import { AccountSetting, BusinessCard, Button, PhoneInput, InputField, Switch } from 'src/components';
-import BankDetails from './components/BankDetails/index';
-import { Email, LinkSVG, User, TopUp, WithDraw, Wallet } from 'src/assets/SVGs';
+// import BankDetails from './components/BankDetails/index';
+import { Email, LinkSVG, User} from 'src/assets/SVGs';
 import { TopUpModal, WithDrawModal, StripeCheckoutModal } from 'src/components/Modals';
 import { AnimatePresence } from 'framer-motion';
 
@@ -56,7 +56,7 @@ const Setting = ({ settings }) => {
 
   const { website } = businessCard;
 
-  const [hasBankDetails, setHasBankDetails] = useState(true);
+  // const [hasBankDetails, setHasBankDetails] = useState(true);
 
   return (
     <div className="flex flex-col h-full w-full p-3 sm:p-5 ">
@@ -95,33 +95,6 @@ const Setting = ({ settings }) => {
                 className="px-2 py-1 w-1/2 flex items-center justify-center text-white text-sm bg-red-600 rounded-md hover:bg-red-700">
                 Remove
               </button>
-            </div>
-          </div>
-          <div className="flex flex-col w-100">
-            <div className="flex flex-col sm:flex-row justify-between sm:my-2  sm:space-x-2 order-2">
-              <button
-                onClick={() => toggleTopUpModal()}
-                className="py-2 px-2 w-100 flex justify-start sm:justify-center  items-center text-white text-md rounded-md btn my-1">
-                <TopUp />
-                Top up
-              </button>
-
-              <button
-                onClick={() => toggleWithDrawModal()}
-                className="px-2 py-2 flex justify-start sm:justify-center items-center text-white text-md rounded-md btn my-1">
-                <WithDraw />
-                Withdraw
-              </button>
-            </div>
-            <div className="flex flex-col justify-center items-center sm:flex-row">
-              <div>
-                <Wallet />
-              </div>
-              <div>
-                <span className="sm:text-4xl sm:font-bold text-2xl my-1 sm:my-0 block">
-                  $ {fixedWithoutRoundOff(balance, 2)}
-                </span>
-              </div>
             </div>
           </div>
         </div>
@@ -350,9 +323,9 @@ const Setting = ({ settings }) => {
                 <h1 className="text-lg font-semibold">Contact Details</h1>
                 <BusinessCard image={imageUrl} phone={phone} website={website || ''} name={name} email={email} />
               </div>
-              <div className="flex flex-col space-y-2">
+              {/* <div className="flex flex-col space-y-2 none">
                 <BankDetails setHasBankDetails={setHasBankDetails} />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

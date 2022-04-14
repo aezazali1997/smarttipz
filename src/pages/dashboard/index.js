@@ -1,14 +1,9 @@
 import { parseCookies } from 'nookies';
 import React from 'react';
 
-const Favourites = () => {
-  return (
-    <div className="w-full h-screen justify-center items-center">
-      <p>Favourites</p>
-    </div>
-  );
+const Dashboard = () => {
+  return <div></div>;
 };
-
 export const getServerSideProps = async (context) => {
   const { token } = parseCookies(context);
   if (!token)
@@ -20,8 +15,14 @@ export const getServerSideProps = async (context) => {
       props: {}
     };
   else {
-    return { props: {} };
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/dashboard/news-feed'
+      },
+      props: {}
+    };
   }
 };
 
-export default Favourites;
+export default Dashboard;

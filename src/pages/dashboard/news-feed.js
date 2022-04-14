@@ -8,6 +8,7 @@ import { PaymentModal, ShareModal, TipModal, VideoRatingModal, StripeCheckoutMod
 import { UseFetchNewsFeed } from 'src/hooks';
 import { AnimatePresence } from 'framer-motion';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { parseCookies } from 'nookies';
 
 const NewsFeed = () => {
   const {
@@ -304,6 +305,20 @@ const NewsFeed = () => {
       </AnimatePresence>
     </div>
   );
+};
+export const getServerSideProps = async (context) => {
+  const { token } = parseCookies(context);
+  if (!token)
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/auth/login'
+      },
+      props: {}
+    };
+  else {
+    return { props: {} };
+  }
 };
 
 export default NewsFeed;
