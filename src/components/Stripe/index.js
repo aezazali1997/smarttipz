@@ -51,7 +51,7 @@ const Stripe = ({ setIsVerified, setCardToken, amount, setBalance, personalInfo,
       });
 
     pr.on('paymentmethod', async (ev) => {
-      console.log('opayment button clicked');
+      console.log('payment button clicked','testing purpose');
       let {
         data: {
           data: { client_secret }
