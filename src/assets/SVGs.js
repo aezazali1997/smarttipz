@@ -165,7 +165,7 @@ export const HalfStar = () => (
   </span>
 );
 export const Wallet = () => (
-  <span className="flex relative sm:w-16 sm:h-16 mr-3 w-12 h-12">
+  <span className="flex relative w-32 lg:w-40  lg:h-40 h-32">
     <Image src={virtualwallet} layout="fill" objectFit="cover" alt="Virtaul Wallet" property="true" />
   </span>
 );

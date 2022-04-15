@@ -28,30 +28,10 @@ const Setting = ({ settings }) => {
     FileInput,
     openFileDialog,
     _ChangeCountryCode,
-    onChangeBusinessWebsite,
-    withDrawFunds,
-    showTopUpModal,
-    showWithDrawModal,
-    toggleTopUpModal,
-    toggleWithDrawModal,
-    balance,
-    setBalance,
-    topUp,
-    setTopUp,
-    topUpSubmit,
-    ToppingUp,
-    withDraw,
-    setWithDraw,
-    isWithDrawing,
-    withDrawError,
-    showCheckout,
-    toggleCheckoutModal,
-    generateLink,
-    isGeneratingLink,
-    link
+    onChangeBusinessWebsite
   } = UseFetchSetting(settings);
 
-  const { id, name, email, about, accessible, showPhone, accountType, phone, username, showName, showUsername, tip } =
+  const { name, email, about, accessible, showPhone, accountType, phone, username, showName, showUsername, tip } =
     personalInfo;
 
   const { website } = businessCard;
@@ -323,51 +303,11 @@ const Setting = ({ settings }) => {
                 <h1 className="text-lg font-semibold">Contact Details</h1>
                 <BusinessCard image={imageUrl} phone={phone} website={website || ''} name={name} email={email} />
               </div>
-              {/* <div className="flex flex-col space-y-2 none">
-                <BankDetails setHasBankDetails={setHasBankDetails} />
-              </div> */}
             </div>
           </div>
         </div>
         {/* section ends here */}
       </div>
-      <AnimatePresence>
-        {showWithDrawModal && (
-          <WithDrawModal
-            withDrawSubmit={withDrawFunds}
-            handleWithDrawChange={setWithDraw}
-            loading={isWithDrawing}
-            toggleWithDrawModal={toggleWithDrawModal}
-            amount={withDraw}
-            modalTitle={'Withdraw'}
-            error={withDrawError}
-            hasBankDetails={hasBankDetails}
-            onBoarded={personalInfo.onBoarded}
-            generateLink={generateLink}
-            isGeneratingLink={isGeneratingLink}
-            link={link}
-          />
-        )}
-        {showTopUpModal && (
-          <TopUpModal
-            topUpSubmit={topUpSubmit}
-            handleTopUpChange={setTopUp}
-            loading={ToppingUp}
-            toggleTopUpModal={toggleTopUpModal}
-            amount={topUp}
-            modalTitle={'Top up'}
-          />
-        )}
-        {showCheckout && (
-          <StripeCheckoutModal
-            toggleCheckoutModal={toggleCheckoutModal}
-            topUp={topUp}
-            handleTopUpChange={setTopUp}
-            personalInfo={personalInfo}
-            setBalance={setBalance}
-          />
-        )}
-      </AnimatePresence>
     </div>
   );
 };

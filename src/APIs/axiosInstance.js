@@ -213,10 +213,9 @@ class AxiosInstance {
   async viewPost(payload) {
     return await axios.post(USER_API_BASE_URL + `api/profile/videos/view`, payload, this.getAuthHeader());
   }
-  async topUpProfile(topUp, email) {
+  async topUpProfile(topUp) {
     let payload = {
-      topUp,
-      email
+      topUp
     };
     return await axios.post(USER_API_BASE_URL + `api/profile/topup`, payload, this.getAuthHeader());
   }
@@ -252,8 +251,15 @@ class AxiosInstance {
   async getClientSecret(payload) {
     return await axios.post(`${USER_API_BASE_URL}api/profile/topup/clientsecret`, payload, this.getAuthHeader());
   }
-  async generateStripeAccountLink(payload) {
+  async generateStripeAccountLink() {
     return await axios.post(`${USER_API_BASE_URL}api/profile/onboard`, null, this.getAuthHeader());
+  }
+  async getEmail() {
+    console.log('getting email');
+    return await axios.get(`${USER_API_BASE_URL}api/user/email`, this.getAuthHeader());
+  }
+  async getUserDetails() {
+    return await axios.get(`${USER_API_BASE_URL}api/user/details`, this.getAuthHeader());
   }
   // async checkAccount() {
   //   return await axios.post(`${USER_API_BASE_URL}api/profile/stripeAccount`, null, this.getAuthHeader());

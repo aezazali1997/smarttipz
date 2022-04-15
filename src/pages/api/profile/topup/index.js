@@ -19,7 +19,7 @@ const handler = async (req, res) => {
 
   const { username } = jwt.verify(authorization.split(' ')[1], process.env.SECRET_KEY);
 
-  const { id: userId } = await User.findOne({
+  const { id: userId, email } = await User.findOne({
     where: { username }
   });
 
@@ -39,7 +39,7 @@ const handler = async (req, res) => {
         message: AUTH.NO_BODY
       });
     }
-    const { topUp, email } = req.body;
+    const { topUp } = req.body;
     try {
       let user = await User.find({
         where: {

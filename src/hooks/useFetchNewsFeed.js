@@ -84,7 +84,7 @@ const UseFetchNewsFeed = () => {
       return;
     }
     if (tip > userBalance) {
-      setTipError('You do not have the required amount in your wallet. Please top up your wallet from Settings.');
+      setTipError('You do not have the required amount. Please top up your Wallet.');
       return;
     }
 
@@ -195,7 +195,7 @@ const UseFetchNewsFeed = () => {
   };
   const paymentSubmit = async () => {
     if (videoPayment > userBalance) {
-      setPaymentError('You do not have the required amount in your wallet. Please top up your wallet from Settings.');
+      setPaymentError('You do not have the required amount. Please top up your Wallet');
       return;
     }
     setIsPaying(true);

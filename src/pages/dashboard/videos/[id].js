@@ -815,36 +815,35 @@ const VideoDetailScreen = () => {
           {title}
         </p>
 
-        {
-          // localStorage.getItem('id') != UserId &&
-          // issue here
-          videoCost === 'Paid' && restrictPaidVideo ? (
-            !stopVideo ? (
-              <div className="detail-page-video-wrapper" onClick={_HandlePaidVideos}>
-                <VideoPlayer poster={thumbnail} src={url} />
-              </div>
-            ) : (
-              <div className="detail-page-video-wrapper flex flex-col justify-center items-center">
-                <p className="text-lg text-gray-500 text-center">To continue watching video</p>
-                <button
-                  onClick={_TogglePaymentModal}
-                  type="button"
-                  className="mt-3 text-lg w-full inline-flex justify-center hover:underline  px-4 py-2 text-base font-medium text  sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                  PAY NOW
-                </button>
-              </div>
-            )
-          ) : (
-            <div
-              className="detail-page-video-wrapper"
-              onClick={() => {
-                !isViewed && localStorage.getItem('id') != UserId && postViewOnVideo(videoId);
-                setIsViewed(true);
-              }}>
+        {typeof window !== 'undefined' &&
+        localStorage.getItem('id') != UserId &&
+        videoCost === 'Paid' &&
+        restrictPaidVideo ? (
+          !stopVideo ? (
+            <div className="detail-page-video-wrapper" onClick={_HandlePaidVideos}>
               <VideoPlayer poster={thumbnail} src={url} />
             </div>
+          ) : (
+            <div className="detail-page-video-wrapper flex flex-col justify-center items-center">
+              <p className="text-lg text-gray-500 text-center">To continue watching video</p>
+              <button
+                onClick={_TogglePaymentModal}
+                type="button"
+                className="mt-3 text-lg w-full inline-flex justify-center hover:underline  px-4 py-2 text-base font-medium text  sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                PAY NOW
+              </button>
+            </div>
           )
-        }
+        ) : (
+          <div
+            className="detail-page-video-wrapper"
+            onClick={() => {
+              !isViewed && localStorage.getItem('id') != UserId && postViewOnVideo(videoId);
+              setIsViewed(true);
+            }}>
+            <VideoPlayer poster={thumbnail} src={url} />
+          </div>
+        )}
         <div className="w-full flex flex-col md:flex-row justify-center md:justify-between py-2">
           <div className="flex flex-row justify-between space-x-3">
             <div className="flex space-x-3">

@@ -37,18 +37,8 @@ const UseFetchSetting = (settings) => {
   const [businessCard, setBusinessCard] = useState('');
   const [countryCode, setCountryCode] = useState('');
   const { setProfilePic } = useSearchContext();
-  const [showTopUpModal, setShowTopUpModal] = useState(false);
   let { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
-  const [balance, setBalance] = useState(0.0);
-  const [topUp, setTopUp] = useState(0);
-  const [withDraw, setWithDraw] = useState(0);
-  const [ToppingUp, setToppingUp] = useState(false);
-  const [isWithDrawing, setIsWithDrawing] = useState(false);
-  const [isGeneratingLink, setIsGeneratingLink] = useState(false);
-  const [showWithDrawModal, setShowWithDrawModal] = useState(false);
-  const [withDrawError, setWithDrawError] = useState('');
-  const [showCheckout, setShowCheckout] = useState(false);
-  const [link, setLink] = useState('');
+
   const [onBoarding, setOnBoarding] = useState(false);
 
   useEffect(() => {
@@ -70,7 +60,6 @@ const UseFetchSetting = (settings) => {
       setImageUrl(settings?.picture);
       setCountryCode(settings?.phone);
       setPersonalInfo(settings);
-      setBalance(settings.totalTipsAmount);
     }
     if (accountType === 'Business') {
       axiosInstance
@@ -91,67 +80,6 @@ const UseFetchSetting = (settings) => {
 
   const disablePersonalLoading = () => {
     setPersonalLoading(false);
-  };
-  const toggleTopUpModal = () => {
-    setShowTopUpModal(!showTopUpModal);
-  };
-  const toggleWithDrawModal = () => {
-    setShowWithDrawModal(!showWithDrawModal);
-    setWithDrawError('');
-    setWithDraw(0);
-  };
-
-  const withDrawFunds = async () => {
-    if (withDraw > balance) {
-      setWithDrawError('Amount exceeded balance');
-      return;
-    }
-    setWithDrawError('');
-    let email = personalInfo.email;
-    setIsWithDrawing(true);
-    try {
-      let {
-        data: { totalTipsAmount }
-      } = await axiosInstance.withDrawProfile(withDraw, email);
-      setBalance(totalTipsAmount);
-    } catch (error) {}
-    setIsWithDrawing(false);
-    toggleWithDrawModal();
-  };
-
-  const topUpSubmit = async () => {
-    toggleTopUpModal();
-    setShowCheckout(true);
-
-    setToppingUp(false);
-    setWithDrawError('');
-  };
-
-  const generateLink = async () => {
-    if (link === '') {
-      try {
-        setIsGeneratingLink(true);
-        let {
-          data: {
-            data: {
-              accountLink,
-              accountLink: { url }
-            }
-          }
-        } = await axiosInstance.generateStripeAccountLink();
-        setLink(url);
-        let diff = accountLink.expires_at - accountLink.created;
-      } catch (error) {
-        console.log('ERROR: ', error.message);
-      }
-      setIsGeneratingLink(false);
-    } else {
-      let anchor = document.createElement('a');
-      anchor.setAttribute('href', link);
-      anchor.setAttribute('target', '_blank');
-      anchor.click();
-      setLink('');
-    }
   };
 
   const enableAccountLoading = () => {
@@ -262,9 +190,7 @@ const UseFetchSetting = (settings) => {
         disablePersonalLoading();
       });
   };
-  const toggleCheckoutModal = () => {
-    setShowCheckout(!showCheckout);
-  };
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: initialValues,
@@ -317,28 +243,7 @@ const UseFetchSetting = (settings) => {
     FileInput,
     openFileDialog,
     _ChangeCountryCode,
-    onChangeBusinessWebsite,
-    withDrawFunds,
-    toggleTopUpModal,
-    showTopUpModal,
-    balance,
-    setBalance,
-    topUp,
-    setTopUp,
-    topUpSubmit,
-    ToppingUp,
-    showWithDrawModal,
-    withDraw,
-    setWithDraw,
-    toggleWithDrawModal,
-    isWithDrawing,
-    withDrawError,
-    toggleCheckoutModal,
-    showCheckout,
-    // handleTopUpChange,
-    generateLink,
-    isGeneratingLink,
-    link
+    onChangeBusinessWebsite
   };
 };
 

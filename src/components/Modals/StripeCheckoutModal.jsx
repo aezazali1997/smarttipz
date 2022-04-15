@@ -18,7 +18,7 @@ const StripeCheckoutModal = ({
   topUp,
   handleTopUpChange,
   setBalance,
-  personalInfo,
+
   // _HandleChangeTip,
   // tip = 0,
   // ToggleTipModal,
@@ -33,20 +33,32 @@ const StripeCheckoutModal = ({
   const [isProcessing, setIsProcessing] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [cardToken, setCardToken] = useState('');
+  const [email, setEmail] = useState('');
 
   const [finalAmount, setFinalAmount] = useState(0);
 
   useEffect(() => {
     setFinalAmount(stripeFeeCal(Number(topUp)));
+    getEmail();
   }, []);
-
+  const getEmail = async () => {
+    try {
+      const {
+        data: {
+          data: { email }
+        }
+      } = await axiosInstance.getEmail();
+      setEmail(email);
+    } catch (error) {
+      console.log('ERROR! : ', error.message);
+    }
+  };
   const handleTopUpSubmit = async () => {
     setIsProcessing(true);
     const data = {
       amount: finalAmount.toString(),
       token: cardToken
     };
-    let email = personalInfo.email;
 
     try {
       const response = await axiosInstance.topUpStripe(data);
@@ -109,7 +121,10 @@ const StripeCheckoutModal = ({
                   <h1> {moment(Date.now()).format('D/MM/YYYY')}</h1>
                 </div>
                 <div className="flex justify-between px-2 mt-2">
-                  <h1 className="font-bold text-lg"> Total including fee</h1>
+                  <div>
+                    <h1 className="font-bold text-lg"> Total including fee</h1>
+                    <span className="text-xs ml-1">Stripe secure payment (Fee inlcuded) </span>
+                  </div>
                   <h1 className="text-right text-2xl font-bol">$ {finalAmount}</h1>
                 </div>
               </div>
@@ -132,7 +147,7 @@ const StripeCheckoutModal = ({
                       isVerified={isVerified}
                       amount={finalAmount}
                       topUp={topUp}
-                      personalInfo={personalInfo}
+                      email={email}
                       setBalance={setBalance}
                       toggleCheckoutModal={toggleCheckoutModal}
                     />
