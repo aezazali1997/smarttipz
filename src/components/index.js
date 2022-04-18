@@ -49,3 +49,4 @@ export { default as PostDeletedAlert } from './PostDeletedAlert';
 export {default as CustomStar} from './CustomStar';
 export {default as CheckoutForm } from './CheckoutForm'
 export {default as SmartTipzLogo} from './SmartTipsLogo';
+export { default as Skeleton } from './Skeleton'

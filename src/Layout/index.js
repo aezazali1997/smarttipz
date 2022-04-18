@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import cookie from 'js-cookie';
 import { Sidebar, Drawer } from 'src/components'
 import { useOutsideClick } from 'src/hooks';
-
+import Swal from 'sweetalert2';
 const CustomLayout = ({ children }) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -38,11 +38,29 @@ const CustomLayout = ({ children }) => {
   };
 
   const _Logout = () => {
-    cookie.remove('name');
-    cookie.remove('token');
-    cookie.remove('username');
-    localStorage.clear();
-    router.push('/auth/login');
+    Swal.fire({
+      title: 'Logout',
+      text: 'Are you sure you want to logout?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Logout',
+      cancelButtonText: 'No',
+      buttonsStyling: false,
+      customClass: {
+        confirmButton:
+          'w-full inline-flex justify-center rounded-md border-none px-4 py-2 btn text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm',
+        cancelButton:
+          'mt-3 w-full inline-flex justify-center hover:underline  px-4 py-2 text-base font-medium text-red-600  sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        cookie.remove('name');
+        cookie.remove('token');
+        cookie.remove('username');
+        localStorage.clear();
+        router.push('/auth/login');
+      }
+    });
   };
 
   return (
@@ -76,7 +94,7 @@ const CustomLayout = ({ children }) => {
       </main>
     </div>
   );
-};
+};;;;;;;;
 
 
 export default CustomLayout;

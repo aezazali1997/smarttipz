@@ -61,7 +61,14 @@ const handler = async (req, res) => {
       res.status(200).json({
         error: false,
         message: 'Login successful',
-        data: { id: id, username: user.username, image: picture, token }
+        data: {
+          id: id,
+          username: user.username,
+          image: picture,
+          token,
+          isApproved: user.isApproved,
+          accountType: user.accountType
+        }
       });
     } catch (err) {
       res.status(500).json({ error: true, message: err.message, data: [] });

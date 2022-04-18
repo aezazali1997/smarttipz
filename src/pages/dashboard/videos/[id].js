@@ -141,7 +141,7 @@ const VideoDetailScreen = () => {
   };
 
   const _GetVideoById = async () => {
-    console.log('rendering this posts');
+    console.log('getting single post');
     try {
       const {
         data: {
@@ -181,7 +181,9 @@ const VideoDetailScreen = () => {
           data: { videos, totalVideos }
         }
       } = await axiosInstance.getRelatedVideos(currentPage);
-      setPosts(videos);
+      // filtering so that the open video does not gets shown in related videos
+      let tempVideos = videos.filter((tmpVideo) => tmpVideo.id != id);
+      setPosts(tempVideos);
       setCurrentPage((prev) => (prev = currentPage));
       videos.length >= totalVideos ? setHasMore(false) : setHasMore(true);
       // var count = 0;

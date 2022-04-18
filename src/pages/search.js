@@ -15,6 +15,7 @@ import {
 import { FilterModal, PaymentModal, ShareModal, TipModal, VideoRatingModal } from 'src/components/Modals';
 import { UseSearch } from 'src/hooks';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { parseCookies } from 'nookies';
 
 const Search = () => {
   const {
@@ -488,8 +489,8 @@ const Search = () => {
           ''
         )}
       </div>
-      <div className="hidden lg:block w-full lg:w-2/6 relative h-full">
-        <div className="sticky top-0 space-y-4 justify-center flex-col items-center ">
+      <div className="hidden lg:block lg:w-2/6">
+        <div className=" space-y-4 justify-center top-20 fixed z-50 flex-col items-center search-filters ">
           <GenericFilters
             category={category}
             activeGenericFilter={activeGenericFilter}
@@ -577,6 +578,20 @@ const Search = () => {
       </AnimatePresence>
     </div>
   );
+};
+export const getServerSideProps = async (context) => {
+  const { token } = parseCookies(context);
+  if (!token)
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/auth/login'
+      },
+      props: {}
+    };
+  else {
+    return { props: {} };
+  }
 };
 
 export default Search;

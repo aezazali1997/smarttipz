@@ -41,17 +41,24 @@ const UseFetchLogin = () => {
         enableLoading();
         const data = { email, password }
         try {
-            const { data: { data: { username, token, image, id }, message } } = await axiosInstance.login(data);
-            disableLoading();
-            setError(false);
-            setStatus(message);
-            setShowAlert(true);
-            cookie.set('token', token);
-            cookie.set('username', username);
-            localStorage.setItem('image', image);
-            setProfilePic(image);
-            localStorage.setItem('id', id);
-            router.push('/dashboard/news-feed');
+          const {
+            data: {
+              data: { username, token, image, id, accountType, isApproved },
+              message
+            }
+          } = await axiosInstance.login(data);
+          disableLoading();
+          setError(false);
+          setStatus(message);
+          setShowAlert(true);
+          cookie.set('token', token);
+          cookie.set('username', username);
+          localStorage.setItem('image', image);
+          localStorage.setItem('isApproved', isApproved);
+          localStorage.setItem('accountType', accountType);
+          setProfilePic(image);
+          localStorage.setItem('id', id);
+          router.push('/dashboard/news-feed');
         }
         catch (e) {
             if (e.response.status === 405) {

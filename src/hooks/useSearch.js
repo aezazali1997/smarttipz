@@ -458,22 +458,37 @@ const UseSearch = () => {
 
   const _HandleDeleteVideo = async (index, videoId) => {
     try {
-      const res = await axiosInstance.deleteVideo(videoId);
-      console.log('res in use search', res);
-      setCatalogueCount((catalogueCount) => catalogueCount - 1);
-      const originalArray = [...posts];
-      let newArray = originalArray.map((item, i) => {
-        if (item.Video.id !== videoId) return item;
-        item.Video.isApproved = false;
-        return item;
-      });
-      setPosts(newArray);
-    } catch ({
-      response: {
-        data: { message }
-      }
-    }) {
-      console.log('Api Failed: ', message);
+      // delet the video in search
+
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        buttonsStyling: false,
+        customClass: {
+          confirmButton:
+            'w-full inline-flex justify-center rounded-md border-none px-4 py-2 btn text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm',
+          cancelButton:
+            'mt-3 w-full inline-flex justify-center hover:underline  px-4 py-2 text-base font-medium text-red-600  sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm'
+        }
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const res = await axiosInstance.deleteVideo(videoId)
+          console.log('res in use search', res)
+          setCatalogueCount((catalogueCount) => catalogueCount - 1)
+          const originalArray = [...posts]
+          let newArray = originalArray.map((item, i) => {
+            if (item.Video.id !== videoId) return item
+            item.Video.isApproved = false
+            return item
+          })
+          setPosts(newArray)
+        }
+      })
+    } catch (error) {
+      console.log('Api Failed: ', error.message)
     }
   };
 

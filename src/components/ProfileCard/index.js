@@ -1,11 +1,8 @@
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
-import Rating from '../RatingStar';
 import Image from 'next/image';
-import PopupBusinessCard from '../PopupBusinessCard';
-import Spinner from '../Spinner';
-import CustomStar from '../CustomStar';
+import { CustomStar, PopupBusinessCard, Spinner, Rating, Skeleton } from 'src/components';
 const ProfileCard = ({
   data,
   otherUser,
@@ -83,7 +80,11 @@ const ProfileCard = ({
             &nbsp;<p className="text-sm">{views} Views</p>
           </span>
           <span className="flex w-full items-center justify-center">
-            <CustomStar value={_rating || 0} isHalf={true} />
+            {_rating ? (
+              <CustomStar value={_rating} isHalf={true} />
+            ) : (
+              <Skeleton bgColor="bg-gray-100" display="flex" round="rounded-md" height="h-6" width="w-28" />
+            )}
           </span>
         </div>
       </div>

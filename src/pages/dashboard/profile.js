@@ -20,7 +20,8 @@ import {
   Rating,
   CustomStar,
   Spinner,
-  TestimonialCard
+  TestimonialCard,
+  Skeleton
 } from 'src/components';
 import { ShareModal } from 'src/components/Modals';
 import { UseFetchProfile } from 'src/hooks';
@@ -151,8 +152,14 @@ const Profile = ({ profile }) => {
                   &nbsp;<p className="text-xs">{views} Views</p>
                 </span>
                 <span className="flex w-full items-center">
-                  <CustomStar value={profileRating} isHalf={true} /> &nbsp;
-                  <p className="text-xs"> Rating </p>
+                  {profileRating ? (
+                    <>
+                      <CustomStar value={profileRating} isHalf={true} /> &nbsp;
+                      <p className="text-xs"> Rating </p>
+                    </>
+                  ) : (
+                    <Skeleton bgColor="bg-gray-100" height="h-6" width="w-36 " round="rounded-md" display="flex" />
+                  )}
                 </span>
               </div>
               <div className="flex w-full mt-2 px-2">
@@ -187,103 +194,98 @@ const Profile = ({ profile }) => {
           )}
         </div>
       </div>
-      {/* section ends here */}
-      {/* section starts here */}
-      <>
-        <div className="flex flex-col w-full px-2 mt-4">
-          <h1 className="text-md font-medium">
-            {accountType === 'Personal' ? (showName ? name + "'s" : showUsername ? username + "'s" : '') : name + "'s"}{' '}
-            Catalogue
-          </h1>
-          {fetchingCatalogues ? (
-            <div className="flex w-full justify-center">
-              <span className="flex flex-col items-center">
-                <Spinner />
-                <p className="text-sm text-gray-400"> Loading Catalogues</p>
-              </span>
-            </div>
-          ) : isEmpty(catalogues) ? (
-            <div className="flex w-full justify-center items-center">
-              <p className="text-gray-500"> No Catalogues Yet</p>
-            </div>
-          ) : (
-            <div className="w-auto mt-6 relative">
-              <Carousel>
-                {catalogues.map((item, index) => {
-                  const {
-                    id: postId,
-                    isLiked,
-                    likeCount,
-                    shareCount,
-                    commentCount,
-                    avgRating,
-                    totalRaters,
-                    Video: {
-                      id,
-                      UserId,
-                      title,
-                      url,
-                      mediaType,
-                      thumbnail,
-                      catalogue,
-                      description,
-                      User,
-                      videoType,
-                      videoCost,
-                      Shares,
-                      productLink,
-                      createdAt,
-                      views
-                    }
-                  } = item;
-                  return (
-                    <div key={index} className="my-2 px-5">
-                      <NewsfeedCard
-                        id={postId}
-                        videoId={id}
-                        UserId={UserId}
-                        index={index}
-                        catalogue={catalogue}
-                        url={url}
-                        User={User}
-                        Shares={Shares}
-                        views={views}
-                        rating={2.5}
-                        posts={catalogues}
-                        isLiked={isLiked}
-                        likeCount={likeCount}
-                        shareCount={shareCount}
-                        commentCount={commentCount}
-                        mediaType={mediaType}
-                        avgRating={avgRating}
-                        videoType={videoType}
-                        videoCost={videoCost}
-                        createdAt={createdAt}
-                        description={description}
-                        title={title}
-                        productLink={productLink}
-                        width={'max-w-xs'}
-                        thumbnail={thumbnail}
-                        HandleLikePost={() => HandleLikePost(postId, isLiked)}
-                        _HandleCommentCounts={_HandleCommentCounts}
-                        _OpenShareModal={_OpenShareModal}
-                        _HandleGotoUserProfile={_HandleGotoUserProfile}
-                        _HandleGotoVideoDetails={_HandleGotoVideoDetails}
-                        _HandleDeleteVideo={_HandleDeleteVideo}
-                        _HandleCatalogue={_HandleCatalogue}
-                        _handleViewsOnVideo={postViewOnVideo}
-                      />
-                    </div>
-                  );
-                })}
-              </Carousel>
-            </div>
-          )}
-        </div>
-      </>
-      {/* )} */}
-      {/* section ends here */}
-      {/* section starts here */}
+
+      <div className="flex flex-col w-full px-2 mt-4">
+        <h1 className="text-md font-medium">
+          {accountType === 'Personal' ? (showName ? name + "'s" : showUsername ? username + "'s" : '') : name + "'s"}{' '}
+          Catalogue
+        </h1>
+        {fetchingCatalogues ? (
+          <div className="flex w-full justify-center">
+            <span className="flex flex-col items-center">
+              <Spinner />
+              <p className="text-sm text-gray-400"> Loading Catalogues</p>
+            </span>
+          </div>
+        ) : isEmpty(catalogues) ? (
+          <div className="flex w-full justify-center items-center">
+            <p className="text-gray-500"> No Catalogues Yet</p>
+          </div>
+        ) : (
+          <div className="w-auto mt-6 relative">
+            <Carousel>
+              {catalogues.map((item, index) => {
+                const {
+                  id: postId,
+                  isLiked,
+                  likeCount,
+                  shareCount,
+                  commentCount,
+                  avgRating,
+                  totalRaters,
+                  Video: {
+                    id,
+                    UserId,
+                    title,
+                    url,
+                    mediaType,
+                    thumbnail,
+                    catalogue,
+                    description,
+                    User,
+                    videoType,
+                    videoCost,
+                    Shares,
+                    productLink,
+                    createdAt,
+                    views
+                  }
+                } = item;
+                return (
+                  <div key={index} className="my-2 px-5">
+                    <NewsfeedCard
+                      id={postId}
+                      videoId={id}
+                      UserId={UserId}
+                      index={index}
+                      catalogue={catalogue}
+                      url={url}
+                      User={User}
+                      Shares={Shares}
+                      views={views}
+                      rating={2.5}
+                      posts={catalogues}
+                      isLiked={isLiked}
+                      likeCount={likeCount}
+                      shareCount={shareCount}
+                      commentCount={commentCount}
+                      mediaType={mediaType}
+                      avgRating={avgRating}
+                      videoType={videoType}
+                      videoCost={videoCost}
+                      createdAt={createdAt}
+                      description={description}
+                      title={title}
+                      productLink={productLink}
+                      width={'max-w-xs'}
+                      thumbnail={thumbnail}
+                      HandleLikePost={() => HandleLikePost(postId, isLiked)}
+                      _HandleCommentCounts={_HandleCommentCounts}
+                      _OpenShareModal={_OpenShareModal}
+                      _HandleGotoUserProfile={_HandleGotoUserProfile}
+                      _HandleGotoVideoDetails={_HandleGotoVideoDetails}
+                      _HandleDeleteVideo={_HandleDeleteVideo}
+                      _HandleCatalogue={_HandleCatalogue}
+                      _handleViewsOnVideo={postViewOnVideo}
+                    />
+                  </div>
+                );
+              })}
+            </Carousel>
+          </div>
+        )}
+      </div>
+
       <div className="flex flex-col w-full px-2  mt-8">
         <h1 className="text-md font-medium">Videos</h1>
         {fetchingMyVideos ? (

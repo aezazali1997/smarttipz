@@ -116,23 +116,39 @@ const UseFetchVideo = () => {
   };
   const _HandleDeleteVideo = async (index, videoId) => {
     try {
-      const res = await axiosInstance.deleteVideo(videoId);
-      console.log("res delete in use fetch videos",res)
-      setCatalogueCount((catalogueCount) => catalogueCount - 1);
-      const originalArray = [...Videos];
-      const originalFilteredArray = [...filterdVideos];
-      originalArray.splice(index, 1);
-      let newFilteredArray = originalFilteredArray.filter((item, i) => {
-        if (item.Video.id !== videoId) return item;
-      });
-      setFilterVideos(newFilteredArray);
-      setVideos(originalArray);
-    } catch ({
-      response: {
-        data: { message }
-      }
-    }) {
-      console.log('Api Failed: ', message);
+
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'Are you sure you want to remove this video. It cannot be reverted',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+        buttonsStyling: false,
+
+        customClass: {
+          confirmButton:
+            'w-full inline-flex justify-center rounded-md border-none px-4 py-2 btn text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm',
+          cancelButton:
+            'mt-3 w-full inline-flex justify-center hover:underline  px-4 py-2 text-base font-medium text-red-600  sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm'
+        }
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          // deleting the video permanantly
+          const res = await axiosInstance.deleteVideo(videoId)
+          setCatalogueCount((catalogueCount) => catalogueCount - 1)
+          const originalArray = [...Videos]
+          const originalFilteredArray = [...filterdVideos]
+          originalArray.splice(index, 1)
+          let newFilteredArray = originalFilteredArray.filter((item, i) => {
+            if (item.Video.id !== videoId) return item
+          })
+          setFilterVideos(newFilteredArray)
+          setVideos(originalArray)
+        }
+      })
+    } catch (error) {
+      console.log('Api Failed: ', error.message)
     }
   };
 
