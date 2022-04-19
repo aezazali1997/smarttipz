@@ -149,10 +149,13 @@ const Profile = ({ profile }) => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  &nbsp;<p className="text-xs">{views} Views</p>
+                  &nbsp;
+                  <p className="text-xs">
+                    {views} View{views > 1 ? 's' : null}
+                  </p>
                 </span>
                 <span className="flex w-full items-center">
-                  {profileRating ? (
+                  {profileRating !== null ? (
                     <>
                       <CustomStar value={profileRating} isHalf={true} /> &nbsp;
                       <p className="text-xs"> Rating </p>
@@ -467,17 +470,16 @@ const Profile = ({ profile }) => {
               >
                 <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
                   {filteredTestimonial.map(({ id, picture, ownerName, designation, description, isVisible }, index) => (
-                    <div key={index}>
-                      <TestimonialCard
-                        _Toggle={() => _EditTestimonial(id, isVisible)}
-                        image={picture}
-                        name={ownerName}
-                        designation={designation}
-                        description={description}
-                        checked={isVisible}
-                        index={index}
-                      />
-                    </div>
+                    <TestimonialCard
+                      key={index}
+                      _Toggle={() => _EditTestimonial(id, isVisible)}
+                      image={picture}
+                      name={ownerName}
+                      designation={designation}
+                      description={description}
+                      checked={isVisible}
+                      index={index}
+                    />
                   ))}
                 </div>
               </InfiniteScroll>

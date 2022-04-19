@@ -88,10 +88,18 @@ const handler = async (req, res) => {
       await newPost.setVideo(video);
       await share.setVideo(video);
 
+      const sharedPost = await Share.findOne({
+        include: [{ model: Video }],
+        where: {
+          UserId: id
+        }
+      });
+
       return res.status(201).json({
         error: false,
         message: 'Video Shared',
-        data: {}
+        data: { sharedPost }
+        // to be continued
       });
     } catch (err) {
       console.log('Videos Api Failed Error: ', err.message);

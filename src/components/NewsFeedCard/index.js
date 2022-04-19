@@ -164,23 +164,23 @@ const NewsfeedCard = ({
                 className="rounded-full w-10 h-10 object-cover"
                 alt="avatar"></img>
               <div className="flex flex-col w-full">
-                <p
+                <a
                   onClick={() => _HandleGotoUserProfile(UserId, User?.username)}
                   className="text-sm font-bold font-sans hover:underline cursor-pointer">
                   {User?.name}
-                </p>
+                </a>
                 <p className="text-gray-500 text-sm">
                   {moment(createdAt).format('D MMM YYYY')}, {moment(createdAt).format('H:mm')}
                 </p>
               </div>
             </div>
             <div className="flex space-x-2">
-              
-              <div className='animation-container h-auto  cursor-pointer' data-tip
-                  data-for={`tip`}  onClick={ToggleTipModal}>
-                <span
-                 
-                  className="inline-flex h-8 w-14 tip-hand">
+              <div
+                className="animation-container h-auto  cursor-pointer"
+                data-tip
+                data-for={`tip`}
+                onClick={ToggleTipModal}>
+                <span className="inline-flex h-8 w-14 tip-hand">
                   <Image src={HandIcon} alt="banner" objectFit="contain" />
                 </span>
                 <ReactTooltip
@@ -195,7 +195,6 @@ const NewsfeedCard = ({
               </div>
 
               <span data-for="fav" data-tip onClick={() => HandleFavouritePost(id)}>
-                
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="w-6 h-6 text-gray-500 hover:text-purple-600 cursor-pointer"
@@ -209,9 +208,9 @@ const NewsfeedCard = ({
                     d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                   />
                 </svg>
-               <ReactTooltip id="fav" place="top" effect="solid" border={false} borderColor="white" clickable={false}>
+                <ReactTooltip id="fav" place="top" effect="solid" border={false} borderColor="white" clickable={false}>
                   Add to favourite
-                 </ReactTooltip>
+                </ReactTooltip>
               </span>
               <div className="flex items-start justify-start">
                 <PostActionDropdown
@@ -223,7 +222,6 @@ const NewsfeedCard = ({
                 />
               </div>
             </div>
-            
           </div>
           <p
             onClick={() => _HandleGotoVideoDetails(id)}
@@ -231,17 +229,12 @@ const NewsfeedCard = ({
             {title}
           </p>
         </div>
-        {
-          
-          (localStorage.getItem('id')!=UserId) &&
-         videoCost === 'Paid' && restrictPaidVideo  ? (
+        {localStorage.getItem('id') != UserId && videoCost === 'Paid' && restrictPaidVideo ? (
           !stopVideo ? (
             <div className="video-wrapper" onClick={_HandlePaidVideos}>
-             
-                <VideoPlayer poster={thumbnail} src={url} />
-              
+              <VideoPlayer poster={thumbnail} src={url} />
             </div>
-          ) :   (
+          ) : (
             <div className="video-wrapper flex flex-col justify-center items-center">
               <p className="text-md text-gray-500 text-center">To continue watching video</p>
               <button
@@ -253,10 +246,12 @@ const NewsfeedCard = ({
             </div>
           )
         ) : (
-          <div className="video-wrapper" onClick={()=>{
-            !isViewed && localStorage.getItem('id')!=UserId && _handleViewsOnVideo(videoId)
-            setIsViewed(true)
-          } }>
+          <div
+            className="video-wrapper"
+            onClick={() => {
+              !isViewed && localStorage.getItem('id') != UserId && _handleViewsOnVideo(videoId);
+              setIsViewed(true);
+            }}>
             <VideoPlayer poster={thumbnail} src={url} />
           </div>
         )}
@@ -271,7 +266,7 @@ const NewsfeedCard = ({
               Number(localStorage.getItem('id')) !== UserId ? 'cursor-pointer' : 'cursor-default'
             }`}>
             {displayRatingStars()}
-            
+
             <ReactTooltip
               id="rating"
               place="bottom"
@@ -292,7 +287,10 @@ const NewsfeedCard = ({
                 clipRule="evenodd"
               />
             </svg>
-            &nbsp;<p className="text-xs text-gray-500">{views} Views</p>
+            &nbsp;
+            <p className="text-xs text-gray-500">
+              {views} View{views > 1 ? 's' : null}
+            </p>
           </span>
         </div>
 

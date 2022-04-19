@@ -30,3 +30,6 @@
     height: 1px;
     background:gray;
 }
+.messages-container{
+    height: 88vh;
+}

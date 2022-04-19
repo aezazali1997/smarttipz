@@ -264,6 +264,9 @@ class AxiosInstance {
   // async checkAccount() {
   //   return await axios.post(`${USER_API_BASE_URL}api/profile/stripeAccount`, null, this.getAuthHeader());
   // }
+  async getMessagerDetails(id) {
+    return await axios.get(`${USER_API_BASE_URL}api/profile/message/details?id=${id}`, this.getAuthHeader());
+  }
 }
 
 export default new AxiosInstance;

@@ -5,7 +5,7 @@ import { Email, LinkSVG, User, TopUp, WithDraw, Wallet } from 'src/assets/SVGs';
 import { fixedWithoutRoundOff } from 'helpers';
 import axiosInstance from 'src/APIs/axiosInstance';
 import { AnimatePresence } from 'framer-motion';
-import { Spinner } from 'src/components';
+import { Spinner, Skeleton } from 'src/components';
 
 const WalletPage = () => {
   // states
@@ -146,7 +146,11 @@ const WalletPage = () => {
           <div>
             <span className="sm:text-4xl sm:font-bold text-2xl my-1 sm:my-0 block">
               {isLoading ? '' : '$'}
-              {isLoading ? '' : fixedWithoutRoundOff(balance, 2)}
+              {isLoading ? (
+                <Skeleton bgColor="bg-gray-200" display="block" height="h-12" width="w-36" round="rounded-md" />
+              ) : (
+                fixedWithoutRoundOff(balance, 2)
+              )}
             </span>
           </div>
         </div>

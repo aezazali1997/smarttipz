@@ -64,10 +64,12 @@ const ContentSection = ({
           </div>
         )
       ) : (
-        <div className="video-wrapper" onClick={()=>{
-          !isViewed && localStorage.getItem('id')!=UserId && _handleViewsOnVideo(videoId)
-          setIsViewed(true)
-        }}>
+        <div
+          className="video-wrapper"
+          onClick={() => {
+            !isViewed && localStorage.getItem('id') != UserId && _handleViewsOnVideo(videoId);
+            setIsViewed(true);
+          }}>
           <VideoPlayer poster={thumbnail} src={url} />
         </div>
       )}
@@ -75,7 +77,7 @@ const ContentSection = ({
         <div className="flex flex-row space-x-2 items-center">
           <span className="flex space-x-2 items-center">
             <FontAwesomeIcon icon={faShareAlt} className="w-6 h-6 text" />
-            <p className="">Shares:</p>
+            <p className="">Share{shareCount > 1 ? 's' : null}:</p>
           </span>
           <p className=" cursor-pointer  w-full text-center text-gray-600 group-hover:text-purple-600">
             {shareCount || 0}

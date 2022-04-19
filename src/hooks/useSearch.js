@@ -298,12 +298,8 @@ const UseSearch = () => {
         // }
         // setCatalogueCount(count);
         disablePostsLoading();
-      } catch ({
-        response: {
-          data: { message }
-        }
-      }) {
-        console.log(message);
+      } catch (error) {
+        console.log(error.message);
         disablePostsLoading();
         setPosts([]);
       }

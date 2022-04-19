@@ -98,8 +98,9 @@ const NewsFeed = () => {
           </div>
         </div>
         {isloadingFeed ? (
-          <div className="flex justify-center items-center">
-            <Spinner />
+          <div className="flex flex-col h-screen w-full -mt-32  items-center justify-center">
+            <div className="self-center ml-3 loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-6 w-6 "></div>
+            <p className="text-sm text-center text-gray-400">Loading news feed</p>
           </div>
         ) : isEmpty(posts) ? (
           <div className="flex w-full justify-center items-center">

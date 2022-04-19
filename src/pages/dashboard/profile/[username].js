@@ -16,7 +16,8 @@ import {
   TestimonialCard,
   Spinner,
   NewsfeedCard,
-  Carousel
+  Carousel,
+  Skeleton
 } from 'src/components';
 import { useSearchContext } from 'src/contexts';
 import { PaymentModal, ShareModal, TipModal, VideoRatingModal } from 'src/components/Modals';
@@ -42,6 +43,7 @@ const UserProfile = ({ profile }) => {
   const [testimonials, setTestimonials] = useState([]);
   const [personalInfo, setPersonalInfo] = useState({});
   const [isFollowing, setIsFollowing] = useState(false);
+  const [isFollowLoading, setIsFollowLoading] = useState(false);
   const [canMessage, setCanMessage] = useState(false);
   const [showBusinessCard, setShowBusinessCard] = useState(false);
   const [loadingTestimonial, setLoadingTestimonial] = useState(false);
@@ -278,6 +280,7 @@ const UserProfile = ({ profile }) => {
 
   const _Follow = async () => {
     try {
+      setIsFollowLoading(true);
       const {
         data: {
           data: { follow }
@@ -288,6 +291,7 @@ const UserProfile = ({ profile }) => {
     } catch (err) {
       console.log('FollowUser API Failed: ', err);
     }
+    setIsFollowLoading(false);
   };
 
   let handleShowBusinessCard = () => {
@@ -582,10 +586,17 @@ const UserProfile = ({ profile }) => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  &nbsp;<p className="text-xs">{views} Views</p>
+                  &nbsp;
+                  <p className="text-xs">
+                    {views} View {views > 1 ? 's' : null}
+                  </p>
                 </span>
                 <span className="flex w-full items-center">
-                  <CustomStar value={profileRating || 0} isHalf={true} />
+                  {profileRating === null ? (
+                    <Skeleton bgColor="bg-gray-200" height="h-6" width="w-20" round="rounded-md" display="block" />
+                  ) : (
+                    <CustomStar value={profileRating} isHalf={true} />
+                  )}
                 </span>
               </div>
               <div className="flex w-full mt-2 px-2">
@@ -619,9 +630,12 @@ const UserProfile = ({ profile }) => {
             </div>
           )}
           {!fetchingCatalogues ? (
-            <div className="flex w-full mt-3 items-center px-2 space-x-6">
-              <button onClick={_Follow} className={isFollowing ? 'followingBtn' : 'followBtn'}>
-                {isFollowing ? 'Following' : 'Follow'}
+            <div className="flex  w-full mt-3 items-center px-2 space-x-6">
+              <button
+                onClick={_Follow}
+                className={`${isFollowing ? 'followingBtn' : 'followBtn'} flex justify-center px-2 py-1.5`}>
+                <span>{isFollowLoading ? 'Loading' : isFollowing ? 'Following' : 'Follow'}</span>
+                {isFollowLoading && <Spinner />}
               </button>
 
               {canMessage && (
@@ -832,7 +846,7 @@ const UserProfile = ({ profile }) => {
             )}
           </div>
         </>
-      ) : !fetchingCatalogues && !isFollowing ? (
+      ) : !fetchingCatalogues && !isFollowing && !fetchingMyVideos ? (
         <p className="text-gray-500 mt-5 text-center"> You are not following this user. Follow to see the content</p>
       ) : null}
 
@@ -857,9 +871,10 @@ const UserProfile = ({ profile }) => {
             ) : (
               <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
                 {testimonials.map(
-                  ({ picture, description, designation, ownerName, isVisible }) =>
+                  ({ picture, description, designation, ownerName, isVisible }, index) =>
                     isVisible && (
                       <TestimonialCard
+                        key={index}
                         image={picture}
                         name={ownerName}
                         designation={designation}

@@ -125,6 +125,11 @@ const UseFetchVideo = () => {
         confirmButtonText: 'Yes',
         cancelButtonText: 'No',
         buttonsStyling: false,
+        showLoaderOnConfirm: true,
+        preConfirm: async () => {
+          const res = await axiosInstance.deleteVideo(videoId);
+          setCatalogueCount((catalogueCount) => catalogueCount - 1);
+        },
 
         customClass: {
           confirmButton:
@@ -135,18 +140,17 @@ const UseFetchVideo = () => {
       }).then(async (result) => {
         if (result.isConfirmed) {
           // deleting the video permanantly
-          const res = await axiosInstance.deleteVideo(videoId)
-          setCatalogueCount((catalogueCount) => catalogueCount - 1)
-          const originalArray = [...Videos]
-          const originalFilteredArray = [...filterdVideos]
-          originalArray.splice(index, 1)
+
+          const originalArray = [...Videos];
+          const originalFilteredArray = [...filterdVideos];
+          originalArray.splice(index, 1);
           let newFilteredArray = originalFilteredArray.filter((item, i) => {
-            if (item.Video.id !== videoId) return item
-          })
-          setFilterVideos(newFilteredArray)
-          setVideos(originalArray)
+            if (item.Video.id !== videoId) return item;
+          });
+          setFilterVideos(newFilteredArray);
+          setVideos(originalArray);
         }
-      })
+      });
     } catch (error) {
       console.log('Api Failed: ', error.message)
     }

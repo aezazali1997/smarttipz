@@ -298,7 +298,7 @@ const Search = () => {
             </div>
           </div>
         ) : activeGenericFilter === 'Posts' ? (
-          <div className="space-y-4">
+          <div className="space-y-4 ">
             {postsLoading ? (
               <div className="flex w-full justify-center">
                 <span className="flex flex-col items-center">
@@ -435,7 +435,7 @@ const Search = () => {
             )}
           </div>
         ) : activeGenericFilter === 'Profile' ? (
-          <div className="space-y-4 mt-4">
+          <div className="space-y-4 mt-4 ">
             {userProfileLoading ? (
               <div className="flex w-full justify-center">
                 <span className="flex flex-col items-center">
@@ -490,7 +490,7 @@ const Search = () => {
         )}
       </div>
       <div className="hidden lg:block lg:w-2/6">
-        <div className=" space-y-4 justify-center top-20 fixed z-50 flex-col items-center search-filters ">
+        <div className=" space-y-4 justify-center top-28 fixed z-0 flex-col items-center search-filters ">
           <GenericFilters
             category={category}
             activeGenericFilter={activeGenericFilter}

@@ -70,8 +70,8 @@ const Videos = () => {
         </div>
       </div>
       {loading ? (
-        <div className="flex w-full justify-center">
-          <span className="flex flex-col items-center">
+        <div className="flex w-full justify-center items-center h-screen ">
+          <span className="flex flex-col items-center -mt-52">
             <Spinner />
             <p className="text-sm text-gray-400"> Loading Videos</p>
           </span>

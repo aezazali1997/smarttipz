@@ -23,6 +23,9 @@ const PostActionDropdown = ({ _HandleCatalogue, _HandleDeleteVideo, catalogue, o
   useOutsideClick(popoverDropdownRef, () => {
     setDropdownPopoverShow(false);
   });
+  const checkId = () => {
+    return ID && parseInt(ID) == ownerId;
+  };
 
   useEffect(() => {
     if (localStorage.getItem('id') !== null) {
@@ -33,7 +36,7 @@ const PostActionDropdown = ({ _HandleCatalogue, _HandleDeleteVideo, catalogue, o
   return (
     <>
       <a
-        className="text-blueGray-500 block relative"
+        className={`${checkId() ? 'cursor-pointer' : 'cursor-default'} text-blueGray-500 block relative`}
         href="#pablo"
         ref={btnDropdownRef}
         onClick={(e) => {
@@ -61,7 +64,7 @@ const PostActionDropdown = ({ _HandleCatalogue, _HandleDeleteVideo, catalogue, o
           className={'absolute -ml-40 mt-7 bg-white text-base z-10   list-none text-left rounded shadow-lg min-w-48'}>
           {
             <>
-              {ID && parseInt(ID) == ownerId && (
+              {checkId() && (
                 <>
                   <div
                     className={

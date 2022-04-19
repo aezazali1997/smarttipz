@@ -98,37 +98,37 @@ const Messages = () => {
     }
 
     return (
-        <div className="h-screen flex flex-col">
-            <Helmet>
-                <title>Messaging | Smart Tipz</title>
-            </Helmet>
-            {/* <div className="hidden lg:flex w-full items-center py-5 px-5 shadow-md z-10">
+      <div className="flex flex-col">
+        <Helmet>
+          <title>Messaging | Smart Tipz</title>
+        </Helmet>
+        {/* <div className="hidden lg:flex w-full items-center py-5 px-5 shadow-md z-10">
                 <p className="text-xl font-semibold ">Messages</p>
             </div> */}
-            <main className="hidden lg:flex flex-col lg:flex-row w-full h-screen ">
-                <WebInbox
-                    loading={loading}
-                    userList={userList}
-                    _OnSelect={_OnSelect}
-                    selected={selected}
-                    goBackToUserList={goBackToUserList}
-                    message={message}
-                    setMessage={setMessage}
-                />
-            </main>
-            <main className="lg:hidden flex flex-col lg:flex-row w-full h-screen overflow-y-auto">
-                <MobileInbox
-                    userList={userList}
-                    loading={loading}
-                    _OnSelect={_OnSelect}
-                    selected={selected}
-                    goBackToUserList={goBackToUserList}
-                    message={message}
-                    setMessage={setMessage}
-                />
-            </main>
-        </div>
-    )
+        <main className="hidden lg:flex flex-col lg:flex-row w-full messages-container  ">
+          <WebInbox
+            loading={loading}
+            userList={userList}
+            _OnSelect={_OnSelect}
+            selected={selected}
+            goBackToUserList={goBackToUserList}
+            message={message}
+            setMessage={setMessage}
+          />
+        </main>
+        <main className="lg:hidden flex flex-col lg:flex-row w-full h-screen overflow-y-auto">
+          <MobileInbox
+            userList={userList}
+            loading={loading}
+            _OnSelect={_OnSelect}
+            selected={selected}
+            goBackToUserList={goBackToUserList}
+            message={message}
+            setMessage={setMessage}
+          />
+        </main>
+      </div>
+    );
 }
 
 // protected route

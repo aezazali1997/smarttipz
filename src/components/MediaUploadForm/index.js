@@ -46,6 +46,9 @@ const Index = ({
       setHasWatchLimitError(false)
     }
   }, [formik.values.second,formik.values.minute])
+  useEffect(() => {
+    formik.resetForm();
+  }, []);
   
   return (
     <form onSubmit={formik.handleSubmit}>

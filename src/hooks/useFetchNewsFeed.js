@@ -120,6 +120,7 @@ const UseFetchNewsFeed = () => {
           data: { videos, totalVideos, catalogCount }
         }
       } = await axiosInstance.getAllSharedVideos(currentPage);
+
       setPosts(videos);
       setCurrentPage((prev) => (prev = currentPage));
       videos.length >= totalVideos ? setHasMore(false) : setHasMore(true);
@@ -478,6 +479,12 @@ const UseFetchNewsFeed = () => {
         showCancelButton: true,
         confirmButtonText: 'Delete',
         buttonsStyling: false,
+        showLoaderOnConfirm: true,
+        preConfirm: async () => {
+          let res = await axiosInstance.deleteVideo(videoId);
+          console.log('res in use fetch news', res);
+          setCatalogueCount((catalogueCount) => catalogueCount - 1);
+        },
         customClass: {
           confirmButton:
             'w-full inline-flex justify-center rounded-md border-none px-4 py-2 btn text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm',
@@ -486,9 +493,6 @@ const UseFetchNewsFeed = () => {
         }
       }).then(async (result) => {
         if (result.isConfirmed) {
-          let res = await axiosInstance.deleteVideo(videoId);
-          console.log('res in use fetch news', res);
-          setCatalogueCount((catalogueCount) => catalogueCount - 1);
           const originalArray = [...posts];
           let newArray = originalArray.map((item, i) => {
             if (item.Video.id !== videoId) return item;
@@ -610,7 +614,7 @@ const UseFetchNewsFeed = () => {
       const {
         data: { message }
       } = await axiosInstance.sharePost({ caption: shareCaption, videoId: videoId });
-      GetPosts(0);
+      // GetPosts(0);
       Swal.fire({
         text: message,
         icon: 'success',

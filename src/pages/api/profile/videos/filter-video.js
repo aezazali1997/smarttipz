@@ -97,7 +97,8 @@ const handler = async (req, res) => {
       });
 
       if (!videos) {
-        return res.status(400).send({ error: true, data: [], message: API.NO_SUCCESS });
+        return res.status(204).end();
+        // send({ error: true, data: [], message: API.NO_SUCCESS });
       }
       const item = videos;
       const { id, VideoId, Video, Share: Shares, isShared, likeCount, commentCount } = item;

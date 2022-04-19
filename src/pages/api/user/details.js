@@ -25,7 +25,9 @@ const handler = async (req, res) => {
       const {
         id: UserId,
         email,
-        onBoarded
+        onBoarded,
+        name,
+        picture
       } = await User.findOne({
         where: {
           username
@@ -47,7 +49,9 @@ const handler = async (req, res) => {
           userDetail: {
             id: UserId,
             email,
-            onBoarded
+            onBoarded,
+            name,
+            picture
           }
         }
       });

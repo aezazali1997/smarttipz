@@ -536,7 +536,16 @@ const UseFetchProfile = (profile) => {
         confirmButtonText: 'Yes',
         cancelButtonText: 'No',
         buttonsStyling: false,
-
+        showLoaderOnConfirm: true,
+        preConfirm: async () => {
+          const {
+            data: {
+              data: { profileUpdatedRating }
+            }
+          } = await axiosInstance.deleteVideo(videoId);
+          // deletes the video and updated the user profile
+          setProfileRating(profileUpdatedRating);
+        },
         customClass: {
           confirmButton:
             'w-full inline-flex justify-center rounded-md border-none px-4 py-2 btn text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm',
@@ -546,21 +555,15 @@ const UseFetchProfile = (profile) => {
       }).then(async (result) => {
         if (result.isConfirmed) {
           //   deletes the  video
-          const {
-            data: {
-              data: { profileUpdatedRating }
-            }
-          } = await axiosInstance.deleteVideo(videoId)
-          // deletes the video and updated the user profile
-          setProfileRating(profileUpdatedRating)
-          const originalArray = [...myVideos]
-          const originalCatalogueArray = [...catalogues]
-          let newArray = originalCatalogueArray.filter((item) => item.id !== videoId && item)
-          originalArray.splice(index, 1)
-          setCatalogues([...newArray])
-          setMyVideos([...originalArray])
+
+          const originalArray = [...myVideos];
+          const originalCatalogueArray = [...catalogues];
+          let newArray = originalCatalogueArray.filter((item) => item.id !== videoId && item);
+          originalArray.splice(index, 1);
+          setCatalogues([...newArray]);
+          setMyVideos([...originalArray]);
         }
-      })
+      });
     } catch (error) {
       console.log('Api Failed: ', error.message)
     }
