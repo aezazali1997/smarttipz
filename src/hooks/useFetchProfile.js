@@ -62,9 +62,6 @@ const UseFetchProfile = (profile) => {
   useEffect(() => {
     const { accountType } = profile
     enableLoadTestimonial()
-    // localStorage.setItem('isApproved', isApproved);
-    // localStorage.setItem('username', username);
-    // localStorage.setItem('accountType', accountType);
     axiosInstance
       .getFollow()
       .then(
@@ -118,6 +115,9 @@ const UseFetchProfile = (profile) => {
             disableLoadTestimonial()
           }
         )
+    }
+    return ()=>{
+      setFollowed(0);
     }
   }, [])
 

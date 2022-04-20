@@ -59,7 +59,7 @@ const handler = async (req, res) => {
       });
 
       const video = await Video.findOne({
-        attributes: ['id', 'shareCount'],
+        attributes: ['id', 'shareCount', 'rating', 'comment'],
         where: { id: videoId, isApproved: true }
       });
 
@@ -94,11 +94,25 @@ const handler = async (req, res) => {
           UserId: id
         }
       });
+      const shared = {
+        share,
+        sharedPost,
+        VideoId: video.id,
+        avgRating: video.rating,
+        commentCount: video.comment,
+        hasPaid: true,
+        id: newPost.id,
+        isLiked: false,
+        isShared: true,
+        likeCount: 0,
+        shareCount: video.shareCount,
+        totalRaters: 0
+      };
 
       return res.status(201).json({
         error: false,
         message: 'Video Shared',
-        data: { sharedPost }
+        data: { shared }
         // to be continued
       });
     } catch (err) {

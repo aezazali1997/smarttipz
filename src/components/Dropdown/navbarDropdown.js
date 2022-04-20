@@ -52,7 +52,7 @@ const PostActionDropdown = ({ toggleDropdown, DropdownRef, logout, dropdown, set
   };
 
   const _CloseDropdowns = () => {
-    console.log('close drop downs');
+   
     setShowDropdown(false);
     setDropdownPopoverShow(false);
   };

@@ -51,6 +51,7 @@ const handler = async (req, res) => {
           UserId: id
         }
       });
+      console.log('card',card)
       const amountCal = (amount * 100).toString().split('.')[0];
 
       if (card) {

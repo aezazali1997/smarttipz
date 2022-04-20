@@ -33,3 +33,6 @@
 .messages-container{
     height: 88vh;
 }
+.max-height-screen{
+    height: calc(100vh - 4.5rem);
+}

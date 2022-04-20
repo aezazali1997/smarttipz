@@ -137,7 +137,7 @@ const WalletPage = () => {
   }, [1]);
 
   return (
-    <div className="w-100 h-screen">
+    <div className="w-100 max-height-screen">
       <div className=" flex flex-col justify-center items-center h-full">
         <div className="flex text-center items-center">
           <div>
@@ -157,14 +157,14 @@ const WalletPage = () => {
         <div className="flex mt-2">
           <button
             onClick={() => toggleTopUpModal()}
-            className="px-2 mx-1 py-2 sm:w-40 w-32 flex justify-start sm:justify-center items-center text-white text-md rounded-md btn my-1">
+            className="px-2 mx-1 py-2 sm:w-40 w-auto flex justify-start sm:justify-center items-center text-white text-md rounded-md btn my-1">
             <TopUp />
             Top up
           </button>
 
           <button
             onClick={() => toggleWithDrawModal()}
-            className="px-2 mx-1 py-2 sm:w-40 w-32   flex justify-start sm:justify-center items-center text-white text-md rounded-md btn my-1">
+            className="px-2 mx-1 py-2 sm:w-40 w-auto   flex justify-start sm:justify-center items-center text-white text-md rounded-md btn my-1">
             <WithDraw />
             Withdraw
           </button>
