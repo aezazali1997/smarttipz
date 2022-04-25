@@ -22,46 +22,46 @@ const initials = {
 }
 
 const UseFetchProfile = (profile) => {
-  const router = useRouter()
+  const router = useRouter();
 
-  const [showBusinessCard, setShowBusinessCard] = useState(false)
-  const [followers, setFollowers] = useState(0)
-  const [followed, setFollowed] = useState(0)
-  const [businessCard, setBusinessCard] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [uploading, setUploading] = useState(false)
-  const [loadingTestimonial, setLoadingTestimonial] = useState(true)
-  const [imageUrl, setImageUrl] = useState('')
-  const [hasMore, setHasMore] = useState(false)
-  const [testimonial, setTestimonial] = useState([])
-  const [filteredTestimonial, setFilteredTestimonial] = useState([])
-  const [showModal, setShowModal] = useState(false)
-  const [showRequestTestimonial, setShowRequestTestimonial] = useState(false)
-  const [MediaType, setMediaType] = useState(null)
-  const [urls, setUrls] = useState('')
-  const [thumbnailFile, setThumbnailFile] = useState('')
-  const [thumbnailUrl, setThumbnailUrl] = useState('')
-  const [agree, setAgree] = useState(false)
-  const [initialValues, setInitialValues] = useState(initial)
-  const [modalTitle, setModalTitle] = useState('')
-  const [catalogues, setCatalogues] = useState([])
-  const [fetchingCatalogues, setFetchCatalogues] = useState(true)
-  const [myVideos, setMyVideos] = useState([])
-  const [fetchingMyVideos, setFetchMyVideos] = useState(true)
-  const [uploadingThumbnail, setUploadingThumbnail] = useState(false)
-  const [catalogueCount, setCatalogueCount] = useState(0)
-  const [showShareModal, setShowShareModal] = useState(false)
-  const [isSharing, setIsSharing] = useState(false)
-  const [shareData, setShareData] = useState({})
-  const [shareCaption, setShareCaption] = useState('')
-  const [profileRating, setProfileRating] = useState(null)
+  const [showBusinessCard, setShowBusinessCard] = useState(false);
+  const [followers, setFollowers] = useState(0);
+  const [followed, setFollowed] = useState(0);
+  const [businessCard, setBusinessCard] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [loadingTestimonial, setLoadingTestimonial] = useState(true);
+  const [imageUrl, setImageUrl] = useState('');
+  const [hasMore, setHasMore] = useState(false);
+  const [testimonial, setTestimonial] = useState([]);
+  const [filteredTestimonial, setFilteredTestimonial] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [showRequestTestimonial, setShowRequestTestimonial] = useState(false);
+  const [MediaType, setMediaType] = useState(null);
+  const [urls, setUrls] = useState('');
+  const [thumbnailFile, setThumbnailFile] = useState('');
+  const [thumbnailUrl, setThumbnailUrl] = useState('');
+  const [agree, setAgree] = useState(false);
+  const [initialValues, setInitialValues] = useState(initial);
+  const [modalTitle, setModalTitle] = useState('');
+  const [catalogues, setCatalogues] = useState([]);
+  const [fetchingCatalogues, setFetchCatalogues] = useState(true);
+  const [myVideos, setMyVideos] = useState([]);
+  const [fetchingMyVideos, setFetchMyVideos] = useState(true);
+  const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
+  const [catalogueCount, setCatalogueCount] = useState(0);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
+  const [shareData, setShareData] = useState({});
+  const [shareCaption, setShareCaption] = useState('');
+  const [profileRating, setProfileRating] = useState(null);
 
-  let { FileInput, openFileDialog, uploadToS3 } = useS3Upload()
-  let thumbnailRef = useRef()
+  let { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
+  let thumbnailRef = useRef();
 
   useEffect(() => {
-    const { accountType } = profile
-    enableLoadTestimonial()
+    const { accountType } = profile;
+    enableLoadTestimonial();
     axiosInstance
       .getFollow()
       .then(
@@ -70,9 +70,9 @@ const UseFetchProfile = (profile) => {
             data: { followers, followed, avgProfileRating }
           }
         }) => {
-          setFollowed(followed)
-          setFollowers(followers)
-          setProfileRating(avgProfileRating)
+          setFollowed(followed);
+          setFollowers(followers);
+          setProfileRating(avgProfileRating);
         }
       )
       .catch(
@@ -81,12 +81,12 @@ const UseFetchProfile = (profile) => {
             data: { message }
           }
         }) => {}
-      )
+      );
     if (accountType === 'Business') {
       axiosInstance
         .getBusinessCard()
         .then(({ data: { data } }) => {
-          setBusinessCard(data)
+          setBusinessCard(data);
         })
         .catch(
           ({
@@ -94,17 +94,17 @@ const UseFetchProfile = (profile) => {
               data: { message }
             }
           }) => {}
-        )
+        );
       axiosInstance
         .getTestimonial()
         .then(({ data: { data } }) => {
-          const slicedData = data.slice(0, 5)
+          const slicedData = data.slice(0, 5);
           if (data?.length !== slicedData?.length) {
-            setHasMore(true)
+            setHasMore(true);
           }
-          setTestimonial(data)
-          setFilteredTestimonial(slicedData)
-          disableLoadTestimonial()
+          setTestimonial(data);
+          setFilteredTestimonial(slicedData);
+          disableLoadTestimonial();
         })
         .catch(
           ({
@@ -112,67 +112,106 @@ const UseFetchProfile = (profile) => {
               data: { message }
             }
           }) => {
-            disableLoadTestimonial()
+            disableLoadTestimonial();
           }
-        )
+        );
     }
-    return ()=>{
+    return () => {
       setFollowed(0);
-    }
-  }, [])
+    };
+  }, []);
 
   const fetchCatalogues = async () => {
-    enableFetchCatalogue()
+    enableFetchCatalogue();
     try {
       const {
         data: {
           data: { catalogues }
         }
-      } = await axiosInstance.getCatalogues()
-      setCatalogues(catalogues)
-      disableFetchCatalogue()
+      } = await axiosInstance.getCatalogues();
+      setCatalogues(catalogues);
+      disableFetchCatalogue();
     } catch ({
       response: {
         data: { message }
       }
     }) {
-      console.log('Error in catalogue Api: ', message)
-      disableFetchCatalogue()
+      console.log('Error in catalogue Api: ', message);
+      disableFetchCatalogue();
     }
-  }
+  };
+  const HandleFavouritePost = async (id) => {
+    try {
+      const {
+        data: {
+          data: { isFavourite },
+          message
+        }
+      } = await axiosInstance.favouritePost({ videoId: id });
+
+      // sets the icon color changing effect
+      let tmpposts = myVideos;
+      for (let i = 0; i < tmpposts.length; i++) {
+        if (tmpposts[i].VideoId === id) {
+          tmpposts[i].isFavourite = !tmpposts[i].isFavourite;
+        }
+      }
+      setMyVideos([...tmpposts]);
+
+      // let tmpposts1 = catalogues;
+      // for (let i = 0; i < tmpposts1.length; i++) {
+      //   if (tmpposts1[i].VideoId === id) {
+      //     tmpposts1[i].isFavourite = !tmpposts1[i].isFavourite;
+      //   }
+      // }
+      // setCatalogues([...tmpposts1]);
+
+      Swal.fire({
+        icon: 'success',
+        title: `${isFavourite ? 'Added to' : 'Removed from'} favourite`,
+        text: `Video ${isFavourite ? 'Added to' : 'Removed from'} favourite section`,
+        showCancelButton: false,
+        showDenyButton: false,
+        showConfirmButton: false,
+        timer: 3000
+      });
+    } catch (error) {
+      console.log('Like Post Api failed: ', error.message);
+    }
+  };
 
   const fetchMyVideos = async () => {
-    enableFetchMyVideos()
+    enableFetchMyVideos();
     try {
       const {
         data: {
           data: { videos }
         }
-      } = await axiosInstance.getVideos()
-      setMyVideos(videos)
-      var count = 0
+      } = await axiosInstance.getVideos();
+      setMyVideos(videos);
+      var count = 0;
       for (let i = 0; i < videos.length; i++) {
         if (videos[i].Video.catalogue === true) {
-          count = count + 1
+          count = count + 1;
         }
       }
-      setCatalogueCount(count)
+      setCatalogueCount(count);
 
-      disableFetchMyVideos()
+      disableFetchMyVideos();
     } catch ({
       response: {
         data: { message }
       }
     }) {
-      console.log('Error in videos Api: ', message)
-      disableFetchMyVideos()
+      console.log('Error in videos Api: ', message);
+      disableFetchMyVideos();
     }
-  }
+  };
 
   useEffect(() => {
-    fetchCatalogues()
-    fetchMyVideos()
-  }, [])
+    fetchCatalogues();
+    fetchMyVideos();
+  }, []);
   // useEffect(()=>{
   //     // if(!(profileRating===null || profileRating>0)){
 
@@ -181,53 +220,53 @@ const UseFetchProfile = (profile) => {
   //     // setProfileRating(calProfileRating(myVideos));
   // },[myVideos])
 
-  useEffect(() => {}, [testimonial, catalogues])
+  useEffect(() => {}, [testimonial, catalogues]);
 
   let fetchMoreData = () => {
-    let copyAllTestimonials = [...testimonial]
-    let copyFilteredTestimonials = [...filteredTestimonial]
-    let moreData = copyAllTestimonials.slice(copyFilteredTestimonials?.length, copyFilteredTestimonials?.length + 5)
-    let updatedTestimonials = [...copyAllTestimonials, ...moreData]
+    let copyAllTestimonials = [...testimonial];
+    let copyFilteredTestimonials = [...filteredTestimonial];
+    let moreData = copyAllTestimonials.slice(copyFilteredTestimonials?.length, copyFilteredTestimonials?.length + 5);
+    let updatedTestimonials = [...copyAllTestimonials, ...moreData];
     if (testimonial?.length !== updatedTestimonials?.length) {
-      setHasMore(true)
+      setHasMore(true);
     } else {
-      setHasMore(false)
+      setHasMore(false);
     }
-    setFilteredTestimonial(updatedTestimonials)
-  }
+    setFilteredTestimonial(updatedTestimonials);
+  };
 
   let handleShowBusinessCard = () => {
-    setShowBusinessCard((showBusinessCard) => !showBusinessCard)
-  }
+    setShowBusinessCard((showBusinessCard) => !showBusinessCard);
+  };
 
   let handleFileChange = async (file) => {
-    enableUploading()
-    let { url } = await uploadToS3(file)
-    setImageUrl(url)
-    disableUploading()
-  }
+    enableUploading();
+    let { url } = await uploadToS3(file);
+    setImageUrl(url);
+    disableUploading();
+  };
 
   const _DeleteImg = () => {
-    setUrls('')
-  }
+    setUrls('');
+  };
 
   const _AddTestimonial = () => {
-    setShowRequestTestimonial(!showRequestTestimonial)
-  }
+    setShowRequestTestimonial(!showRequestTestimonial);
+  };
 
   const _EditTestimonial = (id, isVisible) => {
     axiosInstance
       .updateTestimonial({ id, isVisible })
       .then(({ data: { data, message } }) => {
-        const CopyOriginalArray = [...testimonial]
+        const CopyOriginalArray = [...testimonial];
         let updatedArray = CopyOriginalArray.map((item, index) => {
-          if (item.id !== id) return item
+          if (item.id !== id) return item;
           else {
-            item.isVisible = !isVisible
-            return item
+            item.isVisible = !isVisible;
+            return item;
           }
-        })
-        setTestimonial(updatedArray)
+        });
+        setTestimonial(updatedArray);
       })
       .catch(
         ({
@@ -235,10 +274,10 @@ const UseFetchProfile = (profile) => {
             data: { message }
           }
         }) => {
-          console.log('error: ', message)
+          console.log('error: ', message);
         }
-      )
-  }
+      );
+  };
 
   const _DeleteTestimonial = (data) => {
     Swal.fire({
@@ -265,10 +304,10 @@ const UseFetchProfile = (profile) => {
               timer: 3000,
               showCancelButton: false,
               showConfirmButton: false
-            })
-            let copyOriginal = [...testimonial]
-            let updatedArray = copyOriginal.filter((item) => (item.id !== data?.id ? item : ''))
-            setTestimonial(updatedArray)
+            });
+            let copyOriginal = [...testimonial];
+            let updatedArray = copyOriginal.filter((item) => (item.id !== data?.id ? item : ''));
+            setTestimonial(updatedArray);
           })
           .catch((e) => {
             Swal.fire({
@@ -277,66 +316,66 @@ const UseFetchProfile = (profile) => {
               timer: 3000,
               showCancelButton: false,
               showConfirmButton: false
-            })
-          })
+            });
+          });
       }
-    })
-  }
+    });
+  };
 
   const handleShowModal = () => {
-    setShowModal(!showModal)
-  }
+    setShowModal(!showModal);
+  };
 
   const enableLoading = () => {
-    setLoading(true)
-  }
+    setLoading(true);
+  };
 
   const disableLoading = () => {
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
   const enableUploading = () => {
-    setUploading(true)
-  }
+    setUploading(true);
+  };
 
   const disableUploading = () => {
-    setUploading(false)
-  }
+    setUploading(false);
+  };
   const enableLoadTestimonial = () => {
-    setLoadingTestimonial(true)
-  }
+    setLoadingTestimonial(true);
+  };
 
   const disableLoadTestimonial = () => {
-    setLoadingTestimonial(false)
-  }
+    setLoadingTestimonial(false);
+  };
 
   const enableFetchCatalogue = () => {
-    setFetchCatalogues(true)
-  }
+    setFetchCatalogues(true);
+  };
 
   const disableFetchCatalogue = () => {
-    setFetchCatalogues(false)
-  }
+    setFetchCatalogues(false);
+  };
 
   const enableFetchMyVideos = () => {
-    setFetchMyVideos(true)
-  }
+    setFetchMyVideos(true);
+  };
 
   const disableFetchMyVideos = () => {
-    setFetchMyVideos(false)
-  }
+    setFetchMyVideos(false);
+  };
 
   const enableShareLoading = () => {
-    setIsSharing(true)
-  }
+    setIsSharing(true);
+  };
 
   const disableShareLoading = () => {
-    setIsSharing(false)
-  }
+    setIsSharing(false);
+  };
 
   const _OnRequestTestimonial = (values, resetForm) => {
-    const { email } = values
-    enableLoading()
+    const { email } = values;
+    enableLoading();
     axiosInstance
       .requestTestimonial({ email })
       .then(({ data: { message } }) => {
@@ -345,10 +384,10 @@ const UseFetchProfile = (profile) => {
           icon: 'success',
           buttons: false,
           timer: 3000
-        })
-        _AddTestimonial()
-        resetForm({ email: '' })
-        disableLoading()
+        });
+        _AddTestimonial();
+        resetForm({ email: '' });
+        disableLoading();
       })
       .catch(
         ({
@@ -369,50 +408,50 @@ const UseFetchProfile = (profile) => {
                 icon: 'error',
                 buttons: false,
                 timer: 3000
-              })
-          disableLoading()
+              });
+          disableLoading();
         }
-      )
-  }
+      );
+  };
 
   const _OnUploadMedia = async (values, setSubmitting, resetForm) => {
-    setSubmitting(true)
-    values.url = urls
-    values.thumbnail = thumbnailUrl
-    values.category = 'catalogue'
-    values.agree = agree
+    setSubmitting(true);
+    values.url = urls;
+    values.thumbnail = thumbnailUrl;
+    values.category = 'catalogue';
+    values.agree = agree;
     try {
-      const res = await axiosInstance.uploadNewsFeed(values)
+      const res = await axiosInstance.uploadNewsFeed(values);
       const {
         data: { message }
-      } = res
+      } = res;
       Swal.fire({
         text: message,
         timer: 3000,
         icon: 'success',
         showCancelButton: false,
         showConfirmButton: false
-      })
-      setCatalogues([values, ...catalogues])
-      resetForm(initials)
-      setSubmitting(false)
-      _CloseUploadModal()
+      });
+      setCatalogues([values, ...catalogues]);
+      resetForm(initials);
+      setSubmitting(false);
+      _CloseUploadModal();
     } catch ({
       response: {
         data: { message }
       }
     }) {
-      console.log('API Failed: ', message)
+      console.log('API Failed: ', message);
       Swal.fire({
         text: message,
         timer: 3000,
         icon: 'error',
         showCancelButton: false,
         showConfirmButton: false
-      })
-      setSubmitting(false)
+      });
+      setSubmitting(false);
     }
-  }
+  };
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -420,58 +459,58 @@ const UseFetchProfile = (profile) => {
     validationSchema: modalTitle === '' ? RequestTestimonialFormSchema : UploadPhotoVideoSchema,
     validateOnBlur: true,
     onSubmit: (values, { resetForm, setSubmitting }) => {
-      modalTitle === '' ? _OnRequestTestimonial(values, resetForm) : _OnUploadMedia(values, setSubmitting, resetForm)
+      modalTitle === '' ? _OnRequestTestimonial(values, resetForm) : _OnUploadMedia(values, setSubmitting, resetForm);
     }
-  })
+  });
 
   let onChangeThumbnail = async ({ target }) => {
-    const { files } = target
+    const { files } = target;
     for (let i = 0; i < files.length; i++) {
-      setUploadingThumbnail(true)
-      let file = files[0]
-      setThumbnailFile(file)
-      const { url } = await uploadToS3(file)
-      setThumbnailUrl(url)
-      setUploadingThumbnail(false)
+      setUploadingThumbnail(true);
+      let file = files[0];
+      setThumbnailFile(file);
+      const { url } = await uploadToS3(file);
+      setThumbnailUrl(url);
+      setUploadingThumbnail(false);
     }
-  }
+  };
 
   let _OnThumbnailClick = () => {
-    thumbnailRef.current.click()
-  }
+    thumbnailRef.current.click();
+  };
 
   let _OnRemoveThumbnail = () => {
-    setThumbnailUrl('')
-    setThumbnailFile('')
-  }
+    setThumbnailUrl('');
+    setThumbnailFile('');
+  };
 
   let _OpenUploadModal = () => {
-    setModalTitle('Upload Photo/Video')
-    setInitialValues(initials)
-    setShowModal(true)
-  }
+    setModalTitle('Upload Photo/Video');
+    setInitialValues(initials);
+    setShowModal(true);
+  };
 
   let _CloseUploadModal = () => {
-    setModalTitle('')
-    setUrls('')
-    setThumbnailUrl('')
-    setAgree(false)
-    setShowModal(false)
-  }
+    setModalTitle('');
+    setUrls('');
+    setThumbnailUrl('');
+    setAgree(false);
+    setShowModal(false);
+  };
 
   let ChangeAgreement = (e) => {
-    const { checked } = e.target
-    setAgree(checked)
-  }
+    const { checked } = e.target;
+    setAgree(checked);
+  };
 
   // console.log('catalogueCount: ', catalogueCount);
 
   const _HandleCatalogue = async (videoId, catalogue) => {
     if (catalogueCount < 5 || catalogue === true) {
       try {
-        const data = await axiosInstance.addToCatalogue({ videoId, catalogue })
-        const originalArray = [...catalogues]
-        const originalVideoArray = [...myVideos]
+        const data = await axiosInstance.addToCatalogue({ videoId, catalogue });
+        const originalArray = [...catalogues];
+        const originalVideoArray = [...myVideos];
         if (catalogue) {
           //   asking wether user wants to delete the catalogue video or not
           Swal.fire({
@@ -491,29 +530,29 @@ const UseFetchProfile = (profile) => {
           }).then((result) => {
             if (result.isConfirmed) {
               //   deletes the catalogue video
-              let newArray = originalArray.filter((item) => item.id !== videoId && item)
-              setCatalogues(newArray)
-              setCatalogueCount((catalogueCount) => catalogueCount - 1)
+              let newArray = originalArray.filter((item) => item.id !== videoId && item);
+              setCatalogues(newArray);
+              setCatalogueCount((catalogueCount) => catalogueCount - 1);
             }
-          })
+          });
         } else {
           //   adds the video to catalogue
-          fetchCatalogues()
-          setCatalogueCount((catalogueCount) => catalogueCount + 1)
+          fetchCatalogues();
+          setCatalogueCount((catalogueCount) => catalogueCount + 1);
         }
         // mapping the video after deleting and adding from catalogue
         let newArray = originalVideoArray.map((item) => {
-          if (item.id !== videoId) return item
-          item.Video.catalogue = !catalogue
-          return item
-        })
-        setMyVideos(newArray)
+          if (item.id !== videoId) return item;
+          item.Video.catalogue = !catalogue;
+          return item;
+        });
+        setMyVideos(newArray);
       } catch ({
         response: {
           data: { message }
         }
       }) {
-        console.log('error in Api: ', message)
+        console.log('error in Api: ', message);
       }
     } else {
       Swal.fire({
@@ -522,9 +561,9 @@ const UseFetchProfile = (profile) => {
         icon: 'info',
         showConfirmButton: true,
         showCancelButton: false
-      })
+      });
     }
-  }
+  };
 
   const _HandleDeleteVideo = async (index, videoId) => {
     try {
@@ -565,49 +604,49 @@ const UseFetchProfile = (profile) => {
         }
       });
     } catch (error) {
-      console.log('Api Failed: ', error.message)
+      console.log('Api Failed: ', error.message);
     }
-  }
+  };
   const _HandleGotoUserProfile = (id, username) => {
     if (id !== parseInt(localStorage.getItem('id'))) {
-      router.push(`/dashboard/profile/${username}`)
+      router.push(`/dashboard/profile/${username}`);
     } else {
-      router.push(`/dashboard/profile`)
+      router.push(`/dashboard/profile`);
     }
-  }
+  };
 
   const _HandleGotoVideoDetails = (id) => {
-    router.push(`/dashboard/videos/${id}`)
-  }
+    router.push(`/dashboard/videos/${id}`);
+  };
   const postViewOnVideo = async (VideoId) => {
     try {
-      await axiosInstance.viewPost({ VideoId: VideoId })
+      await axiosInstance.viewPost({ VideoId: VideoId });
     } catch (error) {
-      console.log('ERROR:', error)
+      console.log('ERROR:', error);
     }
-  }
+  };
   const HandleLikePost = async (id, isLiked) => {
-    const updatedCatPosts = await checkLikeCount(catalogues, id, isLiked)
-    const updatedVideoPosts = await checkLikeCount(myVideos, id, isLiked)
-    setCatalogues(updatedCatPosts)
-    setMyVideos(updatedVideoPosts)
+    const updatedCatPosts = await checkLikeCount(catalogues, id, isLiked);
+    const updatedVideoPosts = await checkLikeCount(myVideos, id, isLiked);
+    setCatalogues(updatedCatPosts);
+    setMyVideos(updatedVideoPosts);
     try {
-      await axiosInstance.likePost({ postId: id })
+      await axiosInstance.likePost({ postId: id });
     } catch ({
       response: {
         data: { message }
       }
     }) {
-      console.log('Like Post Api failed: ', message)
+      console.log('Like Post Api failed: ', message);
     }
-  }
+  };
 
   const _HandleCommentCounts = async (postId, operator) => {
-    const updatedCatPost = await checkCountById(catalogues, 'commentCount', postId, operator)
-    const updatedVideoPost = await checkCountById(myVideos, 'commentCount', postId, operator)
-    setCatalogues(updatedCatPost)
-    setMyVideos(updatedVideoPost)
-  }
+    const updatedCatPost = await checkCountById(catalogues, 'commentCount', postId, operator);
+    const updatedVideoPost = await checkCountById(myVideos, 'commentCount', postId, operator);
+    setCatalogues(updatedCatPost);
+    setMyVideos(updatedVideoPost);
+  };
 
   let _OpenShareModal = (id, thumbnail, url, picture, name, title) => {
     setShareData({
@@ -617,43 +656,43 @@ const UseFetchProfile = (profile) => {
       picture,
       name,
       title
-    })
-    setShowShareModal(true)
-  }
+    });
+    setShowShareModal(true);
+  };
 
   let _CloseShareModal = () => {
-    setShowShareModal(false)
-    setShareCaption('')
-  }
+    setShowShareModal(false);
+    setShareCaption('');
+  };
 
   const _HandleChangeCaption = ({ target }) => {
-    const { value } = target
-    setShareCaption(value)
-  }
+    const { value } = target;
+    setShareCaption(value);
+  };
 
   const _HandleSharePost = async () => {
-    enableShareLoading()
+    enableShareLoading();
     try {
       const {
         data: { message }
-      } = await axiosInstance.sharePost({ caption: shareCaption, videoId: shareData?.videoId })
+      } = await axiosInstance.sharePost({ caption: shareCaption, videoId: shareData?.videoId });
       Swal.fire({
         text: message,
         icon: 'success',
         timer: 3000,
         showConfirmButton: false,
         showCancelButton: false
-      })
-      disableShareLoading()
-      _CloseShareModal()
+      });
+      disableShareLoading();
+      _CloseShareModal();
     } catch ({
       response: {
         data: { message }
       }
     }) {
-      console.log('Share Post Api failed: ', message)
+      console.log('Share Post Api failed: ', message);
     }
-  }
+  };
 
   return {
     followed,
@@ -716,7 +755,8 @@ const UseFetchProfile = (profile) => {
     isSharing,
     _HandleCommentCounts,
     profileRating,
-    postViewOnVideo
-  }
-};;;;;
+    postViewOnVideo,
+    HandleFavouritePost
+  };
+};
 export default UseFetchProfile;

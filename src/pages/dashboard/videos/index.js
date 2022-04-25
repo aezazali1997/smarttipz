@@ -26,7 +26,8 @@ const Videos = () => {
     isSharing,
     shareData,
     shareCaption,
-    postViewOnVideo
+    postViewOnVideo,
+    HandleFavouritePost
   } = UseFetchVideo();
 
   return (
@@ -90,6 +91,7 @@ const Videos = () => {
               commentCount,
               shareCount,
               avgRating,
+              isFavourite,
               Video: {
                 id,
                 title,
@@ -127,6 +129,8 @@ const Videos = () => {
                   commentCount={commentCount}
                   shareCount={shareCount}
                   videoCost={videoCost}
+                  isFavourite={isFavourite}
+                  HandleFavouritePost={HandleFavouritePost}
                   videoType={videoType}
                   mediaType={mediaType}
                   description={description}

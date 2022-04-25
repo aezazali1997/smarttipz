@@ -28,6 +28,7 @@ const NewsfeedCard = ({
   width,
   User,
   isLiked,
+  isFavourite,
   likeCount,
   commentCount,
   shareCount,
@@ -50,14 +51,14 @@ const NewsfeedCard = ({
   _HandleCommentCounts,
   _HandleGotoUserProfile,
   _HandleGotoVideoDetails,
-  _handleViewsOnVideo,
-  }) => {
+  _handleViewsOnVideo
+}) => {
   const [showCommentSection, setShowCommentSection] = useState(false);
   const [message, setMessage] = useState('');
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [stopVideo, setStopVideo] = useState(false);
-  const [isViewed,setIsViewed]=useState(false);
+  const [isViewed, setIsViewed] = useState(false);
 
   const getAllCommentsByVideoId = async () => {
     try {
@@ -194,10 +195,12 @@ const NewsfeedCard = ({
                 </ReactTooltip>
               </div>
 
-              <span data-for="fav" data-tip onClick={() => HandleFavouritePost(id)}>
+              <span data-for="fav" data-tip onClick={() => HandleFavouritePost(videoId)}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="w-6 h-6 text-gray-500 hover:text-purple-600 cursor-pointer"
+                  className={`w-6 h-6 ${
+                    !isFavourite ? 'text-gray-500' : 'text-purple-600'
+                  } hover:text-purple-600 cursor-pointer`}
                   fill="currentColor"
                   viewBox="0 0 24 24"
                   stroke="currentColor">
@@ -209,7 +212,7 @@ const NewsfeedCard = ({
                   />
                 </svg>
                 <ReactTooltip id="fav" place="top" effect="solid" border={false} borderColor="white" clickable={false}>
-                  Add to favourite
+                  {isFavourite ? 'add' : 'remove'} favourite
                 </ReactTooltip>
               </span>
               <div className="flex items-start justify-start">

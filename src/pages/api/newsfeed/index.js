@@ -9,6 +9,7 @@ const AllPosts = require('models/AllPost');
 const jwt = require('jsonwebtoken');
 const Pay = require('models/Pay');
 const db = require('models/db');
+import Favourite from 'models/Favourite';
 import Cors from 'cors';
 import initMiddleware from 'utils/init-middleWare';
 
@@ -261,7 +262,13 @@ const handler = async (req, res) => {
         });
 
         let shareCount = Video.shareCount;
-
+        const isFavourite = await Favourite.findOne({
+          where: {
+            reviewerId: userId,
+            VideoId: Video.id
+          }
+        });
+        console.log('is fav-----------------------------------', isFavourite);
         const ratings =
           await db.query(`select avg(r."rating") as "avgRating", count(r."AllPostId") as "totalRaters" from "AllPosts" p
 						left join "Ratings" as r on p.id=r."AllPostId"
@@ -293,7 +300,8 @@ const handler = async (req, res) => {
           shareCount,
           commentCount,
           isLiked: isLiked ? true : false,
-          hasPaid: paid !== null ? true : false
+          hasPaid: paid !== null ? true : false,
+          isFavourite: isFavourite !== null ? true : false
         };
       }
 

@@ -416,9 +416,30 @@ const UseFetchNewsFeed = () => {
   const HandleFavouritePost = async (id) => {
     try {
       const {
-        data: { data, message }
+        data: {
+          data: { isFavourite },
+          message
+        }
       } = await axiosInstance.favouritePost({ videoId: id });
-      GetPosts(0);
+
+      // sets the icon color changing effect
+      let tmpposts = posts;
+      for (let i = 0; i < tmpposts.length; i++) {
+        if (tmpposts[i].VideoId === id) {
+          tmpposts[i].isFavourite = !tmpposts[i].isFavourite;
+        }
+      }
+      setPosts([...tmpposts]);
+
+      Swal.fire({
+        icon: 'success',
+        title: `${isFavourite ? 'Added to' : 'Removed from'} favourite`,
+        text: `Video ${isFavourite ? 'Added to' : 'Removed from'} favourite section`,
+        showCancelButton: false,
+        showDenyButton: false,
+        showConfirmButton: false,
+        timer: 3000
+      });
     } catch ({
       response: {
         data: { message }

@@ -47,58 +47,52 @@ const handler = async (req, res) => {
         } = req;
 
         try {
-            if (!authorization) {
-                return res.status(401).send({ error: true, data: [], message: AUTH.NOT_LOGGED_IN })
-            }
+          if (!authorization) {
+            return res.status(401).send({ error: true, data: [], message: AUTH.NOT_LOGGED_IN });
+          }
 
-            const { username } = jwt.verify(
-                authorization.split(' ')[1],
-                process.env.SECRET_KEY
-            );
+          const { username } = jwt.verify(authorization.split(' ')[1], process.env.SECRET_KEY);
 
-            if (!body) {
-                return res.status(400).send({ error: true, data: [], message: AUTH.NO_USER_SENT })
-            }
+          if (!body) {
+            return res.status(400).send({ error: true, data: [], message: AUTH.NO_USER_SENT });
+          }
 
-            const { id } = await User.findOne({
-                attributes: ['id'],
-                where: { username, isBlocked: false, isDeleted: false }
+          const { id } = await User.findOne({
+            attributes: ['id'],
+            where: { username, isBlocked: false, isDeleted: false }
+          });
+
+          const video = await Video.findOne({
+            attributes: ['id'],
+            where: { id: videoId, isApproved: true }
+          });
+
+          const post = await Favourite.findOne({ where: { VideoId: video.id, reviewerId: id } });
+
+          //
+
+          if (post === null) {
+            const favourite = await Favourite.create({
+              reviewerId: id
             });
 
-            // console.log('id => ', id);
-
-            const video = await Video.findOne({
-                attributes: ['id'],
-                where: { id: videoId, isApproved: true }
+            await favourite.setVideo(video);
+            return res.status(201).json({
+              error: false,
+              message: API.SUCCESS,
+              data: {
+                isFavourite: true
+              }
             });
-
-            // console.log('video => ', video);
-
-
-            const post = await Favourite.findOne({ where: { VideoId: video.id, reviewerId: id } });
-
-            // console.log('post => ', post);
-// 
-
-            if (post === null) {
-                const favourite = await Favourite.create({
-                    reviewerId: id,
-                });
-
-                await favourite.setVideo(video);
-                return res.status(201).json({
-                    error: false,
-                    message: API.SUCCESS,
-                    data: {}
-                });
+          }
+          await Favourite.destroy({ where: { reviewerId: id, VideoId: video.id } });
+          res.status(201).json({
+            error: false,
+            message: 'Post removed from favourites',
+            data: {
+              isFavourite: false
             }
-            await Favourite.destroy({ where: { reviewerId: id } });
-            // res.status(200).json({
-            //     error: false,
-            //     message: 'Post removed from favourites',
-            //     data: {}
-            // });
-
+          });
         } catch (err) {
             console.log("Favourite Api Failed Error: ", err.message);
             res.status(500).send({ error: true, data: [], message: `${API.ERROR}:${err.message}` });

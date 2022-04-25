@@ -414,6 +414,44 @@ const UseSearch = () => {
     GetUserProfiles();
   }, [filterSearch, sort, category, videoCategory, videoType, account, rateFilter]);
 
+  const HandleFavouritePost = async (id) => {
+    console.log('handle fav');
+    try {
+      const {
+        data: {
+          data: { isFavourite },
+          message
+        }
+      } = await axiosInstance.favouritePost({ videoId: id });
+
+      // sets the icon color changing effect
+      let tmpposts = posts;
+      if (Array.isArray(tmpposts)) {
+        for (let i = 0; i < tmpposts.length; i++) {
+          if (tmpposts[i].VideoId === id) {
+            tmpposts[i].isFavourite = !tmpposts[i].isFavourite;
+          }
+        }
+        setPosts([...tmpposts]);
+      } else {
+        tmpposts.isFavourite = !tmpposts.isFavourite;
+        setPosts({ ...tmpposts });
+      }
+
+      Swal.fire({
+        icon: 'success',
+        title: `${isFavourite ? 'Added to' : 'Removed from'} favourite`,
+        text: `Video ${isFavourite ? 'Added to' : 'Removed from'} favourite section`,
+        showCancelButton: false,
+        showDenyButton: false,
+        showConfirmButton: false,
+        timer: 3000
+      });
+    } catch (error) {
+      console.log('fav Post Api failed: ', error.message);
+    }
+  };
+
   const _HandleCatalogue = async (videoId, catalogue) => {
     if (catalogueCount < 5 || catalogue === true) {
       try {
@@ -471,20 +509,20 @@ const UseSearch = () => {
         }
       }).then(async (result) => {
         if (result.isConfirmed) {
-          const res = await axiosInstance.deleteVideo(videoId)
-          console.log('res in use search', res)
-          setCatalogueCount((catalogueCount) => catalogueCount - 1)
-          const originalArray = [...posts]
+          const res = await axiosInstance.deleteVideo(videoId);
+          console.log('res in use search', res);
+          setCatalogueCount((catalogueCount) => catalogueCount - 1);
+          const originalArray = [...posts];
           let newArray = originalArray.map((item, i) => {
-            if (item.Video.id !== videoId) return item
-            item.Video.isApproved = false
-            return item
-          })
-          setPosts(newArray)
+            if (item.Video.id !== videoId) return item;
+            item.Video.isApproved = false;
+            return item;
+          });
+          setPosts(newArray);
         }
-      })
+      });
     } catch (error) {
-      console.log('Api Failed: ', error.message)
+      console.log('Api Failed: ', error.message);
     }
   };
 
@@ -760,7 +798,8 @@ const UseSearch = () => {
     paymentSubmit,
     tipError,
     showCelebration,
-    setAmountReciever
+    setAmountReciever,
+    HandleFavouritePost
   };
 };
 

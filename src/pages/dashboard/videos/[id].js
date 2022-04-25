@@ -204,6 +204,41 @@ const VideoDetailScreen = () => {
       console.log(message);
     }
   };
+  const HandleFavouritePosts = async (id) => {
+    try {
+      const {
+        data: {
+          data: { isFavourite },
+          message
+        }
+      } = await axiosInstance.favouritePost({ videoId: id });
+
+      // sets the icon color changing effect
+      let tmpposts = posts;
+      for (let i = 0; i < tmpposts.length; i++) {
+        if (tmpposts[i].VideoId === id) {
+          tmpposts[i].isFavourite = !tmpposts[i].isFavourite;
+        }
+      }
+      setPosts([...tmpposts]);
+
+      Swal.fire({
+        icon: 'success',
+        title: `${isFavourite ? 'Added to' : 'Removed from'} favourite`,
+        text: `Video ${isFavourite ? 'Added to' : 'Removed from'} favourite section`,
+        showCancelButton: false,
+        showDenyButton: false,
+        showConfirmButton: false,
+        timer: 3000
+      });
+    } catch ({
+      response: {
+        data: { message }
+      }
+    }) {
+      console.log('Like Post Api failed: ', message);
+    }
+  };
 
   const _FetchMoreData = async () => {
     try {
@@ -233,6 +268,7 @@ const VideoDetailScreen = () => {
     shareCount = 0,
     commentCount = 0,
     isLiked = false,
+
     Video: {
       id: videoId = '',
       description = '',
@@ -570,6 +606,35 @@ const VideoDetailScreen = () => {
     setShareCaption('');
   };
 
+  const HandleFavouritePost = async (id) => {
+    console.log('id', id);
+    try {
+      const {
+        data: {
+          data: { isFavourite },
+          message
+        }
+      } = await axiosInstance.favouritePost({ videoId: id });
+
+      // sets the icon color changing effect
+      let tmppost = video;
+      tmppost.isFavourite = !tmppost.isFavourite;
+      setVideo({ ...tmppost });
+
+      Swal.fire({
+        icon: 'success',
+        title: `${isFavourite ? 'Added to' : 'Removed from'} favourite`,
+        text: `Video ${isFavourite ? 'Added to' : 'Removed from'} favourite section`,
+        showCancelButton: false,
+        showDenyButton: false,
+        showConfirmButton: false,
+        timer: 3000
+      });
+    } catch (error) {
+      console.log('Like Post Api failed: ', error.message);
+    }
+  };
+
   const _HandleSharePost = async () => {
     const { videoId = '' } = shareData;
     const updatedVideo = { ...video };
@@ -677,14 +742,22 @@ const VideoDetailScreen = () => {
                     d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                   />
                 </svg> */}
-            <span data-for="fav" data-tip onClick={() => HandleFavouritePost(id)}>
+            <span
+              data-for="fav"
+              data-tip
+              onClick={() => {
+                console.log(video);
+                //  HandleFavouritePost(video.VideoId)}
+              }}>
               {/* <svg
 									xmlns="http://www.w3.org/2000/svg">
 									<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
 								</svg> */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="w-6 h-6 text-gray-500 hover:text-purple-600 cursor-pointer"
+                className={`w-6 h-6 ${
+                  video.isFavourite ? 'text-purple-600' : 'text-gray-500'
+                } hover:text-purple-600 cursor-pointer`}
                 fill="currentColor"
                 viewBox="0 0 24 24"
                 stroke="currentColor">
@@ -788,19 +861,23 @@ const VideoDetailScreen = () => {
 							xmlns="http://www.w3.org/2000/svg">
 							<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
 						</svg> */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-6 h-6 text-gray-500 hover:text-purple-600 cursor-pointer"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-              />
-            </svg>
+            <span onClick={() => HandleFavouritePost(video.VideoId)}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className={`w-6 h-6 ${
+                  !video.isFavourite ? 'text-gray-500' : 'text-purple-600'
+                }  hover:text-purple-600 cursor-pointer`}
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+            </span>
             <div className="flex items-start justify-start">
               <PostActionDropdown
                 _HandleCatalogue={() => _HandleCatalogue(id, catalogue)}
@@ -992,6 +1069,7 @@ const VideoDetailScreen = () => {
                     id: postId,
                     avgRating,
                     hasPaid,
+                    isFavourite,
                     Video: {
                       description,
                       title,
@@ -1031,6 +1109,7 @@ const VideoDetailScreen = () => {
                       videoType={videoType}
                       mediaType={mediaType}
                       description={description}
+                      isFavourite={isFavourite}
                       title={title}
                       isPost={true}
                       width={'max-w-lg'}
@@ -1049,6 +1128,7 @@ const VideoDetailScreen = () => {
                       posts={posts}
                       setPosts={setPosts}
                       restrictPaidVideo={!hasPaid}
+                      HandleFavouritePosts={HandleFavouritePosts}
                     />
                   </div>
                 )

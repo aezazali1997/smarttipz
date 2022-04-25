@@ -134,6 +134,7 @@ const NewsFeed = () => {
                   avgRating,
                   totalRaters,
                   isLiked,
+                  isFavourite,
                   Video: {
                     id,
                     description,
@@ -202,6 +203,7 @@ const NewsFeed = () => {
                       watchLimit={watchLimit}
                       productLink={productLink}
                       isLiked={isLiked}
+                      isFavourite={isFavourite}
                       posts={posts}
                       width={'max-w-lg'}
                       likeCount={likeCount}

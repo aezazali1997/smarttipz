@@ -1,3 +1,5 @@
+import Favourite from 'models/Favourite';
+
 const AllPosts = require('models/AllPost');
 const Comments = require('models/Comments');
 const PostLikee = require('models/Like');
@@ -94,6 +96,14 @@ const getStats = async (video, userId) => {
       VideoId
     }
   });
+
+  const isFavourite = await Favourite.findOne({
+    where: {
+      reviewerId: userId,
+      VideoId: VideoId
+    }
+  });
+
   const ratings =
     await db.query(`select avg(r."rating") as "avgRating", count(r."AllPostId") as "totalRaters" from "AllPosts" p
 						left join "Ratings" as r on p.id=r."AllPostId"
@@ -122,7 +132,8 @@ const getStats = async (video, userId) => {
     commentCount,
     shareCount,
     isLiked: isLiked ? true : false,
-    hasPaid: paid !== null ? true : false
+    hasPaid: paid !== null ? true : false,
+    isFavourite: isFavourite !== null ? true : false
   };
   return data;
 };

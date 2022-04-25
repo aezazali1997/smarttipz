@@ -13,14 +13,14 @@ export function AppWrapper({ children }) {
   const [profilePic, setProfilePic] = useState('');
 
   const _HandleSearchClick = (e) => {
-    if (e.keyCode == 13 || e.key == 'Enter') {
+    
       localStorage.setItem('searchText', search);
       setSearch(search);
       setFilterSearch(search);
       if (!router.asPath.includes('?')) {
         router.push('/search?active=All', undefined, { shallow: true });
       }
-    }
+    
   };
   useEffect(() => {
     if (!router.asPath.includes('search')) {

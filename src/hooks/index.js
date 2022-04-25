@@ -8,3 +8,4 @@ export { default as UseSearch } from './useSearch';
 export { default as UseFetchNewsFeed } from './useFetchNewsFeed';
 export { default as useOutsideClick } from './useOutsideClick';
 export { default as UseFetchVideo } from './useFetchVideo';
+export { default as UseFetchFavourite } from './useFetchFavourite';

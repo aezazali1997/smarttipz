@@ -86,7 +86,8 @@ const Profile = ({ profile }) => {
     setShareCaption,
     isSharing,
     profileRating,
-    postViewOnVideo
+    postViewOnVideo,
+    HandleFavouritePost
   } = UseFetchProfile(profile);
   const { name, about, rating, views, picture, phone, email, accountType, username, showUsername, showName } = profile;
   const { website } = businessCard;
@@ -226,6 +227,7 @@ const Profile = ({ profile }) => {
                   commentCount,
                   avgRating,
                   totalRaters,
+                  isFavourite,
                   Video: {
                     id,
                     UserId,
@@ -268,6 +270,8 @@ const Profile = ({ profile }) => {
                       videoCost={videoCost}
                       createdAt={createdAt}
                       description={description}
+                      isFavourite={isFavourite}
+                      HandleFavouritePost={HandleFavouritePost}
                       title={title}
                       productLink={productLink}
                       width={'max-w-xs'}
@@ -314,6 +318,7 @@ const Profile = ({ profile }) => {
                   commentCount,
                   avgRating,
                   totalRaters,
+                  isFavourite,
                   Video: {
                     id,
                     UserId,
@@ -350,6 +355,8 @@ const Profile = ({ profile }) => {
                       videoType={videoType}
                       description={description}
                       isLiked={isLiked}
+                      isFavourite={isFavourite}
+                      HandleFavouritePost={HandleFavouritePost}
                       avgRating={avgRating}
                       likeCount={likeCount}
                       commentCount={commentCount}

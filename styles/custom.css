@@ -36,3 +36,6 @@
 .max-height-screen{
     height: calc(100vh - 4.5rem);
 }
+.custom-classes{
+  color: #f2f2f2;
+}

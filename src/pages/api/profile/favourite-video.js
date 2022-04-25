@@ -1,52 +1,43 @@
 import Favourite from 'models/Favourite';
 
 const { isEmpty } = require('lodash');
-const jwt = require('jsonwebtoken');
-const sequelize = require('sequelize');
-const db = require('models/db');
 const AllPosts = require('models/AllPost');
 const PostLikee = require('models/Like');
 const Share = require('models/Share');
-const Video = require('models/Video');
 const User = require('models/User');
+const Video = require('models/Video');
+const jwt = require('jsonwebtoken');
+const sequelize = require('sequelize');
+const db = require('models/db');
 const { API, AUTH, REQUEST } = require('src/pages/api/consts');
+
 const handler = async (req, res) => {
   if (req.method === REQUEST.GET) {
-    const {
-      query: { username },
-      headers: { authorization }
-    } = req;
     try {
-      if (!authorization) {
+      if (!req.headers.authorization) {
         return res.status(401).send({ error: true, data: [], message: AUTH.NOT_LOGGED_IN });
       }
-      const result = jwt.verify(authorization.split(' ')[1], process.env.SECRET_KEY);
+      const { username } = jwt.verify(req.headers.authorization.split(' ')[1], process.env.SECRET_KEY);
 
       const user = await User.findOne({
         attributes: ['id'],
         where: { username }
       });
+
       if (!user) {
         return res.status(404).send({ error: true, data: [], message: AUTH.NO_USER_FOUND });
       }
-
-      // console.log('user: ', user);
       const { id, id: userId } = user;
-
-      const videos = await AllPosts.findAll({
+      const videos = await Favourite.findAll({
         include: [
           {
             model: Video,
             include: [
               {
                 model: User,
-                attributes: ['name', 'username', 'picture', 'tip']
+                attributes: ['name', 'username', 'picture']
               }
             ]
-          },
-          {
-            model: Share,
-            attributes: ['id', 'caption']
           }
         ],
         where: {
@@ -57,42 +48,19 @@ const handler = async (req, res) => {
               }
             },
             {
-              '$Video.UserId$': {
-                [sequelize.Op.eq]: id
-              }
-            },
-            {
-              '$Video.catalogue$': {
-                [sequelize.Op.eq]: true
-              }
-            },
-            {
-              isShared: {
-                [sequelize.Op.eq]: false
+              reviewerId: {
+                [sequelize.Op.eq]: userId
               }
             }
           ]
         },
-        group: [
-          'AllPost.id',
-          'Video.id',
-          'Video->User.id',
-          'Video->User.name',
-          'Video->User.username',
-          'Video->User.picture',
-          'Share.id'
-        ],
         order: [['createdAt', 'DESC']]
       });
 
       for (let i = 0; i < videos.length; i++) {
         const item = videos[i];
-        const { id, VideoId, Video, Share: Shares, isShared, likeCount, commentCount } = item;
-        // const likeCount = await PostLikee.count({
-        //     where: {
-        //         AllPostId: id
-        //     }
-        // });
+        const { id, VideoId, Video } = item;
+
         const isLiked = await PostLikee.find({
           where: {
             AllPostId: id,
@@ -100,7 +68,11 @@ const handler = async (req, res) => {
           }
         });
 
-        let shareCount = Video.shareCount;
+        const shareCount = Video.shareCount;
+        const allpost = await AllPosts.find({
+          where: { id }
+        });
+
         const isFavourite = await Favourite.findOne({
           where: {
             reviewerId: userId,
@@ -118,27 +90,67 @@ const handler = async (req, res) => {
 
         videos[i] = {
           id,
-          VideoId,
-          avgRating,
-          avgRating,
           totalRaters,
-          isShared,
+          avgRating,
+          VideoId,
           Video,
-          Share: Shares,
-          likeCount,
+          likeCount: allpost !== null ? allpost.likeCount : 0,
           shareCount,
-          commentCount,
+          commentCount: allpost !== null ? allpost.commentCount : 0,
           isLiked: isLiked ? true : false,
           isFavourite: isFavourite !== null ? true : false
         };
       }
 
       res.status(200).json({
-        error: false,
         message: API.SUCCESS,
-        data: { catalogues: videos }
+        data: { videos }
       });
     } catch (err) {
+      console.log('Videos Api Failed Error: ', err.message);
+      res.status(500).send({ error: true, data: [], message: `${API.ERROR}:${err.message}` });
+    }
+  } else if (req.method === REQUEST.DELETE) {
+    const {
+      query: { id },
+      headers: { authorization }
+    } = req;
+
+    try {
+      if (!authorization) {
+        return res.status(401).send({ error: true, data: [], message: AUTH.NOT_LOGGED_IN });
+      }
+
+      const { username } = jwt.verify(authorization.split(' ')[1], process.env.SECRET_KEY);
+
+      await Video.update(
+        { isApproved: false },
+        {
+          where: { id }
+        }
+      );
+      const video = await Video.find({
+        where: { id }
+      });
+      const profileRating = await db.query(`
+       select avg(nullif (v.rating,0)) from "Videos" v where v."UserId" =${video.UserId}`);
+      let profileAvgRating = isEmpty(profileRating[0]) ? 0 : profileRating[0][0].avg;
+      profileAvgRating = profileAvgRating === null ? 0 : profileAvgRating;
+      console.log('profile rating', profileAvgRating);
+      await User.update(
+        {
+          avgRating: profileAvgRating
+        },
+        {
+          where: {
+            id: video.UserId
+          }
+        }
+      );
+
+      res.status(200).json({ error: false, data: { profileUpdatedRating: profileAvgRating }, message: API.SUCCESS });
+    } catch (err) {
+      console.log(err);
       res.status(500).send({ error: true, data: [], message: `${API.ERROR}:${err.message}` });
     }
   } else {

@@ -1,4 +1,5 @@
 import { isEmpty } from 'lodash';
+import Favourite from 'models/Favourite';
 import PostLikee from 'models/Like';
 import User from 'models/User';
 import sequelize from 'sequelize';
@@ -232,6 +233,14 @@ const handler = async (req, res) => {
         //     }
         // });
         const shareCount = Video.shareCount;
+
+        const isFavourite = await Favourite.findOne({
+          where: {
+            reviewerId: userId,
+            VideoId: Video.id
+          }
+        });
+
         const ratings =
           await db.query(`select avg(r."rating") as "avgRating", count(r."AllPostId") as "totalRaters" from "AllPosts" p
 						left join "Ratings" as r on p.id=r."AllPostId"
@@ -243,12 +252,12 @@ const handler = async (req, res) => {
 
         let paid = null;
         if (Video.videoCost === 'Paid') {
-            paid = await Pay.findOne({
-              where: {
-                userId: userId,
-                videoId: VideoId
-              }
-            });
+          paid = await Pay.findOne({
+            where: {
+              userId: userId,
+              videoId: VideoId
+            }
+          });
         }
         videos[i] = {
           id,
@@ -262,7 +271,8 @@ const handler = async (req, res) => {
           shareCount,
           commentCount,
           isLiked: isLiked ? true : false,
-          hasPaid: paid !== null ? true : false
+          hasPaid: paid !== null ? true : false,
+          isFavourite: isFavourite !== null ? true : false
         };
       }
       const response = getPagingData(videos, page, limit, videosCount);

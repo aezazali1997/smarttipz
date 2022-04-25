@@ -9,7 +9,6 @@ const { API, AUTH, REQUEST } = require('src/pages/api/consts');
 const stripe = require('stripe')(process.env.STRIPE_SK);
 const handler = async (req, res) => {
   if (req.method === 'GET') {
-   
     try {
       if (!req.headers.authorization) {
         return res.status(401).send({ error: true, data: [], message: AUTH.NOT_LOGGED_IN });

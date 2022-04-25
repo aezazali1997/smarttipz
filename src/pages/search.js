@@ -78,7 +78,8 @@ const Search = () => {
     setAmountReciever,
     handleTipSubmit,
     tipError,
-    showCelebration
+    showCelebration,
+    HandleFavouritePost
   } = UseSearch();
 
   return (
@@ -135,6 +136,7 @@ const Search = () => {
                         avgRating,
                         totalRaters,
                         hasPaid,
+                        isFavourite,
                         Video: {
                           id,
                           description,
@@ -206,6 +208,8 @@ const Search = () => {
                           videoType={videoType}
                           watchLimit={watchLimit}
                           productLink={productLink}
+                          isFavourite={isFavourite}
+                          HandleFavouritePost={HandleFavouritePost}
                           // avgRating={avgRating}
                           width={'max-w-lg'}
                           thumbnail={thumbnail}
@@ -341,6 +345,7 @@ const Search = () => {
                             avgRating,
                             totalRaters,
                             hasPaid,
+                            isFavourite,
                             Video: {
                               id,
                               description,
@@ -420,6 +425,8 @@ const Search = () => {
                               _HandleDeleteVideo={_HandleDeleteVideo}
                               _HandleCommentCounts={_HandleCommentCounts}
                               _HandleGotoUserProfile={_HandleGotoUserProfile}
+                              isFavourite={isFavourite}
+                              HandleFavouritePost={HandleFavouritePost}
                               ToggleTipModal={() => ToggleTipModal(UserId, id)}
                               _HandleGotoVideoDetails={_HandleGotoVideoDetails}
                               TogglePaymentModal={() => _TogglePaymentModal(cost, UserId, id)}
