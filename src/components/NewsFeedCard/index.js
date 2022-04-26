@@ -59,6 +59,10 @@ const NewsfeedCard = ({
   const [loading, setLoading] = useState(true);
   const [stopVideo, setStopVideo] = useState(false);
   const [isViewed, setIsViewed] = useState(false);
+  const tool = React.useRef(null);
+  const isFavourited = () => {
+    return isFavourite ? 'Remove from favourite' : 'Add to favourite';
+  };
 
   const getAllCommentsByVideoId = async () => {
     try {
@@ -195,7 +199,7 @@ const NewsfeedCard = ({
                 </ReactTooltip>
               </div>
 
-              <span data-for="fav" data-tip onClick={() => HandleFavouritePost(videoId)}>
+              <span data-for="fav" data-tip={isFavourited()} onClick={() => HandleFavouritePost(videoId)}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className={`w-6 h-6 ${
@@ -211,9 +215,15 @@ const NewsfeedCard = ({
                     d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                   />
                 </svg>
-                <ReactTooltip id="fav" place="top" effect="solid" border={false} borderColor="white" clickable={false}>
-                  {isFavourite ? 'add' : 'remove'} favourite
-                </ReactTooltip>
+                <ReactTooltip
+                  id="fav"
+                  place="top"
+                  effect="solid"
+                  border={false}
+                  borderColor="white"
+                  clickable={false}
+                  getContent={(dataTip) => dataTip}
+                />
               </span>
               <div className="flex items-start justify-start">
                 <PostActionDropdown

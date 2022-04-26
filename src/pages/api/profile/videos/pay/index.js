@@ -108,7 +108,7 @@ const handler = async (req, res) => {
         `You have received $ ${
           paid - platformFee
         } payment against your paid video http://smart-tipz.vercel.app/dashboard/videos/${AllPost.id}`,
-        'd-74e5e4a92cee4c35bf6630183cb5f52c'
+        'd-316414ed5ee24b3bbef433e4a5eedf55'
       );
 
       if (!success) return res.status(400).json({ error: true, message: message, data: [] });

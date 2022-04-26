@@ -208,6 +208,41 @@ const UserProfile = ({ profile }) => {
       });
     }
   };
+  const HandleFavouritePost = async (id) => {
+    try {
+      const {
+        data: {
+          data: { isFavourite },
+          message
+        }
+      } = await axiosInstance.favouritePost({ videoId: id });
+
+      // sets the icon color changing effect
+      let tmpposts = myVideos;
+      for (let i = 0; i < tmpposts.length; i++) {
+        if (tmpposts[i].VideoId === id) {
+          tmpposts[i].isFavourite = !tmpposts[i].isFavourite;
+        }
+      }
+      setMyVideos([...tmpposts]);
+
+      Swal.fire({
+        icon: 'success',
+        title: `${isFavourite ? 'Added to' : 'Removed from'} favourite`,
+        text: `Video ${isFavourite ? 'Added to' : 'Removed from'} favourite section`,
+        showCancelButton: false,
+        showDenyButton: false,
+        showConfirmButton: false,
+        timer: 3000
+      });
+    } catch ({
+      response: {
+        data: { message }
+      }
+    }) {
+      console.log('Like Post Api failed: ', message);
+    }
+  };
 
   const fetchMyVideos = async (username) => {
     enableFetchMyVideos();
@@ -685,6 +720,7 @@ const UserProfile = ({ profile }) => {
                           commentCount,
                           avgRating,
                           totalRaters,
+                          isFavourite,
                           Video: {
                             id,
                             title,
@@ -742,6 +778,8 @@ const UserProfile = ({ profile }) => {
                             HandleLikePost={() => HandleLikePost(postId, isLiked)}
                             ToggleRatingModal={() => OpenRatingModal({ postId, avgRating, totalRaters })}
                             _handleViewsOnVideo={postViewOnVideo}
+                            isFavourite={isFavourite}
+                            HandleFavouritePost={HandleFavouritePost}
                           />
                         </div>
                       )
@@ -780,6 +818,7 @@ const UserProfile = ({ profile }) => {
                         commentCount,
                         avgRating,
                         totalRaters,
+                        isFavourite,
                         Video: {
                           id,
                           description,
@@ -837,6 +876,8 @@ const UserProfile = ({ profile }) => {
                           HandleLikePost={() => HandleLikePost(postId, isLiked)}
                           ToggleRatingModal={() => OpenRatingModal({ postId, avgRating, totalRaters })}
                           _handleViewsOnVideo={postViewOnVideo}
+                          isFavourite={isFavourite}
+                          HandleFavouritePost={HandleFavouritePost}
                         />
                       </div>
                     )

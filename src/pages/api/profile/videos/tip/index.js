@@ -117,7 +117,7 @@ const handler = async (req, res) => {
         `You have received $ ${
           tip - platformFee
         } tip against your video http://smart-tipz.vercel.app/dashboard/videos/${AllPost.id}`,
-        'd-56caec057d4542e5809d9499af2a1f1c'
+        'd-22f55d2a61df4ed3a49691389d688cc2'
       );
       if (!success) return res.status(400).json({ error: true, message: message, data: [] });
 

@@ -46,8 +46,8 @@ const Favourites = () => {
           </span>
         </div>
       ) : isEmpty(filterdVideos) ? (
-        <div className="flex w-full justify-center items-center">
-          <p className="text-gray-500"> No Videos</p>
+        <div className="flex w-full h-screen justify-center items-center">
+          <p className="text-gray-500 -mt-56"> No Videos</p>
         </div>
       ) : (
         <div className="flex flex-col w-full sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
