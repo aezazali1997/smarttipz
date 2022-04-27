@@ -88,7 +88,6 @@ const handler = async (req, res) => {
           VideoId: videoId
         }
       });
-      
 
       await Video.update(
         {
@@ -102,14 +101,14 @@ const handler = async (req, res) => {
       );
       // send mail to user who recieved payment of their video
 
-      const { success, message } = await sendEmail(
-        userReceiver.email,
-        'You got a paid view for your video!',
-        `You have received $ ${
-          paid - platformFee
-        } payment against your paid video http://smart-tipz.vercel.app/dashboard/videos/${AllPost.id}`,
-        'd-316414ed5ee24b3bbef433e4a5eedf55'
-      );
+      // const { success, message } = await sendEmail(
+      //   userReceiver.email,
+      //   'You got a paid view for your video!',
+      //   `You have received $ ${
+      //     paid - platformFee
+      //   } payment against your paid video http://smart-tipz.vercel.app/dashboard/videos/${AllPost.id}`,
+      //   'd-316414ed5ee24b3bbef433e4a5eedf55'
+      // );
 
       if (!success) return res.status(400).json({ error: true, message: message, data: [] });
 

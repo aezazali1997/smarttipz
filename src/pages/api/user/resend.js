@@ -52,8 +52,7 @@ const handler = async (req, res) => {
         user.email,
         'Account Verification Code',
         `Your account validation code is: ${verificationCode}`,
-        'd-2ade08cf167948cf8cc9b478d81afc7d'
-
+        'd-ea4bfe6cfa594295864ea87286eceadf'
       );
 
       const token = jwt.sign({ email: user.email }, process.env.SECRET_KEY);

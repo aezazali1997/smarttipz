@@ -31,7 +31,7 @@ const WithDrawModal = ({
                     {proceed
                       ? `Are you sure you want to withdraw $${amount}?`
                       : withDrawRequest
-                      ? 'It will take up to 5 working days for funds to appear in your  stripe account.'
+                      ? 'Your withdraw request is sent to SmartTipz successfully.'
                       : 'Withdraw funds from your wallet'}
                   </h1>
                 </span>

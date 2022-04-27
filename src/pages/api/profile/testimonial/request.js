@@ -57,7 +57,7 @@ const handler = async (req, res) => {
           },
           // Change to your verified sender
           subject: 'Testimonial Request',
-          templateId: 'd-d2f73fe79778431ba1644a1aa8474f2c',
+          templateId: 'd-c9ccdc9371c349dbb684bb13b08460f8',
           dynamicTemplateData: {
             username: name,
             clientToken: token

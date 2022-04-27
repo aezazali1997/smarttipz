@@ -66,7 +66,7 @@ const handler = async (req, res) => {
 
       await Testimonial.create({ username, ownerName, description, designation, picture, BusinessId: business.id, ownerEmail });
 
-      res.status(201).json({ error: false, message: API.SUCCESS, data: [] });
+      res.status(201).json({ error: false, message: 'Testimonial submitted succesfully', data: [] });
 
     } catch (err) {
       res.status(500).json({ error: true, message: err.message, data: [] });

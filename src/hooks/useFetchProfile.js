@@ -380,7 +380,7 @@ const UseFetchProfile = (profile) => {
       .requestTestimonial({ email })
       .then(({ data: { message } }) => {
         swal({
-          text: message,
+          text: 'Testimonial requested succesfully',
           icon: 'success',
           buttons: false,
           timer: 3000

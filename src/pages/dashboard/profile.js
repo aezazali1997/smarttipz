@@ -475,7 +475,7 @@ const Profile = ({ profile }) => {
                 //   <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
                 // }
               >
-                <div className="flex flex-col sm:grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
+                <div className="flex flex-col sm:flex-row justify-between items-start ">
                   {filteredTestimonial.map(({ id, picture, ownerName, designation, description, isVisible }, index) => (
                     <TestimonialCard
                       key={index}

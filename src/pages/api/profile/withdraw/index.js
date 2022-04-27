@@ -1,3 +1,5 @@
+import SendEmail from 'utils/sendMail';
+
 const User = require('models/User');
 const BankDetail = require('models/BankDetail');
 const WithDrawRequest = require('models/WithDrawRequest');
@@ -34,6 +36,15 @@ const handler = async (req, res) => {
       UserId: user.id,
       amount: withDraw
     });
+
+    const { success, message } = await SendEmail(
+      email,
+      'Smattipz withdraw request',
+      `You have requested $ ${withDraw} for withdrawal from your SmartTipz Wallet`,
+      'd-6ddea144edc3408788916f93fb9e6772'
+    );
+
+    if (!success) return res.status(400).json({ error: true, message: message, data: [] });
 
     const totalAmount = user.totalTipsAmount;
     await User.update(

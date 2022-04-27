@@ -39,3 +39,12 @@
 .custom-classes{
   color: #f2f2f2;
 }
+.custom-width{
+    width: 50%;
+}
+@media screen and (max-width:668px) {
+    .custom-width{
+        width: 100%;
+    }
+    
+}

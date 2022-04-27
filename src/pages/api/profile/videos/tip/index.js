@@ -111,15 +111,15 @@ const handler = async (req, res) => {
         }
       );
 
-      const { success, message } = await SendEmail(
-        receiverUser.email,
-        'You got a tip for your video!',
-        `You have received $ ${
-          tip - platformFee
-        } tip against your video http://smart-tipz.vercel.app/dashboard/videos/${AllPost.id}`,
-        'd-22f55d2a61df4ed3a49691389d688cc2'
-      );
-      if (!success) return res.status(400).json({ error: true, message: message, data: [] });
+      // const { success, message } = await SendEmail(
+      //   receiverUser.email,
+      //   'You got a tip for your video!',
+      //   `You have received $ ${
+      //     tip - platformFee
+      //   } tip against your video http://smart-tipz.vercel.app/dashboard/videos/${AllPost.id}`,
+      //   'd-22f55d2a61df4ed3a49691389d688cc2'
+      // );
+      // if (!success) return res.status(400).json({ error: true, message: message, data: [] });
 
       res.status(201).send({
         error: false,
