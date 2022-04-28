@@ -270,6 +270,9 @@ class AxiosInstance {
   async getMessagerDetails(id) {
     return await axios.get(`${USER_API_BASE_URL}api/profile/message/details?id=${id}`, this.getAuthHeader());
   }
+  async getNotifications() {
+    return await axios.get(`${USER_API_BASE_URL}api/notification`, this.getAuthHeader());
+  }
 }
 
 export default new AxiosInstance;

@@ -18,9 +18,13 @@ const Pay = require('models/Pay');
 const BankDetail = require('models/BankDetail');
 const WithDrawRequest = require('models/WithDrawRequest');
 const Charge = require('models/Charge');
+const Entity = require('models/Entity');
+const Notification = require('models/Notification');
 const handler = async (req, res) => {
   // force: delets all data and creates a new table
   // alter: updates the data
+  // Entity.sync({ alter: true });
+  Notification.sync({ force: true });
   // Admin.sync({alter:true})
   // BankDetail.sync({
   // alter:true

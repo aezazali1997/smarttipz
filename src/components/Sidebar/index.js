@@ -6,12 +6,15 @@ import { Badge, GlobalSearchbar, SmartTipzLogo } from 'src/components';
 import { useOutsideClick } from 'src/hooks';
 import { NavbarRoutes } from 'routes';
 import { NavDropdown } from '../Dropdown';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import NotificationDropDown from '../Dropdown/notificationDropdown';
 
 const Sidebar = ({ logout }) => {
   const router = useRouter();
 
   const { asPath } = router;
   const [dropdown, setShowDropdown] = useState(false);
+
   const DropdownRef = useRef();
 
   let Active = (path) => {
@@ -27,6 +30,9 @@ const Sidebar = ({ logout }) => {
 
   const toggleDropdown = () => {
     setShowDropdown(!dropdown);
+  };
+  const togggleNotificationDropDown = () => {
+    setShowDropdown(false);
   };
 
   return (
@@ -51,13 +57,17 @@ const Sidebar = ({ logout }) => {
                       className={`flex items-center justify-between py-2 px-3 rounded-lg  font-medium  cursor-pointer
                                             ${Active(path)}`}>
                       <div>
-                        {icon}&nbsp;{name}
+                        {icon}
+                        &nbsp;
+                        {name}
                       </div>
                       {badge && <Badge />}
                     </div>
                   </a>
                 </Link>
               ))}
+
+            <NotificationDropDown />
           </div>
 
           <NavDropdown

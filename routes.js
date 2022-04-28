@@ -6,7 +6,8 @@ import {
   faStar,
   faDollarSign,
   faUserCircle,
-  faHeart
+  faHeart,
+  faBell
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -28,6 +29,19 @@ export const Routes = [
     path: '/dashboard/videos',
     badge: false,
     icon: <FontAwesomeIcon icon={faPlayCircle} />
+  },
+  {
+    name: 'Favourites',
+    path: '/dashboard/favourites',
+    badge: false,
+    icon: <FontAwesomeIcon icon={faHeart} />
+    // faStar
+  },
+  {
+    name: 'Messages',
+    path: '/dashboard/messages',
+    badge: false,
+    icon: <FontAwesomeIcon icon={faComment} />
   },
   {
     name: 'Settings',
@@ -55,13 +69,6 @@ export const NavbarRoutes = [
     path: '/dashboard/messages',
     badge: false,
     icon: <FontAwesomeIcon icon={faComment} />
-  },
-  {
-    name: 'Favourites',
-    path: '/dashboard/favourites',
-    badge: false,
-    icon: <FontAwesomeIcon icon={faHeart} />
-    // faStar
   }
 ];
 

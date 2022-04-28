@@ -90,7 +90,7 @@ const PostActionDropdown = ({ toggleDropdown, DropdownRef, logout, dropdown, set
         }>
         <div className="flex flex-col h-full sidebar-content space-y-1">
           {Routes &&
-            Routes.map(({ path, name, icon, badge }, index) => (
+            Routes.filter((value) => value.name !== 'Messages').map(({ path, name, icon, badge }, index) => (
               <div key={index}>
                 <Link href={path} className="p-4 font-sans nav-link nav-link-ltr">
                   <a>
@@ -141,20 +141,22 @@ const PostActionDropdown = ({ toggleDropdown, DropdownRef, logout, dropdown, set
             {dropdown && (
               <div className=" flex flex-col space-y-2 bg-white p-2 w-52  rounded-lg ease-in-out">
                 {DropdownRoutes &&
-                  DropdownRoutes.map(({ path, name }, index) => (
-                    <div key={index}>
-                      <Link href={path} className="p-4 font-sans nav-link nav-link-ltr">
-                        <a>
-                          <div
-                            onClick={() => _CloseDropdowns()}
-                            className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
+                  DropdownRoutes.map(({ path, name }, index) => {
+                    return (
+                      <div key={index}>
+                        <Link href={path} className="p-4 font-sans nav-link nav-link-ltr">
+                          <a>
+                            <div
+                              onClick={() => _CloseDropdowns()}
+                              className={`flex items-center justify-between py-2 px-3 rounded-lg w-48 font-medium sidebar-dropdown-item cursor-pointer
                               ${ActiveDropdown(path)}`}>
-                            <div>{name}</div>
-                          </div>
-                        </a>
-                      </Link>
-                    </div>
-                  ))}
+                              <div>{name}</div>
+                            </div>
+                          </a>
+                        </Link>
+                      </div>
+                    );
+                  })}
               </div>
             )}
           </div>

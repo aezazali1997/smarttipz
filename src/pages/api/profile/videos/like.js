@@ -1,7 +1,11 @@
+import Entity from 'models/Entity';
+import Video from 'models/Video';
+
 const AllPosts = require('models/AllPost');
 const PostLike = require('models/Like');
 const User = require('models/User');
 const jwt = require('jsonwebtoken');
+const Notification = require('models/Notification');
 const sequelize = require('sequelize');
 const handler = async (req, res) => {
   const { API, AUTH, REQUEST } = require('src/pages/api/consts');
@@ -61,15 +65,12 @@ const handler = async (req, res) => {
       // console.log('id => ', id);
 
       const allPost = await AllPosts.findOne({
-        attributes: ['id', 'likeCount'],
+        attributes: ['id', 'likeCount', 'VideoId'],
         where: { id: postId }
       });
 
-      // console.log('video => ', postId);
-
       const post = await PostLike.findOne({ where: { AllPostId: postId, reviewerId: id } });
-
-      // console.log('post => ', post);
+      const { UserId: notifier } = await Video.findById(allPost.VideoId);
 
       if (post === null) {
         const like = await PostLike.create({
@@ -80,6 +81,22 @@ const handler = async (req, res) => {
         // console.log("allPost",allPost.likeCount+1);
         const likeCount = await AllPosts.update({ likeCount: allPost.likeCount + 1 }, { where: { id: postId } });
         await like.setAllPost(allPost);
+        // get the actor who likes the video %*%* Done
+        // get the notififer whose video is liked
+        // create a notification
+        // alert the user about the notification
+        const entity = await Entity.find({
+          where: {
+            title: 'like'
+          }
+        });
+        await Notification.create({
+          actor: id,
+          notifier: notifier,
+          EntityId: entity.id,
+          allPostId: postId
+        });
+
         return res.status(201).json({
           error: false,
           message: API.SUCCESS,
@@ -88,6 +105,20 @@ const handler = async (req, res) => {
       }
       await PostLike.destroy({ where: { reviewerId: id } });
       const likeCount = await AllPosts.update({ likeCount: allPost.likeCount - 1 }, { where: { id: postId } });
+
+      const entity = await Entity.find({
+        where: {
+          title: 'like'
+        }
+      });
+      await Notification.destroy({
+        where: {
+          actor: id,
+          EntityId: entity.id,
+          allPostId: postId
+        }
+      });
+
       res.status(200).json({
         error: false,
         message: API.SUCCESS,

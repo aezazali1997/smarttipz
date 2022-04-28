@@ -36,7 +36,11 @@ const CustomLayout = ({ children }) => {
   const toggle = () => {
     setIsOpen(!isOpen);
   };
-
+  // useEffect(() => {
+  //   setInterval(() => {
+  //     console.log('set ime out for 3 seconds');
+  //   }, 3000);
+  // }, []);
 
   const _Logout = () => {
     Swal.fire({
@@ -53,7 +57,7 @@ const CustomLayout = ({ children }) => {
         localStorage.clear();
         router.push('/auth/login');
       },
-      cancelButtonText: 'No',
+      cancelButtonText: 'Cancel',
       buttonsStyling: false,
       customClass: {
         confirmButton:
@@ -95,7 +99,7 @@ const CustomLayout = ({ children }) => {
       </main>
     </div>
   );
-};;;;;;;;
+}
 
 
 export default CustomLayout;
