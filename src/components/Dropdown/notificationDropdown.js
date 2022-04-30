@@ -52,9 +52,9 @@ const NotificationDropDown = () => {
     await axiosInstance.readSpecific(payload);
   };
   useState(() => {
-    fetchNotifications();
-    // setInterval(() => {
-    // }, 3000);
+    setInterval(() => {
+      fetchNotifications();
+    }, 3000);
   }, []);
   return (
     <>
