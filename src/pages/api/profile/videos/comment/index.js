@@ -1,3 +1,8 @@
+import Entity from 'models/Entity';
+import Notification from 'models/Notification';
+import Share from 'models/Share';
+import Video from 'models/Video';
+
 const AllPosts = require('models/AllPost');
 const Comment = require('models/Comments');
 const jwt = require('jsonwebtoken');
@@ -62,9 +67,13 @@ const handler = async (req, res) => {
       }
 
       const allPost = await AllPosts.findOne({
-        attributes: ['id', 'commentCount'],
+        attributes: ['id', 'commentCount', 'ShareId', 'VideoId'],
         where: { id: videoId }
       });
+      // allpostId above
+      // enrity id comment
+      // actor user.id
+      // notiier video.UserId
 
       const comment = await Comment.create({
         OwnerId: user.id,
@@ -81,6 +90,50 @@ const handler = async (req, res) => {
       );
       await comment.setUser(user);
       await comment.setAllPost(allPost);
+      let isShared = allPost.ShareId;
+      let id = user.id;
+      if (isShared) {
+        const share = await Share.findOne({
+          where: {
+            id: allPost.ShareId
+          }
+        });
+
+        let notifier = share.UserId;
+
+        const entity = await Entity.findOne({
+          where: {
+            title: 'comment'
+          }
+        });
+
+        await Notification.create({
+          actor: id,
+          notifier: notifier,
+          EntityId: entity.id,
+          allPostId: videoId
+        });
+      } else {
+        const video = await Video.findOne({
+          where: {
+            id: allPost.VideoId
+          }
+        });
+        let notifier = video.UserId;
+
+        const entity = await Entity.findOne({
+          where: {
+            title: 'comment'
+          }
+        });
+
+        await Notification.create({
+          actor: id,
+          notifier: notifier,
+          EntityId: entity.id,
+          allPostId: videoId
+        });
+      }
 
       return res.status(201).json({
         error: false,

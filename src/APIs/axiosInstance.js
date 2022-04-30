@@ -273,6 +273,15 @@ class AxiosInstance {
   async getNotifications() {
     return await axios.get(`${USER_API_BASE_URL}api/notification`, this.getAuthHeader());
   }
+  async getSpecificVideoById(id) {
+    return await axios.get(`${USER_API_BASE_URL}api/notification/video?allPostId=${id}`, this.getAuthHeader());
+  }
+  async readAllNotification() {
+    return await axios.post(`${USER_API_BASE_URL}api/notification`, this.getAuthHeader());
+  }
+  async readSpecific(payload) {
+    return await axios.post(`${USER_API_BASE_URL}api/notification/read-post`, payload, this.getAuthHeader());
+  }
 }
 
 export default new AxiosInstance;

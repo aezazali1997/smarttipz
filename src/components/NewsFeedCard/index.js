@@ -242,7 +242,10 @@ const NewsfeedCard = ({
             {title}
           </p>
         </div>
-        {localStorage.getItem('id') != UserId && videoCost === 'Paid' && restrictPaidVideo ? (
+        {typeof window !== 'undefined' &&
+        localStorage.getItem('id') != UserId &&
+        videoCost === 'Paid' &&
+        restrictPaidVideo ? (
           !stopVideo ? (
             <div className="video-wrapper" onClick={_HandlePaidVideos}>
               <VideoPlayer poster={thumbnail} src={url} />
@@ -272,11 +275,17 @@ const NewsfeedCard = ({
         <div className="flex justify-between w-full px-3">
           <span
             data-tip
-            data-tip-disable={Number(localStorage.getItem('id')) === UserId}
+            data-tip-disable={typeof window !== 'undefined' && Number(localStorage.getItem('id')) === UserId}
             data-for="rating"
-            onClick={Number(localStorage.getItem('id')) !== UserId ? ToggleRatingModal : () => {}}
+            onClick={
+              typeof window !== 'undefined' && Number(localStorage.getItem('id')) !== UserId
+                ? ToggleRatingModal
+                : () => {}
+            }
             className={`flex items-center z-0 ${
-              Number(localStorage.getItem('id')) !== UserId ? 'cursor-pointer' : 'cursor-default'
+              typeof window !== 'undefined' && Number(localStorage.getItem('id')) !== UserId
+                ? 'cursor-pointer'
+                : 'cursor-default'
             }`}>
             {displayRatingStars()}
 

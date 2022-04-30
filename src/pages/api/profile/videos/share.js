@@ -94,6 +94,19 @@ const handler = async (req, res) => {
           UserId: id
         }
       });
+
+      // check if post is already shared
+      const tmp_share = await Share.findOne({
+        where: {
+          VideoId: videoId
+        }
+      });
+      console.log('share------------', tmp_share);
+      // if post is shared
+      // notify the user who shared the post
+      // if post is not shared
+      // notify the user who is the owner of the post
+
       const shared = {
         share,
         sharedPost,

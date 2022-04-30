@@ -6,6 +6,7 @@ const PostLike = require('models/Like');
 const User = require('models/User');
 const jwt = require('jsonwebtoken');
 const Notification = require('models/Notification');
+const Share = require('models/Share');
 const sequelize = require('sequelize');
 const handler = async (req, res) => {
   const { API, AUTH, REQUEST } = require('src/pages/api/consts');
@@ -65,26 +66,28 @@ const handler = async (req, res) => {
       // console.log('id => ', id);
 
       const allPost = await AllPosts.findOne({
-        attributes: ['id', 'likeCount', 'VideoId'],
+        attributes: ['id', 'likeCount', 'VideoId', 'ShareId'],
         where: { id: postId }
       });
-
+      let shareId = allPost.ShareId;
+      console.log('shareid ', shareId);
       const post = await PostLike.findOne({ where: { AllPostId: postId, reviewerId: id } });
-      const { UserId: notifier } = await Video.findById(allPost.VideoId);
+      let notifier = null;
+      if (shareId !== null) {
+        const { UserId } = await Share.findById(shareId);
+        notifier = UserId;
+      } else {
+        const { UserId } = await Video.findById(allPost.VideoId);
+        notifier = UserId;
+      }
 
       if (post === null) {
         const like = await PostLike.create({
           reviewerId: id,
           isLiked: true
         });
-        // console.log('post id',postId);
-        // console.log("allPost",allPost.likeCount+1);
         const likeCount = await AllPosts.update({ likeCount: allPost.likeCount + 1 }, { where: { id: postId } });
         await like.setAllPost(allPost);
-        // get the actor who likes the video %*%* Done
-        // get the notififer whose video is liked
-        // create a notification
-        // alert the user about the notification
         const entity = await Entity.find({
           where: {
             title: 'like'

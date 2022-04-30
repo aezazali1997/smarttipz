@@ -268,7 +268,7 @@ const handler = async (req, res) => {
             VideoId: Video.id
           }
         });
-        console.log('is fav-----------------------------------', isFavourite);
+
         const ratings =
           await db.query(`select avg(r."rating") as "avgRating", count(r."AllPostId") as "totalRaters" from "AllPosts" p
 						left join "Ratings" as r on p.id=r."AllPostId"
